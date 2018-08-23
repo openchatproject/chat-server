@@ -13,4 +13,6 @@ public interface PendingAccounts {
   @SqlQuery("SELECT verification_code FROM pending_accounts WHERE number = :number")
   String getCodeForNumber(@Bind("number") String number);
 
+  @SqlUpdate("DELETE FROM pending_accounts WHERE number = :number")
+  void remove(@Bind("number") String number);
 }

@@ -10,28 +10,40 @@ public final class MessageProtos {
   }
   public interface OutgoingMessageSignalOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // optional uint32 type = 1;
     boolean hasType();
     int getType();
-    
+
     // optional string source = 2;
     boolean hasSource();
-    String getSource();
-    
+    java.lang.String getSource();
+    com.google.protobuf.ByteString
+        getSourceBytes();
+
     // optional string relay = 3;
     boolean hasRelay();
-    String getRelay();
-    
+    java.lang.String getRelay();
+    com.google.protobuf.ByteString
+        getRelayBytes();
+
     // repeated string destinations = 4;
-    java.util.List<String> getDestinationsList();
+    java.util.List<java.lang.String>
+    getDestinationsList();
     int getDestinationsCount();
-    String getDestinations(int index);
-    
+    java.lang.String getDestinations(int index);
+    com.google.protobuf.ByteString
+        getDestinationsBytes(int index);
+
+    // repeated uint64 destinationDeviceIds = 7;
+    java.util.List<java.lang.Long> getDestinationDeviceIdsList();
+    int getDestinationDeviceIdsCount();
+    long getDestinationDeviceIds(int index);
+
     // optional uint64 timestamp = 5;
     boolean hasTimestamp();
     long getTimestamp();
-    
+
     // optional bytes message = 6;
     boolean hasMessage();
     com.google.protobuf.ByteString getMessage();
@@ -40,30 +52,149 @@ public final class MessageProtos {
       com.google.protobuf.GeneratedMessage
       implements OutgoingMessageSignalOrBuilder {
     // Use OutgoingMessageSignal.newBuilder() to construct.
-    private OutgoingMessageSignal(Builder builder) {
+    private OutgoingMessageSignal(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private OutgoingMessageSignal(boolean noInit) {}
-    
+    private OutgoingMessageSignal(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final OutgoingMessageSignal defaultInstance;
     public static OutgoingMessageSignal getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public OutgoingMessageSignal getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private OutgoingMessageSignal(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              type_ = input.readUInt32();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              source_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000004;
+              relay_ = input.readBytes();
+              break;
+            }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                destinations_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              destinations_.add(input.readBytes());
+              break;
+            }
+            case 40: {
+              bitField0_ |= 0x00000008;
+              timestamp_ = input.readUInt64();
+              break;
+            }
+            case 50: {
+              bitField0_ |= 0x00000010;
+              message_ = input.readBytes();
+              break;
+            }
+            case 56: {
+              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+                destinationDeviceIds_ = new java.util.ArrayList<java.lang.Long>();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              destinationDeviceIds_.add(input.readUInt64());
+              break;
+            }
+            case 58: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010) && input.getBytesUntilLimit() > 0) {
+                destinationDeviceIds_ = new java.util.ArrayList<java.lang.Long>();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                destinationDeviceIds_.add(input.readUInt64());
+              }
+              input.popLimit(limit);
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          destinations_ = new com.google.protobuf.UnmodifiableLazyStringList(destinations_);
+        }
+        if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+          destinationDeviceIds_ = java.util.Collections.unmodifiableList(destinationDeviceIds_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return com.openchat.secureim.entities.MessageProtos.internal_static_textsecure_OutgoingMessageSignal_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.openchat.secureim.entities.MessageProtos.internal_static_textsecure_OutgoingMessageSignal_fieldAccessorTable;
+      return com.openchat.secureim.entities.MessageProtos.internal_static_textsecure_OutgoingMessageSignal_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal.class, com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<OutgoingMessageSignal> PARSER =
+        new com.google.protobuf.AbstractParser<OutgoingMessageSignal>() {
+      public OutgoingMessageSignal parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new OutgoingMessageSignal(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<OutgoingMessageSignal> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // optional uint32 type = 1;
     public static final int TYPE_FIELD_NUMBER = 1;
@@ -74,85 +205,107 @@ public final class MessageProtos {
     public int getType() {
       return type_;
     }
-    
+
     // optional string source = 2;
     public static final int SOURCE_FIELD_NUMBER = 2;
     private java.lang.Object source_;
     public boolean hasSource() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public String getSource() {
+    public java.lang.String getSource() {
       java.lang.Object ref = source_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           source_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getSourceBytes() {
+    public com.google.protobuf.ByteString
+        getSourceBytes() {
       java.lang.Object ref = source_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         source_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // optional string relay = 3;
     public static final int RELAY_FIELD_NUMBER = 3;
     private java.lang.Object relay_;
     public boolean hasRelay() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
-    public String getRelay() {
+    public java.lang.String getRelay() {
       java.lang.Object ref = relay_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           relay_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getRelayBytes() {
+    public com.google.protobuf.ByteString
+        getRelayBytes() {
       java.lang.Object ref = relay_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         relay_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // repeated string destinations = 4;
     public static final int DESTINATIONS_FIELD_NUMBER = 4;
     private com.google.protobuf.LazyStringList destinations_;
-    public java.util.List<String>
+    public java.util.List<java.lang.String>
         getDestinationsList() {
       return destinations_;
     }
     public int getDestinationsCount() {
       return destinations_.size();
     }
-    public String getDestinations(int index) {
+    public java.lang.String getDestinations(int index) {
       return destinations_.get(index);
     }
-    
+    public com.google.protobuf.ByteString
+        getDestinationsBytes(int index) {
+      return destinations_.getByteString(index);
+    }
+
+    // repeated uint64 destinationDeviceIds = 7;
+    public static final int DESTINATIONDEVICEIDS_FIELD_NUMBER = 7;
+    private java.util.List<java.lang.Long> destinationDeviceIds_;
+    public java.util.List<java.lang.Long>
+        getDestinationDeviceIdsList() {
+      return destinationDeviceIds_;
+    }
+    public int getDestinationDeviceIdsCount() {
+      return destinationDeviceIds_.size();
+    }
+    public long getDestinationDeviceIds(int index) {
+      return destinationDeviceIds_.get(index);
+    }
+
     // optional uint64 timestamp = 5;
     public static final int TIMESTAMP_FIELD_NUMBER = 5;
     private long timestamp_;
@@ -162,7 +315,7 @@ public final class MessageProtos {
     public long getTimestamp() {
       return timestamp_;
     }
-    
+
     // optional bytes message = 6;
     public static final int MESSAGE_FIELD_NUMBER = 6;
     private com.google.protobuf.ByteString message_;
@@ -172,12 +325,13 @@ public final class MessageProtos {
     public com.google.protobuf.ByteString getMessage() {
       return message_;
     }
-    
+
     private void initFields() {
       type_ = 0;
       source_ = "";
       relay_ = "";
       destinations_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      destinationDeviceIds_ = java.util.Collections.emptyList();
       timestamp_ = 0L;
       message_ = com.google.protobuf.ByteString.EMPTY;
     }
@@ -185,11 +339,11 @@ public final class MessageProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -211,14 +365,17 @@ public final class MessageProtos {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeBytes(6, message_);
       }
+      for (int i = 0; i < destinationDeviceIds_.size(); i++) {
+        output.writeUInt64(7, destinationDeviceIds_.get(i));
+      }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -249,92 +406,87 @@ public final class MessageProtos {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(6, message_);
       }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < destinationDeviceIds_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeUInt64SizeNoTag(destinationDeviceIds_.get(i));
+        }
+        size += dataSize;
+        size += 1 * getDestinationDeviceIdsList().size();
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
@@ -348,18 +500,21 @@ public final class MessageProtos {
           getDescriptor() {
         return com.openchat.secureim.entities.MessageProtos.internal_static_textsecure_OutgoingMessageSignal_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.openchat.secureim.entities.MessageProtos.internal_static_textsecure_OutgoingMessageSignal_fieldAccessorTable;
+        return com.openchat.secureim.entities.MessageProtos.internal_static_textsecure_OutgoingMessageSignal_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal.class, com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal.Builder.class);
       }
-      
+
       // Construct using com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder(BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -370,7 +525,7 @@ public final class MessageProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         type_ = 0;
@@ -381,26 +536,28 @@ public final class MessageProtos {
         bitField0_ = (bitField0_ & ~0x00000004);
         destinations_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000008);
-        timestamp_ = 0L;
+        destinationDeviceIds_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000010);
-        message_ = com.google.protobuf.ByteString.EMPTY;
+        timestamp_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000020);
+        message_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal.getDescriptor();
+        return com.openchat.secureim.entities.MessageProtos.internal_static_textsecure_OutgoingMessageSignal_descriptor;
       }
-      
+
       public com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal getDefaultInstanceForType() {
         return com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal.getDefaultInstance();
       }
-      
+
       public com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal build() {
         com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal result = buildPartial();
         if (!result.isInitialized()) {
@@ -408,17 +565,7 @@ public final class MessageProtos {
         }
         return result;
       }
-      
-      private com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal buildPartial() {
         com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal result = new com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal(this);
         int from_bitField0_ = bitField0_;
@@ -441,11 +588,16 @@ public final class MessageProtos {
           bitField0_ = (bitField0_ & ~0x00000008);
         }
         result.destinations_ = destinations_;
-        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          destinationDeviceIds_ = java.util.Collections.unmodifiableList(destinationDeviceIds_);
+          bitField0_ = (bitField0_ & ~0x00000010);
+        }
+        result.destinationDeviceIds_ = destinationDeviceIds_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
           to_bitField0_ |= 0x00000008;
         }
         result.timestamp_ = timestamp_;
-        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
           to_bitField0_ |= 0x00000010;
         }
         result.message_ = message_;
@@ -453,7 +605,7 @@ public final class MessageProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal) {
           return mergeFrom((com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal)other);
@@ -462,17 +614,21 @@ public final class MessageProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal other) {
         if (other == com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal.getDefaultInstance()) return this;
         if (other.hasType()) {
           setType(other.getType());
         }
         if (other.hasSource()) {
-          setSource(other.getSource());
+          bitField0_ |= 0x00000002;
+          source_ = other.source_;
+          onChanged();
         }
         if (other.hasRelay()) {
-          setRelay(other.getRelay());
+          bitField0_ |= 0x00000004;
+          relay_ = other.relay_;
+          onChanged();
         }
         if (!other.destinations_.isEmpty()) {
           if (destinations_.isEmpty()) {
@@ -481,6 +637,16 @@ public final class MessageProtos {
           } else {
             ensureDestinationsIsMutable();
             destinations_.addAll(other.destinations_);
+          }
+          onChanged();
+        }
+        if (!other.destinationDeviceIds_.isEmpty()) {
+          if (destinationDeviceIds_.isEmpty()) {
+            destinationDeviceIds_ = other.destinationDeviceIds_;
+            bitField0_ = (bitField0_ & ~0x00000010);
+          } else {
+            ensureDestinationDeviceIdsIsMutable();
+            destinationDeviceIds_.addAll(other.destinationDeviceIds_);
           }
           onChanged();
         }
@@ -493,70 +659,30 @@ public final class MessageProtos {
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 8: {
-              bitField0_ |= 0x00000001;
-              type_ = input.readUInt32();
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              source_ = input.readBytes();
-              break;
-            }
-            case 26: {
-              bitField0_ |= 0x00000004;
-              relay_ = input.readBytes();
-              break;
-            }
-            case 34: {
-              ensureDestinationsIsMutable();
-              destinations_.add(input.readBytes());
-              break;
-            }
-            case 40: {
-              bitField0_ |= 0x00000010;
-              timestamp_ = input.readUInt64();
-              break;
-            }
-            case 50: {
-              bitField0_ |= 0x00000020;
-              message_ = input.readBytes();
-              break;
-            }
+        com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // optional uint32 type = 1;
       private int type_ ;
       public boolean hasType() {
@@ -577,23 +703,38 @@ public final class MessageProtos {
         onChanged();
         return this;
       }
-      
+
       // optional string source = 2;
       private java.lang.Object source_ = "";
       public boolean hasSource() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public String getSource() {
+      public java.lang.String getSource() {
         java.lang.Object ref = source_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           source_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setSource(String value) {
+      public com.google.protobuf.ByteString
+          getSourceBytes() {
+        java.lang.Object ref = source_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          source_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      public Builder setSource(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -608,28 +749,48 @@ public final class MessageProtos {
         onChanged();
         return this;
       }
-      void setSource(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000002;
+      public Builder setSourceBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
         source_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional string relay = 3;
       private java.lang.Object relay_ = "";
       public boolean hasRelay() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
-      public String getRelay() {
+      public java.lang.String getRelay() {
         java.lang.Object ref = relay_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           relay_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setRelay(String value) {
+      public com.google.protobuf.ByteString
+          getRelayBytes() {
+        java.lang.Object ref = relay_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          relay_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      public Builder setRelay(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -644,12 +805,17 @@ public final class MessageProtos {
         onChanged();
         return this;
       }
-      void setRelay(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000004;
+      public Builder setRelayBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
         relay_ = value;
         onChanged();
+        return this;
       }
-      
+
       // repeated string destinations = 4;
       private com.google.protobuf.LazyStringList destinations_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureDestinationsIsMutable() {
@@ -658,18 +824,22 @@ public final class MessageProtos {
           bitField0_ |= 0x00000008;
          }
       }
-      public java.util.List<String>
+      public java.util.List<java.lang.String>
           getDestinationsList() {
         return java.util.Collections.unmodifiableList(destinations_);
       }
       public int getDestinationsCount() {
         return destinations_.size();
       }
-      public String getDestinations(int index) {
+      public java.lang.String getDestinations(int index) {
         return destinations_.get(index);
       }
+      public com.google.protobuf.ByteString
+          getDestinationsBytes(int index) {
+        return destinations_.getByteString(index);
+      }
       public Builder setDestinations(
-          int index, String value) {
+          int index, java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -678,7 +848,8 @@ public final class MessageProtos {
         onChanged();
         return this;
       }
-      public Builder addDestinations(String value) {
+      public Builder addDestinations(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -688,7 +859,7 @@ public final class MessageProtos {
         return this;
       }
       public Builder addAllDestinations(
-          java.lang.Iterable<String> values) {
+          java.lang.Iterable<java.lang.String> values) {
         ensureDestinationsIsMutable();
         super.addAll(values, destinations_);
         onChanged();
@@ -700,37 +871,87 @@ public final class MessageProtos {
         onChanged();
         return this;
       }
-      void addDestinations(com.google.protobuf.ByteString value) {
-        ensureDestinationsIsMutable();
+      public Builder addDestinationsBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureDestinationsIsMutable();
         destinations_.add(value);
         onChanged();
+        return this;
       }
-      
+
+      // repeated uint64 destinationDeviceIds = 7;
+      private java.util.List<java.lang.Long> destinationDeviceIds_ = java.util.Collections.emptyList();
+      private void ensureDestinationDeviceIdsIsMutable() {
+        if (!((bitField0_ & 0x00000010) == 0x00000010)) {
+          destinationDeviceIds_ = new java.util.ArrayList<java.lang.Long>(destinationDeviceIds_);
+          bitField0_ |= 0x00000010;
+         }
+      }
+      public java.util.List<java.lang.Long>
+          getDestinationDeviceIdsList() {
+        return java.util.Collections.unmodifiableList(destinationDeviceIds_);
+      }
+      public int getDestinationDeviceIdsCount() {
+        return destinationDeviceIds_.size();
+      }
+      public long getDestinationDeviceIds(int index) {
+        return destinationDeviceIds_.get(index);
+      }
+      public Builder setDestinationDeviceIds(
+          int index, long value) {
+        ensureDestinationDeviceIdsIsMutable();
+        destinationDeviceIds_.set(index, value);
+        onChanged();
+        return this;
+      }
+      public Builder addDestinationDeviceIds(long value) {
+        ensureDestinationDeviceIdsIsMutable();
+        destinationDeviceIds_.add(value);
+        onChanged();
+        return this;
+      }
+      public Builder addAllDestinationDeviceIds(
+          java.lang.Iterable<? extends java.lang.Long> values) {
+        ensureDestinationDeviceIdsIsMutable();
+        super.addAll(values, destinationDeviceIds_);
+        onChanged();
+        return this;
+      }
+      public Builder clearDestinationDeviceIds() {
+        destinationDeviceIds_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        onChanged();
+        return this;
+      }
+
       // optional uint64 timestamp = 5;
       private long timestamp_ ;
       public boolean hasTimestamp() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
+        return ((bitField0_ & 0x00000020) == 0x00000020);
       }
       public long getTimestamp() {
         return timestamp_;
       }
       public Builder setTimestamp(long value) {
-        bitField0_ |= 0x00000010;
+        bitField0_ |= 0x00000020;
         timestamp_ = value;
         onChanged();
         return this;
       }
       public Builder clearTimestamp() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000020);
         timestamp_ = 0L;
         onChanged();
         return this;
       }
-      
+
       // optional bytes message = 6;
       private com.google.protobuf.ByteString message_ = com.google.protobuf.ByteString.EMPTY;
       public boolean hasMessage() {
-        return ((bitField0_ & 0x00000020) == 0x00000020);
+        return ((bitField0_ & 0x00000040) == 0x00000040);
       }
       public com.google.protobuf.ByteString getMessage() {
         return message_;
@@ -739,35 +960,35 @@ public final class MessageProtos {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000020;
+  bitField0_ |= 0x00000040;
         message_ = value;
         onChanged();
         return this;
       }
       public Builder clearMessage() {
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ = (bitField0_ & ~0x00000040);
         message_ = getDefaultInstance().getMessage();
         onChanged();
         return this;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:textsecure.OutgoingMessageSignal)
     }
-    
+
     static {
       defaultInstance = new OutgoingMessageSignal(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:textsecure.OutgoingMessageSignal)
   }
-  
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_textsecure_OutgoingMessageSignal_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_textsecure_OutgoingMessageSignal_fieldAccessorTable;
-  
+
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
     return descriptor;
@@ -777,11 +998,12 @@ public final class MessageProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\033OutgoingMessageSignal.proto\022\ntextsecur" +
-      "e\"~\n\025OutgoingMessageSignal\022\014\n\004type\030\001 \001(\r" +
-      "\022\016\n\006source\030\002 \001(\t\022\r\n\005relay\030\003 \001(\t\022\024\n\014desti" +
-      "nations\030\004 \003(\t\022\021\n\ttimestamp\030\005 \001(\004\022\017\n\007mess" +
-      "age\030\006 \001(\014B:\n)com.openchat.textsecu" +
-      ".entitiesB\rMessageProtos"
+      "e\"\234\001\n\025OutgoingMessageSignal\022\014\n\004type\030\001 \001(" +
+      "\r\022\016\n\006source\030\002 \001(\t\022\r\n\005relay\030\003 \001(\t\022\024\n\014dest" +
+      "inations\030\004 \003(\t\022\034\n\024destinationDeviceIds\030\007" +
+      " \003(\004\022\021\n\ttimestamp\030\005 \001(\004\022\017\n\007message\030\006 \001(\014" +
+      "B:\n)com.openchat.secureim.ent" +
+      "itiesB\rMessageProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -793,9 +1015,7 @@ public final class MessageProtos {
           internal_static_textsecure_OutgoingMessageSignal_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_textsecure_OutgoingMessageSignal_descriptor,
-              new java.lang.String[] { "Type", "Source", "Relay", "Destinations", "Timestamp", "Message", },
-              com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal.class,
-              com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal.Builder.class);
+              new java.lang.String[] { "Type", "Source", "Relay", "Destinations", "DestinationDeviceIds", "Timestamp", "Message", });
           return null;
         }
       };
@@ -804,6 +1024,6 @@ public final class MessageProtos {
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
   }
-  
+
   // @@protoc_insertion_point(outer_class_scope)
 }

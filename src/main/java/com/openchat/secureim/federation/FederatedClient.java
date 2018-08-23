@@ -22,6 +22,7 @@ import com.openchat.secureim.entities.ClientContacts;
 import com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal;
 import com.openchat.secureim.entities.PreKey;
 import com.openchat.secureim.entities.RelayMessage;
+import com.openchat.secureim.entities.UnstructuredPreKeyList;
 import com.openchat.secureim.util.Base64;
 
 import javax.net.ssl.SSLContext;
@@ -83,12 +84,12 @@ public class FederatedClient {
     }
   }
 
-  public PreKey getKey(String destination)  {
+  public UnstructuredPreKeyList getKeys(String destination)  {
     try {
       WebResource resource = client.resource(peer.getUrl()).path(String.format(PREKEY_PATH, destination));
       return resource.accept(MediaType.APPLICATION_JSON)
                      .header("Authorization", authorizationHeader)
-                     .get(PreKey.class);
+                     .get(UnstructuredPreKeyList.class);
     } catch (UniformInterfaceException | ClientHandlerException e) {
       logger.warn("PreKey", e);
       return null;
@@ -123,14 +124,14 @@ public class FederatedClient {
     }
   }
 
-  public void sendMessage(String destination, OutgoingMessageSignal message)
+  public void sendMessage(String destination, long destinationDeviceId, OutgoingMessageSignal message)
       throws IOException, NoSuchUserException
   {
     try {
       WebResource    resource = client.resource(peer.getUrl()).path(RELAY_MESSAGE_PATH);
       ClientResponse response = resource.type(MediaType.APPLICATION_JSON)
                                         .header("Authorization", authorizationHeader)
-                                        .entity(new RelayMessage(destination, message.toByteArray()))
+                                        .entity(new RelayMessage(destination, destinationDeviceId, message.toByteArray()))
                                         .put(ClientResponse.class);
 
       if (response.getStatus() == 404) {

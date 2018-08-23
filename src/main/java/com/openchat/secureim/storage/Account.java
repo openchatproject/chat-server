@@ -11,27 +11,31 @@ public class Account implements Serializable {
 
   private long    id;
   private String  number;
+  private long    deviceId;
   private String  hashedAuthenticationToken;
   private String  salt;
   private String  signalingKey;
   private String  gcmRegistrationId;
   private String  apnRegistrationId;
   private boolean supportsSms;
+  private boolean fetchesMessages;
 
   public Account() {}
 
-  public Account(long id, String number, String hashedAuthenticationToken, String salt,
+  public Account(long id, String number, long deviceId, String hashedAuthenticationToken, String salt,
                  String signalingKey, String gcmRegistrationId, String apnRegistrationId,
-                 boolean supportsSms)
+                 boolean supportsSms, boolean fetchesMessages)
   {
     this.id                        = id;
     this.number                    = number;
+    this.deviceId                  = deviceId;
     this.hashedAuthenticationToken = hashedAuthenticationToken;
     this.salt                      = salt;
     this.signalingKey              = signalingKey;
     this.gcmRegistrationId         = gcmRegistrationId;
     this.apnRegistrationId         = apnRegistrationId;
     this.supportsSms               = supportsSms;
+    this.fetchesMessages           = fetchesMessages;
   }
 
   public String getApnRegistrationId() {
@@ -56,6 +60,14 @@ public class Account implements Serializable {
 
   public String getNumber() {
     return number;
+  }
+
+  public long getDeviceId() {
+    return deviceId;
+  }
+
+  public void setDeviceId(long deviceId) {
+    this.deviceId = deviceId;
   }
 
   public void setAuthenticationCredentials(AuthenticationCredentials credentials) {
@@ -89,5 +101,13 @@ public class Account implements Serializable {
 
   public void setId(long id) {
     this.id = id;
+  }
+
+  public void setFetchesMessages(boolean fetchesMessages) {
+    this.fetchesMessages = fetchesMessages;
+  }
+
+  public boolean getFetchesMessages() {
+    return fetchesMessages;
   }
 }

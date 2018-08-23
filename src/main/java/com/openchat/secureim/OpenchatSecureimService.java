@@ -41,6 +41,10 @@ import com.openchat.secureim.storage.DirectoryManager;
 import com.openchat.secureim.storage.Keys;
 import com.openchat.secureim.storage.PendingAccounts;
 import com.openchat.secureim.storage.PendingAccountsManager;
+import com.openchat.secureim.storage.PendingDeviceRegistrations;
+import com.openchat.secureim.storage.PendingDevicesManager;
+import com.openchat.secureim.storage.StoredMessageManager;
+import com.openchat.secureim.storage.StoredMessages;
 import com.openchat.secureim.util.UrlSigner;
 import com.openchat.secureim.workers.DirectoryCommand;
 
@@ -74,18 +78,22 @@ public class OpenChatSecureimService extends Service<OpenChatSecureimConfigurati
     DBIFactory dbiFactory = new DBIFactory();
     DBI        jdbi       = dbiFactory.build(environment, config.getDatabaseConfiguration(), "postgresql");
 
-    Accounts        accounts        = jdbi.onDemand(Accounts.class);
-    PendingAccounts pendingAccounts = jdbi.onDemand(PendingAccounts.class);
-    Keys            keys            = jdbi.onDemand(Keys.class);
+    Accounts                   accounts        = jdbi.onDemand(Accounts.class);
+    PendingAccounts            pendingAccounts = jdbi.onDemand(PendingAccounts.class);
+    PendingDeviceRegistrations pendingDevices  = jdbi.onDemand(PendingDeviceRegistrations.class);
+    Keys                       keys            = jdbi.onDemand(Keys.class);
+    StoredMessages             storedMessages  = jdbi.onDemand(StoredMessages.class);
 
     MemcachedClient memcachedClient = new MemcachedClientFactory(config.getMemcacheConfiguration()).getClient();
     JedisPool       redisClient     = new RedisClientFactory(config.getRedisConfiguration()).getRedisClientPool();
 
     DirectoryManager         directory              = new DirectoryManager(redisClient);
     PendingAccountsManager   pendingAccountsManager = new PendingAccountsManager(pendingAccounts, memcachedClient);
+    PendingDevicesManager    pendingDevicesManager  = new PendingDevicesManager(pendingDevices, memcachedClient);
     AccountsManager          accountsManager        = new AccountsManager(accounts, directory, memcachedClient);
     AccountAuthenticator     accountAuthenticator   = new AccountAuthenticator(accountsManager                     );
     FederatedClientManager   federatedClientManager = new FederatedClientManager(config.getFederationConfiguration());
+    StoredMessageManager     storedMessageManager   = new StoredMessageManager(storedMessages);
     RateLimiters             rateLimiters           = new RateLimiters(config.getLimitsConfiguration(), memcachedClient);
     TwilioSmsSender          twilioSmsSender        = new TwilioSmsSender(config.getTwilioConfiguration());
     Optional<NexmoSmsSender> nexmoSmsSender         = initializeNexmoSmsSender(config.getNexmoConfiguration());
@@ -93,6 +101,7 @@ public class OpenChatSecureimService extends Service<OpenChatSecureimConfigurati
     UrlSigner                urlSigner              = new UrlSigner(config.getS3Configuration());
     PushSender               pushSender             = new PushSender(config.getGcmConfiguration(),
                                                                      config.getApnConfiguration(),
+                                                                     storedMessageManager,
                                                                      accountsManager, directory);
 
     environment.addProvider(new MultiBasicAuthProvider<>(new FederatedPeerAuthenticator(config.getFederationConfiguration()),
@@ -100,10 +109,11 @@ public class OpenChatSecureimService extends Service<OpenChatSecureimConfigurati
                                                          accountAuthenticator,
                                                          Account.class, "OpenchatSecureimServer"));
 
-    environment.addResource(new AccountController(pendingAccountsManager, accountsManager, rateLimiters, smsSender));
+    environment.addResource(new AccountController(pendingAccountsManager, pendingDevicesManager, accountsManager, rateLimiters, smsSender));
     environment.addResource(new DirectoryController(rateLimiters, directory));
     environment.addResource(new AttachmentController(rateLimiters, federatedClientManager, urlSigner));
-    environment.addResource(new KeysController(rateLimiters, keys, federatedClientManager));
+    environment.addResource(new KeysController.V1(rateLimiters, keys, accountsManager, federatedClientManager));
+    environment.addResource(new KeysController.V2(rateLimiters, keys, accountsManager, federatedClientManager));
     environment.addResource(new FederationController(keys, accountsManager, pushSender, urlSigner));
 
     environment.addServlet(new MessageController(rateLimiters, accountAuthenticator,

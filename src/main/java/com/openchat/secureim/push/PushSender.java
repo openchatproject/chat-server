@@ -11,11 +11,13 @@ import com.openchat.secureim.entities.MessageProtos;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.DirectoryManager;
+import com.openchat.secureim.storage.StoredMessageManager;
 
 import java.io.IOException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.util.List;
 
 public class PushSender {
 
@@ -26,9 +28,11 @@ public class PushSender {
 
   private final GCMSender gcmSender;
   private final APNSender apnSender;
+  private final StoredMessageManager storedMessageManager;
 
   public PushSender(GcmConfiguration gcmConfiguration,
                     ApnConfiguration apnConfiguration,
+                    StoredMessageManager storedMessageManager,
                     AccountsManager accounts,
                     DirectoryManager directory)
       throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException
@@ -36,25 +40,27 @@ public class PushSender {
     this.accounts  = accounts;
     this.directory = directory;
 
-    this.gcmSender = new GCMSender(gcmConfiguration.getApiKey());
-    this.apnSender = new APNSender(apnConfiguration.getCertificate(), apnConfiguration.getKey());
+    this.storedMessageManager = storedMessageManager;
+    this.gcmSender            = new GCMSender(gcmConfiguration.getApiKey());
+    this.apnSender            = new APNSender(apnConfiguration.getCertificate(), apnConfiguration.getKey());
   }
 
-  public void sendMessage(String destination, MessageProtos.OutgoingMessageSignal outgoingMessage)
+  public void sendMessage(String destination, long destinationDeviceId, MessageProtos.OutgoingMessageSignal outgoingMessage)
       throws IOException, NoSuchUserException
   {
-    Optional<Account> account = accounts.get(destination);
+    Optional<Account> accountOptional = accounts.get(destination, destinationDeviceId);
 
-    if (!account.isPresent()) {
-      directory.remove(destination);
+    if (!accountOptional.isPresent()) {
       throw new NoSuchUserException("No such local destination: " + destination);
     }
+    Account account = accountOptional.get();
 
-    String signalingKey              = account.get().getSignalingKey();
+    String signalingKey              = account.getSignalingKey();
     EncryptedOutgoingMessage message = new EncryptedOutgoingMessage(outgoingMessage, signalingKey);
 
-    if      (account.get().getGcmRegistrationId() != null) sendGcmMessage(account.get(), message);
-    else if (account.get().getApnRegistrationId() != null) sendApnMessage(account.get(), message);
+    if      (account.getGcmRegistrationId() != null) sendGcmMessage(account, message);
+    else if (account.getApnRegistrationId() != null) sendApnMessage(account, message);
+    else if (account.getFetchesMessages())           storeFetchedMessage(account, message);
     else                                             throw new NoSuchUserException("No push identifier!");
   }
 
@@ -84,4 +90,7 @@ public class PushSender {
     apnSender.sendMessage(account.getApnRegistrationId(), outgoingMessage);
   }
 
+  private void storeFetchedMessage(Account account, EncryptedOutgoingMessage outgoingMessage) {
+    storedMessageManager.storeMessage(account, outgoingMessage);
+  }
 }
