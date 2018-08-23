@@ -17,6 +17,10 @@ public class TwilioConfiguration {
   @JsonProperty
   private String number;
 
+  @NotEmpty
+  @JsonProperty
+  private String localDomain;
+
   public String getAccountId() {
     return accountId;
   }
@@ -27,5 +31,9 @@ public class TwilioConfiguration {
 
   public String getNumber() {
     return number;
+  }
+
+  public String getLocalDomain() {
+    return localDomain;
   }
 }

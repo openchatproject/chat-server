@@ -13,6 +13,7 @@ import com.openchat.secureim.entities.ApnRegistrationId;
 import com.openchat.secureim.entities.GcmRegistrationId;
 import com.openchat.secureim.limits.RateLimiters;
 import com.openchat.secureim.sms.SenderFactory;
+import com.openchat.secureim.sms.TwilioSmsSender;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.PendingAccountsManager;
@@ -24,9 +25,11 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -54,7 +57,6 @@ public class AccountController {
     this.rateLimiters    = rateLimiters;
     this.senderFactory   = smsSenderFactory;
   }
-
 
   @Timed
   @GET
@@ -164,6 +166,16 @@ public class AccountController {
   public void deleteApnRegistrationId(@Auth Account account) {
     account.setApnRegistrationId(null);
     accounts.update(account);
+  }
+
+  @Timed
+  @POST
+  @Path("/voice/twiml/{code}")
+  @Produces(MediaType.APPLICATION_XML)
+  public Response getTwiml(@PathParam("code") String encodedVerificationText) {
+    return Response.ok().entity(String.format(TwilioSmsSender.SAY_TWIML,
+                                              SenderFactory.VoxSender.VERIFICATION_TEXT +
+                                                  encodedVerificationText)).build();
   }
 
   private VerificationCode generateVerificationCode() {

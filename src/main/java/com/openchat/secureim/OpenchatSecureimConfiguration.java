@@ -25,7 +25,7 @@ public class OpenChatSecureimConfiguration extends Configuration {
   private TwilioConfiguration twilio;
 
   @JsonProperty
-  private NexmoConfiguration nexmo = new NexmoConfiguration();
+  private NexmoConfiguration nexmo;
 
   @NotNull
   @JsonProperty
