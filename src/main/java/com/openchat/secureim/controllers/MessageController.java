@@ -27,7 +27,7 @@ import com.openchat.secureim.push.PushSender;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.util.Base64;
 import com.openchat.secureim.util.IterablePair;
-import com.openchat.secureim.util.IterablePair.Pair;
+import com.openchat.secureim.util.Pair;
 import com.openchat.secureim.util.Util;
 
 import javax.servlet.AsyncContext;
