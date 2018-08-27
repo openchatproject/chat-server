@@ -45,7 +45,7 @@ public class AccountsManager {
       memcachedClient.set(getKey(account.getNumber(), account.getDeviceId()), 0, account);
     }
 
-    updateDirectory(account);
+    updateDirectory(account, true);
   }
 
   public void update(Account account) {
@@ -54,7 +54,7 @@ public class AccountsManager {
     }
 
     accounts.update(account);
-    updateDirectory(account);
+    updateDirectory(account, true);
   }
 
   public Optional<Account> get(String number, long deviceId) {
@@ -80,12 +80,12 @@ public class AccountsManager {
     return accounts.getAllByNumber(number);
   }
 
-  private void updateDirectory(Account account) {
+  private void updateDirectory(Account account, boolean possiblyOtherAccounts) {
     boolean active = account.getFetchesMessages() ||
                      !Util.isEmpty(account.getApnRegistrationId()) || !Util.isEmpty(account.getGcmRegistrationId());
     boolean supportsSms = account.getSupportsSms();
 
-    if (!active || !supportsSms) {
+    if (possiblyOtherAccounts && (!active || !supportsSms)) {
       NumberData numberData = accounts.getNumberData(account.getNumber());
       active = numberData.isActive();
       supportsSms = numberData.isSupportsSms();
