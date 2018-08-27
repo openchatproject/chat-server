@@ -16,6 +16,7 @@ import com.openchat.secureim.auth.FederatedPeerAuthenticator;
 import com.openchat.secureim.auth.MultiBasicAuthProvider;
 import com.openchat.secureim.configuration.NexmoConfiguration;
 import com.openchat.secureim.controllers.AccountController;
+import com.openchat.secureim.controllers.DeviceController;
 import com.openchat.secureim.controllers.AttachmentController;
 import com.openchat.secureim.controllers.DirectoryController;
 import com.openchat.secureim.controllers.FederationController;
@@ -109,7 +110,8 @@ public class OpenChatSecureimService extends Service<OpenChatSecureimConfigurati
                                                          accountAuthenticator,
                                                          Account.class, "OpenchatSecureimServer"));
 
-    environment.addResource(new AccountController(pendingAccountsManager, pendingDevicesManager, accountsManager, rateLimiters, smsSender));
+    environment.addResource(new AccountController(pendingAccountsManager, accountsManager, rateLimiters, smsSender));
+    environment.addResource(new DeviceController(pendingDevicesManager, accountsManager, rateLimiters));
     environment.addResource(new DirectoryController(rateLimiters, directory));
     environment.addResource(new AttachmentController(rateLimiters, federatedClientManager, urlSigner));
     environment.addResource(new KeysController(rateLimiters, keys, accountsManager, federatedClientManager));
