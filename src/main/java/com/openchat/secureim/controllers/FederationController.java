@@ -11,6 +11,7 @@ import com.openchat.secureim.entities.AttachmentUri;
 import com.openchat.secureim.entities.ClientContact;
 import com.openchat.secureim.entities.ClientContacts;
 import com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal;
+import com.openchat.secureim.entities.MessageResponse;
 import com.openchat.secureim.entities.RelayMessage;
 import com.openchat.secureim.entities.UnstructuredPreKeyList;
 import com.openchat.secureim.federation.FederatedPeer;
@@ -18,9 +19,11 @@ import com.openchat.secureim.push.PushSender;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Keys;
+import com.openchat.secureim.util.Pair;
 import com.openchat.secureim.util.UrlSigner;
 import com.openchat.secureim.util.Util;
 
+import javax.print.attribute.standard.Media;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -33,8 +36,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Path("/v1/federation")
 public class FederationController {
@@ -86,22 +93,49 @@ public class FederationController {
   @PUT
   @Path("/message")
   @Consumes(MediaType.APPLICATION_JSON)
-  public void relayMessage(@Auth FederatedPeer peer, @Valid RelayMessage message)
+  @Produces(MediaType.APPLICATION_JSON)
+  public MessageResponse relayMessage(@Auth FederatedPeer peer, @Valid List<RelayMessage> messages)
       throws IOException
   {
     try {
-      OutgoingMessageSignal signal = OutgoingMessageSignal.parseFrom(message.getOutgoingMessageSignal())
-                                                          .toBuilder()
-                                                          .setRelay(peer.getName())
-                                                          .build();
+      Map<String, Pair<Boolean, Set<Long>>> destinations = new HashMap<>();
 
-      pushSender.sendMessage(message.getDestination(), message.getDestinationDeviceId(), signal);
+      for (RelayMessage message : messages) {
+        Pair<Boolean, Set<Long>> deviceIds = destinations.get(message.getDestination());
+        if (deviceIds == null) {
+          deviceIds = new Pair<Boolean, Set<Long>>(true, new HashSet<Long>());
+          destinations.put(message.getDestination(), deviceIds);
+        }
+        deviceIds.second().add(message.getDestinationDeviceId());
+      }
+
+      Map<Pair<String, Long>, Account> accountCache = new HashMap<>();
+      List<String> numbersMissingDevices = new LinkedList<>();
+      pushSender.fillLocalAccountsCache(destinations, accountCache, numbersMissingDevices);
+
+      List<String> success = new LinkedList<>();
+      List<String> failure = new LinkedList<>(numbersMissingDevices);
+
+      for (RelayMessage message : messages) {
+        Account account = accountCache.get(new Pair<>(message.getDestination(), message.getDestinationDeviceId()));
+        if (account == null)
+          continue;
+        OutgoingMessageSignal signal = OutgoingMessageSignal.parseFrom(message.getOutgoingMessageSignal())
+                                                            .toBuilder()
+                                                            .setRelay(peer.getName())
+                                                            .build();
+        try {
+          pushSender.sendMessage(account, signal);
+        } catch (NoSuchUserException e) {
+          logger.info("No such user", e);
+          failure.add(message.getDestination());
+        }
+      }
+
+      return new MessageResponse(success, failure, numbersMissingDevices);
     } catch (InvalidProtocolBufferException ipe) {
       logger.warn("ProtoBuf", ipe);
       throw new WebApplicationException(Response.status(400).build());
-    } catch (NoSuchUserException e) {
-      logger.debug("No User", e);
-      throw new WebApplicationException(Response.status(404).build());
     }
   }
 

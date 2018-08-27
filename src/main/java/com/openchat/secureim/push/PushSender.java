@@ -12,19 +12,21 @@ import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.DirectoryManager;
 import com.openchat.secureim.storage.StoredMessageManager;
+import com.openchat.secureim.util.Pair;
 
 import java.io.IOException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class PushSender {
 
   private final Logger logger = LoggerFactory.getLogger(PushSender.class);
 
   private final AccountsManager  accounts;
-  private final DirectoryManager directory;
 
   private final GCMSender gcmSender;
   private final APNSender apnSender;
@@ -38,23 +40,37 @@ public class PushSender {
       throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException
   {
     this.accounts  = accounts;
-    this.directory = directory;
 
     this.storedMessageManager = storedMessageManager;
     this.gcmSender            = new GCMSender(gcmConfiguration.getApiKey());
     this.apnSender            = new APNSender(apnConfiguration.getCertificate(), apnConfiguration.getKey());
   }
 
-  public void sendMessage(String destination, long destinationDeviceId, MessageProtos.OutgoingMessageSignal outgoingMessage)
+  public void fillLocalAccountsCache(Map<String, Pair<Boolean, Set<Long>>> destinations, Map<Pair<String, Long>, Account> accountCache, List<String> numbersMissingDevices) {
+    for (Map.Entry<String, Pair<Boolean, Set<Long>>> destination : destinations.entrySet()) {
+      if (destination.getValue().first()) {
+        String number = destination.getKey();
+        List<Account> accountList = accounts.getAllByNumber(number);
+        Set<Long> deviceIdsIncluded = destination.getValue().second();
+        if (accountList.size() != deviceIdsIncluded.size())
+          numbersMissingDevices.add(number);
+        else {
+          for (Account account : accountList) {
+            if (!deviceIdsIncluded.contains(account.getDeviceId())) {
+              numbersMissingDevices.add(number);
+              break;
+            }
+          }
+          for (Account account : accountList)
+            accountCache.put(new Pair<>(number, account.getDeviceId()), account);
+        }
+      }
+    }
+  }
+
+  public void sendMessage(Account account, MessageProtos.OutgoingMessageSignal outgoingMessage)
       throws IOException, NoSuchUserException
   {
-    Optional<Account> accountOptional = accounts.get(destination, destinationDeviceId);
-
-    if (!accountOptional.isPresent()) {
-      throw new NoSuchUserException("No such local destination: " + destination);
-    }
-    Account account = accountOptional.get();
-
     String signalingKey              = account.getSignalingKey();
     EncryptedOutgoingMessage message = new EncryptedOutgoingMessage(outgoingMessage, signalingKey);
 

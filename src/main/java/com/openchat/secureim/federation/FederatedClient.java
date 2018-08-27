@@ -20,6 +20,7 @@ import com.openchat.secureim.entities.AttachmentUri;
 import com.openchat.secureim.entities.ClientContact;
 import com.openchat.secureim.entities.ClientContacts;
 import com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal;
+import com.openchat.secureim.entities.MessageResponse;
 import com.openchat.secureim.entities.PreKey;
 import com.openchat.secureim.entities.RelayMessage;
 import com.openchat.secureim.entities.UnstructuredPreKeyList;
@@ -124,23 +125,21 @@ public class FederatedClient {
     }
   }
 
-  public void sendMessage(String destination, long destinationDeviceId, OutgoingMessageSignal message)
-      throws IOException, NoSuchUserException
+  public MessageResponse sendMessages(List<RelayMessage> messages)
+      throws IOException
   {
     try {
       WebResource    resource = client.resource(peer.getUrl()).path(RELAY_MESSAGE_PATH);
       ClientResponse response = resource.type(MediaType.APPLICATION_JSON)
                                         .header("Authorization", authorizationHeader)
-                                        .entity(new RelayMessage(destination, destinationDeviceId, message.toByteArray()))
+                                        .entity(messages)
                                         .put(ClientResponse.class);
-
-      if (response.getStatus() == 404) {
-        throw new NoSuchUserException("No remote user: " + destination);
-      }
 
       if (response.getStatus() != 200 && response.getStatus() != 204) {
         throw new IOException("Bad response: " + response.getStatus());
       }
+
+      return response.getEntity(MessageResponse.class);
     } catch (UniformInterfaceException | ClientHandlerException e) {
       logger.warn("sendMessage", e);
       throw new IOException(e);
