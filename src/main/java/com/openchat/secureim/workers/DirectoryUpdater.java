@@ -11,7 +11,6 @@ import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.DirectoryManager;
 import com.openchat.secureim.storage.DirectoryManager.BatchOperationHandle;
 import com.openchat.secureim.util.Base64;
-import com.openchat.secureim.util.NumberData;
 import com.openchat.secureim.util.Util;
 
 import java.util.Iterator;
@@ -38,22 +37,22 @@ public class DirectoryUpdater {
     BatchOperationHandle batchOperation = directory.startBatchOperation();
 
     try {
-      Iterator<NumberData> numbers = accountsManager.getAllNumbers();
+      Iterator<Account> accounts = accountsManager.getAllMasterAccounts();
 
-      if (numbers == null)
+      if (accounts == null)
         return;
 
-      while (numbers.hasNext()) {
-        NumberData number = numbers.next();
-        if (number.isActive()) {
-          byte[]        token         = Util.getContactToken(number.getNumber());
-          ClientContact clientContact = new ClientContact(token, null, number.isSupportsSms());
+      while (accounts.hasNext()) {
+        Account account = accounts.next();
+        if (account.isActive()) {
+          byte[]        token         = Util.getContactToken(account.getNumber());
+          ClientContact clientContact = new ClientContact(token, null, account.getSupportsSms());
 
           directory.add(batchOperation, clientContact);
 
           logger.debug("Adding local token: " + Base64.encodeBytesWithoutPadding(token));
         } else {
-          directory.remove(batchOperation, number.getNumber());
+          directory.remove(batchOperation, account.getNumber());
         }
       }
     } finally {

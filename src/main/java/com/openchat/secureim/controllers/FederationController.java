@@ -11,7 +11,6 @@ import com.openchat.secureim.entities.AttachmentUri;
 import com.openchat.secureim.entities.ClientContact;
 import com.openchat.secureim.entities.ClientContacts;
 import com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal;
-import com.openchat.secureim.entities.PreKey;
 import com.openchat.secureim.entities.RelayMessage;
 import com.openchat.secureim.entities.UnstructuredPreKeyList;
 import com.openchat.secureim.federation.FederatedPeer;
@@ -19,7 +18,6 @@ import com.openchat.secureim.push.PushSender;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Keys;
-import com.openchat.secureim.util.NumberData;
 import com.openchat.secureim.util.UrlSigner;
 import com.openchat.secureim.util.Util;
 
@@ -122,14 +120,14 @@ public class FederationController {
   public ClientContacts getUserTokens(@Auth                FederatedPeer peer,
                                       @PathParam("offset") int offset)
   {
-    List<NumberData>    numberList    = accounts.getAllNumbers(offset, ACCOUNT_CHUNK_SIZE);
+    List<Account>        numberList    = accounts.getAllMasterAccounts(offset, ACCOUNT_CHUNK_SIZE);
     List<ClientContact> clientContacts = new LinkedList<>();
 
-    for (NumberData number : numberList) {
-      byte[]        token         = Util.getContactToken(number.getNumber());
-      ClientContact clientContact = new ClientContact(token, null, number.isSupportsSms());
+    for (Account account : numberList) {
+      byte[]        token         = Util.getContactToken(account.getNumber());
+      ClientContact clientContact = new ClientContact(token, null, account.getSupportsSms());
 
-      if (!number.isActive())
+      if (!account.isActive())
         clientContact.setInactive(true);
 
       clientContacts.add(clientContact);

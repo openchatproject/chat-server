@@ -2,6 +2,7 @@ package com.openchat.secureim.storage;
 
 
 import com.openchat.secureim.auth.AuthenticationCredentials;
+import com.openchat.secureim.util.Util;
 
 import java.io.Serializable;
 
@@ -109,5 +110,9 @@ public class Account implements Serializable {
 
   public boolean getFetchesMessages() {
     return fetchesMessages;
+  }
+
+  public boolean isActive() {
+    return getFetchesMessages() || !Util.isEmpty(getApnRegistrationId()) || !Util.isEmpty(getGcmRegistrationId());
   }
 }
