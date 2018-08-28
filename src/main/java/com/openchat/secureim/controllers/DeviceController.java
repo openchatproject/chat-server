@@ -96,7 +96,7 @@ public class DeviceController {
       device.setSupportsSms(accountAttributes.getSupportsSms());
       device.setFetchesMessages(accountAttributes.getFetchesMessages());
 
-      accounts.createAccountOnExistingNumber(device);
+      accounts.provisionDevice(device);
 
       pendingDevices.remove(number);
 

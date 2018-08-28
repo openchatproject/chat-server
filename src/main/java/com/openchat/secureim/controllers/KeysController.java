@@ -11,6 +11,7 @@ import com.openchat.secureim.entities.UnstructuredPreKeyList;
 import com.openchat.secureim.federation.FederatedClientManager;
 import com.openchat.secureim.federation.NoSuchPeerException;
 import com.openchat.secureim.limits.RateLimiters;
+import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Keys;
@@ -62,7 +63,11 @@ public class KeysController {
       UnstructuredPreKeyList keyList;
 
       if (relay == null) {
-        keyList = keys.get(number, accountsManager.getAllByNumber(number));
+        Optional<Account> account = accountsManager.getAccount(number);
+        if (account.isPresent())
+          keyList = keys.get(number, account.get());
+        else
+          throw new WebApplicationException(Response.status(404).build());
       } else {
         keyList = federatedClientManager.getClient(relay).getKeys(number);
       }

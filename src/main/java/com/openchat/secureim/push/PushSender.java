@@ -1,5 +1,6 @@
 package com.openchat.secureim.push;
 
+import com.google.common.base.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.configuration.ApnConfiguration;
@@ -7,6 +8,7 @@ import com.openchat.secureim.configuration.GcmConfiguration;
 import com.openchat.secureim.controllers.NoSuchUserException;
 import com.openchat.secureim.entities.EncryptedOutgoingMessage;
 import com.openchat.secureim.entities.MessageProtos;
+import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.DirectoryManager;
@@ -45,28 +47,6 @@ public class PushSender {
     this.apnSender            = new APNSender(apnConfiguration.getCertificate(), apnConfiguration.getKey());
   }
 
-  public void fillLocalAccountsCache(Map<String, Pair<Boolean, Set<Long>>> destinations, Map<Pair<String, Long>, Device> accountCache, List<String> numbersMissingDevices) {
-    for (Map.Entry<String, Pair<Boolean, Set<Long>>> destination : destinations.entrySet()) {
-      if (destination.getValue().first()) {
-        String number = destination.getKey();
-        List<Device> deviceList = accounts.getAllByNumber(number);
-        Set<Long> deviceIdsIncluded = destination.getValue().second();
-        if (deviceList.size() != deviceIdsIncluded.size())
-          numbersMissingDevices.add(number);
-        else {
-          for (Device device : deviceList) {
-            if (!deviceIdsIncluded.contains(device.getDeviceId())) {
-              numbersMissingDevices.add(number);
-              break;
-            }
-          }
-          for (Device device : deviceList)
-            accountCache.put(new Pair<>(number, device.getDeviceId()), device);
-        }
-      }
-    }
-  }
-
   public void sendMessage(Device device, MessageProtos.OutgoingMessageSignal outgoingMessage)
       throws IOException, NoSuchUserException
   {
@@ -76,7 +56,7 @@ public class PushSender {
     if      (device.getGcmRegistrationId() != null) sendGcmMessage(device, message);
     else if (device.getApnRegistrationId() != null) sendApnMessage(device, message);
     else if (device.getFetchesMessages())           storeFetchedMessage(device, message);
-    else                                             throw new NoSuchUserException("No push identifier!");
+    else                                            throw new NoSuchUserException("No push identifier!");
   }
 
   private void sendGcmMessage(Device device, EncryptedOutgoingMessage outgoingMessage)

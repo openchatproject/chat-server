@@ -119,7 +119,7 @@ public class OpenChatSecureimService extends Service<OpenChatSecureimConfigurati
     environment.addResource(new FederationController(keys, accountsManager, pushSender, urlSigner));
 
     environment.addServlet(new MessageController(rateLimiters, deviceAuthenticator,
-                                                 pushSender, federatedClientManager),
+                                                 pushSender, accountsManager, federatedClientManager),
                            MessageController.PATH);
 
     environment.addHealthCheck(new RedisHealthCheck(redisClient));

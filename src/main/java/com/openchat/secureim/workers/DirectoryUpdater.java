@@ -37,7 +37,7 @@ public class DirectoryUpdater {
     BatchOperationHandle batchOperation = directory.startBatchOperation();
 
     try {
-      Iterator<Device> accounts = accountsManager.getAllMasterAccounts();
+      Iterator<Device> accounts = accountsManager.getAllMasterDevices();
 
       if (accounts == null)
         return;

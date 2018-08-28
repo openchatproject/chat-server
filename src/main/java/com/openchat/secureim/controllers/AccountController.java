@@ -15,6 +15,7 @@ import com.openchat.secureim.entities.GcmRegistrationId;
 import com.openchat.secureim.limits.RateLimiters;
 import com.openchat.secureim.sms.SmsSender;
 import com.openchat.secureim.sms.TwilioSmsSender;
+import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.PendingAccountsManager;
@@ -37,6 +38,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 
 @Path("/v1/accounts")
 public class AccountController {
@@ -126,7 +128,7 @@ public class AccountController {
       device.setFetchesMessages(accountAttributes.getFetchesMessages());
       device.setDeviceId(0);
 
-      accounts.createResetNumber(device);
+      accounts.create(new Account(number, accountAttributes.getSupportsSms(), device));
 
       pendingAccounts.remove(number);
 

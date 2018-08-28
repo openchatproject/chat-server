@@ -4,10 +4,17 @@ package com.openchat.secureim.storage;
 import com.google.common.base.Optional;
 import net.spy.memcached.MemcachedClient;
 import com.openchat.secureim.entities.ClientContact;
+import com.openchat.secureim.util.Pair;
 import com.openchat.secureim.util.Util;
+import sun.util.logging.resources.logging_zh_CN;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class AccountsManager {
 
@@ -28,15 +35,15 @@ public class AccountsManager {
     return accounts.getNumberCount();
   }
 
-  public List<Device> getAllMasterAccounts(int offset, int length) {
-    return accounts.getAllFirstAccounts(offset, length);
+  public List<Device> getAllMasterDevices(int offset, int length) {
+    return accounts.getAllMasterDevices(offset, length);
   }
 
-  public Iterator<Device> getAllMasterAccounts() {
-    return accounts.getAllFirstAccounts();
+  public Iterator<Device> getAllMasterDevices() {
+    return accounts.getAllMasterDevices();
   }
 
-  public void createAccountOnExistingNumber(Device device) {
+  public void provisionDevice(Device device) {
     long id = accounts.insert(device);
     device.setId(id);
 
@@ -75,8 +82,43 @@ public class AccountsManager {
     else                 return Optional.absent();
   }
 
-  public List<Device> getAllByNumber(String number) {
-    return accounts.getAllByNumber(number);
+  public Optional<Account> getAccount(String number) {
+    List<Device> devices = accounts.getAllByNumber(number);
+    if (devices.isEmpty())
+      return Optional.absent();
+    return Optional.of(new Account(number, devices.get(0).getSupportsSms(), devices));
+  }
+
+  private Map<String, Account> getAllAccounts(Set<String> numbers) {
+    //TODO: ONE QUERY
+    Map<String, Account> result = new HashMap<>();
+    for (String number : numbers) {
+      Optional<Account> account = getAccount(number);
+      if (account.isPresent())
+        result.put(number, account.get());
+    }
+    return result;
+  }
+
+  public Pair<Map<String, Account>, List<String>> getAccountsForDevices(Map<String, Set<Long>> destinations) {
+    List<String> numbersMissingDevices = new LinkedList<>();
+    Map<String, Account> localAccounts = getAllAccounts(destinations.keySet());
+
+    for (String number : destinations.keySet()) {
+      if (localAccounts.get(number) == null)
+        numbersMissingDevices.add(number);
+    }
+
+    Iterator<Account> localAccountIterator = localAccounts.values().iterator();
+    while (localAccountIterator.hasNext()) {
+      Account account = localAccountIterator.next();
+      if (!account.hasAllDeviceIds(destinations.get(account.getNumber()))) {
+        numbersMissingDevices.add(account.getNumber());
+        localAccountIterator.remove();
+      }
+    }
+
+    return new Pair<>(localAccounts, numbersMissingDevices);
   }
 
   private void updateDirectory(Device device) {
