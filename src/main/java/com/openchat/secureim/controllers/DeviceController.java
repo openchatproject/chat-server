@@ -50,7 +50,6 @@ public class DeviceController {
 
   @Timed
   @GET
-  @Path("")
   @Produces(MediaType.APPLICATION_JSON)
   public VerificationCode createDeviceToken(@Auth Account account)
       throws RateLimitExceededException
