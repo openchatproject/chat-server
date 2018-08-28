@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
+import com.yammer.dropwizard.config.FilterBuilder;
 import com.yammer.dropwizard.db.DatabaseConfiguration;
 import com.yammer.dropwizard.jdbi.DBIFactory;
 import com.yammer.dropwizard.migrations.MigrationsBundle;
@@ -46,9 +47,11 @@ import com.openchat.secureim.storage.PendingDeviceRegistrations;
 import com.openchat.secureim.storage.PendingDevicesManager;
 import com.openchat.secureim.storage.StoredMessageManager;
 import com.openchat.secureim.storage.StoredMessages;
+import com.openchat.secureim.util.CORSHeaderFilter;
 import com.openchat.secureim.util.UrlSigner;
 import com.openchat.secureim.workers.DirectoryCommand;
 
+import java.io.IOException;
 import java.security.Security;
 import java.util.concurrent.TimeUnit;
 
@@ -127,23 +130,3 @@ public class OpenChatSecureimService extends Service<OpenChatSecureimConfigurati
     environment.addProvider(new IOExceptionMapper());
     environment.addProvider(new RateLimitExceededExceptionMapper());
 
-    if (config.getGraphiteConfiguration().isEnabled()) {
-      GraphiteReporter.enable(15, TimeUnit.SECONDS,
-                              config.getGraphiteConfiguration().getHost(),
-                              config.getGraphiteConfiguration().getPort());
-    }
-  }
-
-  private Optional<NexmoSmsSender> initializeNexmoSmsSender(NexmoConfiguration configuration) {
-    if (configuration == null) {
-      return Optional.absent();
-    } else {
-      return Optional.of(new NexmoSmsSender(configuration));
-    }
-  }
-
-  public static void main(String[] args) throws Exception {
-    new OpenChatSecureimService().run(args);
-  }
-
-}
