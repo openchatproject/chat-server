@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
-import com.yammer.dropwizard.config.FilterBuilder;
 import com.yammer.dropwizard.db.DatabaseConfiguration;
 import com.yammer.dropwizard.jdbi.DBIFactory;
 import com.yammer.dropwizard.migrations.MigrationsBundle;
@@ -12,7 +11,7 @@ import com.yammer.metrics.reporting.GraphiteReporter;
 import net.spy.memcached.MemcachedClient;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.skife.jdbi.v2.DBI;
-import com.openchat.secureim.auth.AccountAuthenticator;
+import com.openchat.secureim.auth.DeviceAuthenticator;
 import com.openchat.secureim.auth.FederatedPeerAuthenticator;
 import com.openchat.secureim.auth.MultiBasicAuthProvider;
 import com.openchat.secureim.configuration.NexmoConfiguration;
@@ -36,7 +35,7 @@ import com.openchat.secureim.push.PushSender;
 import com.openchat.secureim.sms.NexmoSmsSender;
 import com.openchat.secureim.sms.SmsSender;
 import com.openchat.secureim.sms.TwilioSmsSender;
-import com.openchat.secureim.storage.Account;
+import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.Accounts;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.DirectoryManager;
@@ -51,7 +50,6 @@ import com.openchat.secureim.util.CORSHeaderFilter;
 import com.openchat.secureim.util.UrlSigner;
 import com.openchat.secureim.workers.DirectoryCommand;
 
-import java.io.IOException;
 import java.security.Security;
 import java.util.concurrent.TimeUnit;
 
@@ -95,7 +93,7 @@ public class OpenChatSecureimService extends Service<OpenChatSecureimConfigurati
     PendingAccountsManager   pendingAccountsManager = new PendingAccountsManager(pendingAccounts, memcachedClient);
     PendingDevicesManager    pendingDevicesManager  = new PendingDevicesManager(pendingDevices, memcachedClient);
     AccountsManager          accountsManager        = new AccountsManager(accounts, directory, memcachedClient);
-    AccountAuthenticator     accountAuthenticator   = new AccountAuthenticator(accountsManager                     );
+    DeviceAuthenticator      deviceAuthenticator    = new DeviceAuthenticator(accountsManager                     );
     FederatedClientManager   federatedClientManager = new FederatedClientManager(config.getFederationConfiguration());
     StoredMessageManager     storedMessageManager   = new StoredMessageManager(storedMessages);
     RateLimiters             rateLimiters           = new RateLimiters(config.getLimitsConfiguration(), memcachedClient);
@@ -110,8 +108,8 @@ public class OpenChatSecureimService extends Service<OpenChatSecureimConfigurati
 
     environment.addProvider(new MultiBasicAuthProvider<>(new FederatedPeerAuthenticator(config.getFederationConfiguration()),
                                                          FederatedPeer.class,
-                                                         accountAuthenticator,
-                                                         Account.class, "OpenchatSecureimServer"));
+                                                         deviceAuthenticator,
+                                                         Device.class, "OpenchatSecureimServer"));
 
     environment.addResource(new AccountController(pendingAccountsManager, accountsManager, rateLimiters, smsSender));
     environment.addResource(new DeviceController(pendingDevicesManager, accountsManager, rateLimiters));
@@ -120,7 +118,7 @@ public class OpenChatSecureimService extends Service<OpenChatSecureimConfigurati
     environment.addResource(new KeysController(rateLimiters, keys, accountsManager, federatedClientManager));
     environment.addResource(new FederationController(keys, accountsManager, pushSender, urlSigner));
 
-    environment.addServlet(new MessageController(rateLimiters, accountAuthenticator,
+    environment.addServlet(new MessageController(rateLimiters, deviceAuthenticator,
                                                  pushSender, federatedClientManager),
                            MessageController.PATH);
 

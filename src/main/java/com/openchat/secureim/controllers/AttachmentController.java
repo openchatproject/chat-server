@@ -10,7 +10,7 @@ import com.openchat.secureim.entities.AttachmentUri;
 import com.openchat.secureim.federation.FederatedClientManager;
 import com.openchat.secureim.federation.NoSuchPeerException;
 import com.openchat.secureim.limits.RateLimiters;
-import com.openchat.secureim.storage.Account;
+import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.util.Conversions;
 import com.openchat.secureim.util.UrlSigner;
 
@@ -22,7 +22,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -49,8 +48,8 @@ public class AttachmentController {
   @Timed
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response allocateAttachment(@Auth Account account) throws RateLimitExceededException {
-    rateLimiters.getAttachmentLimiter().validate(account.getNumber());
+  public Response allocateAttachment(@Auth Device device) throws RateLimitExceededException {
+    rateLimiters.getAttachmentLimiter().validate(device.getNumber());
 
     long                 attachmentId = generateAttachmentId();
     URL                  url          = urlSigner.getPreSignedUrl(attachmentId, HttpMethod.PUT);
@@ -63,7 +62,7 @@ public class AttachmentController {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{attachmentId}")
-  public Response redirectToAttachment(@Auth                      Account account,
+  public Response redirectToAttachment(@Auth Device device,
                                        @PathParam("attachmentId") long attachmentId,
                                        @QueryParam("relay")       String relay)
   {

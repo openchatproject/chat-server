@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.openchat.secureim.entities.ClientContact;
 import com.openchat.secureim.federation.FederatedClient;
 import com.openchat.secureim.federation.FederatedClientManager;
-import com.openchat.secureim.storage.Account;
+import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.DirectoryManager;
 import com.openchat.secureim.storage.DirectoryManager.BatchOperationHandle;
@@ -37,22 +37,22 @@ public class DirectoryUpdater {
     BatchOperationHandle batchOperation = directory.startBatchOperation();
 
     try {
-      Iterator<Account> accounts = accountsManager.getAllMasterAccounts();
+      Iterator<Device> accounts = accountsManager.getAllMasterAccounts();
 
       if (accounts == null)
         return;
 
       while (accounts.hasNext()) {
-        Account account = accounts.next();
-        if (account.isActive()) {
-          byte[]        token         = Util.getContactToken(account.getNumber());
-          ClientContact clientContact = new ClientContact(token, null, account.getSupportsSms());
+        Device device = accounts.next();
+        if (device.isActive()) {
+          byte[]        token         = Util.getContactToken(device.getNumber());
+          ClientContact clientContact = new ClientContact(token, null, device.getSupportsSms());
 
           directory.add(batchOperation, clientContact);
 
           logger.debug("Adding local token: " + Base64.encodeBytesWithoutPadding(token));
         } else {
-          directory.remove(batchOperation, account.getNumber());
+          directory.remove(batchOperation, device.getNumber());
         }
       }
     } finally {

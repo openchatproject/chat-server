@@ -11,7 +11,7 @@ import com.openchat.secureim.entities.UnstructuredPreKeyList;
 import com.openchat.secureim.federation.FederatedClientManager;
 import com.openchat.secureim.federation.NoSuchPeerException;
 import com.openchat.secureim.limits.RateLimiters;
-import com.openchat.secureim.storage.Account;
+import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Keys;
 
@@ -50,13 +50,13 @@ public class KeysController {
   @Timed
   @PUT
   @Consumes(MediaType.APPLICATION_JSON)
-  public void setKeys(@Auth Account account, @Valid PreKeyList preKeys)  {
-    keys.store(account.getNumber(), account.getDeviceId(), preKeys.getLastResortKey(), preKeys.getKeys());
+  public void setKeys(@Auth Device device, @Valid PreKeyList preKeys)  {
+    keys.store(device.getNumber(), device.getDeviceId(), preKeys.getLastResortKey(), preKeys.getKeys());
   }
 
-  public List<PreKey> getKeys(Account account, String number, String relay) throws RateLimitExceededException
+  private List<PreKey> getKeys(Device device, String number, String relay) throws RateLimitExceededException
   {
-    rateLimiters.getPreKeysLimiter().validate(account.getNumber() + "__" + number);
+    rateLimiters.getPreKeysLimiter().validate(device.getNumber() + "__" + number);
 
     try {
       UnstructuredPreKeyList keyList;
@@ -79,15 +79,15 @@ public class KeysController {
   @GET
   @Path("/{number}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response get(@Auth                    Account account,
+  public Response get(@Auth Device device,
                       @PathParam("number")     String number,
                       @QueryParam("multikeys") Optional<String> multikey,
                       @QueryParam("relay")     String relay)
       throws RateLimitExceededException
   {
     if (!multikey.isPresent())
-      return Response.ok(getKeys(account, number, relay).get(0)).type(MediaType.APPLICATION_JSON).build();
+      return Response.ok(getKeys(device, number, relay).get(0)).type(MediaType.APPLICATION_JSON).build();
     else
-      return Response.ok(getKeys(account, number, relay)).type(MediaType.APPLICATION_JSON).build();
+      return Response.ok(getKeys(device, number, relay)).type(MediaType.APPLICATION_JSON).build();
   }
 }

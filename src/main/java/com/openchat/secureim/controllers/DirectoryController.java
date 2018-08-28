@@ -2,12 +2,11 @@ package com.openchat.secureim.controllers;
 
 import com.google.common.base.Optional;
 import com.yammer.dropwizard.auth.Auth;
-import com.yammer.metrics.annotation.Metered;
 import com.yammer.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.limits.RateLimiters;
-import com.openchat.secureim.storage.Account;
+import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.entities.ClientContact;
 import com.openchat.secureim.entities.ClientContactTokens;
 import com.openchat.secureim.entities.ClientContacts;
@@ -45,10 +44,10 @@ public class DirectoryController {
   @GET
   @Path("/{token}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getTokenPresence(@Auth Account account, @PathParam("token") String token)
+  public Response getTokenPresence(@Auth Device device, @PathParam("token") String token)
       throws RateLimitExceededException
   {
-    rateLimiters.getContactsLimiter().validate(account.getNumber());
+    rateLimiters.getContactsLimiter().validate(device.getNumber());
 
     try {
       Optional<ClientContact> contact = directory.get(Base64.decodeWithoutPadding(token));
@@ -67,10 +66,10 @@ public class DirectoryController {
   @Path("/tokens")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  public ClientContacts getContactIntersection(@Auth Account account, @Valid ClientContactTokens contacts)
+  public ClientContacts getContactIntersection(@Auth Device device, @Valid ClientContactTokens contacts)
       throws RateLimitExceededException
   {
-    rateLimiters.getContactsLimiter().validate(account.getNumber(), contacts.getContacts().size());
+    rateLimiters.getContactsLimiter().validate(device.getNumber(), contacts.getContacts().size());
 
     try {
       List<byte[]> tokens = new LinkedList<>();
