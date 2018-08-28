@@ -58,7 +58,7 @@ public class MessageController extends HttpServlet {
   private final Logger logger       = LoggerFactory.getLogger(MessageController.class);
 
   private final RateLimiters           rateLimiters;
-  private final DeviceAuthenticator deviceAuthenticator;
+  private final DeviceAuthenticator    deviceAuthenticator;
   private final PushSender             pushSender;
   private final FederatedClientManager federatedClientManager;
   private final ObjectMapper           objectMapper;
@@ -70,7 +70,7 @@ public class MessageController extends HttpServlet {
                            FederatedClientManager federatedClientManager)
   {
     this.rateLimiters           = rateLimiters;
-    this.deviceAuthenticator = deviceAuthenticator;
+    this.deviceAuthenticator    = deviceAuthenticator;
     this.pushSender             = pushSender;
     this.federatedClientManager = federatedClientManager;
     this.objectMapper           = new ObjectMapper();
