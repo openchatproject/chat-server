@@ -18,7 +18,6 @@ import com.openchat.secureim.sms.TwilioSmsSender;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.PendingAccountsManager;
-import com.openchat.secureim.storage.PendingDevicesManager;
 import com.openchat.secureim.util.Util;
 import com.openchat.secureim.util.VerificationCode;
 
@@ -44,10 +43,10 @@ public class AccountController {
 
   private final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
-  private final PendingAccountsManager     pendingAccounts;
-  private final AccountsManager            accounts;
-  private final RateLimiters               rateLimiters;
-  private final SmsSender                  smsSender;
+  private final PendingAccountsManager pendingAccounts;
+  private final AccountsManager        accounts;
+  private final RateLimiters           rateLimiters;
+  private final SmsSender              smsSender;
 
   public AccountController(PendingAccountsManager pendingAccounts,
                            AccountsManager accounts,

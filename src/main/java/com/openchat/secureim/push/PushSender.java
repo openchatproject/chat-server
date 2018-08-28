@@ -1,6 +1,5 @@
 package com.openchat.secureim.push;
 
-import com.google.common.base.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.configuration.ApnConfiguration;

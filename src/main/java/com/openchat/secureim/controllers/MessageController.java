@@ -26,7 +26,6 @@ import com.openchat.secureim.federation.NoSuchPeerException;
 import com.openchat.secureim.limits.RateLimiters;
 import com.openchat.secureim.push.PushSender;
 import com.openchat.secureim.storage.Account;
-import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.util.Base64;
 import com.openchat.secureim.util.IterablePair;
 import com.openchat.secureim.util.Pair;

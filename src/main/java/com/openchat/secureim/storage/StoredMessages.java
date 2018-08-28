@@ -3,7 +3,6 @@ package com.openchat.secureim.storage;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
-import com.openchat.secureim.entities.EncryptedOutgoingMessage;
 
 import java.util.List;
 

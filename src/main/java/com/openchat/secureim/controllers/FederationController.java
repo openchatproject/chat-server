@@ -23,7 +23,6 @@ import com.openchat.secureim.util.Pair;
 import com.openchat.secureim.util.UrlSigner;
 import com.openchat.secureim.util.Util;
 
-import javax.print.attribute.standard.Media;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
