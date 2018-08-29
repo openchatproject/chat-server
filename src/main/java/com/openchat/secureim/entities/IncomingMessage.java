@@ -13,6 +13,9 @@ public class IncomingMessage {
   private String destination;
 
   @JsonProperty
+  private long   destinationDeviceId = 1;
+
+  @JsonProperty
   @NotEmpty
   private String body;
 
@@ -21,9 +24,6 @@ public class IncomingMessage {
 
   @JsonProperty
   private long   timestamp;
-
-  @JsonProperty
-  private long   destinationDeviceId = 1;
 
   public String getDestination() {
     return destination;
