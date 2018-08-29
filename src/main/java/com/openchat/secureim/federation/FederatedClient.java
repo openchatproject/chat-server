@@ -19,11 +19,7 @@ import com.openchat.secureim.entities.AccountCount;
 import com.openchat.secureim.entities.AttachmentUri;
 import com.openchat.secureim.entities.ClientContact;
 import com.openchat.secureim.entities.ClientContacts;
-import com.openchat.secureim.entities.IncomingMessage;
 import com.openchat.secureim.entities.IncomingMessageList;
-import com.openchat.secureim.entities.MessageResponse;
-import com.openchat.secureim.entities.PreKey;
-import com.openchat.secureim.entities.RelayMessage;
 import com.openchat.secureim.entities.UnstructuredPreKeyList;
 import com.openchat.secureim.util.Base64;
 
@@ -53,7 +49,6 @@ public class FederatedClient {
   private static final String USER_COUNT_PATH     = "/v1/federation/user_count";
   private static final String USER_TOKENS_PATH    = "/v1/federation/user_tokens/%d";
   private static final String RELAY_MESSAGE_PATH  = "/v1/federation/messages/%s/%s";
-  private static final String PREKEY_PATH         = "/v1/federation/key/%s";
   private static final String PREKEY_PATH_DEVICE  = "/v1/federation/key/%s/%s";
   private static final String ATTACHMENT_URI_PATH = "/v1/federation/attachment/%d";
 
@@ -80,34 +75,36 @@ public class FederatedClient {
       WebResource resource = client.resource(peer.getUrl())
                                    .path(String.format(ATTACHMENT_URI_PATH, attachmentId));
 
-      return resource.accept(MediaType.APPLICATION_JSON)
-                     .header("Authorization", authorizationHeader)
-                     .get(AttachmentUri.class)
-                     .getLocation();
+      ClientResponse response = resource.accept(MediaType.APPLICATION_JSON)
+                                        .header("Authorization", authorizationHeader)
+                                        .get(ClientResponse.class);
+
+      if (response.getStatus() < 200 || response.getStatus() >= 300) {
+        throw new WebApplicationException(clientResponseToResponse(response));
+      }
+
+      return response.getEntity(AttachmentUri.class).getLocation();
+
     } catch (UniformInterfaceException | ClientHandlerException e) {
       logger.warn("Bad URI", e);
       throw new IOException(e);
     }
   }
 
-  public Optional<PreKey> getKey(String destination)  {
-    try {
-      WebResource resource = client.resource(peer.getUrl()).path(String.format(PREKEY_PATH, destination));
-      return Optional.of(resource.accept(MediaType.APPLICATION_JSON)
-                                 .header("Authorization", authorizationHeader)
-                                 .get(PreKey.class));
-    } catch (UniformInterfaceException | ClientHandlerException e) {
-      logger.warn("PreKey", e);
-      return Optional.absent();
-    }
-  }
-
   public Optional<UnstructuredPreKeyList> getKeys(String destination, String device) {
     try {
       WebResource resource = client.resource(peer.getUrl()).path(String.format(PREKEY_PATH_DEVICE, destination, device));
-      return Optional.of(resource.accept(MediaType.APPLICATION_JSON)
-                                 .header("Authorization", authorizationHeader)
-                                 .get(UnstructuredPreKeyList.class));
+
+      ClientResponse response = resource.accept(MediaType.APPLICATION_JSON)
+                                        .header("Authorization", authorizationHeader)
+                                        .get(ClientResponse.class);
+
+      if (response.getStatus() < 200 || response.getStatus() >= 300) {
+        throw new WebApplicationException(clientResponseToResponse(response));
+      }
+
+      return Optional.of(response.getEntity(UnstructuredPreKeyList.class));
+
     } catch (UniformInterfaceException | ClientHandlerException e) {
       logger.warn("PreKey", e);
       return Optional.absent();
