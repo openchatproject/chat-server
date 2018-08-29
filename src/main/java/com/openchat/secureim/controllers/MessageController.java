@@ -241,11 +241,9 @@ public class MessageController extends HttpServlet {
 
       outgoingMessage.setTimestamp(System.currentTimeMillis());
 
-      int index = 0;
-
       for (String destination : destinationNumbers) {
         if (!destination.equals(incoming.getDestination()))
-          outgoingMessage.setDestinations(index++, destination);
+          outgoingMessage.addDestinations(destination);
       }
 
       LocalOrRemoteDevice device = null;
