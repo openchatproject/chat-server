@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
+import com.yammer.dropwizard.config.HttpConfiguration;
 import com.yammer.dropwizard.db.DatabaseConfiguration;
 import com.yammer.dropwizard.jdbi.DBIFactory;
 import com.yammer.dropwizard.migrations.MigrationsBundle;
@@ -16,12 +17,13 @@ import com.openchat.secureim.auth.FederatedPeerAuthenticator;
 import com.openchat.secureim.auth.MultiBasicAuthProvider;
 import com.openchat.secureim.configuration.NexmoConfiguration;
 import com.openchat.secureim.controllers.AccountController;
-import com.openchat.secureim.controllers.DeviceController;
 import com.openchat.secureim.controllers.AttachmentController;
+import com.openchat.secureim.controllers.DeviceController;
 import com.openchat.secureim.controllers.DirectoryController;
 import com.openchat.secureim.controllers.FederationController;
 import com.openchat.secureim.controllers.KeysController;
 import com.openchat.secureim.controllers.MessageController;
+import com.openchat.secureim.controllers.WebsocketControllerFactory;
 import com.openchat.secureim.federation.FederatedClientManager;
 import com.openchat.secureim.federation.FederatedPeer;
 import com.openchat.secureim.limits.RateLimiters;
@@ -35,15 +37,16 @@ import com.openchat.secureim.push.PushSender;
 import com.openchat.secureim.sms.NexmoSmsSender;
 import com.openchat.secureim.sms.SmsSender;
 import com.openchat.secureim.sms.TwilioSmsSender;
-import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.Accounts;
 import com.openchat.secureim.storage.AccountsManager;
+import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.DirectoryManager;
 import com.openchat.secureim.storage.Keys;
 import com.openchat.secureim.storage.PendingAccounts;
 import com.openchat.secureim.storage.PendingAccountsManager;
 import com.openchat.secureim.storage.PendingDevices;
 import com.openchat.secureim.storage.PendingDevicesManager;
+import com.openchat.secureim.storage.PubSubManager;
 import com.openchat.secureim.storage.StoredMessageManager;
 import com.openchat.secureim.storage.StoredMessages;
 import com.openchat.secureim.util.CORSHeaderFilter;
@@ -77,6 +80,8 @@ public class OpenChatSecureimService extends Service<OpenChatSecureimConfigurati
   public void run(OpenChatSecureimConfiguration config, Environment environment)
       throws Exception
   {
+    config.getHttpConfiguration().setConnectorType(HttpConfiguration.ConnectorType.NONBLOCKING);
+    
     DBIFactory dbiFactory = new DBIFactory();
     DBI        jdbi       = dbiFactory.build(environment, config.getDatabaseConfiguration(), "postgresql");
 
@@ -94,7 +99,8 @@ public class OpenChatSecureimService extends Service<OpenChatSecureimConfigurati
     PendingDevicesManager    pendingDevicesManager  = new PendingDevicesManager(pendingDevices, memcachedClient);
     AccountsManager          accountsManager        = new AccountsManager(accounts, directory, memcachedClient);
     FederatedClientManager   federatedClientManager = new FederatedClientManager(config.getFederationConfiguration());
-    StoredMessageManager     storedMessageManager   = new StoredMessageManager(storedMessages);
+    PubSubManager            pubSubManager          = new PubSubManager(redisClient);
+    StoredMessageManager     storedMessageManager   = new StoredMessageManager(storedMessages, pubSubManager);
 
     AccountAuthenticator     deviceAuthenticator    = new AccountAuthenticator(accountsManager);
     RateLimiters             rateLimiters           = new RateLimiters(config.getLimitsConfiguration(), memcachedClient);
@@ -124,6 +130,9 @@ public class OpenChatSecureimService extends Service<OpenChatSecureimConfigurati
     environment.addResource(attachmentController);
     environment.addResource(keysController);
     environment.addResource(messageController);
+
+    environment.addServlet(new WebsocketControllerFactory(deviceAuthenticator, storedMessageManager, pubSubManager),
+                           "/v1/websocket/");
 
     environment.addHealthCheck(new RedisHealthCheck(redisClient));
     environment.addHealthCheck(new MemcacheHealthCheck(memcachedClient));
