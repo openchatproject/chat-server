@@ -10,7 +10,7 @@ import com.openchat.secureim.entities.IncomingMessage;
 import com.openchat.secureim.entities.IncomingMessageList;
 import com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal;
 import com.openchat.secureim.entities.MessageResponse;
-import com.openchat.secureim.entities.MissingDevices;
+import com.openchat.secureim.entities.MismatchedDevices;
 import com.openchat.secureim.federation.FederatedClient;
 import com.openchat.secureim.federation.FederatedClientManager;
 import com.openchat.secureim.federation.NoSuchPeerException;
@@ -76,15 +76,15 @@ public class MessageController {
       else                             sendRelayMessage(source, destinationName, messages);
     } catch (NoSuchUserException e) {
       throw new WebApplicationException(Response.status(404).build());
-    } catch (MissingDevicesException e) {
+    } catch (MismatchedDevicesException e) {
       throw new WebApplicationException(Response.status(409)
-                                                .entity(new MissingDevices(e.getMissingDevices()))
+                                                .entity(new MismatchedDevices(e.getMissingDevices(),
+                                                                              e.getExtraDevices()))
                                                 .build());
     }
   }
 
   @Timed
-  @Path("/")
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
@@ -107,7 +107,7 @@ public class MessageController {
   private void sendLocalMessage(Account source,
                                 String destinationName,
                                 IncomingMessageList messages)
-      throws NoSuchUserException, MissingDevicesException, IOException
+      throws NoSuchUserException, MismatchedDevicesException, IOException
   {
     Account destination = getDestinationAccount(destinationName);
 
@@ -180,23 +180,34 @@ public class MessageController {
   }
 
   private void validateCompleteDeviceList(Account account, List<IncomingMessage> messages)
-      throws MissingDevicesException
+      throws MismatchedDevicesException
   {
-    Set<Long> destinationDeviceIds = new HashSet<>();
-    List<Long> missingDeviceIds    = new LinkedList<>();
+    Set<Long> messageDeviceIds = new HashSet<>();
+    Set<Long> accountDeviceIds = new HashSet<>();
+
+    List<Long> missingDeviceIds = new LinkedList<>();
+    List<Long> extraDeviceIds   = new LinkedList<>();
 
     for (IncomingMessage message : messages) {
-      destinationDeviceIds.add(message.getDestinationDeviceId());
+      messageDeviceIds.add(message.getDestinationDeviceId());
     }
 
     for (Device device : account.getDevices()) {
-      if (!destinationDeviceIds.contains(device.getId())) {
+      accountDeviceIds.add(device.getId());
+
+      if (!messageDeviceIds.contains(device.getId())) {
         missingDeviceIds.add(device.getId());
       }
     }
 
-    if (!missingDeviceIds.isEmpty()) {
-      throw new MissingDevicesException(missingDeviceIds);
+    for (IncomingMessage message : messages) {
+      if (!accountDeviceIds.contains(message.getDestinationDeviceId())) {
+        extraDeviceIds.add(message.getDestinationDeviceId());
+      }
+    }
+
+    if (!missingDeviceIds.isEmpty() || !extraDeviceIds.isEmpty()) {
+      throw new MismatchedDevicesException(missingDeviceIds, extraDeviceIds);
     }
   }
 

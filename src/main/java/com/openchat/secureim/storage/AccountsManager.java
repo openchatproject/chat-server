@@ -3,19 +3,11 @@ package com.openchat.secureim.storage;
 
 import com.google.common.base.Optional;
 import net.spy.memcached.MemcachedClient;
-import com.openchat.secureim.controllers.MissingDevicesException;
 import com.openchat.secureim.entities.ClientContact;
-import com.openchat.secureim.util.Pair;
 import com.openchat.secureim.util.Util;
-import sun.util.logging.resources.logging_zh_CN;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class AccountsManager {
 
