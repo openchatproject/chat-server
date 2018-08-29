@@ -1,6 +1,7 @@
 package com.openchat.secureim.controllers;
 
 import com.amazonaws.HttpMethod;
+import com.google.common.base.Optional;
 import com.yammer.dropwizard.auth.Auth;
 import com.yammer.metrics.annotation.Timed;
 import org.slf4j.Logger;
@@ -10,7 +11,7 @@ import com.openchat.secureim.entities.AttachmentUri;
 import com.openchat.secureim.federation.FederatedClientManager;
 import com.openchat.secureim.federation.NoSuchPeerException;
 import com.openchat.secureim.limits.RateLimiters;
-import com.openchat.secureim.storage.Device;
+import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.util.Conversions;
 import com.openchat.secureim.util.UrlSigner;
 
@@ -19,6 +20,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -48,37 +50,38 @@ public class AttachmentController {
   @Timed
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response allocateAttachment(@Auth Device device) throws RateLimitExceededException {
-    rateLimiters.getAttachmentLimiter().validate(device.getNumber());
+  public AttachmentDescriptor allocateAttachment(@Auth Account account)
+      throws RateLimitExceededException
+  {
+    if (account.isRateLimited()) {
+      rateLimiters.getAttachmentLimiter().validate(account.getNumber());
+    }
 
-    long                 attachmentId = generateAttachmentId();
-    URL                  url          = urlSigner.getPreSignedUrl(attachmentId, HttpMethod.PUT);
-    AttachmentDescriptor descriptor   = new AttachmentDescriptor(attachmentId, url.toExternalForm());
+    long attachmentId = generateAttachmentId();
+    URL  url          = urlSigner.getPreSignedUrl(attachmentId, HttpMethod.PUT);
 
-    return Response.ok().entity(descriptor).build();
+    return new AttachmentDescriptor(attachmentId, url.toExternalForm());
+
   }
 
   @Timed
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{attachmentId}")
-  public Response redirectToAttachment(@Auth                      Device device,
-                                       @PathParam("attachmentId") long   attachmentId,
-                                       @QueryParam("relay")       String relay)
+  public AttachmentUri redirectToAttachment(@Auth                      Account account,
+                                            @PathParam("attachmentId") long    attachmentId,
+                                            @QueryParam("relay")       Optional<String> relay)
+      throws IOException
   {
     try {
-      URL url;
-
-      if (relay == null) url = urlSigner.getPreSignedUrl(attachmentId, HttpMethod.GET);
-      else               url = federatedClientManager.getClient(relay).getSignedAttachmentUri(attachmentId);
-
-      return Response.ok().entity(new AttachmentUri(url)).build();
-    } catch (IOException e) {
-      logger.warn("No conectivity", e);
-      return Response.status(500).build();
+      if (!relay.isPresent()) {
+        return new AttachmentUri(urlSigner.getPreSignedUrl(attachmentId, HttpMethod.GET));
+      } else {
+        return new AttachmentUri(federatedClientManager.getClient(relay.get()).getSignedAttachmentUri(attachmentId));
+      }
     } catch (NoSuchPeerException e) {
       logger.info("No such peer: " + relay);
-      return Response.status(404).build();
+      throw new WebApplicationException(Response.status(404).build());
     }
   }
 

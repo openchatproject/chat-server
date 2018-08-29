@@ -9,6 +9,7 @@ import com.yammer.metrics.core.Meter;
 import org.bouncycastle.openssl.PEMReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.openchat.secureim.entities.CryptoEncodingException;
 import com.openchat.secureim.entities.EncryptedOutgoingMessage;
 import com.openchat.secureim.util.Util;
 
@@ -16,7 +17,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -50,12 +50,12 @@ public class APNSender {
   }
 
   public void sendMessage(String registrationId, EncryptedOutgoingMessage message)
-      throws IOException
+      throws TransientPushFailureException, NotPushRegisteredException
   {
     try {
       if (!apnService.isPresent()) {
         failure.mark();
-        throw new IOException("APN access not configured!");
+        throw new TransientPushFailureException("APN access not configured!");
       }
 
       String payload = APNS.newPayload()
@@ -67,12 +67,12 @@ public class APNSender {
 
       apnService.get().push(registrationId, payload);
       success.mark();
-    } catch (MalformedURLException mue) {
-      throw new AssertionError(mue);
     } catch (NetworkIOException nioe) {
       logger.warn("Network Error", nioe);
       failure.mark();
-      throw new IOException("Error sending APN");
+      throw new TransientPushFailureException(nioe);
+    } catch (CryptoEncodingException e) {
+      throw new NotPushRegisteredException(e);
     }
   }
 

@@ -7,10 +7,10 @@ public class PendingDevicesManager {
 
   private static final String MEMCACHE_PREFIX = "pending_devices";
 
-  private final PendingDeviceRegistrations pendingDevices;
-  private final MemcachedClient            memcachedClient;
+  private final PendingDevices  pendingDevices;
+  private final MemcachedClient memcachedClient;
 
-  public PendingDevicesManager(PendingDeviceRegistrations pendingDevices,
+  public PendingDevicesManager(PendingDevices pendingDevices,
                                MemcachedClient memcachedClient)
   {
     this.pendingDevices  = pendingDevices;
@@ -26,8 +26,10 @@ public class PendingDevicesManager {
   }
 
   public void remove(String number) {
-    if (memcachedClient != null)
+    if (memcachedClient != null) {
       memcachedClient.delete(MEMCACHE_PREFIX + number);
+    }
+
     pendingDevices.remove(number);
   }
 

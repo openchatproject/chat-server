@@ -19,7 +19,6 @@ public class PreKey {
   private String  number;
 
   @JsonProperty
-  @NotNull
   private long deviceId;
 
   @JsonProperty

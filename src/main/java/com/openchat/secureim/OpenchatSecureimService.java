@@ -11,7 +11,7 @@ import com.yammer.metrics.reporting.GraphiteReporter;
 import net.spy.memcached.MemcachedClient;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.skife.jdbi.v2.DBI;
-import com.openchat.secureim.auth.DeviceAuthenticator;
+import com.openchat.secureim.auth.AccountAuthenticator;
 import com.openchat.secureim.auth.FederatedPeerAuthenticator;
 import com.openchat.secureim.auth.MultiBasicAuthProvider;
 import com.openchat.secureim.configuration.NexmoConfiguration;
@@ -42,7 +42,7 @@ import com.openchat.secureim.storage.DirectoryManager;
 import com.openchat.secureim.storage.Keys;
 import com.openchat.secureim.storage.PendingAccounts;
 import com.openchat.secureim.storage.PendingAccountsManager;
-import com.openchat.secureim.storage.PendingDeviceRegistrations;
+import com.openchat.secureim.storage.PendingDevices;
 import com.openchat.secureim.storage.PendingDevicesManager;
 import com.openchat.secureim.storage.StoredMessageManager;
 import com.openchat.secureim.storage.StoredMessages;
@@ -80,11 +80,11 @@ public class OpenChatSecureimService extends Service<OpenChatSecureimConfigurati
     DBIFactory dbiFactory = new DBIFactory();
     DBI        jdbi       = dbiFactory.build(environment, config.getDatabaseConfiguration(), "postgresql");
 
-    Accounts                   accounts        = jdbi.onDemand(Accounts.class);
-    PendingAccounts            pendingAccounts = jdbi.onDemand(PendingAccounts.class);
-    PendingDeviceRegistrations pendingDevices  = jdbi.onDemand(PendingDeviceRegistrations.class);
-    Keys                       keys            = jdbi.onDemand(Keys.class);
-    StoredMessages             storedMessages  = jdbi.onDemand(StoredMessages.class);
+    Accounts        accounts        = jdbi.onDemand(Accounts.class);
+    PendingAccounts pendingAccounts = jdbi.onDemand(PendingAccounts.class);
+    PendingDevices  pendingDevices  = jdbi.onDemand(PendingDevices.class);
+    Keys            keys            = jdbi.onDemand(Keys.class);
+    StoredMessages  storedMessages  = jdbi.onDemand(StoredMessages.class );
 
     MemcachedClient memcachedClient = new MemcachedClientFactory(config.getMemcacheConfiguration()).getClient();
     JedisPool       redisClient     = new RedisClientFactory(config.getRedisConfiguration()).getRedisClientPool();
@@ -93,10 +93,12 @@ public class OpenChatSecureimService extends Service<OpenChatSecureimConfigurati
     PendingAccountsManager   pendingAccountsManager = new PendingAccountsManager(pendingAccounts, memcachedClient);
     PendingDevicesManager    pendingDevicesManager  = new PendingDevicesManager(pendingDevices, memcachedClient);
     AccountsManager          accountsManager        = new AccountsManager(accounts, directory, memcachedClient);
-    DeviceAuthenticator      deviceAuthenticator    = new DeviceAuthenticator(accountsManager                     );
     FederatedClientManager   federatedClientManager = new FederatedClientManager(config.getFederationConfiguration());
     StoredMessageManager     storedMessageManager   = new StoredMessageManager(storedMessages);
+
+    AccountAuthenticator     deviceAuthenticator    = new AccountAuthenticator(accountsManager);
     RateLimiters             rateLimiters           = new RateLimiters(config.getLimitsConfiguration(), memcachedClient);
+
     TwilioSmsSender          twilioSmsSender        = new TwilioSmsSender(config.getTwilioConfiguration());
     Optional<NexmoSmsSender> nexmoSmsSender         = initializeNexmoSmsSender(config.getNexmoConfiguration());
     SmsSender                smsSender              = new SmsSender(twilioSmsSender, nexmoSmsSender, config.getTwilioConfiguration().isInternational());
@@ -104,7 +106,11 @@ public class OpenChatSecureimService extends Service<OpenChatSecureimConfigurati
     PushSender               pushSender             = new PushSender(config.getGcmConfiguration(),
                                                                      config.getApnConfiguration(),
                                                                      storedMessageManager,
-                                                                     accountsManager, directory);
+                                                                     accountsManager);
+
+    AttachmentController attachmentController = new AttachmentController(rateLimiters, federatedClientManager, urlSigner);
+    KeysController       keysController       = new KeysController(rateLimiters, keys, federatedClientManager);
+    MessageController    messageController    = new MessageController(rateLimiters, pushSender, accountsManager, federatedClientManager);
 
     environment.addProvider(new MultiBasicAuthProvider<>(new FederatedPeerAuthenticator(config.getFederationConfiguration()),
                                                          FederatedPeer.class,
@@ -114,13 +120,10 @@ public class OpenChatSecureimService extends Service<OpenChatSecureimConfigurati
     environment.addResource(new AccountController(pendingAccountsManager, accountsManager, rateLimiters, smsSender));
     environment.addResource(new DeviceController(pendingDevicesManager, accountsManager, rateLimiters));
     environment.addResource(new DirectoryController(rateLimiters, directory));
-    environment.addResource(new AttachmentController(rateLimiters, federatedClientManager, urlSigner));
-    environment.addResource(new KeysController(rateLimiters, keys, accountsManager, federatedClientManager));
-    environment.addResource(new FederationController(keys, accountsManager, pushSender, urlSigner));
-
-    environment.addServlet(new MessageController(rateLimiters, deviceAuthenticator,
-                                                 pushSender, accountsManager, federatedClientManager),
-                           MessageController.PATH);
+    environment.addResource(new FederationController(accountsManager, attachmentController, keysController, messageController));
+    environment.addResource(attachmentController);
+    environment.addResource(keysController);
+    environment.addResource(messageController);
 
     environment.addHealthCheck(new RedisHealthCheck(redisClient));
     environment.addHealthCheck(new MemcacheHealthCheck(memcachedClient));
