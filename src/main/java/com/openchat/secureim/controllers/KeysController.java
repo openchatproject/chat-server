@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.entities.PreKey;
 import com.openchat.secureim.entities.PreKeyList;
+import com.openchat.secureim.entities.PreKeyStatus;
 import com.openchat.secureim.entities.UnstructuredPreKeyList;
 import com.openchat.secureim.federation.FederatedClientManager;
 import com.openchat.secureim.federation.NoSuchPeerException;
@@ -55,6 +56,20 @@ public class KeysController {
   public void setKeys(@Auth Account account, @Valid PreKeyList preKeys)  {
     Device device = account.getAuthenticatedDevice().get();
     keys.store(account.getNumber(), device.getId(), preKeys.getKeys(), preKeys.getLastResortKey());
+  }
+
+  @Timed
+  @GET
+  @Path("/")
+  @Produces(MediaType.APPLICATION_JSON)
+  public PreKeyStatus getStatus(@Auth Account account) {
+    int count = keys.getCount(account.getNumber(), account.getAuthenticatedDevice().get().getId());
+
+    if (count > 0) {
+      count = count - 1;
+    }
+
+    return new PreKeyStatus(count);
   }
 
   @Timed
