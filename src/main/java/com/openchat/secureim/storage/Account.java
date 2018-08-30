@@ -3,6 +3,7 @@ package com.openchat.secureim.storage;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 
 import java.io.Serializable;
@@ -33,6 +34,13 @@ public class Account implements Serializable {
   public Account(String number, boolean supportsSms) {
     this.number      = number;
     this.supportsSms = supportsSms;
+  }
+
+  @VisibleForTesting
+  public Account(String number, boolean supportsSms, List<Device> devices) {
+    this.number      = number;
+    this.supportsSms = supportsSms;
+    this.devices     = devices;
   }
 
   public long getId() {

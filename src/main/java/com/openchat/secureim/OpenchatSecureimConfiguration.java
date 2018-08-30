@@ -13,6 +13,7 @@ import com.openchat.secureim.configuration.RateLimitsConfiguration;
 import com.openchat.secureim.configuration.RedisConfiguration;
 import com.openchat.secureim.configuration.S3Configuration;
 import com.openchat.secureim.configuration.TwilioConfiguration;
+import com.openchat.secureim.configuration.WebsocketConfiguration;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -66,6 +67,14 @@ public class OpenChatSecureimConfiguration extends Configuration {
   @Valid
   @JsonProperty
   private GraphiteConfiguration graphite = new GraphiteConfiguration();
+
+  @Valid
+  @JsonProperty
+  private WebsocketConfiguration websocket = new WebsocketConfiguration();
+
+  public WebsocketConfiguration getWebsocketConfiguration() {
+    return websocket;
+  }
 
   public TwilioConfiguration getTwilioConfiguration() {
     return twilio;

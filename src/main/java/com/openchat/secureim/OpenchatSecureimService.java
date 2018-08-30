@@ -131,12 +131,6 @@ public class OpenChatSecureimService extends Service<OpenChatSecureimConfigurati
     environment.addResource(keysController);
     environment.addResource(messageController);
 
-    environment.addServlet(new WebsocketControllerFactory(deviceAuthenticator, storedMessageManager, pubSubManager),
-                           "/v1/websocket/");
-
-    environment.addHealthCheck(new RedisHealthCheck(redisClient));
-    environment.addHealthCheck(new MemcacheHealthCheck(memcachedClient));
-
-    environment.addProvider(new IOExceptionMapper());
-    environment.addProvider(new RateLimitExceededExceptionMapper());
-
+    if (config.getWebsocketConfiguration().isEnabled()) {
+      environment.addServlet(new WebsocketControllerFactory(deviceAuthenticator, storedMessageManager, pubSubManager),
+                             "/v1/websocket/");
