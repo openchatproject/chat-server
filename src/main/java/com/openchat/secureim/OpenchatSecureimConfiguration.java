@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yammer.dropwizard.config.Configuration;
 import com.yammer.dropwizard.db.DatabaseConfiguration;
 import com.openchat.secureim.configuration.ApnConfiguration;
+import com.openchat.secureim.configuration.DataDogConfiguration;
 import com.openchat.secureim.configuration.FederationConfiguration;
 import com.openchat.secureim.configuration.GcmConfiguration;
 import com.openchat.secureim.configuration.GraphiteConfiguration;
@@ -70,6 +71,10 @@ public class OpenChatSecureimConfiguration extends Configuration {
 
   @Valid
   @JsonProperty
+  private DataDogConfiguration datadog = new DataDogConfiguration();
+
+  @Valid
+  @JsonProperty
   private WebsocketConfiguration websocket = new WebsocketConfiguration();
 
   public WebsocketConfiguration getWebsocketConfiguration() {
@@ -118,5 +123,9 @@ public class OpenChatSecureimConfiguration extends Configuration {
 
   public GraphiteConfiguration getGraphiteConfiguration() {
     return graphite;
+  }
+
+  public DataDogConfiguration getDataDogConfiguration() {
+    return datadog;
   }
 }
