@@ -10,6 +10,8 @@ import com.yammer.dropwizard.jdbi.args.OptionalArgumentFactory;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.spy.memcached.MemcachedClient;
 import org.skife.jdbi.v2.DBI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.openchat.secureim.OpenChatSecureimConfiguration;
 import com.openchat.secureim.federation.FederatedClientManager;
 import com.openchat.secureim.providers.MemcachedClientFactory;
@@ -21,6 +23,8 @@ import com.openchat.secureim.storage.DirectoryManager;
 import redis.clients.jedis.JedisPool;
 
 public class DirectoryCommand extends ConfiguredCommand<OpenChatSecureimConfiguration> {
+
+  private final Logger logger = LoggerFactory.getLogger(DirectoryCommand.class);
 
   public DirectoryCommand() {
     super("directory", "Update directory from DB and peers.");
@@ -52,6 +56,9 @@ public class DirectoryCommand extends ConfiguredCommand<OpenChatSecureimConfigur
 
       update.updateFromLocalDatabase();
       update.updateFromPeers();
+    } catch (Exception ex) {
+      logger.warn("Directory Exception", ex);
+      throw new RuntimeException(ex);
     } finally {
       Thread.sleep(3000);
       System.exit(0);
