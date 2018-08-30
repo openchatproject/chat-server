@@ -12,6 +12,7 @@ import com.openchat.secureim.federation.FederatedClientManager;
 import com.openchat.secureim.federation.NoSuchPeerException;
 import com.openchat.secureim.limits.RateLimiters;
 import com.openchat.secureim.storage.Account;
+import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.Keys;
 
@@ -26,6 +27,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.LinkedList;
+import java.util.List;
 
 @Path("/v1/keys")
 public class KeysController {
@@ -34,13 +37,15 @@ public class KeysController {
 
   private final RateLimiters           rateLimiters;
   private final Keys                   keys;
+  private final AccountsManager        accounts;
   private final FederatedClientManager federatedClientManager;
 
-  public KeysController(RateLimiters rateLimiters, Keys keys,
+  public KeysController(RateLimiters rateLimiters, Keys keys, AccountsManager accounts,
                         FederatedClientManager federatedClientManager)
   {
     this.rateLimiters           = rateLimiters;
     this.keys                   = keys;
+    this.accounts               = accounts;
     this.federatedClientManager = federatedClientManager;
   }
 
@@ -92,18 +97,50 @@ public class KeysController {
     return results.getKeys().get(0);
   }
 
-  private Optional<UnstructuredPreKeyList> getLocalKeys(String number, String deviceId) {
+  private Optional<UnstructuredPreKeyList> getLocalKeys(String number, String deviceIdSelector) {
+    Optional<Account> destination = accounts.get(number);
+
+    if (!destination.isPresent() || !destination.get().isActive()) {
+      return Optional.absent();
+    }
+
     try {
-      if (deviceId.equals("*")) {
-        return keys.get(number);
+      if (deviceIdSelector.equals("*")) {
+        Optional<UnstructuredPreKeyList> preKeys = keys.get(number);
+        return getActiveKeys(destination.get(), preKeys);
       }
 
-      Optional<PreKey> targetKey = keys.get(number, Long.parseLong(deviceId));
+      long             deviceId     = Long.parseLong(deviceIdSelector);
+      Optional<Device> targetDevice = destination.get().getDevice(deviceId);
 
-      if (targetKey.isPresent()) return Optional.of(new UnstructuredPreKeyList(targetKey.get()));
-      else                       return Optional.absent();
+      if (!targetDevice.isPresent() || !targetDevice.get().isActive()) {
+        return Optional.absent();
+      }
+
+      Optional<UnstructuredPreKeyList> preKeys = keys.get(number, deviceId);
+      return getActiveKeys(destination.get(), preKeys);
     } catch (NumberFormatException e) {
       throw new WebApplicationException(Response.status(422).build());
     }
+  }
+
+  private Optional<UnstructuredPreKeyList> getActiveKeys(Account destination,
+                                                         Optional<UnstructuredPreKeyList> preKeys)
+  {
+    if (!preKeys.isPresent()) return Optional.absent();
+
+    List<PreKey> filteredKeys = new LinkedList<>();
+
+    for (PreKey preKey : preKeys.get().getKeys()) {
+      Optional<Device> device = destination.getDevice(preKey.getDeviceId());
+
+      if (device.isPresent() && device.get().isActive()) {
+        preKey.setRegistrationId(device.get().getRegistrationId());
+        filteredKeys.add(preKey);
+      }
+    }
+
+    if (filteredKeys.isEmpty()) return Optional.absent();
+    else                        return Optional.of(new UnstructuredPreKeyList(filteredKeys));
   }
 }

@@ -36,6 +36,9 @@ public class PreKey {
   @JsonProperty
   private boolean lastResort;
 
+  @JsonProperty
+  private int registrationId;
+
   public PreKey() {}
 
   public PreKey(long id, String number, long deviceId, long keyId,
@@ -108,5 +111,13 @@ public class PreKey {
 
   public long getDeviceId() {
     return deviceId;
+  }
+
+  public int getRegistrationId() {
+    return registrationId;
+  }
+
+  public void setRegistrationId(int registrationId) {
+    this.registrationId = registrationId;
   }
 }
