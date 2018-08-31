@@ -14,4 +14,11 @@ public class ClientContactTokens {
   public List<String> getContacts() {
     return contacts;
   }
+
+  public ClientContactTokens() {}
+
+  public ClientContactTokens(List<String> contacts) {
+    this.contacts = contacts;
+  }
+
 }

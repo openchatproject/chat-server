@@ -2,7 +2,9 @@ package com.openchat.secureim.controllers;
 
 import com.google.common.base.Optional;
 import com.yammer.dropwizard.auth.Auth;
+import com.yammer.metrics.Metrics;
 import com.yammer.metrics.annotation.Timed;
+import com.yammer.metrics.core.Histogram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.entities.ClientContact;
@@ -30,7 +32,8 @@ import java.util.List;
 @Path("/v1/directory")
 public class DirectoryController {
 
-  private final Logger logger = LoggerFactory.getLogger(DirectoryController.class);
+  private final Logger    logger            = LoggerFactory.getLogger(DirectoryController.class);
+  private final Histogram contactsHistogram = Metrics.newHistogram(DirectoryController.class, "contacts");
 
   private final RateLimiters     rateLimiters;
   private final DirectoryManager directory;
@@ -40,7 +43,7 @@ public class DirectoryController {
     this.rateLimiters = rateLimiters;
   }
 
-  @Timed()
+  @Timed
   @GET
   @Path("/{token}")
   @Produces(MediaType.APPLICATION_JSON)
@@ -61,7 +64,7 @@ public class DirectoryController {
     }
   }
 
-  @Timed()
+  @Timed
   @PUT
   @Path("/tokens")
   @Produces(MediaType.APPLICATION_JSON)
@@ -70,6 +73,7 @@ public class DirectoryController {
       throws RateLimitExceededException
   {
     rateLimiters.getContactsLimiter().validate(account.getNumber(), contacts.getContacts().size());
+    contactsHistogram.update(contacts.getContacts().size());
 
     try {
       List<byte[]> tokens = new LinkedList<>();
