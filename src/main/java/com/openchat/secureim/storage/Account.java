@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Account implements Serializable {
 
-  public static final int MEMCACHE_VERION = 2;
+  public static final int MEMCACHE_VERION = 3;
 
   @JsonIgnore
   private long id;
@@ -26,15 +26,13 @@ public class Account implements Serializable {
   @JsonProperty
   private List<Device> devices = new LinkedList<>();
 
+  @JsonProperty
+  private String identityKey;
+
   @JsonIgnore
   private Optional<Device> authenticatedDevice;
 
   public Account() {}
-
-  public Account(String number, boolean supportsSms) {
-    this.number      = number;
-    this.supportsSms = supportsSms;
-  }
 
   @VisibleForTesting
   public Account(String number, boolean supportsSms, List<Device> devices) {
@@ -125,5 +123,13 @@ public class Account implements Serializable {
 
   public Optional<String> getRelay() {
     return Optional.absent();
+  }
+
+  public void setIdentityKey(String identityKey) {
+    this.identityKey = identityKey;
+  }
+
+  public String getIdentityKey() {
+    return identityKey;
   }
 }

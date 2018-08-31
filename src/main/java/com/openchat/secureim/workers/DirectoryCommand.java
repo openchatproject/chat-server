@@ -1,5 +1,12 @@
 package com.openchat.secureim.workers;
 
+import com.yammer.dropwizard.cli.ConfiguredCommand;
+import com.yammer.dropwizard.config.Bootstrap;
+import com.yammer.dropwizard.db.DatabaseConfiguration;
+import com.yammer.dropwizard.jdbi.ImmutableListContainerFactory;
+import com.yammer.dropwizard.jdbi.ImmutableSetContainerFactory;
+import com.yammer.dropwizard.jdbi.OptionalContainerFactory;
+import com.yammer.dropwizard.jdbi.args.OptionalArgumentFactory;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.spy.memcached.MemcachedClient;
 import org.skife.jdbi.v2.DBI;
@@ -13,13 +20,6 @@ import com.openchat.secureim.storage.Accounts;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.DirectoryManager;
 
-import io.dropwizard.cli.ConfiguredCommand;
-import io.dropwizard.db.DataSourceFactory;
-import io.dropwizard.jdbi.ImmutableListContainerFactory;
-import io.dropwizard.jdbi.ImmutableSetContainerFactory;
-import io.dropwizard.jdbi.OptionalContainerFactory;
-import io.dropwizard.jdbi.args.OptionalArgumentFactory;
-import io.dropwizard.setup.Bootstrap;
 import redis.clients.jedis.JedisPool;
 
 public class DirectoryCommand extends ConfiguredCommand<OpenChatSecureimConfiguration> {
@@ -37,8 +37,8 @@ public class DirectoryCommand extends ConfiguredCommand<OpenChatSecureimConfigur
       throws Exception
   {
     try {
-      DataSourceFactory dbConfig = config.getDataSourceFactory();
-      DBI               dbi      = new DBI(dbConfig.getUrl(), dbConfig.getUser(), dbConfig.getPassword());
+      DatabaseConfiguration dbConfig = config.getDatabaseConfiguration();
+      DBI                   dbi      = new DBI(dbConfig.getUrl(), dbConfig.getUser(), dbConfig.getPassword());
 
       dbi.registerArgumentFactory(new OptionalArgumentFactory(dbConfig.getDriverClass()));
       dbi.registerContainerFactory(new ImmutableListContainerFactory());

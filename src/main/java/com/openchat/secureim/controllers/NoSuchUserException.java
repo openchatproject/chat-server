@@ -1,5 +1,7 @@
 package com.openchat.secureim.controllers;
 
+import com.openchat.secureim.federation.NoSuchPeerException;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,7 +11,7 @@ public class NoSuchUserException extends Exception {
 
   public NoSuchUserException(String user) {
     super(user);
-    missing = new LinkedList<>();
+    missing = new LinkedList<String>();
     missing.add(user);
   }
 

@@ -1,6 +1,6 @@
 package com.openchat.secureim.providers;
 
-import com.codahale.metrics.health.HealthCheck;
+import com.yammer.metrics.core.HealthCheck;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -10,6 +10,7 @@ public class RedisHealthCheck extends HealthCheck {
   private final JedisPool clientPool;
 
   public RedisHealthCheck(JedisPool clientPool) {
+    super("redis");
     this.clientPool = clientPool;
   }
 

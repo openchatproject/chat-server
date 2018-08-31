@@ -1,12 +1,10 @@
 package com.openchat.secureim.sms;
 
-import com.codahale.metrics.Meter;
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.SharedMetricRegistries;
+import com.yammer.metrics.Metrics;
+import com.yammer.metrics.core.Meter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.configuration.NexmoConfiguration;
-import com.openchat.secureim.util.Constants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,15 +12,13 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-
-import static com.codahale.metrics.MetricRegistry.name;
+import java.util.concurrent.TimeUnit;
 
 public class NexmoSmsSender {
 
-  private final MetricRegistry metricRegistry = SharedMetricRegistries.getOrCreate(Constants.METRICS_NAME);
-  private final Meter          smsMeter       = metricRegistry.meter(name(getClass(), "sms", "delivered"));
-  private final Meter          voxMeter       = metricRegistry.meter(name(getClass(), "vox", "delivered"));
-  private final Logger         logger         = LoggerFactory.getLogger(NexmoSmsSender.class);
+  private final Meter  smsMeter = Metrics.newMeter(NexmoSmsSender.class, "sms", "delivered", TimeUnit.MINUTES);
+  private final Meter  voxMeter = Metrics.newMeter(NexmoSmsSender.class, "vox", "delivered", TimeUnit.MINUTES);
+  private final Logger logger   = LoggerFactory.getLogger(NexmoSmsSender.class);
 
   private static final String NEXMO_SMS_URL =
       "https://rest.nexmo.com/sms/json?api_key=%s&api_secret=%s&from=%s&to=%s&text=%s";

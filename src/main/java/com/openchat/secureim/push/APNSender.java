@@ -1,24 +1,17 @@
 package com.openchat.secureim.push;
 
-import com.codahale.metrics.Meter;
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.SharedMetricRegistries;
 import com.google.common.base.Optional;
 import com.notnoop.apns.APNS;
 import com.notnoop.apns.ApnsService;
 import com.notnoop.exceptions.NetworkIOException;
+import com.yammer.metrics.Metrics;
+import com.yammer.metrics.core.Meter;
 import org.bouncycastle.openssl.PEMReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.openchat.secureim.entities.CryptoEncodingException;
 import com.openchat.secureim.entities.EncryptedOutgoingMessage;
-import com.openchat.secureim.storage.Account;
-import com.openchat.secureim.storage.Device;
-import com.openchat.secureim.storage.PubSubManager;
-import com.openchat.secureim.storage.PubSubMessage;
-import com.openchat.secureim.storage.StoredMessages;
-import com.openchat.secureim.util.Constants;
 import com.openchat.secureim.util.Util;
-import com.openchat.secureim.websocket.WebsocketAddress;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -31,31 +24,21 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-
-import static com.codahale.metrics.MetricRegistry.name;
+import java.util.concurrent.TimeUnit;
 
 public class APNSender {
 
-  private final MetricRegistry metricRegistry = SharedMetricRegistries.getOrCreate(Constants.METRICS_NAME);
-  private final Meter          websocketMeter = metricRegistry.meter(name(getClass(), "websocket"));
-  private final Meter          pushMeter      = metricRegistry.meter(name(getClass(), "push"));
-  private final Meter          failureMeter   = metricRegistry.meter(name(getClass(), "failure"));
-  private final Logger         logger         = LoggerFactory.getLogger(APNSender.class);
+  private final Meter  success = Metrics.newMeter(APNSender.class, "sent", "success", TimeUnit.MINUTES);
+  private final Meter  failure = Metrics.newMeter(APNSender.class, "sent", "failure", TimeUnit.MINUTES);
+  private final Logger logger  = LoggerFactory.getLogger(APNSender.class);
 
   private static final String MESSAGE_BODY = "m";
 
   private final Optional<ApnsService> apnService;
-  private final PubSubManager         pubSubManager;
-  private final StoredMessages        storedMessages;
 
-  public APNSender(PubSubManager pubSubManager,
-                   StoredMessages storedMessages,
-                   String apnCertificate, String apnKey)
+  public APNSender(String apnCertificate, String apnKey)
       throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException
   {
-    this.pubSubManager  = pubSubManager;
-    this.storedMessages = storedMessages;
-
     if (!Util.isEmpty(apnCertificate) && !Util.isEmpty(apnKey)) {
       byte[] keyStore = initializeKeyStore(apnCertificate, apnKey);
       this.apnService = Optional.of(APNS.newService()
@@ -66,44 +49,31 @@ public class APNSender {
     }
   }
 
-  public void sendMessage(Account account, Device device,
-                          String registrationId, EncryptedOutgoingMessage message)
+  public void sendMessage(String registrationId, EncryptedOutgoingMessage message)
       throws TransientPushFailureException, NotPushRegisteredException
-  {
-    if (pubSubManager.publish(new WebsocketAddress(account.getId(), device.getId()),
-                              new PubSubMessage(PubSubMessage.TYPE_DELIVER, message.serialize())))
-    {
-      websocketMeter.mark();
-    } else {
-      storedMessages.insert(account.getId(), device.getId(), message.serialize());
-      sendPush(registrationId, message.serialize());
-    }
-  }
-
-  private void sendPush(String registrationId, String message)
-      throws TransientPushFailureException
   {
     try {
       if (!apnService.isPresent()) {
-        failureMeter.mark();
+        failure.mark();
         throw new TransientPushFailureException("APN access not configured!");
       }
 
       String payload = APNS.newPayload()
                            .alertBody("Message!")
-                           .customField(MESSAGE_BODY, message)
+                           .customField(MESSAGE_BODY, message.serialize())
                            .build();
 
       logger.debug("APN Payload: " + payload);
 
       apnService.get().push(registrationId, payload);
-      pushMeter.mark();
+      success.mark();
     } catch (NetworkIOException nioe) {
       logger.warn("Network Error", nioe);
-      failureMeter.mark();
+      failure.mark();
       throw new TransientPushFailureException(nioe);
+    } catch (CryptoEncodingException e) {
+      throw new NotPushRegisteredException(e);
     }
-
   }
 
   private static byte[] initializeKeyStore(String pemCertificate, String pemKey)

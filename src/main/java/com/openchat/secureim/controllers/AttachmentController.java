@@ -1,8 +1,9 @@
 package com.openchat.secureim.controllers;
 
 import com.amazonaws.HttpMethod;
-import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
+import com.yammer.dropwizard.auth.Auth;
+import com.yammer.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.entities.AttachmentDescriptor;
@@ -26,8 +27,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-
-import io.dropwizard.auth.Auth;
 
 
 @Path("/v1/attachments")

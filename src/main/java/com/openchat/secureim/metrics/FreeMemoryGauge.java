@@ -1,14 +1,17 @@
 package com.openchat.secureim.metrics;
 
-import com.codahale.metrics.Gauge;
 import com.sun.management.OperatingSystemMXBean;
+import com.yammer.metrics.core.Gauge;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.management.ManagementFactory;
 
-public class FreeMemoryGauge implements Gauge<Long> {
+public class FreeMemoryGauge extends Gauge<Long> {
 
   @Override
-  public Long getValue() {
+  public Long value() {
     OperatingSystemMXBean mbean = (com.sun.management.OperatingSystemMXBean)
         ManagementFactory.getOperatingSystemMXBean();
 

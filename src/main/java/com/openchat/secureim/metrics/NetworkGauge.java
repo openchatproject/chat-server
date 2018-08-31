@@ -1,15 +1,16 @@
 package com.openchat.secureim.metrics;
 
 
-import com.codahale.metrics.Gauge;
+import com.yammer.metrics.core.Gauge;
 import com.openchat.secureim.util.Pair;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-public abstract class NetworkGauge implements Gauge<Long> {
+public abstract class NetworkGauge extends Gauge<Long> {
 
   protected Pair<Long, Long> getSentReceived() throws IOException {
     File           proc          = new File("/proc/net/dev");

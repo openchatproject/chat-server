@@ -1,11 +1,17 @@
 package com.openchat.secureim;
 
-import com.codahale.metrics.SharedMetricRegistries;
-import com.codahale.metrics.graphite.GraphiteReporter;
 import com.google.common.base.Optional;
+import com.yammer.dropwizard.Service;
+import com.yammer.dropwizard.config.Bootstrap;
+import com.yammer.dropwizard.config.Environment;
+import com.yammer.dropwizard.config.HttpConfiguration;
+import com.yammer.dropwizard.db.DatabaseConfiguration;
+import com.yammer.dropwizard.jdbi.DBIFactory;
+import com.yammer.dropwizard.migrations.MigrationsBundle;
+import com.yammer.metrics.Metrics;
+import com.yammer.metrics.reporting.GraphiteReporter;
 import net.spy.memcached.MemcachedClient;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.skife.jdbi.v2.DBI;
 import com.openchat.secureim.auth.AccountAuthenticator;
 import com.openchat.secureim.auth.FederatedPeerAuthenticator;
@@ -18,6 +24,7 @@ import com.openchat.secureim.controllers.DirectoryController;
 import com.openchat.secureim.controllers.FederationController;
 import com.openchat.secureim.controllers.KeysController;
 import com.openchat.secureim.controllers.MessageController;
+import com.openchat.secureim.controllers.WebsocketControllerFactory;
 import com.openchat.secureim.federation.FederatedClientManager;
 import com.openchat.secureim.federation.FederatedPeer;
 import com.openchat.secureim.limits.RateLimiters;
@@ -46,30 +53,18 @@ import com.openchat.secureim.storage.PendingAccountsManager;
 import com.openchat.secureim.storage.PendingDevices;
 import com.openchat.secureim.storage.PendingDevicesManager;
 import com.openchat.secureim.storage.PubSubManager;
+import com.openchat.secureim.storage.StoredMessageManager;
 import com.openchat.secureim.storage.StoredMessages;
-import com.openchat.secureim.util.Constants;
+import com.openchat.secureim.util.CORSHeaderFilter;
 import com.openchat.secureim.util.UrlSigner;
-import com.openchat.secureim.websocket.WebsocketControllerFactory;
 import com.openchat.secureim.workers.DirectoryCommand;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletRegistration;
 import java.security.Security;
-import java.util.EnumSet;
 import java.util.concurrent.TimeUnit;
 
-import static com.codahale.metrics.MetricRegistry.name;
-import io.dropwizard.Application;
-import io.dropwizard.db.DataSourceFactory;
-import io.dropwizard.jdbi.DBIFactory;
-import io.dropwizard.metrics.graphite.GraphiteReporterFactory;
-import io.dropwizard.migrations.MigrationsBundle;
-import io.dropwizard.setup.Bootstrap;
-import io.dropwizard.setup.Environment;
 import redis.clients.jedis.JedisPool;
 
-public class OpenChatSecureimService extends Application<OpenChatSecureimConfiguration> {
+public class OpenChatSecureimService extends Service<OpenChatSecureimConfiguration> {
 
   static {
     Security.addProvider(new BouncyCastleProvider());
@@ -77,44 +72,41 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
 
   @Override
   public void initialize(Bootstrap<OpenChatSecureimConfiguration> bootstrap) {
+    bootstrap.setName("openchat-secureim");
     bootstrap.addCommand(new DirectoryCommand());
     bootstrap.addBundle(new MigrationsBundle<OpenChatSecureimConfiguration>() {
       @Override
-      public DataSourceFactory getDataSourceFactory(OpenChatSecureimConfiguration configuration) {
-        return configuration.getDataSourceFactory();
+      public DatabaseConfiguration getDatabaseConfiguration(OpenChatSecureimConfiguration configuration) {
+        return configuration.getDatabaseConfiguration();
       }
     });
-  }
-
-  @Override
-  public String getName() {
-    return "openchat-secureim";
   }
 
   @Override
   public void run(OpenChatSecureimConfiguration config, Environment environment)
       throws Exception
   {
-    SharedMetricRegistries.add(Constants.METRICS_NAME, environment.metrics());
-
+    config.getHttpConfiguration().setConnectorType(HttpConfiguration.ConnectorType.NONBLOCKING);
+    
     DBIFactory dbiFactory = new DBIFactory();
-    DBI        jdbi       = dbiFactory.build(environment, config.getDataSourceFactory(), "postgresql");
+    DBI        jdbi       = dbiFactory.build(environment, config.getDatabaseConfiguration(), "postgresql");
 
     Accounts        accounts        = jdbi.onDemand(Accounts.class);
     PendingAccounts pendingAccounts = jdbi.onDemand(PendingAccounts.class);
     PendingDevices  pendingDevices  = jdbi.onDemand(PendingDevices.class);
     Keys            keys            = jdbi.onDemand(Keys.class);
+    StoredMessages  storedMessages  = jdbi.onDemand(StoredMessages.class );
 
     MemcachedClient memcachedClient = new MemcachedClientFactory(config.getMemcacheConfiguration()).getClient();
     JedisPool       redisClient     = new RedisClientFactory(config.getRedisConfiguration()).getRedisClientPool();
 
-    DirectoryManager       directory              = new DirectoryManager(redisClient);
-    PendingAccountsManager pendingAccountsManager = new PendingAccountsManager(pendingAccounts, memcachedClient);
-    PendingDevicesManager  pendingDevicesManager  = new PendingDevicesManager (pendingDevices, memcachedClient );
-    AccountsManager        accountsManager        = new AccountsManager(accounts, directory, memcachedClient);
-    FederatedClientManager federatedClientManager = new FederatedClientManager(config.getFederationConfiguration());
-    StoredMessages         storedMessages         = new StoredMessages(redisClient);
-    PubSubManager          pubSubManager          = new PubSubManager(redisClient);
+    DirectoryManager         directory              = new DirectoryManager(redisClient);
+    PendingAccountsManager   pendingAccountsManager = new PendingAccountsManager(pendingAccounts, memcachedClient);
+    PendingDevicesManager    pendingDevicesManager  = new PendingDevicesManager(pendingDevices, memcachedClient);
+    AccountsManager          accountsManager        = new AccountsManager(accounts, directory, memcachedClient);
+    FederatedClientManager   federatedClientManager = new FederatedClientManager(config.getFederationConfiguration());
+    PubSubManager            pubSubManager          = new PubSubManager(redisClient);
+    StoredMessageManager     storedMessageManager   = new StoredMessageManager(storedMessages, pubSubManager);
 
     AccountAuthenticator     deviceAuthenticator    = new AccountAuthenticator(accountsManager);
     RateLimiters             rateLimiters           = new RateLimiters(config.getLimitsConfiguration(), memcachedClient);
@@ -125,30 +117,26 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     UrlSigner                urlSigner              = new UrlSigner(config.getS3Configuration());
     PushSender               pushSender             = new PushSender(config.getGcmConfiguration(),
                                                                      config.getApnConfiguration(),
-                                                                     storedMessages, pubSubManager,
+                                                                     storedMessageManager,
                                                                      accountsManager);
 
     AttachmentController attachmentController = new AttachmentController(rateLimiters, federatedClientManager, urlSigner);
     KeysController       keysController       = new KeysController(rateLimiters, keys, accountsManager, federatedClientManager);
     MessageController    messageController    = new MessageController(rateLimiters, pushSender, accountsManager, federatedClientManager);
 
-    environment.jersey().register(new MultiBasicAuthProvider<>(new FederatedPeerAuthenticator(config.getFederationConfiguration()),
-                                                               FederatedPeer.class,
-                                                               deviceAuthenticator,
-                                                               Device.class, "OpenchatSecureimServer"));
+    environment.addProvider(new MultiBasicAuthProvider<>(new FederatedPeerAuthenticator(config.getFederationConfiguration()),
+                                                         FederatedPeer.class,
+                                                         deviceAuthenticator,
+                                                         Device.class, "OpenchatSecureimServer"));
 
-    environment.jersey().register(new AccountController(pendingAccountsManager, accountsManager, rateLimiters, smsSender));
-    environment.jersey().register(new DeviceController(pendingDevicesManager, accountsManager, rateLimiters));
-    environment.jersey().register(new DirectoryController(rateLimiters, directory));
-    environment.jersey().register(new FederationController(accountsManager, attachmentController, keysController, messageController));
-    environment.jersey().register(attachmentController);
-    environment.jersey().register(keysController);
-    environment.jersey().register(messageController);
+    environment.addResource(new AccountController(pendingAccountsManager, accountsManager, rateLimiters, smsSender));
+    environment.addResource(new DeviceController(pendingDevicesManager, accountsManager, rateLimiters));
+    environment.addResource(new DirectoryController(rateLimiters, directory));
+    environment.addResource(new FederationController(accountsManager, attachmentController, keysController, messageController));
+    environment.addResource(attachmentController);
+    environment.addResource(keysController);
+    environment.addResource(messageController);
 
     if (config.getWebsocketConfiguration().isEnabled()) {
-      WebsocketControllerFactory servlet = new WebsocketControllerFactory(deviceAuthenticator,
-                                                                          pushSender,
-                                                                          storedMessages,
-                                                                          pubSubManager);
-
-      ServletRegistration.Dynamic websocket = environment.servlets().addServlet("WebSocket", servlet);
+      environment.addServlet(new WebsocketControllerFactory(deviceAuthenticator, storedMessageManager, pubSubManager),
+                             "/v1/websocket/");

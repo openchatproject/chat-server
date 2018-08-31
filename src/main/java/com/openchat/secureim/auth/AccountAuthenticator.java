@@ -1,26 +1,28 @@
 package com.openchat.secureim.auth;
 
-import com.codahale.metrics.Meter;
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.SharedMetricRegistries;
 import com.google.common.base.Optional;
+import com.yammer.dropwizard.auth.AuthenticationException;
+import com.yammer.dropwizard.auth.Authenticator;
+import com.yammer.dropwizard.auth.basic.BasicCredentials;
+import com.yammer.metrics.Metrics;
+import com.yammer.metrics.core.Meter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.storage.Account;
-import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
-import com.openchat.secureim.util.Constants;
+import com.openchat.secureim.storage.AccountsManager;
 
-import static com.codahale.metrics.MetricRegistry.name;
-import io.dropwizard.auth.AuthenticationException;
-import io.dropwizard.auth.Authenticator;
-import io.dropwizard.auth.basic.BasicCredentials;
+import java.util.concurrent.TimeUnit;
 
 public class AccountAuthenticator implements Authenticator<BasicCredentials, Account> {
 
-  private final MetricRegistry metricRegistry               = SharedMetricRegistries.getOrCreate(Constants.METRICS_NAME);
-  private final Meter          authenticationFailedMeter    = metricRegistry.meter(name(getClass(), "authentication", "failed"   ));
-  private final Meter          authenticationSucceededMeter = metricRegistry.meter(name(getClass(), "authentication", "succeeded"));
+  private final Meter authenticationFailedMeter    = Metrics.newMeter(AccountAuthenticator.class,
+                                                                      "authentication", "failed",
+                                                                      TimeUnit.MINUTES);
+
+  private final Meter authenticationSucceededMeter = Metrics.newMeter(AccountAuthenticator.class,
+                                                                      "authentication", "succeeded",
+                                                                      TimeUnit.MINUTES);
 
   private final Logger logger = LoggerFactory.getLogger(AccountAuthenticator.class);
 

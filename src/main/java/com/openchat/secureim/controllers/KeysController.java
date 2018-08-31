@@ -1,7 +1,8 @@
 package com.openchat.secureim.controllers;
 
-import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
+import com.yammer.dropwizard.auth.Auth;
+import com.yammer.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.entities.PreKey;
@@ -30,8 +31,6 @@ import javax.ws.rs.core.Response;
 import java.util.LinkedList;
 import java.util.List;
 
-import io.dropwizard.auth.Auth;
-
 @Path("/v1/keys")
 public class KeysController {
 
@@ -55,7 +54,14 @@ public class KeysController {
   @PUT
   @Consumes(MediaType.APPLICATION_JSON)
   public void setKeys(@Auth Account account, @Valid PreKeyList preKeys)  {
-    Device device = account.getAuthenticatedDevice().get();
+    Device device      = account.getAuthenticatedDevice().get();
+    String identityKey = preKeys.getLastResortKey().getIdentityKey();
+
+    if (!identityKey.equals(account.getIdentityKey())) {
+      account.setIdentityKey(identityKey);
+      accounts.update(account);
+    }
+
     keys.store(account.getNumber(), device.getId(), preKeys.getKeys(), preKeys.getLastResortKey());
   }
 

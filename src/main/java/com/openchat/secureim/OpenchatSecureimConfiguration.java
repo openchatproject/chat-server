@@ -1,6 +1,8 @@
 package com.openchat.secureim;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.yammer.dropwizard.config.Configuration;
+import com.yammer.dropwizard.db.DatabaseConfiguration;
 import com.openchat.secureim.configuration.ApnConfiguration;
 import com.openchat.secureim.configuration.FederationConfiguration;
 import com.openchat.secureim.configuration.GcmConfiguration;
@@ -16,9 +18,6 @@ import com.openchat.secureim.configuration.WebsocketConfiguration;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-
-import io.dropwizard.Configuration;
-import io.dropwizard.db.DataSourceFactory;
 
 public class OpenChatSecureimConfiguration extends Configuration {
 
@@ -59,7 +58,7 @@ public class OpenChatSecureimConfiguration extends Configuration {
   @Valid
   @NotNull
   @JsonProperty
-  private DataSourceFactory database = new DataSourceFactory();
+  private DatabaseConfiguration database = new DatabaseConfiguration();
 
   @Valid
   @NotNull
@@ -72,7 +71,7 @@ public class OpenChatSecureimConfiguration extends Configuration {
 
   @Valid
   @JsonProperty
-  private MetricsConfiguration viz = new MetricsConfiguration();
+  private MetricsConfiguration metrics = new MetricsConfiguration();
 
   @Valid
   @JsonProperty
@@ -110,7 +109,7 @@ public class OpenChatSecureimConfiguration extends Configuration {
     return redis;
   }
 
-  public DataSourceFactory getDataSourceFactory() {
+  public DatabaseConfiguration getDatabaseConfiguration() {
     return database;
   }
 
@@ -127,6 +126,6 @@ public class OpenChatSecureimConfiguration extends Configuration {
   }
 
   public MetricsConfiguration getMetricsConfiguration() {
-    return viz;
+    return metrics;
   }
 }

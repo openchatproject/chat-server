@@ -1,7 +1,8 @@
 package com.openchat.secureim.controllers;
 
-import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
+import com.yammer.dropwizard.auth.Auth;
+import com.yammer.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.entities.AccountCount;
@@ -27,8 +28,6 @@ import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-
-import io.dropwizard.auth.Auth;
 
 @Path("/v1/federation")
 public class FederationController {
