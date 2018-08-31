@@ -1,0 +1,35 @@
+package com.openchat.secureim.metrics;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import com.openchat.secureim.util.Pair;
+
+import java.io.IOException;
+
+public class NetworkSentGauge extends NetworkGauge {
+
+  private final Logger logger = LoggerFactory.getLogger(NetworkSentGauge.class);
+
+  private long lastTimestamp;
+  private long lastSent;
+
+  @Override
+  public Long value() {
+    try {
+      long             timestamp       = System.currentTimeMillis();
+      Pair<Long, Long> sentAndReceived = getSentReceived();
+      long             result          = 0;
+
+      if (lastTimestamp != 0) {
+        result        = sentAndReceived.first() - lastSent;
+        lastSent      = sentAndReceived.first();
+      }
+
+      lastTimestamp = timestamp;
+      return result;
+    } catch (IOException e) {
+      logger.warn("NetworkSentGauge", e);
+      return -1L;
+    }
+  }
+}
