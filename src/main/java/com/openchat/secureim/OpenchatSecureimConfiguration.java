@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yammer.dropwizard.config.Configuration;
 import com.yammer.dropwizard.db.DatabaseConfiguration;
 import com.openchat.secureim.configuration.ApnConfiguration;
-import com.openchat.secureim.configuration.DataDogConfiguration;
 import com.openchat.secureim.configuration.FederationConfiguration;
 import com.openchat.secureim.configuration.GcmConfiguration;
 import com.openchat.secureim.configuration.GraphiteConfiguration;
 import com.openchat.secureim.configuration.MemcacheConfiguration;
+import com.openchat.secureim.configuration.MetricsConfiguration;
 import com.openchat.secureim.configuration.NexmoConfiguration;
 import com.openchat.secureim.configuration.RateLimitsConfiguration;
 import com.openchat.secureim.configuration.RedisConfiguration;
@@ -71,7 +71,7 @@ public class OpenChatSecureimConfiguration extends Configuration {
 
   @Valid
   @JsonProperty
-  private DataDogConfiguration datadog = new DataDogConfiguration();
+  private MetricsConfiguration metrics = new MetricsConfiguration();
 
   @Valid
   @JsonProperty
@@ -125,7 +125,7 @@ public class OpenChatSecureimConfiguration extends Configuration {
     return graphite;
   }
 
-  public DataDogConfiguration getDataDogConfiguration() {
-    return datadog;
+  public MetricsConfiguration getMetricsConfiguration() {
+    return metrics;
   }
 }
