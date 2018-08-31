@@ -1,7 +1,6 @@
 package com.openchat.secureim.controllers;
 
 import java.util.List;
-import java.util.Set;
 
 public class MismatchedDevicesException extends Exception {
 

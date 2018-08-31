@@ -1,9 +1,8 @@
 package com.openchat.secureim.controllers;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
-import com.yammer.dropwizard.auth.Auth;
-import com.yammer.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.auth.AuthenticationCredentials;
@@ -13,8 +12,8 @@ import com.openchat.secureim.entities.AccountAttributes;
 import com.openchat.secureim.entities.DeviceResponse;
 import com.openchat.secureim.limits.RateLimiters;
 import com.openchat.secureim.storage.Account;
-import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.AccountsManager;
+import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.PendingDevicesManager;
 import com.openchat.secureim.util.VerificationCode;
 
@@ -31,6 +30,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+
+import io.dropwizard.auth.Auth;
 
 @Path("/v1/devices")
 public class DeviceController {

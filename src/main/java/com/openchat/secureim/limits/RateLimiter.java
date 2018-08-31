@@ -1,12 +1,13 @@
 package com.openchat.secureim.limits;
 
-import com.yammer.metrics.Metrics;
-import com.yammer.metrics.core.Meter;
+import com.codahale.metrics.Meter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.SharedMetricRegistries;
 import net.spy.memcached.MemcachedClient;
-
 import com.openchat.secureim.controllers.RateLimitExceededException;
+import com.openchat.secureim.util.Constants;
 
-import java.util.concurrent.TimeUnit;
+import static com.codahale.metrics.MetricRegistry.name;
 
 public class RateLimiter {
 
@@ -19,7 +20,9 @@ public class RateLimiter {
   public RateLimiter(MemcachedClient memcachedClient, String name,
                      int bucketSize, double leakRatePerMinute)
   {
-    this.meter             = Metrics.newMeter(RateLimiter.class, name, "exceeded", TimeUnit.MINUTES);
+    MetricRegistry metricRegistry = SharedMetricRegistries.getOrCreate(Constants.METRICS_NAME);
+
+    this.meter             = metricRegistry.meter(name(getClass(), name, "exceeded"));
     this.memcachedClient   = memcachedClient;
     this.name              = name;
     this.bucketSize        = bucketSize;
