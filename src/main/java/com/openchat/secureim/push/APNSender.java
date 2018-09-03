@@ -1,16 +1,18 @@
 package com.openchat.secureim.push;
 
+import com.codahale.metrics.Meter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.SharedMetricRegistries;
 import com.google.common.base.Optional;
 import com.notnoop.apns.APNS;
 import com.notnoop.apns.ApnsService;
 import com.notnoop.exceptions.NetworkIOException;
-import com.yammer.metrics.Metrics;
-import com.yammer.metrics.core.Meter;
 import org.bouncycastle.openssl.PEMReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.entities.CryptoEncodingException;
 import com.openchat.secureim.entities.EncryptedOutgoingMessage;
+import com.openchat.secureim.util.Constants;
 import com.openchat.secureim.util.Util;
 
 import java.io.ByteArrayInputStream;
@@ -24,13 +26,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.concurrent.TimeUnit;
+
+import static com.codahale.metrics.MetricRegistry.name;
 
 public class APNSender {
 
-  private final Meter  success = Metrics.newMeter(APNSender.class, "sent", "success", TimeUnit.MINUTES);
-  private final Meter  failure = Metrics.newMeter(APNSender.class, "sent", "failure", TimeUnit.MINUTES);
-  private final Logger logger  = LoggerFactory.getLogger(APNSender.class);
+  private final MetricRegistry metricRegistry = SharedMetricRegistries.getOrCreate(Constants.METRICS_NAME);
+  private final Meter          success        = metricRegistry.meter(name(getClass(), "sent", "success"));
+  private final Meter          failure        = metricRegistry.meter(name(getClass(), "sent", "failure"));
+  private final Logger         logger         = LoggerFactory.getLogger(APNSender.class);
 
   private static final String MESSAGE_BODY = "m";
 

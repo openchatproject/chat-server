@@ -1,21 +1,24 @@
 package com.openchat.secureim.push;
 
+import com.codahale.metrics.Meter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.SharedMetricRegistries;
 import com.google.android.gcm.server.Constants;
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
-import com.yammer.metrics.Metrics;
-import com.yammer.metrics.core.Meter;
 import com.openchat.secureim.entities.CryptoEncodingException;
 import com.openchat.secureim.entities.EncryptedOutgoingMessage;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+
+import static com.codahale.metrics.MetricRegistry.name;
 
 public class GCMSender {
 
-  private final Meter success = Metrics.newMeter(GCMSender.class, "sent", "success", TimeUnit.MINUTES);
-  private final Meter failure = Metrics.newMeter(GCMSender.class, "sent", "failure", TimeUnit.MINUTES);
+  private final MetricRegistry metricRegistry = SharedMetricRegistries.getOrCreate(com.openchat.secureim.util.Constants.METRICS_NAME);
+  private final Meter          success        = metricRegistry.meter(name(getClass(), "sent", "success"));
+  private final Meter          failure        = metricRegistry.meter(name(getClass(), "sent", "failure"));
 
   private final Sender sender;
 

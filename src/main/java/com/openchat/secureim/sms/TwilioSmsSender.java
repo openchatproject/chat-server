@@ -1,21 +1,24 @@
 package com.openchat.secureim.sms;
 
+import com.codahale.metrics.Meter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.SharedMetricRegistries;
 import com.twilio.sdk.TwilioRestClient;
 import com.twilio.sdk.TwilioRestException;
 import com.twilio.sdk.resource.factory.CallFactory;
 import com.twilio.sdk.resource.factory.MessageFactory;
-import com.yammer.metrics.Metrics;
-import com.yammer.metrics.core.Meter;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import com.openchat.secureim.configuration.TwilioConfiguration;
+import com.openchat.secureim.util.Constants;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
+
+import static com.codahale.metrics.MetricRegistry.name;
 
 public class TwilioSmsSender {
 
@@ -24,8 +27,9 @@ public class TwilioSmsSender {
                                          "    <Say voice=\"woman\" language=\"en\">" + SmsSender.VOX_VERIFICATION_TEXT + "%s</Say>\n" +
                                          "</Response>";
 
-  private final Meter smsMeter = Metrics.newMeter(TwilioSmsSender.class, "sms", "delivered", TimeUnit.MINUTES);
-  private final Meter voxMeter = Metrics.newMeter(TwilioSmsSender.class, "vox", "delivered", TimeUnit.MINUTES);
+  private final MetricRegistry metricRegistry = SharedMetricRegistries.getOrCreate(Constants.METRICS_NAME);
+  private final Meter          smsMeter       = metricRegistry.meter(name(getClass(), "sms", "delivered"));
+  private final Meter          voxMeter       = metricRegistry.meter(name(getClass(), "vox", "delivered"));
 
   private final String accountId;
   private final String accountToken;
