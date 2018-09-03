@@ -18,7 +18,6 @@ import com.openchat.secureim.controllers.DirectoryController;
 import com.openchat.secureim.controllers.FederationController;
 import com.openchat.secureim.controllers.KeysController;
 import com.openchat.secureim.controllers.MessageController;
-import com.openchat.secureim.controllers.WebsocketControllerFactory;
 import com.openchat.secureim.federation.FederatedClientManager;
 import com.openchat.secureim.federation.FederatedPeer;
 import com.openchat.secureim.limits.RateLimiters;
@@ -47,10 +46,10 @@ import com.openchat.secureim.storage.PendingAccountsManager;
 import com.openchat.secureim.storage.PendingDevices;
 import com.openchat.secureim.storage.PendingDevicesManager;
 import com.openchat.secureim.storage.PubSubManager;
-import com.openchat.secureim.storage.StoredMessageManager;
 import com.openchat.secureim.storage.StoredMessages;
 import com.openchat.secureim.util.Constants;
 import com.openchat.secureim.util.UrlSigner;
+import com.openchat.secureim.websocket.WebsocketControllerFactory;
 import com.openchat.secureim.workers.DirectoryCommand;
 
 import javax.servlet.DispatcherType;
@@ -105,18 +104,17 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     PendingAccounts pendingAccounts = jdbi.onDemand(PendingAccounts.class);
     PendingDevices  pendingDevices  = jdbi.onDemand(PendingDevices.class);
     Keys            keys            = jdbi.onDemand(Keys.class);
-    StoredMessages  storedMessages  = jdbi.onDemand(StoredMessages.class );
 
     MemcachedClient memcachedClient = new MemcachedClientFactory(config.getMemcacheConfiguration()).getClient();
     JedisPool       redisClient     = new RedisClientFactory(config.getRedisConfiguration()).getRedisClientPool();
 
-    DirectoryManager         directory              = new DirectoryManager(redisClient);
-    PendingAccountsManager   pendingAccountsManager = new PendingAccountsManager(pendingAccounts, memcachedClient);
-    PendingDevicesManager    pendingDevicesManager  = new PendingDevicesManager(pendingDevices, memcachedClient);
-    AccountsManager          accountsManager        = new AccountsManager(accounts, directory, memcachedClient);
-    FederatedClientManager   federatedClientManager = new FederatedClientManager(config.getFederationConfiguration());
-    PubSubManager            pubSubManager          = new PubSubManager(redisClient);
-    StoredMessageManager     storedMessageManager   = new StoredMessageManager(storedMessages, pubSubManager);
+    DirectoryManager       directory              = new DirectoryManager(redisClient);
+    PendingAccountsManager pendingAccountsManager = new PendingAccountsManager(pendingAccounts, memcachedClient);
+    PendingDevicesManager  pendingDevicesManager  = new PendingDevicesManager (pendingDevices, memcachedClient );
+    AccountsManager        accountsManager        = new AccountsManager(accounts, directory, memcachedClient);
+    FederatedClientManager federatedClientManager = new FederatedClientManager(config.getFederationConfiguration());
+    StoredMessages         storedMessages         = new StoredMessages(redisClient);
+    PubSubManager          pubSubManager          = new PubSubManager(redisClient);
 
     AccountAuthenticator     deviceAuthenticator    = new AccountAuthenticator(accountsManager);
     RateLimiters             rateLimiters           = new RateLimiters(config.getLimitsConfiguration(), memcachedClient);
@@ -127,7 +125,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     UrlSigner                urlSigner              = new UrlSigner(config.getS3Configuration());
     PushSender               pushSender             = new PushSender(config.getGcmConfiguration(),
                                                                      config.getApnConfiguration(),
-                                                                     storedMessageManager,
+                                                                     storedMessages, pubSubManager,
                                                                      accountsManager);
 
     AttachmentController attachmentController = new AttachmentController(rateLimiters, federatedClientManager, urlSigner);
@@ -149,7 +147,8 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
 
     if (config.getWebsocketConfiguration().isEnabled()) {
       WebsocketControllerFactory servlet = new WebsocketControllerFactory(deviceAuthenticator,
-                                                                          storedMessageManager,
+                                                                          pushSender,
+                                                                          storedMessages,
                                                                           pubSubManager);
 
       ServletRegistration.Dynamic websocket = environment.servlets().addServlet("WebSocket", servlet);

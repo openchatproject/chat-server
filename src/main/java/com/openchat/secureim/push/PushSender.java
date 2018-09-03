@@ -10,7 +10,8 @@ import com.openchat.secureim.entities.MessageProtos;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
-import com.openchat.secureim.storage.StoredMessageManager;
+import com.openchat.secureim.storage.PubSubManager;
+import com.openchat.secureim.storage.StoredMessages;
 
 import java.io.IOException;
 import java.security.KeyStoreException;
@@ -21,32 +22,45 @@ public class PushSender {
 
   private final Logger logger = LoggerFactory.getLogger(PushSender.class);
 
-  private final AccountsManager      accounts;
-  private final GCMSender            gcmSender;
-  private final APNSender            apnSender;
-  private final StoredMessageManager storedMessageManager;
+  private final AccountsManager accounts;
+  private final GCMSender       gcmSender;
+  private final APNSender       apnSender;
+  private final WebsocketSender webSocketSender;
 
   public PushSender(GcmConfiguration gcmConfiguration,
                     ApnConfiguration apnConfiguration,
-                    StoredMessageManager storedMessageManager,
-                    AccountsManager accounts)
+                    StoredMessages   storedMessages,
+                    PubSubManager    pubSubManager,
+                    AccountsManager  accounts)
       throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException
   {
-    this.accounts             = accounts;
-    this.storedMessageManager = storedMessageManager;
-    this.gcmSender            = new GCMSender(gcmConfiguration.getApiKey());
-    this.apnSender            = new APNSender(apnConfiguration.getCertificate(), apnConfiguration.getKey());
+    this.accounts        = accounts;
+    this.webSocketSender = new WebsocketSender(storedMessages, pubSubManager);
+    this.gcmSender       = new GCMSender(gcmConfiguration.getApiKey());
+    this.apnSender       = new APNSender(pubSubManager, storedMessages,
+                                         apnConfiguration.getCertificate(),
+                                         apnConfiguration.getKey());
   }
 
-  public void sendMessage(Account account, Device device, MessageProtos.OutgoingMessageSignal outgoingMessage)
+  public void sendMessage(Account account, Device device, MessageProtos.OutgoingMessageSignal message)
       throws NotPushRegisteredException, TransientPushFailureException
   {
-    String                   signalingKey = device.getSignalingKey();
-    EncryptedOutgoingMessage message      = new EncryptedOutgoingMessage(outgoingMessage, signalingKey);
+    try {
+      String                   signalingKey     = device.getSignalingKey();
+      EncryptedOutgoingMessage encryptedMessage = new EncryptedOutgoingMessage(message, signalingKey);
 
+      sendMessage(account, device, encryptedMessage);
+    } catch (CryptoEncodingException e) {
+      throw new NotPushRegisteredException(e);
+    }
+  }
+
+  public void sendMessage(Account account, Device device, EncryptedOutgoingMessage message)
+      throws NotPushRegisteredException, TransientPushFailureException
+  {
     if      (device.getGcmId() != null)   sendGcmMessage(account, device, message);
     else if (device.getApnId() != null)   sendApnMessage(account, device, message);
-    else if (device.getFetchesMessages()) storeFetchedMessage(account, device, message);
+    else if (device.getFetchesMessages()) sendWebSocketMessage(account, device, message);
     else                                  throw new NotPushRegisteredException("No delivery possible!");
   }
 
@@ -73,7 +87,7 @@ public class PushSender {
       throws TransientPushFailureException, NotPushRegisteredException
   {
     try {
-      apnSender.sendMessage(device.getApnId(), outgoingMessage);
+      apnSender.sendMessage(account, device, device.getApnId(), outgoingMessage);
     } catch (NotPushRegisteredException e) {
       device.setApnId(null);
       accounts.update(account);
@@ -81,11 +95,11 @@ public class PushSender {
     }
   }
 
-  private void storeFetchedMessage(Account account, Device device, EncryptedOutgoingMessage outgoingMessage)
+  private void sendWebSocketMessage(Account account, Device device, EncryptedOutgoingMessage outgoingMessage)
       throws NotPushRegisteredException
   {
     try {
-      storedMessageManager.storeMessage(account, device, outgoingMessage);
+      webSocketSender.sendMessage(account, device, outgoingMessage);
     } catch (CryptoEncodingException e) {
       throw new NotPushRegisteredException(e);
     }
