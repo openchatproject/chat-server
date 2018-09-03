@@ -4,6 +4,7 @@ package com.openchat.secureim.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.annotations.VisibleForTesting;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlTransient;
@@ -42,8 +43,19 @@ public class PreKey {
   public PreKey() {}
 
   public PreKey(long id, String number, long deviceId, long keyId,
-                String publicKey, String identityKey,
-                boolean lastResort)
+                String publicKey, boolean lastResort)
+  {
+    this.id          = id;
+    this.number      = number;
+    this.deviceId    = deviceId;
+    this.keyId       = keyId;
+    this.publicKey   = publicKey;
+    this.lastResort  = lastResort;
+  }
+
+  @VisibleForTesting
+  public PreKey(long id, String number, long deviceId, long keyId,
+                String publicKey, String identityKey, boolean lastResort)
   {
     this.id          = id;
     this.number      = number;
