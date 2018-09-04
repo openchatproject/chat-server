@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Account implements Serializable {
 
-  public static final int MEMCACHE_VERION = 4;
+  public static final int MEMCACHE_VERION = 3;
 
   @JsonIgnore
   private long id;

@@ -11,11 +11,13 @@ import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.DirectoryManager;
 import com.openchat.secureim.storage.DirectoryManager.BatchOperationHandle;
 import com.openchat.secureim.util.Base64;
-import com.openchat.secureim.util.Hex;
 import com.openchat.secureim.util.Util;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+
+import static com.openchat.secureim.storage.DirectoryManager.PendingClientContact;
 
 public class DirectoryUpdater {
 
@@ -66,54 +68,69 @@ public class DirectoryUpdater {
 
   public void updateFromPeers() {
     logger.info("Updating peer directories.");
-    List<FederatedClient> clients = federatedClientManager.getClients();
+
+    int                   contactsAdded   = 0;
+    int                   contactsRemoved = 0;
+    List<FederatedClient> clients         = federatedClientManager.getClients();
 
     for (FederatedClient client : clients) {
       logger.info("Updating directory from peer: " + client.getPeerName());
-//      BatchOperationHandle handle = directory.startBatchOperation();
 
-      try {
-        int userCount = client.getUserCount();
-        int retrieved = 0;
+      int userCount = client.getUserCount();
+      int retrieved = 0;
 
-        logger.info("Remote peer user count: " + userCount);
+      logger.info("Remote peer user count: " + userCount);
 
-        while (retrieved < userCount) {
-          logger.info("Retrieving remote tokens...");
-          List<ClientContact> clientContacts = client.getUserTokens(retrieved);
+      while (retrieved < userCount) {
+        logger.info("Retrieving remote tokens...");
+        List<ClientContact>        remoteContacts = client.getUserTokens(retrieved);
+        List<PendingClientContact> localContacts  = new LinkedList<>();
+        BatchOperationHandle       handle         = directory.startBatchOperation();
 
-          if (clientContacts == null) {
-            logger.info("Remote tokens empty, ending...");
-            break;
-          } else {
-            logger.info("Retrieved " + clientContacts.size() + " remote tokens...");
-          }
-
-          for (ClientContact clientContact : clientContacts) {
-            clientContact.setRelay(client.getPeerName());
-
-            Optional<ClientContact> existing = directory.get(clientContact.getToken());
-
-            if (!clientContact.isInactive() && (!existing.isPresent() || client.getPeerName().equals(existing.get().getRelay()))) {
-//              directory.add(handle, clientContact);
-              directory.add(clientContact);
-            } else {
-              if (existing.isPresent() && client.getPeerName().equals(existing.get().getRelay())) {
-                directory.remove(clientContact.getToken());
-              }
-            }
-          }
-
-          retrieved += clientContacts.size();
-          logger.info("Processed: " + retrieved + " remote tokens.");
+        if (remoteContacts == null) {
+          logger.info("Remote tokens empty, ending...");
+          break;
+        } else {
+          logger.info("Retrieved " + remoteContacts.size() + " remote tokens...");
         }
 
-        logger.info("Update from peer complete.");
-      } finally {
-//        directory.stopBatchOperation(handle);
+        for (ClientContact remoteContact : remoteContacts) {
+          localContacts.add(directory.get(handle, remoteContact.getToken()));
+        }
+
+        directory.stopBatchOperation(handle);
+
+        handle = directory.startBatchOperation();
+        Iterator<ClientContact>        remoteContactIterator = remoteContacts.iterator();
+        Iterator<PendingClientContact> localContactIterator  = localContacts.iterator();
+
+        while (remoteContactIterator.hasNext() && localContactIterator.hasNext()) {
+          ClientContact           remoteContact = remoteContactIterator.next();
+          Optional<ClientContact> localContact  = localContactIterator.next().get();
+
+          remoteContact.setRelay(client.getPeerName());
+
+          if (!remoteContact.isInactive() && (!localContact.isPresent() || client.getPeerName().equals(localContact.get().getRelay()))) {
+            contactsAdded++;
+            directory.add(handle, remoteContact);
+          } else {
+            if (localContact.isPresent() && client.getPeerName().equals(localContact.get().getRelay())) {
+              contactsRemoved++;
+              directory.remove(handle, remoteContact.getToken());
+            }
+          }
+        }
+
+        directory.stopBatchOperation(handle);
+
+        retrieved += remoteContacts.size();
+        logger.info("Processed: " + retrieved + " remote tokens.");
       }
+
+      logger.info("Update from peer complete.");
     }
 
     logger.info("Update from peer directories complete.");
+    logger.info(String.format("Added %d and removed %d remove contacts.", contactsAdded, contactsRemoved));
   }
 }

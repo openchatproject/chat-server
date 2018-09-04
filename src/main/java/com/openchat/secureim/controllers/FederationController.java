@@ -9,9 +9,8 @@ import com.openchat.secureim.entities.AttachmentUri;
 import com.openchat.secureim.entities.ClientContact;
 import com.openchat.secureim.entities.ClientContacts;
 import com.openchat.secureim.entities.IncomingMessageList;
-import com.openchat.secureim.entities.PreKeyResponseV2;
-import com.openchat.secureim.entities.PreKeyV1;
-import com.openchat.secureim.entities.PreKeyResponseV1;
+import com.openchat.secureim.entities.PreKey;
+import com.openchat.secureim.entities.UnstructuredPreKeyList;
 import com.openchat.secureim.federation.FederatedPeer;
 import com.openchat.secureim.federation.NonLimitedAccount;
 import com.openchat.secureim.storage.Account;
@@ -31,7 +30,7 @@ import java.util.List;
 
 import io.dropwizard.auth.Auth;
 
-@Path("/")
+@Path("/v1/federation")
 public class FederationController {
 
   private final Logger logger = LoggerFactory.getLogger(FederationController.class);
@@ -40,26 +39,23 @@ public class FederationController {
 
   private final AccountsManager      accounts;
   private final AttachmentController attachmentController;
-  private final KeysControllerV1     keysControllerV1;
-  private final KeysControllerV2     keysControllerV2;
+  private final KeysController       keysController;
   private final MessageController    messageController;
 
   public FederationController(AccountsManager      accounts,
                               AttachmentController attachmentController,
-                              KeysControllerV1     keysControllerV1,
-                              KeysControllerV2     keysControllerV2,
-                              MessageController    messageController)
+                              KeysController       keysController,
+                              MessageController     messageController)
   {
     this.accounts             = accounts;
     this.attachmentController = attachmentController;
-    this.keysControllerV1     = keysControllerV1;
-    this.keysControllerV2     = keysControllerV2;
+    this.keysController       = keysController;
     this.messageController    = messageController;
   }
 
   @Timed
   @GET
-  @Path("/v1/federation/attachment/{attachmentId}")
+  @Path("/attachment/{attachmentId}")
   @Produces(MediaType.APPLICATION_JSON)
   public AttachmentUri getSignedAttachmentUri(@Auth                      FederatedPeer peer,
                                               @PathParam("attachmentId") long attachmentId)
@@ -71,15 +67,14 @@ public class FederationController {
 
   @Timed
   @GET
-  @Path("/v1/federation/key/{number}")
+  @Path("/key/{number}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Optional<PreKeyV1> getKey(@Auth                FederatedPeer peer,
-                                   @PathParam("number") String number)
+  public PreKey getKey(@Auth                FederatedPeer peer,
+                       @PathParam("number") String number)
       throws IOException
   {
     try {
-      return keysControllerV1.get(new NonLimitedAccount("Unknown", -1, peer.getName()),
-                                  number, Optional.<String>absent());
+      return keysController.get(new NonLimitedAccount("Unknown", -1, peer.getName()), number, Optional.<String>absent());
     } catch (RateLimitExceededException e) {
       logger.warn("Rate limiting on federated channel", e);
       throw new IOException(e);
@@ -88,34 +83,16 @@ public class FederationController {
 
   @Timed
   @GET
-  @Path("/v1/federation/key/{number}/{device}")
+  @Path("/key/{number}/{device}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Optional<PreKeyResponseV1> getKeysV1(@Auth                FederatedPeer peer,
-                                              @PathParam("number") String number,
-                                              @PathParam("device") String device)
+  public UnstructuredPreKeyList getKeys(@Auth                FederatedPeer peer,
+                                        @PathParam("number") String number,
+                                        @PathParam("device") String device)
       throws IOException
   {
     try {
-      return keysControllerV1.getDeviceKey(new NonLimitedAccount("Unknown", -1, peer.getName()),
-                                           number, device, Optional.<String>absent());
-    } catch (RateLimitExceededException e) {
-      logger.warn("Rate limiting on federated channel", e);
-      throw new IOException(e);
-    }
-  }
-
-  @Timed
-  @GET
-  @Path("/v2/federation/key/{number}/{device}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Optional<PreKeyResponseV2> getKeysV2(@Auth                FederatedPeer peer,
-                                              @PathParam("number") String number,
-                                              @PathParam("device") String device)
-      throws IOException
-  {
-    try {
-      return keysControllerV2.getDeviceKey(new NonLimitedAccount("Unknown", -1, peer.getName()),
-                                           number, device, Optional.<String>absent());
+      return keysController.getDeviceKey(new NonLimitedAccount("Unknown", -1, peer.getName()),
+                                         number, device, Optional.<String>absent());
     } catch (RateLimitExceededException e) {
       logger.warn("Rate limiting on federated channel", e);
       throw new IOException(e);
@@ -124,7 +101,7 @@ public class FederationController {
 
   @Timed
   @PUT
-  @Path("/v1/federation/messages/{source}/{sourceDeviceId}/{destination}")
+  @Path("/messages/{source}/{sourceDeviceId}/{destination}")
   public void sendMessages(@Auth                        FederatedPeer peer,
                            @PathParam("source")         String source,
                            @PathParam("sourceDeviceId") long sourceDeviceId,
@@ -143,7 +120,7 @@ public class FederationController {
 
   @Timed
   @GET
-  @Path("/v1/federation/user_count")
+  @Path("/user_count")
   @Produces(MediaType.APPLICATION_JSON)
   public AccountCount getUserCount(@Auth FederatedPeer peer) {
     return new AccountCount((int)accounts.getCount());
@@ -151,7 +128,7 @@ public class FederationController {
 
   @Timed
   @GET
-  @Path("/v1/federation/user_tokens/{offset}")
+  @Path("/user_tokens/{offset}")
   @Produces(MediaType.APPLICATION_JSON)
   public ClientContacts getUserTokens(@Auth                FederatedPeer peer,
                                       @PathParam("offset") int offset)

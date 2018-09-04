@@ -17,8 +17,7 @@ import com.openchat.secureim.controllers.AttachmentController;
 import com.openchat.secureim.controllers.DeviceController;
 import com.openchat.secureim.controllers.DirectoryController;
 import com.openchat.secureim.controllers.FederationController;
-import com.openchat.secureim.controllers.KeysControllerV1;
-import com.openchat.secureim.controllers.KeysControllerV2;
+import com.openchat.secureim.controllers.KeysController;
 import com.openchat.secureim.controllers.MessageController;
 import com.openchat.secureim.federation.FederatedClientManager;
 import com.openchat.secureim.federation.FederatedPeer;
@@ -132,8 +131,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
                                                                      accountsManager);
 
     AttachmentController attachmentController = new AttachmentController(rateLimiters, federatedClientManager, urlSigner);
-    KeysControllerV1     keysControllerV1     = new KeysControllerV1(rateLimiters, keys, accountsManager, federatedClientManager);
-    KeysControllerV2     keysControllerV2     = new KeysControllerV2(rateLimiters, keys, accountsManager, federatedClientManager);
+    KeysController       keysController       = new KeysController(rateLimiters, keys, accountsManager, federatedClientManager);
     MessageController    messageController    = new MessageController(rateLimiters, pushSender, accountsManager, federatedClientManager);
 
     environment.jersey().register(new MultiBasicAuthProvider<>(new FederatedPeerAuthenticator(config.getFederationConfiguration()),
@@ -144,10 +142,9 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     environment.jersey().register(new AccountController(pendingAccountsManager, accountsManager, rateLimiters, smsSender));
     environment.jersey().register(new DeviceController(pendingDevicesManager, accountsManager, rateLimiters));
     environment.jersey().register(new DirectoryController(rateLimiters, directory));
-    environment.jersey().register(new FederationController(accountsManager, attachmentController, keysControllerV1, keysControllerV2, messageController));
+    environment.jersey().register(new FederationController(accountsManager, attachmentController, keysController, messageController));
     environment.jersey().register(attachmentController);
-    environment.jersey().register(keysControllerV1);
-    environment.jersey().register(keysControllerV2);
+    environment.jersey().register(keysController);
     environment.jersey().register(messageController);
 
     if (config.getWebsocketConfiguration().isEnabled()) {

@@ -3,8 +3,6 @@ package com.openchat.secureim.storage;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.openchat.secureim.auth.AuthenticationCredentials;
-import com.openchat.secureim.entities.DeviceKey;
-import com.openchat.secureim.entities.PreKeyV2;
 import com.openchat.secureim.util.Util;
 
 import java.io.Serializable;
@@ -37,15 +35,11 @@ public class Device implements Serializable {
   @JsonProperty
   private int registrationId;
 
-  @JsonProperty
-  private DeviceKey deviceKey;
-
   public Device() {}
 
   public Device(long id, String authToken, String salt,
                 String signalingKey, String gcmId, String apnId,
-                boolean fetchesMessages, int registrationId,
-                DeviceKey deviceKey)
+                boolean fetchesMessages, int registrationId)
   {
     this.id              = id;
     this.authToken       = authToken;
@@ -55,7 +49,6 @@ public class Device implements Serializable {
     this.apnId           = apnId;
     this.fetchesMessages = fetchesMessages;
     this.registrationId  = registrationId;
-    this.deviceKey       = deviceKey;
   }
 
   public String getApnId() {
@@ -121,13 +114,5 @@ public class Device implements Serializable {
 
   public void setRegistrationId(int registrationId) {
     this.registrationId = registrationId;
-  }
-
-  public DeviceKey getDeviceKey() {
-    return deviceKey;
-  }
-
-  public void setDeviceKey(DeviceKey deviceKey) {
-    this.deviceKey = deviceKey;
   }
 }
