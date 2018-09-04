@@ -52,7 +52,7 @@ public class StoredMessages {
       jedis = jedisPool.getResource();
       String message;
 
-      while ((message = jedis.rpop(QUEUE_PREFIX + accountId + ":" + deviceId)) != null) {
+      while ((message = jedis.rpop(getKey(accountId, deviceId))) != null) {
         messages.add(message);
       }
 
