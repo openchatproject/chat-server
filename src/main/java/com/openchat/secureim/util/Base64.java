@@ -671,7 +671,7 @@ public class Base64
 	
 	
     public static byte[] decode( String s ) throws java.io.IOException {
-        return decode( s, NO_OPTIONS );
+        return decode( s, DONT_GUNZIP );
     }
 
     
