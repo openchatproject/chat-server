@@ -31,6 +31,7 @@ public class OpenChatSecureimConfiguration extends Configuration {
   private NexmoConfiguration nexmo;
 
   @NotNull
+  @Valid
   @JsonProperty
   private GcmConfiguration gcm;
 
