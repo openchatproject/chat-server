@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.entities.PendingMessage;
 import com.openchat.secureim.util.Constants;
+import com.openchat.secureim.util.SystemMapper;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -27,7 +28,7 @@ public class StoredMessages {
   private final Histogram      queueSizeHistogram = metricRegistry.histogram(name(getClass(), "queue_size"));
 
 
-  private static final ObjectMapper mapper = new ObjectMapper();
+  private static final ObjectMapper mapper = SystemMapper.getMapper();
   private static final String QUEUE_PREFIX = "msgs";
 
   private final JedisPool jedisPool;

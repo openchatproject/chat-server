@@ -1,6 +1,8 @@
 package com.openchat.secureim.storage;
 
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
@@ -8,6 +10,7 @@ import net.spy.memcached.MemcachedClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.entities.ClientContact;
+import com.openchat.secureim.util.SystemMapper;
 import com.openchat.secureim.util.Util;
 
 import java.io.IOException;
@@ -30,7 +33,7 @@ public class AccountsManager {
     this.accounts        = accounts;
     this.directory       = directory;
     this.memcachedClient = memcachedClient;
-    this.mapper          = new ObjectMapper();
+    this.mapper          = SystemMapper.getMapper();
   }
 
   public long getCount() {

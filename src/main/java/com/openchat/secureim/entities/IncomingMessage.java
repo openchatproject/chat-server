@@ -25,7 +25,7 @@ public class IncomingMessage {
   private String relay;
 
   @JsonProperty
-  private long   timestamp;
+  private long   timestamp; // deprecated
 
 
   public String getDestination() {

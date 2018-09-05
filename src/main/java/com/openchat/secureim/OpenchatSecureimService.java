@@ -21,6 +21,7 @@ import com.openchat.secureim.controllers.FederationControllerV2;
 import com.openchat.secureim.controllers.KeysControllerV1;
 import com.openchat.secureim.controllers.KeysControllerV2;
 import com.openchat.secureim.controllers.MessageController;
+import com.openchat.secureim.controllers.ReceiptController;
 import com.openchat.secureim.federation.FederatedClientManager;
 import com.openchat.secureim.federation.FederatedPeer;
 import com.openchat.secureim.limits.RateLimiters;
@@ -160,6 +161,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     environment.jersey().register(new DirectoryController(rateLimiters, directory));
     environment.jersey().register(new FederationControllerV1(accountsManager, attachmentController, messageController, keysControllerV1));
     environment.jersey().register(new FederationControllerV2(accountsManager, attachmentController, messageController, keysControllerV2));
+    environment.jersey().register(new ReceiptController(accountsManager, federatedClientManager, pushSender));
     environment.jersey().register(attachmentController);
     environment.jersey().register(keysControllerV1);
     environment.jersey().register(keysControllerV2);
@@ -167,6 +169,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
 
     if (config.getWebsocketConfiguration().isEnabled()) {
       WebsocketControllerFactory servlet = new WebsocketControllerFactory(deviceAuthenticator,
+                                                                          accountsManager,
                                                                           pushSender,
                                                                           storedMessages,
                                                                           pubSubManager);

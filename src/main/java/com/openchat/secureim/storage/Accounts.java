@@ -17,6 +17,7 @@ import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.Transaction;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
+import com.openchat.secureim.util.SystemMapper;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -35,12 +36,7 @@ public abstract class Accounts {
   private static final String NUMBER = "number";
   private static final String DATA   = "data";
 
-  private static final ObjectMapper mapper = new ObjectMapper();
-
-  static {
-    mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
-    mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-  }
+  private static final ObjectMapper mapper = SystemMapper.getMapper();
 
   @SqlUpdate("INSERT INTO accounts (" + NUMBER + ", " + DATA + ") VALUES (:number, CAST(:data AS json))")
   @GetGeneratedKeys

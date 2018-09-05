@@ -9,6 +9,8 @@ import com.openchat.secureim.entities.PendingMessage;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.Device;
 
+import static com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal;
+
 public class PushSender {
 
   private final Logger logger = LoggerFactory.getLogger(PushSender.class);
@@ -26,13 +28,17 @@ public class PushSender {
     this.webSocketSender = websocketSender;
   }
 
-  public void sendMessage(Account account, Device device, MessageProtos.OutgoingMessageSignal message)
+  public void sendMessage(Account account, Device device, OutgoingMessageSignal message)
       throws NotPushRegisteredException, TransientPushFailureException
   {
     try {
+      boolean                  isReceipt        = message.getType() == OutgoingMessageSignal.Type.RECEIPT_VALUE;
       String                   signalingKey     = device.getSignalingKey();
       EncryptedOutgoingMessage encryptedMessage = new EncryptedOutgoingMessage(message, signalingKey);
-      PendingMessage           pendingMessage   = new PendingMessage(message.getSource(), message.getTimestamp(), encryptedMessage.serialize());
+      PendingMessage           pendingMessage   = new PendingMessage(message.getSource(),
+                                                                     message.getTimestamp(),
+                                                                     isReceipt,
+                                                                     encryptedMessage.serialize());
 
       sendMessage(account, device, pendingMessage);
     } catch (CryptoEncodingException e) {

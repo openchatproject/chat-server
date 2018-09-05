@@ -16,11 +16,13 @@ import com.openchat.secureim.push.NotPushRegisteredException;
 import com.openchat.secureim.push.PushSender;
 import com.openchat.secureim.push.TransientPushFailureException;
 import com.openchat.secureim.storage.Account;
+import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.PubSubListener;
 import com.openchat.secureim.storage.PubSubManager;
 import com.openchat.secureim.storage.PubSubMessage;
 import com.openchat.secureim.storage.StoredMessages;
+import com.openchat.secureim.util.SystemMapper;
 import com.openchat.secureim.websocket.WebsocketAddress;
 import com.openchat.secureim.websocket.WebsocketMessage;
 
@@ -33,14 +35,16 @@ import java.util.Map;
 
 import io.dropwizard.auth.AuthenticationException;
 import io.dropwizard.auth.basic.BasicCredentials;
+import static com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal;
 
 public class WebsocketController implements WebSocketListener, PubSubListener {
 
   private static final Logger                    logger          = LoggerFactory.getLogger(WebsocketController.class);
-  private static final ObjectMapper              mapper          = new ObjectMapper();
+  private static final ObjectMapper              mapper          = SystemMapper.getMapper();
   private static final Map<Long, PendingMessage> pendingMessages = new HashMap<>();
 
   private final AccountAuthenticator accountAuthenticator;
+  private final AccountsManager      accountsManager;
   private final PubSubManager        pubSubManager;
   private final StoredMessages       storedMessages;
   private final PushSender           pushSender;
@@ -53,11 +57,13 @@ public class WebsocketController implements WebSocketListener, PubSubListener {
   private long pendingMessageSequence;
 
   public WebsocketController(AccountAuthenticator accountAuthenticator,
+                             AccountsManager      accountsManager,
                              PushSender           pushSender,
                              PubSubManager        pubSubManager,
                              StoredMessages       storedMessages)
   {
     this.accountAuthenticator = accountAuthenticator;
+    this.accountsManager      = accountsManager;
     this.pushSender           = pushSender;
     this.pubSubManager        = pubSubManager;
     this.storedMessages       = storedMessages;
@@ -186,10 +192,16 @@ public class WebsocketController implements WebSocketListener, PubSubListener {
   private void handleMessageAck(String message) {
     try {
       AcknowledgeWebsocketMessage ack = mapper.readValue(message, AcknowledgeWebsocketMessage.class);
+      PendingMessage acknowledgedMessage;
 
       synchronized (pendingMessages) {
-        pendingMessages.remove(ack.getId());
+        acknowledgedMessage = pendingMessages.remove(ack.getId());
       }
+
+      if (acknowledgedMessage != null && !acknowledgedMessage.isReceipt()) {
+        sendDeliveryReceipt(acknowledgedMessage);
+      }
+
     } catch (IOException e) {
       logger.warn("Mapping", e);
     }
@@ -200,6 +212,30 @@ public class WebsocketController implements WebSocketListener, PubSubListener {
 
     for (PendingMessage message : messages) {
       handleDeliverOutgoingMessage(message);
+    }
+  }
+
+  private void sendDeliveryReceipt(PendingMessage acknowledgedMessage) {
+    try {
+      Optional<Account> source = accountsManager.get(acknowledgedMessage.getSender());
+
+      if (!source.isPresent()) {
+        logger.warn("Source account disappeared? (%s)", acknowledgedMessage.getSender());
+        return;
+      }
+
+      OutgoingMessageSignal.Builder receipt =
+          OutgoingMessageSignal.newBuilder()
+                               .setSource(account.getNumber())
+                               .setSourceDevice((int) device.getId())
+                               .setTimestamp(acknowledgedMessage.getMessageId())
+                               .setType(OutgoingMessageSignal.Type.RECEIPT_VALUE);
+
+      for (Device device : source.get().getDevices()) {
+        pushSender.sendMessage(source.get(), device, receipt.build());
+      }
+    } catch (NotPushRegisteredException | TransientPushFailureException e) {
+      logger.warn("Websocket", "Delivery receipet", e);
     }
   }
 
