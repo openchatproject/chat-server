@@ -18,8 +18,10 @@ import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.PendingAccountsManager;
+import com.openchat.secureim.storage.StoredMessages;
 import com.openchat.secureim.util.Util;
 import com.openchat.secureim.util.VerificationCode;
+import com.openchat.secureim.websocket.WebsocketAddress;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -49,16 +51,19 @@ public class AccountController {
   private final AccountsManager        accounts;
   private final RateLimiters           rateLimiters;
   private final SmsSender              smsSender;
+  private final StoredMessages         storedMessages;
 
   public AccountController(PendingAccountsManager pendingAccounts,
                            AccountsManager accounts,
                            RateLimiters rateLimiters,
-                           SmsSender smsSenderFactory)
+                           SmsSender smsSenderFactory,
+                           StoredMessages storedMessages)
   {
     this.pendingAccounts = pendingAccounts;
     this.accounts        = accounts;
     this.rateLimiters    = rateLimiters;
     this.smsSender       = smsSenderFactory;
+    this.storedMessages  = storedMessages;
   }
 
   @Timed
@@ -137,7 +142,7 @@ public class AccountController {
       account.addDevice(device);
 
       accounts.create(account);
-
+      storedMessages.clear(new WebsocketAddress(number, Device.MASTER_ID));
       pendingAccounts.remove(number);
 
       logger.debug("Stored device...");
