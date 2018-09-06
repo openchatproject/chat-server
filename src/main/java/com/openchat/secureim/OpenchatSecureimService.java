@@ -58,6 +58,7 @@ import com.openchat.secureim.util.Constants;
 import com.openchat.secureim.util.UrlSigner;
 import com.openchat.secureim.websocket.WebsocketControllerFactory;
 import com.openchat.secureim.workers.DirectoryCommand;
+import com.openchat.secureim.workers.VacuumCommand;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
@@ -85,6 +86,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
   @Override
   public void initialize(Bootstrap<OpenChatSecureimConfiguration> bootstrap) {
     bootstrap.addCommand(new DirectoryCommand());
+    bootstrap.addCommand(new VacuumCommand());
     bootstrap.addBundle(new MigrationsBundle<OpenChatSecureimConfiguration>() {
       @Override
       public DataSourceFactory getDataSourceFactory(OpenChatSecureimConfiguration configuration) {

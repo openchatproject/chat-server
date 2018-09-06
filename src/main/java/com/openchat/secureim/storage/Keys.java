@@ -15,8 +15,6 @@ import org.skife.jdbi.v2.sqlobject.Transaction;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 import com.openchat.secureim.entities.PreKeyBase;
-import com.openchat.secureim.entities.PreKeyV1;
-import com.openchat.secureim.entities.PreKeyV2;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
@@ -97,6 +95,9 @@ public abstract class Keys {
     if (preKeys != null) return Optional.of(preKeys);
     else                 return Optional.absent();
   }
+
+  @SqlUpdate("VACUUM keys")
+  public abstract void vacuum();
 
   @BindingAnnotation(PreKeyBinder.PreKeyBinderFactory.class)
   @Retention(RetentionPolicy.RUNTIME)
