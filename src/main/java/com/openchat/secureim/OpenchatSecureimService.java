@@ -57,9 +57,12 @@ import com.openchat.secureim.storage.PubSubManager;
 import com.openchat.secureim.storage.StoredMessages;
 import com.openchat.secureim.util.Constants;
 import com.openchat.secureim.util.UrlSigner;
-import com.openchat.secureim.websocket.WebsocketControllerFactory;
+import com.openchat.secureim.websocket.ConnectListener;
+import com.openchat.secureim.websocket.WebSocketAccountAuthenticator;
 import com.openchat.secureim.workers.DirectoryCommand;
 import com.openchat.secureim.workers.VacuumCommand;
+import com.openchat.websocket.WebSocketResourceProviderFactory;
+import com.openchat.websocket.setup.WebSocketEnvironment;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
@@ -172,10 +175,10 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     environment.jersey().register(messageController);
 
     if (config.getWebsocketConfiguration().isEnabled()) {
-      WebsocketControllerFactory servlet = new WebsocketControllerFactory(deviceAuthenticator,
-                                                                          accountsManager,
-                                                                          pushSender,
-                                                                          storedMessages,
-                                                                          pubSubManager);
+      WebSocketEnvironment webSocketEnvironment = new WebSocketEnvironment(environment);
+      webSocketEnvironment.setAuthenticator(new WebSocketAccountAuthenticator(deviceAuthenticator));
+      webSocketEnvironment.setConnectListener(new ConnectListener(accountsManager, pushSender, storedMessages, pubSubManager));
+
+      WebSocketResourceProviderFactory servlet = new WebSocketResourceProviderFactory(webSocketEnvironment);
 
       ServletRegistration.Dynamic websocket = environment.servlets().addServlet("WebSocket", servlet);

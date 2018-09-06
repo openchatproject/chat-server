@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.openchat.secureim.controllers.WebsocketController;
 import com.openchat.secureim.entities.PendingMessage;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.Device;
@@ -22,7 +21,7 @@ import static com.codahale.metrics.MetricRegistry.name;
 
 public class WebsocketSender {
 
-  private static final Logger logger = LoggerFactory.getLogger(WebsocketController.class);
+  private static final Logger logger = LoggerFactory.getLogger(WebsocketSender.class);
 
   private final MetricRegistry metricRegistry = SharedMetricRegistries.getOrCreate(Constants.METRICS_NAME);
   private final Meter          onlineMeter    = metricRegistry.meter(name(getClass(), "online"));
