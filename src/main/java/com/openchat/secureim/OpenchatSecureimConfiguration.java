@@ -9,6 +9,7 @@ import com.openchat.secureim.configuration.MemcacheConfiguration;
 import com.openchat.secureim.configuration.MetricsConfiguration;
 import com.openchat.secureim.configuration.NexmoConfiguration;
 import com.openchat.secureim.configuration.RateLimitsConfiguration;
+import com.openchat.secureim.configuration.RedPhoneConfiguration;
 import com.openchat.secureim.configuration.RedisConfiguration;
 import com.openchat.secureim.configuration.S3Configuration;
 import com.openchat.secureim.configuration.TwilioConfiguration;
@@ -79,6 +80,9 @@ public class OpenChatSecureimConfiguration extends Configuration {
   @JsonProperty
   private WebsocketConfiguration websocket = new WebsocketConfiguration();
 
+  @JsonProperty
+  private RedPhoneConfiguration redphone = new RedPhoneConfiguration();
+
   public WebsocketConfiguration getWebsocketConfiguration() {
     return websocket;
   }
@@ -129,5 +133,9 @@ public class OpenChatSecureimConfiguration extends Configuration {
 
   public MetricsConfiguration getMetricsConfiguration() {
     return viz;
+  }
+
+  public RedPhoneConfiguration getRedphoneConfiguration() {
+    return redphone;
   }
 }

@@ -36,6 +36,7 @@ import com.openchat.secureim.providers.MemcacheHealthCheck;
 import com.openchat.secureim.providers.MemcachedClientFactory;
 import com.openchat.secureim.providers.RedisClientFactory;
 import com.openchat.secureim.providers.RedisHealthCheck;
+import com.openchat.secureim.providers.TimeProvider;
 import com.openchat.secureim.push.APNSender;
 import com.openchat.secureim.push.GCMSender;
 import com.openchat.secureim.push.PushSender;
@@ -139,14 +140,15 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     environment.lifecycle().manage(apnSender);
     environment.lifecycle().manage(gcmSender);
 
-    AccountAuthenticator     deviceAuthenticator    = new AccountAuthenticator(accountsManager);
-    RateLimiters             rateLimiters           = new RateLimiters(config.getLimitsConfiguration(), memcachedClient);
+    AccountAuthenticator     deviceAuthenticator = new AccountAuthenticator(accountsManager);
+    RateLimiters             rateLimiters        = new RateLimiters(config.getLimitsConfiguration(), memcachedClient);
 
-    TwilioSmsSender          twilioSmsSender        = new TwilioSmsSender(config.getTwilioConfiguration());
-    Optional<NexmoSmsSender> nexmoSmsSender         = initializeNexmoSmsSender(config.getNexmoConfiguration());
-    SmsSender                smsSender              = new SmsSender(twilioSmsSender, nexmoSmsSender, config.getTwilioConfiguration().isInternational());
-    UrlSigner                urlSigner              = new UrlSigner(config.getS3Configuration());
-    PushSender               pushSender             = new PushSender(gcmSender, apnSender, websocketSender);
+    TwilioSmsSender          twilioSmsSender     = new TwilioSmsSender(config.getTwilioConfiguration());
+    Optional<NexmoSmsSender> nexmoSmsSender      = initializeNexmoSmsSender(config.getNexmoConfiguration());
+    SmsSender                smsSender           = new SmsSender(twilioSmsSender, nexmoSmsSender, config.getTwilioConfiguration().isInternational());
+    UrlSigner                urlSigner           = new UrlSigner(config.getS3Configuration());
+    PushSender               pushSender          = new PushSender(gcmSender, apnSender, websocketSender);
+    Optional<byte[]>         authorizationKey    = config.getRedphoneConfiguration().getAuthorizationKey();
 
     AttachmentController attachmentController = new AttachmentController(rateLimiters, federatedClientManager, urlSigner);
     KeysControllerV1     keysControllerV1     = new KeysControllerV1(rateLimiters, keys, accountsManager, federatedClientManager);
@@ -158,7 +160,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
                                                                deviceAuthenticator,
                                                                Device.class, "OpenchatSecureimServer"));
 
-    environment.jersey().register(new AccountController(pendingAccountsManager, accountsManager, rateLimiters, smsSender, storedMessages));
+    environment.jersey().register(new AccountController(pendingAccountsManager, accountsManager, rateLimiters, smsSender, storedMessages, new TimeProvider(), authorizationKey));
     environment.jersey().register(new DeviceController(pendingDevicesManager, accountsManager, rateLimiters));
     environment.jersey().register(new DirectoryController(rateLimiters, directory));
     environment.jersey().register(new FederationControllerV1(accountsManager, attachmentController, messageController, keysControllerV1));
