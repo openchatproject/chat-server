@@ -6,8 +6,6 @@ import com.openchat.secureim.auth.AuthenticationCredentials;
 import com.openchat.secureim.entities.SignedPreKey;
 import com.openchat.secureim.util.Util;
 
-import java.io.Serializable;
-
 public class Device {
 
   public static final long MASTER_ID = 1;
@@ -29,6 +27,9 @@ public class Device {
 
   @JsonProperty
   private String  apnId;
+
+  @JsonProperty
+  private long pushTimestamp;
 
   @JsonProperty
   private boolean fetchesMessages;
@@ -63,6 +64,10 @@ public class Device {
 
   public void setApnId(String apnId) {
     this.apnId = apnId;
+
+    if (apnId != null) {
+      this.pushTimestamp = System.currentTimeMillis();
+    }
   }
 
   public String getGcmId() {
@@ -71,6 +76,10 @@ public class Device {
 
   public void setGcmId(String gcmId) {
     this.gcmId = gcmId;
+
+    if (gcmId != null) {
+      this.pushTimestamp = System.currentTimeMillis();
+    }
   }
 
   public long getId() {
@@ -128,5 +137,9 @@ public class Device {
 
   public void setSignedPreKey(SignedPreKey signedPreKey) {
     this.signedPreKey = signedPreKey;
+  }
+
+  public long getPushTimestamp() {
+    return pushTimestamp;
   }
 }
