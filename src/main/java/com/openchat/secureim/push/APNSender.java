@@ -52,7 +52,7 @@ public class APNSender implements Managed {
   private final Meter          failureMeter   = metricRegistry.meter(name(getClass(), "failure"));
   private final Logger         logger         = LoggerFactory.getLogger(APNSender.class);
 
-  private static final String MESSAGE_BODY = "m";
+  private static final String PAYLOAD = "{\"aps\":{\"sound\":\"default\",\"alert\":{\"loc-key\":\"APN_Message\"},\"content-available\":1,\"category\":\"Signal_Message\"}}";
 
   private static final ObjectMapper mapper = SystemMapper.getMapper();
 
@@ -99,7 +99,7 @@ public class APNSender implements Managed {
         storedMessages.insert(websocketAddress, message);
 
         if (!message.isReceipt()) {
-          sendPush(registrationId, serializedPendingMessage);
+          sendPush(registrationId);
         }
       }
     } catch (IOException e) {
@@ -107,7 +107,7 @@ public class APNSender implements Managed {
     }
   }
 
-  private void sendPush(String registrationId, String message)
+  private void sendPush(String registrationId)
       throws TransientPushFailureException
   {
     try {
@@ -116,14 +116,7 @@ public class APNSender implements Managed {
         throw new TransientPushFailureException("APN access not configured!");
       }
 
-      String payload = APNS.newPayload()
-                           .alertBody("Message!")
-                           .customField(MESSAGE_BODY, message)
-                           .build();
-
-      logger.debug("APN Payload: " + payload);
-
-      apnService.get().push(registrationId, payload);
+      apnService.get().push(registrationId, PAYLOAD);
       pushMeter.mark();
     } catch (NetworkIOException nioe) {
       logger.warn("Network Error", nioe);
