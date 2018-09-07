@@ -4,6 +4,7 @@ import com.codahale.metrics.SharedMetricRegistries;
 import com.codahale.metrics.graphite.GraphiteReporter;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.google.common.base.Optional;
+import com.sun.jersey.api.client.Client;
 import net.spy.memcached.MemcachedClient;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
@@ -37,9 +38,8 @@ import com.openchat.secureim.providers.MemcachedClientFactory;
 import com.openchat.secureim.providers.RedisClientFactory;
 import com.openchat.secureim.providers.RedisHealthCheck;
 import com.openchat.secureim.providers.TimeProvider;
-import com.openchat.secureim.push.APNSender;
-import com.openchat.secureim.push.GCMSender;
 import com.openchat.secureim.push.PushSender;
+import com.openchat.secureim.push.PushServiceClient;
 import com.openchat.secureim.push.WebsocketSender;
 import com.openchat.secureim.sms.NexmoSmsSender;
 import com.openchat.secureim.sms.SmsSender;
@@ -73,6 +73,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.codahale.metrics.MetricRegistry.name;
 import io.dropwizard.Application;
+import io.dropwizard.client.JerseyClientBuilder;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.metrics.graphite.GraphiteReporterFactory;
@@ -121,6 +122,8 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
 
     MemcachedClient memcachedClient = new MemcachedClientFactory(config.getMemcacheConfiguration()).getClient();
     JedisPool       redisClient     = new RedisClientFactory(config.getRedisConfiguration()).getRedisClientPool();
+    Client          httpClient      = new JerseyClientBuilder(environment).using(config.getJerseyClientConfiguration())
+                                                                          .build(getName());
 
     DirectoryManager       directory              = new DirectoryManager(redisClient);
     PendingAccountsManager pendingAccountsManager = new PendingAccountsManager(pendingAccounts, memcachedClient);
@@ -129,28 +132,16 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     FederatedClientManager federatedClientManager = new FederatedClientManager(config.getFederationConfiguration());
     StoredMessages         storedMessages         = new StoredMessages(redisClient);
     PubSubManager          pubSubManager          = new PubSubManager(redisClient);
-
-    APNSender apnSender = new APNSender(accountsManager, pubSubManager, storedMessages, memcachedClient,
-                                        config.getApnConfiguration().getCertificate(),
-                                        config.getApnConfiguration().getKey());
-
-    GCMSender gcmSender = new GCMSender(accountsManager,
-                                        config.getGcmConfiguration().getSenderId(),
-                                        config.getGcmConfiguration().getApiKey());
-
-    WebsocketSender websocketSender = new WebsocketSender(storedMessages, pubSubManager);
-
-    environment.lifecycle().manage(apnSender);
-    environment.lifecycle().manage(gcmSender);
-
-    AccountAuthenticator     deviceAuthenticator = new AccountAuthenticator(accountsManager);
-    RateLimiters             rateLimiters        = new RateLimiters(config.getLimitsConfiguration(), memcachedClient);
+    PushServiceClient      pushServiceClient      = new PushServiceClient(httpClient, config.getPushConfiguration());
+    WebsocketSender        websocketSender        = new WebsocketSender(storedMessages, pubSubManager);
+    AccountAuthenticator   deviceAuthenticator    = new AccountAuthenticator(accountsManager);
+    RateLimiters           rateLimiters           = new RateLimiters(config.getLimitsConfiguration(), memcachedClient);
 
     TwilioSmsSender          twilioSmsSender     = new TwilioSmsSender(config.getTwilioConfiguration());
     Optional<NexmoSmsSender> nexmoSmsSender      = initializeNexmoSmsSender(config.getNexmoConfiguration());
     SmsSender                smsSender           = new SmsSender(twilioSmsSender, nexmoSmsSender, config.getTwilioConfiguration().isInternational());
     UrlSigner                urlSigner           = new UrlSigner(config.getS3Configuration());
-    PushSender               pushSender          = new PushSender(gcmSender, apnSender, websocketSender);
+    PushSender               pushSender          = new PushSender(pushServiceClient, websocketSender);
     Optional<byte[]>         authorizationKey    = config.getRedphoneConfiguration().getAuthorizationKey();
 
     AttachmentController attachmentController = new AttachmentController(rateLimiters, federatedClientManager, urlSigner);

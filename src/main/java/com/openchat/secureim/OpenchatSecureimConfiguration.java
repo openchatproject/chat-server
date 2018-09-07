@@ -8,6 +8,7 @@ import com.openchat.secureim.configuration.GraphiteConfiguration;
 import com.openchat.secureim.configuration.MemcacheConfiguration;
 import com.openchat.secureim.configuration.MetricsConfiguration;
 import com.openchat.secureim.configuration.NexmoConfiguration;
+import com.openchat.secureim.configuration.PushConfiguration;
 import com.openchat.secureim.configuration.RateLimitsConfiguration;
 import com.openchat.secureim.configuration.RedPhoneConfiguration;
 import com.openchat.secureim.configuration.RedisConfiguration;
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import io.dropwizard.Configuration;
+import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.db.DataSourceFactory;
 
 public class OpenChatSecureimConfiguration extends Configuration {
@@ -34,7 +36,7 @@ public class OpenChatSecureimConfiguration extends Configuration {
   @NotNull
   @Valid
   @JsonProperty
-  private GcmConfiguration gcm;
+  private PushConfiguration push;
 
   @NotNull
   @Valid
@@ -50,9 +52,6 @@ public class OpenChatSecureimConfiguration extends Configuration {
   @Valid
   @JsonProperty
   private RedisConfiguration redis;
-
-  @JsonProperty
-  private ApnConfiguration apn = new ApnConfiguration();
 
   @Valid
   @JsonProperty
@@ -83,6 +82,12 @@ public class OpenChatSecureimConfiguration extends Configuration {
   @JsonProperty
   private RedPhoneConfiguration redphone = new RedPhoneConfiguration();
 
+  @Valid
+  @NotNull
+  @JsonProperty
+  private JerseyClientConfiguration httpClient = new JerseyClientConfiguration();
+
+
   public WebsocketConfiguration getWebsocketConfiguration() {
     return websocket;
   }
@@ -95,12 +100,12 @@ public class OpenChatSecureimConfiguration extends Configuration {
     return nexmo;
   }
 
-  public GcmConfiguration getGcmConfiguration() {
-    return gcm;
+  public PushConfiguration getPushConfiguration() {
+    return push;
   }
 
-  public ApnConfiguration getApnConfiguration() {
-    return apn;
+  public JerseyClientConfiguration getJerseyClientConfiguration() {
+    return httpClient;
   }
 
   public S3Configuration getS3Configuration() {

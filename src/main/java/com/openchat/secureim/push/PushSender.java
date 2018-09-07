@@ -2,9 +2,10 @@ package com.openchat.secureim.push;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.openchat.secureim.entities.ApnMessage;
 import com.openchat.secureim.entities.CryptoEncodingException;
 import com.openchat.secureim.entities.EncryptedOutgoingMessage;
-import com.openchat.secureim.entities.MessageProtos;
+import com.openchat.secureim.entities.GcmMessage;
 import com.openchat.secureim.entities.PendingMessage;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.Device;
@@ -15,17 +16,12 @@ public class PushSender {
 
   private final Logger logger = LoggerFactory.getLogger(PushSender.class);
 
-  private final GCMSender       gcmSender;
-  private final APNSender       apnSender;
-  private final WebsocketSender webSocketSender;
+  private final PushServiceClient pushServiceClient;
+  private final WebsocketSender   webSocketSender;
 
-  public PushSender(GCMSender gcmClient,
-                    APNSender apnSender,
-                    WebsocketSender websocketSender)
-  {
-    this.gcmSender       = gcmClient;
-    this.apnSender       = apnSender;
-    this.webSocketSender = websocketSender;
+  public PushSender(PushServiceClient pushServiceClient, WebsocketSender websocketSender) {
+    this.pushServiceClient = pushServiceClient;
+    this.webSocketSender   = websocketSender;
   }
 
   public void sendMessage(Account account, Device device, OutgoingMessageSignal message)
@@ -55,22 +51,35 @@ public class PushSender {
     else                                  throw new NotPushRegisteredException("No delivery possible!");
   }
 
-  private void sendGcmMessage(Account account, Device device, PendingMessage pendingMessage) {
-    String number         = account.getNumber();
-    long   deviceId       = device.getId();
-    String registrationId = device.getGcmId();
+  private void sendGcmMessage(Account account, Device device, PendingMessage pendingMessage)
+      throws TransientPushFailureException
+  {
+    String     number         = account.getNumber();
+    long       deviceId       = device.getId();
+    String     registrationId = device.getGcmId();
+    GcmMessage gcmMessage     = new GcmMessage(registrationId, number, (int)deviceId,
+                                               pendingMessage.getEncryptedOutgoingMessage(),
+                                               pendingMessage.isReceipt()                              );
 
-    gcmSender.sendMessage(number, deviceId, registrationId, pendingMessage);
+    pushServiceClient.send(gcmMessage);
   }
 
   private void sendApnMessage(Account account, Device device, PendingMessage outgoingMessage)
       throws TransientPushFailureException
   {
-    apnSender.sendMessage(account, device, device.getApnId(), outgoingMessage);
+    boolean online = webSocketSender.sendMessage(account, device, outgoingMessage, true);
+
+    if (!online && !outgoingMessage.isReceipt()) {
+      ApnMessage apnMessage = new ApnMessage(device.getApnId(), account.getNumber(),
+                                             (int)device.getId(),
+                                             outgoingMessage.getEncryptedOutgoingMessage());
+
+      pushServiceClient.send(apnMessage);
+    }
   }
 
   private void sendWebSocketMessage(Account account, Device device, PendingMessage outgoingMessage)
   {
-    webSocketSender.sendMessage(account, device, outgoingMessage);
+    webSocketSender.sendMessage(account, device, outgoingMessage, false);
   }
 }
