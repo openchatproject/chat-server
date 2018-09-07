@@ -38,6 +38,7 @@ import com.openchat.secureim.providers.MemcachedClientFactory;
 import com.openchat.secureim.providers.RedisClientFactory;
 import com.openchat.secureim.providers.RedisHealthCheck;
 import com.openchat.secureim.providers.TimeProvider;
+import com.openchat.secureim.push.FeedbackHandler;
 import com.openchat.secureim.push.PushSender;
 import com.openchat.secureim.push.PushServiceClient;
 import com.openchat.secureim.push.WebsocketSender;
@@ -142,7 +143,10 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     SmsSender                smsSender           = new SmsSender(twilioSmsSender, nexmoSmsSender, config.getTwilioConfiguration().isInternational());
     UrlSigner                urlSigner           = new UrlSigner(config.getS3Configuration());
     PushSender               pushSender          = new PushSender(pushServiceClient, websocketSender);
+    FeedbackHandler          feedbackHandler     = new FeedbackHandler(pushServiceClient, accountsManager);
     Optional<byte[]>         authorizationKey    = config.getRedphoneConfiguration().getAuthorizationKey();
+
+    environment.lifecycle().manage(feedbackHandler);
 
     AttachmentController attachmentController = new AttachmentController(rateLimiters, federatedClientManager, urlSigner);
     KeysControllerV1     keysControllerV1     = new KeysControllerV1(rateLimiters, keys, accountsManager, federatedClientManager);
