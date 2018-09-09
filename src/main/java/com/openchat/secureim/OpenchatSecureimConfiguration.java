@@ -1,17 +1,16 @@
 package com.openchat.secureim;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.openchat.secureim.configuration.ApnConfiguration;
 import com.openchat.secureim.configuration.FederationConfiguration;
-import com.openchat.secureim.configuration.GcmConfiguration;
 import com.openchat.secureim.configuration.GraphiteConfiguration;
 import com.openchat.secureim.configuration.MemcacheConfiguration;
+import com.openchat.secureim.configuration.MessageStoreConfiguration;
 import com.openchat.secureim.configuration.MetricsConfiguration;
 import com.openchat.secureim.configuration.NexmoConfiguration;
 import com.openchat.secureim.configuration.PushConfiguration;
 import com.openchat.secureim.configuration.RateLimitsConfiguration;
 import com.openchat.secureim.configuration.RedPhoneConfiguration;
-import com.openchat.secureim.configuration.RedisConfiguration;
+import com.openchat.secureim.configuration.DirectoryConfiguration;
 import com.openchat.secureim.configuration.S3Configuration;
 import com.openchat.secureim.configuration.TwilioConfiguration;
 import com.openchat.secureim.configuration.WebsocketConfiguration;
@@ -51,7 +50,12 @@ public class OpenChatSecureimConfiguration extends Configuration {
   @NotNull
   @Valid
   @JsonProperty
-  private RedisConfiguration redis;
+  private DirectoryConfiguration directory;
+
+  @NotNull
+  @Valid
+  @JsonProperty
+  private MessageStoreConfiguration messageStore;
 
   @Valid
   @JsonProperty
@@ -116,8 +120,12 @@ public class OpenChatSecureimConfiguration extends Configuration {
     return memcache;
   }
 
-  public RedisConfiguration getRedisConfiguration() {
-    return redis;
+  public DirectoryConfiguration getDirectoryConfiguration() {
+    return directory;
+  }
+
+  public MessageStoreConfiguration getMessageStoreConfiguration() {
+    return messageStore;
   }
 
   public DataSourceFactory getDataSourceFactory() {

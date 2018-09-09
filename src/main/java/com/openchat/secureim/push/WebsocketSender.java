@@ -3,21 +3,18 @@ package com.openchat.secureim.push;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.SharedMetricRegistries;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.openchat.secureim.entities.PendingMessage;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.PubSubManager;
-import com.openchat.secureim.storage.PubSubMessage;
 import com.openchat.secureim.storage.StoredMessages;
 import com.openchat.secureim.util.Constants;
-import com.openchat.secureim.util.SystemMapper;
 import com.openchat.secureim.websocket.WebsocketAddress;
 
 import static com.codahale.metrics.MetricRegistry.name;
+import static com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal;
+import static com.openchat.secureim.storage.PubSubProtos.PubSubMessage;
 
 public class WebsocketSender {
 
@@ -31,8 +28,6 @@ public class WebsocketSender {
   private final Meter apnOnlineMeter        = metricRegistry.meter(name(getClass(), "apn_online" ));
   private final Meter apnOfflineMeter       = metricRegistry.meter(name(getClass(), "apn_offline"));
 
-  private static final ObjectMapper mapper = SystemMapper.getMapper();
-
   private final StoredMessages storedMessages;
   private final PubSubManager  pubSubManager;
 
@@ -41,27 +36,27 @@ public class WebsocketSender {
     this.pubSubManager  = pubSubManager;
   }
 
-  public boolean sendMessage(Account account, Device device, PendingMessage pendingMessage, boolean apn) {
-    try {
-      String           serialized    = mapper.writeValueAsString(pendingMessage);
-      WebsocketAddress address       = new WebsocketAddress(account.getNumber(), device.getId());
-      PubSubMessage    pubSubMessage = new PubSubMessage(PubSubMessage.TYPE_DELIVER, serialized);
+  public boolean sendMessage(Account account, Device device, OutgoingMessageSignal message, boolean apn) {
+    WebsocketAddress address       = new WebsocketAddress(account.getNumber(), device.getId());
+    PubSubMessage    pubSubMessage = PubSubMessage.newBuilder()
+                                                  .setType(PubSubMessage.Type.DELIVER)
+                                                  .setContent(message.toByteString())
+                                                  .build();
 
-      if (pubSubManager.publish(address, pubSubMessage)) {
-        if (apn) apnOnlineMeter.mark();
-        else     websocketOnlineMeter.mark();
+    if (pubSubManager.publish(address, pubSubMessage)) {
+      if (apn) apnOnlineMeter.mark();
+      else     websocketOnlineMeter.mark();
 
-        return true;
-      } else {
-        if (apn) apnOfflineMeter.mark();
-        else     websocketOfflineMeter.mark();
+      return true;
+    } else {
+      if (apn) apnOfflineMeter.mark();
+      else     websocketOfflineMeter.mark();
 
-        storedMessages.insert(address, pendingMessage);
-        pubSubManager.publish(address, new PubSubMessage(PubSubMessage.TYPE_QUERY_DB, null));
-        return false;
-      }
-    } catch (JsonProcessingException e) {
-      logger.warn("WebsocketSender", "Unable to serialize json", e);
+      storedMessages.insert(address, message);
+      pubSubManager.publish(address, PubSubMessage.newBuilder()
+                                                  .setType(PubSubMessage.Type.QUERY_DB)
+                                                  .build());
+
       return false;
     }
   }

@@ -19,6 +19,7 @@ import com.openchat.secureim.controllers.DeviceController;
 import com.openchat.secureim.controllers.DirectoryController;
 import com.openchat.secureim.controllers.FederationControllerV1;
 import com.openchat.secureim.controllers.FederationControllerV2;
+import com.openchat.secureim.controllers.KeepAliveController;
 import com.openchat.secureim.controllers.KeysControllerV1;
 import com.openchat.secureim.controllers.KeysControllerV2;
 import com.openchat.secureim.controllers.MessageController;
@@ -121,18 +122,19 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     PendingDevices  pendingDevices  = jdbi.onDemand(PendingDevices.class);
     Keys            keys            = jdbi.onDemand(Keys.class);
 
-    MemcachedClient memcachedClient = new MemcachedClientFactory(config.getMemcacheConfiguration()).getClient();
-    JedisPool       redisClient     = new RedisClientFactory(config.getRedisConfiguration()).getRedisClientPool();
-    Client          httpClient      = new JerseyClientBuilder(environment).using(config.getJerseyClientConfiguration())
-                                                                          .build(getName());
+    MemcachedClient memcachedClient    = new MemcachedClientFactory(config.getMemcacheConfiguration()).getClient();
+    JedisPool       directoryClient    = new RedisClientFactory(config.getDirectoryConfiguration().getUrl()).getRedisClientPool();
+    JedisPool       messageStoreClient = new RedisClientFactory(config.getMessageStoreConfiguration().getUrl()).getRedisClientPool();
+    Client          httpClient         = new JerseyClientBuilder(environment).using(config.getJerseyClientConfiguration())
+                                                                             .build(getName());
 
-    DirectoryManager       directory              = new DirectoryManager(redisClient);
+    DirectoryManager       directory              = new DirectoryManager(directoryClient);
     PendingAccountsManager pendingAccountsManager = new PendingAccountsManager(pendingAccounts, memcachedClient);
     PendingDevicesManager  pendingDevicesManager  = new PendingDevicesManager (pendingDevices, memcachedClient );
     AccountsManager        accountsManager        = new AccountsManager(accounts, directory, memcachedClient);
     FederatedClientManager federatedClientManager = new FederatedClientManager(config.getFederationConfiguration());
-    StoredMessages         storedMessages         = new StoredMessages(redisClient);
-    PubSubManager          pubSubManager          = new PubSubManager(redisClient);
+    StoredMessages         storedMessages         = new StoredMessages(messageStoreClient);
+    PubSubManager          pubSubManager          = new PubSubManager(messageStoreClient);
     PushServiceClient      pushServiceClient      = new PushServiceClient(httpClient, config.getPushConfiguration());
     WebsocketSender        websocketSender        = new WebsocketSender(storedMessages, pubSubManager);
     AccountAuthenticator   deviceAuthenticator    = new AccountAuthenticator(accountsManager);
@@ -173,7 +175,8 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
       WebSocketEnvironment webSocketEnvironment = new WebSocketEnvironment(environment);
       webSocketEnvironment.setAuthenticator(new WebSocketAccountAuthenticator(deviceAuthenticator));
       webSocketEnvironment.setConnectListener(new ConnectListener(accountsManager, pushSender, storedMessages, pubSubManager));
-
+      webSocketEnvironment.jersey().register(new KeepAliveController());
+      
       WebSocketResourceProviderFactory servlet = new WebSocketResourceProviderFactory(webSocketEnvironment);
 
       ServletRegistration.Dynamic websocket = environment.servlets().addServlet("WebSocket", servlet);

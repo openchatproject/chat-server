@@ -26,7 +26,7 @@ public class Account {
   private String identityKey;
 
   @JsonIgnore
-  private Optional<Device> authenticatedDevice;
+  private Device authenticatedDevice;
 
   public Account() {}
 
@@ -38,11 +38,11 @@ public class Account {
   }
 
   public Optional<Device> getAuthenticatedDevice() {
-    return authenticatedDevice;
+    return Optional.fromNullable(authenticatedDevice);
   }
 
   public void setAuthenticatedDevice(Device device) {
-    this.authenticatedDevice = Optional.of(device);
+    this.authenticatedDevice = device;
   }
 
   public void setNumber(String number) {

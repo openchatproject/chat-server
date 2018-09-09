@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import org.eclipse.jetty.websocket.api.UpgradeRequest;
 import com.openchat.secureim.auth.AccountAuthenticator;
 import com.openchat.secureim.storage.Account;
+import com.openchat.secureim.storage.Device;
 import com.openchat.websocket.auth.AuthenticationException;
 import com.openchat.websocket.auth.WebSocketAuthenticator;
 

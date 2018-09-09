@@ -47,7 +47,7 @@ public class DirectoryCommand extends ConfiguredCommand<OpenChatSecureimConfigur
 
       Accounts               accounts               = dbi.onDemand(Accounts.class);
       MemcachedClient        memcachedClient        = new MemcachedClientFactory(config.getMemcacheConfiguration()).getClient();
-      JedisPool              redisClient            = new RedisClientFactory(config.getRedisConfiguration()).getRedisClientPool();
+      JedisPool              redisClient            = new RedisClientFactory(config.getDirectoryConfiguration().getUrl()).getRedisClientPool();
       DirectoryManager       directory              = new DirectoryManager(redisClient);
       AccountsManager        accountsManager        = new AccountsManager(accounts, directory, memcachedClient);
       FederatedClientManager federatedClientManager = new FederatedClientManager(config.getFederationConfiguration());

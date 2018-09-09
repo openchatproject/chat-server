@@ -25,7 +25,8 @@ public class EncryptedOutgoingMessage {
   private static final int    MAC_KEY_SIZE    = 20;
   private static final int    MAC_SIZE        = 10;
 
-  private final String serialized;
+  private final byte[] serialized;
+  private final String serializedAndEncoded;
 
   public EncryptedOutgoingMessage(OutgoingMessageSignal outgoingMessage,
                                   String signalingKey)
@@ -34,12 +35,16 @@ public class EncryptedOutgoingMessage {
     byte[]        plaintext  = outgoingMessage.toByteArray();
     SecretKeySpec cipherKey  = getCipherKey (signalingKey);
     SecretKeySpec macKey     = getMacKey(signalingKey);
-    byte[]        ciphertext = getCiphertext(plaintext, cipherKey, macKey);
 
-    this.serialized = Base64.encodeBytes(ciphertext);
+    this.serialized           = getCiphertext(plaintext, cipherKey, macKey);
+    this.serializedAndEncoded = Base64.encodeBytes(this.serialized);
   }
 
-  public String serialize() {
+  public String toEncodedString() {
+    return serializedAndEncoded;
+  }
+
+  public byte[] toByteArray() {
     return serialized;
   }
 

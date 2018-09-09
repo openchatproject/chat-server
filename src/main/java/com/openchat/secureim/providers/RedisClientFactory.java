@@ -1,6 +1,6 @@
 package com.openchat.secureim.providers;
 
-import com.openchat.secureim.configuration.RedisConfiguration;
+import com.openchat.secureim.configuration.DirectoryConfiguration;
 import com.openchat.secureim.util.Util;
 
 import java.net.URI;
@@ -14,11 +14,11 @@ public class RedisClientFactory {
 
   private final JedisPool jedisPool;
 
-  public RedisClientFactory(RedisConfiguration redisConfig) throws URISyntaxException {
+  public RedisClientFactory(String url) throws URISyntaxException {
     JedisPoolConfig poolConfig = new JedisPoolConfig();
     poolConfig.setTestOnBorrow(true);
 
-    URI    redisURI      = new URI(redisConfig.getUrl());
+    URI    redisURI      = new URI(url);
     String redisHost     = redisURI.getHost();
     int    redisPort     = redisURI.getPort();
     String redisPassword = null;
