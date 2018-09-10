@@ -14,8 +14,6 @@ import com.openchat.secureim.util.Constants;
 import com.openchat.secureim.websocket.ProvisioningAddress;
 import com.openchat.secureim.websocket.WebsocketAddress;
 
-import java.io.UnsupportedEncodingException;
-
 import static com.codahale.metrics.MetricRegistry.name;
 import static com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal;
 import static com.openchat.secureim.storage.PubSubProtos.PubSubMessage;
@@ -68,22 +66,18 @@ public class WebsocketSender {
     }
   }
 
-  public boolean sendProvisioningMessage(ProvisioningAddress address, String body) {
-    try {
-      PubSubMessage    pubSubMessage = PubSubMessage.newBuilder()
-                                                    .setType(PubSubMessage.Type.DELIVER)
-                                                    .setContent(ByteString.copyFrom(body, "UTF-8"))
-                                                    .build();
+  public boolean sendProvisioningMessage(ProvisioningAddress address, byte[] body) {
+    PubSubMessage    pubSubMessage = PubSubMessage.newBuilder()
+                                                  .setType(PubSubMessage.Type.DELIVER)
+                                                  .setContent(ByteString.copyFrom(body))
+                                                  .build();
 
-      if (pubSubManager.publish(address, pubSubMessage)) {
-        provisioningOnlineMeter.mark();
-        return true;
-      } else {
-        provisioningOfflineMeter.mark();
-        return false;
-      }
-    } catch (UnsupportedEncodingException e) {
-      throw new AssertionError(e);
+    if (pubSubManager.publish(address, pubSubMessage)) {
+      provisioningOnlineMeter.mark();
+      return true;
+    } else {
+      provisioningOfflineMeter.mark();
+      return false;
     }
   }
 }
