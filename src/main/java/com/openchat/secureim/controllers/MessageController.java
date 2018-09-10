@@ -10,6 +10,7 @@ import com.openchat.secureim.entities.IncomingMessageList;
 import com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal;
 import com.openchat.secureim.entities.MessageResponse;
 import com.openchat.secureim.entities.MismatchedDevices;
+import com.openchat.secureim.entities.ProvisioningMessage;
 import com.openchat.secureim.entities.StaleDevices;
 import com.openchat.secureim.federation.FederatedClient;
 import com.openchat.secureim.federation.FederatedClientManager;
@@ -22,6 +23,8 @@ import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.util.Base64;
+import com.openchat.secureim.websocket.InvalidWebsocketAddressException;
+import com.openchat.secureim.websocket.ProvisioningAddress;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -110,6 +113,21 @@ public class MessageController {
     } catch (ValidationException e) {
       throw new WebApplicationException(Response.status(422).build());
     }
+  }
+
+  @Timed
+  @PUT
+  @Path("/provisioning/{destination}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  public void sendProvisioningMessage(@Auth                     Account source,
+                                      @PathParam("destination") String destinationName,
+                                      @Valid                    ProvisioningMessage message)
+      throws RateLimitExceededException, InvalidWebsocketAddressException
+  {
+    rateLimiters.getMessagesLimiter().validate(source.getNumber());
+
+    pushSender.getWebSocketSender().sendProvisioningMessage(new ProvisioningAddress(destinationName),
+                                                            message.getBody());
   }
 
   private void sendLocalMessage(Account source,

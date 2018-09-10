@@ -31,7 +31,6 @@ import com.openchat.secureim.mappers.IOExceptionMapper;
 import com.openchat.secureim.mappers.RateLimitExceededExceptionMapper;
 import com.openchat.secureim.metrics.CpuUsageGauge;
 import com.openchat.secureim.metrics.FreeMemoryGauge;
-import com.openchat.secureim.metrics.JsonMetricsReporter;
 import com.openchat.secureim.metrics.NetworkReceivedGauge;
 import com.openchat.secureim.metrics.NetworkSentGauge;
 import com.openchat.secureim.providers.MemcacheHealthCheck;
@@ -59,7 +58,8 @@ import com.openchat.secureim.storage.PubSubManager;
 import com.openchat.secureim.storage.StoredMessages;
 import com.openchat.secureim.util.Constants;
 import com.openchat.secureim.util.UrlSigner;
-import com.openchat.secureim.websocket.ConnectListener;
+import com.openchat.secureim.websocket.AuthenticatedConnectListener;
+import com.openchat.secureim.websocket.ProvisioningConnectListener;
 import com.openchat.secureim.websocket.WebSocketAccountAuthenticator;
 import com.openchat.secureim.workers.DirectoryCommand;
 import com.openchat.secureim.workers.VacuumCommand;
@@ -174,9 +174,16 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     if (config.getWebsocketConfiguration().isEnabled()) {
       WebSocketEnvironment webSocketEnvironment = new WebSocketEnvironment(environment, config);
       webSocketEnvironment.setAuthenticator(new WebSocketAccountAuthenticator(deviceAuthenticator));
-      webSocketEnvironment.setConnectListener(new ConnectListener(accountsManager, pushSender, storedMessages, pubSubManager));
+      webSocketEnvironment.setConnectListener(new AuthenticatedConnectListener(accountsManager, pushSender, storedMessages, pubSubManager));
       webSocketEnvironment.jersey().register(new KeepAliveController());
-      
-      WebSocketResourceProviderFactory servlet = new WebSocketResourceProviderFactory(webSocketEnvironment);
 
-      ServletRegistration.Dynamic websocket = environment.servlets().addServlet("WebSocket", servlet);
+      WebSocketEnvironment provisioningEnvironment = new WebSocketEnvironment(environment, config);
+      provisioningEnvironment.setConnectListener(new ProvisioningConnectListener(pubSubManager));
+      provisioningEnvironment.jersey().register(new KeepAliveController());
+      
+      WebSocketResourceProviderFactory webSocketServlet    = new WebSocketResourceProviderFactory(webSocketEnvironment   );
+      WebSocketResourceProviderFactory provisioningServlet = new WebSocketResourceProviderFactory(provisioningEnvironment);
+
+      ServletRegistration.Dynamic websocket    = environment.servlets().addServlet("WebSocket", webSocketServlet      );
+      ServletRegistration.Dynamic provisioning = environment.servlets().addServlet("Provisioning", provisioningServlet);
+

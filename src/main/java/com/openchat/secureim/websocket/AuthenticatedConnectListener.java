@@ -12,7 +12,7 @@ import com.openchat.secureim.storage.StoredMessages;
 import com.openchat.websocket.session.WebSocketSessionContext;
 import com.openchat.websocket.setup.WebSocketConnectListener;
 
-public class ConnectListener implements WebSocketConnectListener {
+public class AuthenticatedConnectListener implements WebSocketConnectListener {
 
   private static final Logger logger = LoggerFactory.getLogger(WebSocketConnection.class);
 
@@ -21,8 +21,8 @@ public class ConnectListener implements WebSocketConnectListener {
   private final StoredMessages  storedMessages;
   private final PubSubManager   pubSubManager;
 
-  public ConnectListener(AccountsManager accountsManager, PushSender pushSender,
-                         StoredMessages storedMessages, PubSubManager pubSubManager)
+  public AuthenticatedConnectListener(AccountsManager accountsManager, PushSender pushSender,
+                                      StoredMessages storedMessages, PubSubManager pubSubManager)
   {
     this.accountsManager = accountsManager;
     this.pushSender      = pushSender;
