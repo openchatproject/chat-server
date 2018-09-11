@@ -1,14 +1,13 @@
 package com.openchat.secureim;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.openchat.secureim.configuration.RedisConfiguration;
 import com.openchat.secureim.configuration.FederationConfiguration;
 import com.openchat.secureim.configuration.GraphiteConfiguration;
-import com.openchat.secureim.configuration.MemcacheConfiguration;
 import com.openchat.secureim.configuration.NexmoConfiguration;
 import com.openchat.secureim.configuration.PushConfiguration;
 import com.openchat.secureim.configuration.RateLimitsConfiguration;
 import com.openchat.secureim.configuration.RedPhoneConfiguration;
+import com.openchat.secureim.configuration.RedisConfiguration;
 import com.openchat.secureim.configuration.S3Configuration;
 import com.openchat.secureim.configuration.TwilioConfiguration;
 import com.openchat.secureim.configuration.WebsocketConfiguration;
