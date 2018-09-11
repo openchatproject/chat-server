@@ -6,6 +6,8 @@ import com.openchat.secureim.auth.AuthenticationCredentials;
 import com.openchat.secureim.entities.SignedPreKey;
 import com.openchat.secureim.util.Util;
 
+import java.util.concurrent.TimeUnit;
+
 public class Device {
 
   public static final long MASTER_ID = 1;
@@ -40,12 +42,15 @@ public class Device {
   @JsonProperty
   private SignedPreKey signedPreKey;
 
+  @JsonProperty
+  private long lastSeen;
+
   public Device() {}
 
   public Device(long id, String authToken, String salt,
                 String signalingKey, String gcmId, String apnId,
                 boolean fetchesMessages, int registrationId,
-                SignedPreKey signedPreKey)
+                SignedPreKey signedPreKey, long lastSeen)
   {
     this.id              = id;
     this.authToken       = authToken;
@@ -56,6 +61,7 @@ public class Device {
     this.fetchesMessages = fetchesMessages;
     this.registrationId  = registrationId;
     this.signedPreKey    = signedPreKey;
+    this.lastSeen        = lastSeen;
   }
 
   public String getApnId() {
@@ -68,6 +74,14 @@ public class Device {
     if (apnId != null) {
       this.pushTimestamp = System.currentTimeMillis();
     }
+  }
+
+  public void setLastSeen(long lastSeen) {
+    this.lastSeen = lastSeen;
+  }
+
+  public long getLastSeen() {
+    return lastSeen;
   }
 
   public String getGcmId() {
@@ -108,7 +122,10 @@ public class Device {
   }
 
   public boolean isActive() {
-    return fetchesMessages || !Util.isEmpty(getApnId()) || !Util.isEmpty(getGcmId());
+    boolean hasChannel = fetchesMessages || !Util.isEmpty(getApnId()) || !Util.isEmpty(getGcmId());
+
+    return (id == MASTER_ID && hasChannel) ||
+           (id != MASTER_ID && hasChannel && signedPreKey != null && lastSeen > (System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30)));
   }
 
   public boolean getFetchesMessages() {
@@ -141,5 +158,18 @@ public class Device {
 
   public long getPushTimestamp() {
     return pushTimestamp;
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    if (other == null || !(other instanceof Device)) return false;
+
+    Device that = (Device)other;
+    return this.id == that.id;
+  }
+
+  @Override
+  public int hashCode() {
+    return (int)this.id;
   }
 }

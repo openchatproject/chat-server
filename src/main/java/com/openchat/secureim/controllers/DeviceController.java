@@ -15,6 +15,7 @@ import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.PendingDevicesManager;
+import com.openchat.secureim.util.Util;
 import com.openchat.secureim.util.VerificationCode;
 
 import javax.validation.Valid;
@@ -103,6 +104,7 @@ public class DeviceController {
       device.setSignalingKey(accountAttributes.getSignalingKey());
       device.setFetchesMessages(accountAttributes.getFetchesMessages());
       device.setId(account.get().getNextDeviceId());
+      device.setLastSeen(Util.todayInMillis());
 
       account.get().addDevice(device);
       accounts.update(account.get());

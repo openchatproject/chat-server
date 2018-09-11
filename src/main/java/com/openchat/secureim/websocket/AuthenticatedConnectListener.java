@@ -9,6 +9,7 @@ import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.PubSubManager;
 import com.openchat.secureim.storage.StoredMessages;
+import com.openchat.secureim.util.Util;
 import com.openchat.websocket.session.WebSocketSessionContext;
 import com.openchat.websocket.setup.WebSocketConnectListener;
 
@@ -46,6 +47,11 @@ public class AuthenticatedConnectListener implements WebSocketConnectListener {
       logger.debug("WS Connection with no authenticated device...");
       context.getClient().close(4001, "Device authentication failed");
       return;
+    }
+
+    if (device.get().getLastSeen() != Util.todayInMillis()) {
+      device.get().setLastSeen(Util.todayInMillis());
+      accountsManager.update(account.get());
     }
 
     final WebSocketConnection connection = new WebSocketConnection(accountsManager, pushSender,
