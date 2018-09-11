@@ -51,18 +51,20 @@ import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.DirectoryManager;
 import com.openchat.secureim.storage.Keys;
+import com.openchat.secureim.storage.Messages;
+import com.openchat.secureim.storage.MessagesManager;
 import com.openchat.secureim.storage.PendingAccounts;
 import com.openchat.secureim.storage.PendingAccountsManager;
 import com.openchat.secureim.storage.PendingDevices;
 import com.openchat.secureim.storage.PendingDevicesManager;
 import com.openchat.secureim.storage.PubSubManager;
-import com.openchat.secureim.storage.StoredMessages;
 import com.openchat.secureim.util.Constants;
 import com.openchat.secureim.util.UrlSigner;
 import com.openchat.secureim.websocket.AuthenticatedConnectListener;
 import com.openchat.secureim.websocket.ProvisioningConnectListener;
 import com.openchat.secureim.websocket.WebSocketAccountAuthenticator;
 import com.openchat.secureim.workers.DirectoryCommand;
+import com.openchat.secureim.liquibase.NameableMigrationsBundle;
 import com.openchat.secureim.workers.VacuumCommand;
 import com.openchat.websocket.WebSocketResourceProviderFactory;
 import com.openchat.websocket.setup.WebSocketEnvironment;
@@ -80,7 +82,6 @@ import io.dropwizard.client.JerseyClientBuilder;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.metrics.graphite.GraphiteReporterFactory;
-import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import redis.clients.jedis.JedisPool;
@@ -95,10 +96,17 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
   public void initialize(Bootstrap<OpenChatSecureimConfiguration> bootstrap) {
     bootstrap.addCommand(new DirectoryCommand());
     bootstrap.addCommand(new VacuumCommand());
-    bootstrap.addBundle(new MigrationsBundle<OpenChatSecureimConfiguration>() {
+    bootstrap.addBundle(new NameableMigrationsBundle<OpenChatSecureimConfiguration>("accountdb", "accountsdb.xml") {
       @Override
       public DataSourceFactory getDataSourceFactory(OpenChatSecureimConfiguration configuration) {
         return configuration.getDataSourceFactory();
+      }
+    });
+
+    bootstrap.addBundle(new NameableMigrationsBundle<OpenChatSecureimConfiguration>("messagedb", "messagedb.xml") {
+      @Override
+      public DataSourceFactory getDataSourceFactory(OpenChatSecureimConfiguration configuration) {
+        return configuration.getMessageStoreConfiguration();
       }
     });
   }
@@ -116,16 +124,17 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     environment.getObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     DBIFactory dbiFactory = new DBIFactory();
-    DBI        jdbi       = dbiFactory.build(environment, config.getDataSourceFactory(), "postgresql");
+    DBI        database   = dbiFactory.build(environment, config.getDataSourceFactory(), "accountdb");
+    DBI        messagedb  = dbiFactory.build(environment, config.getMessageStoreConfiguration(), "messagedb");
 
-    Accounts        accounts        = jdbi.onDemand(Accounts.class);
-    PendingAccounts pendingAccounts = jdbi.onDemand(PendingAccounts.class);
-    PendingDevices  pendingDevices  = jdbi.onDemand(PendingDevices.class);
-    Keys            keys            = jdbi.onDemand(Keys.class);
+    Accounts        accounts        = database.onDemand(Accounts.class);
+    PendingAccounts pendingAccounts = database.onDemand(PendingAccounts.class);
+    PendingDevices  pendingDevices  = database.onDemand(PendingDevices.class);
+    Keys            keys            = database.onDemand(Keys.class);
+    Messages        messages        = messagedb.onDemand(Messages.class);
 
     MemcachedClient memcachedClient    = new MemcachedClientFactory(config.getMemcacheConfiguration()).getClient();
     JedisPool       directoryClient    = new RedisClientFactory(config.getDirectoryConfiguration().getUrl()).getRedisClientPool();
-    JedisPool       messageStoreClient = new RedisClientFactory(config.getMessageStoreConfiguration().getUrl()).getRedisClientPool();
     Client          httpClient         = new JerseyClientBuilder(environment).using(config.getJerseyClientConfiguration())
                                                                              .build(getName());
 
@@ -134,10 +143,10 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     PendingDevicesManager  pendingDevicesManager  = new PendingDevicesManager (pendingDevices, memcachedClient );
     AccountsManager        accountsManager        = new AccountsManager(accounts, directory, memcachedClient);
     FederatedClientManager federatedClientManager = new FederatedClientManager(config.getFederationConfiguration());
-    StoredMessages         storedMessages         = new StoredMessages(messageStoreClient);
-    PubSubManager          pubSubManager          = new PubSubManager(messageStoreClient);
+    MessagesManager        messagesManager        = new MessagesManager(messages);
+    PubSubManager          pubSubManager          = new PubSubManager(directoryClient);
     PushServiceClient      pushServiceClient      = new PushServiceClient(httpClient, config.getPushConfiguration());
-    WebsocketSender        websocketSender        = new WebsocketSender(storedMessages, pubSubManager);
+    WebsocketSender        websocketSender        = new WebsocketSender(messagesManager, pubSubManager);
     AccountAuthenticator   deviceAuthenticator    = new AccountAuthenticator(accountsManager);
     RateLimiters           rateLimiters           = new RateLimiters(config.getLimitsConfiguration(), memcachedClient);
 
@@ -161,7 +170,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
                                                                deviceAuthenticator,
                                                                Device.class, "OpenchatSecureimServer"));
 
-    environment.jersey().register(new AccountController(pendingAccountsManager, accountsManager, rateLimiters, smsSender, storedMessages, new TimeProvider(), authorizationKey));
+    environment.jersey().register(new AccountController(pendingAccountsManager, accountsManager, rateLimiters, smsSender, messagesManager, new TimeProvider(), authorizationKey));
     environment.jersey().register(new DeviceController(pendingDevicesManager, accountsManager, rateLimiters));
     environment.jersey().register(new DirectoryController(rateLimiters, directory));
     environment.jersey().register(new FederationControllerV1(accountsManager, attachmentController, messageController, keysControllerV1));
@@ -176,7 +185,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     if (config.getWebsocketConfiguration().isEnabled()) {
       WebSocketEnvironment webSocketEnvironment = new WebSocketEnvironment(environment, config);
       webSocketEnvironment.setAuthenticator(new WebSocketAccountAuthenticator(deviceAuthenticator));
-      webSocketEnvironment.setConnectListener(new AuthenticatedConnectListener(accountsManager, pushSender, storedMessages, pubSubManager));
+      webSocketEnvironment.setConnectListener(new AuthenticatedConnectListener(accountsManager, pushSender, messagesManager, pubSubManager));
       webSocketEnvironment.jersey().register(new KeepAliveController());
 
       WebSocketEnvironment provisioningEnvironment = new WebSocketEnvironment(environment, config);

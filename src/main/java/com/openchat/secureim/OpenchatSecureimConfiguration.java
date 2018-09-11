@@ -51,10 +51,11 @@ public class OpenChatSecureimConfiguration extends Configuration {
   @JsonProperty
   private DirectoryConfiguration directory;
 
-  @NotNull
   @Valid
+  @NotNull
   @JsonProperty
-  private MessageStoreConfiguration messageStore;
+  private DataSourceFactory messageStore;
+
 
   @Valid
   @JsonProperty
@@ -119,7 +120,7 @@ public class OpenChatSecureimConfiguration extends Configuration {
     return directory;
   }
 
-  public MessageStoreConfiguration getMessageStoreConfiguration() {
+  public DataSourceFactory getMessageStoreConfiguration() {
     return messageStore;
   }
 

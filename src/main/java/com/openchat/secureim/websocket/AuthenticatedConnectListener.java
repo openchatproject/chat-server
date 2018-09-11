@@ -7,8 +7,8 @@ import com.openchat.secureim.push.PushSender;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
+import com.openchat.secureim.storage.MessagesManager;
 import com.openchat.secureim.storage.PubSubManager;
-import com.openchat.secureim.storage.StoredMessages;
 import com.openchat.secureim.util.Util;
 import com.openchat.websocket.session.WebSocketSessionContext;
 import com.openchat.websocket.setup.WebSocketConnectListener;
@@ -19,15 +19,15 @@ public class AuthenticatedConnectListener implements WebSocketConnectListener {
 
   private final AccountsManager accountsManager;
   private final PushSender      pushSender;
-  private final StoredMessages  storedMessages;
+  private final MessagesManager messagesManager;
   private final PubSubManager   pubSubManager;
 
   public AuthenticatedConnectListener(AccountsManager accountsManager, PushSender pushSender,
-                                      StoredMessages storedMessages, PubSubManager pubSubManager)
+                                      MessagesManager messagesManager, PubSubManager pubSubManager)
   {
     this.accountsManager = accountsManager;
     this.pushSender      = pushSender;
-    this.storedMessages  = storedMessages;
+    this.messagesManager = messagesManager;
     this.pubSubManager   = pubSubManager;
   }
 
@@ -55,7 +55,7 @@ public class AuthenticatedConnectListener implements WebSocketConnectListener {
     }
 
     final WebSocketConnection connection = new WebSocketConnection(accountsManager, pushSender,
-                                                                   storedMessages, pubSubManager,
+                                                                   messagesManager, pubSubManager,
                                                                    account.get(), device.get(),
                                                                    context.getClient());
 
