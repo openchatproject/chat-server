@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
-public class DirectoryConfiguration {
+public class RedisConfiguration {
 
   @JsonProperty
   @NotEmpty

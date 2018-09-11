@@ -1,13 +1,11 @@
 package com.openchat.secureim.workers;
 
 import net.sourceforge.argparse4j.inf.Namespace;
-import net.spy.memcached.MemcachedClient;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.OpenChatSecureimConfiguration;
 import com.openchat.secureim.federation.FederatedClientManager;
-import com.openchat.secureim.providers.MemcachedClientFactory;
 import com.openchat.secureim.providers.RedisClientFactory;
 import com.openchat.secureim.storage.Accounts;
 import com.openchat.secureim.storage.AccountsManager;
@@ -46,10 +44,10 @@ public class DirectoryCommand extends ConfiguredCommand<OpenChatSecureimConfigur
       dbi.registerContainerFactory(new OptionalContainerFactory());
 
       Accounts               accounts               = dbi.onDemand(Accounts.class);
-      MemcachedClient        memcachedClient        = new MemcachedClientFactory(config.getMemcacheConfiguration()).getClient();
+      JedisPool              cacheClient            = new RedisClientFactory(config.getCacheConfiguration().getUrl()).getRedisClientPool();
       JedisPool              redisClient            = new RedisClientFactory(config.getDirectoryConfiguration().getUrl()).getRedisClientPool();
       DirectoryManager       directory              = new DirectoryManager(redisClient);
-      AccountsManager        accountsManager        = new AccountsManager(accounts, directory, memcachedClient);
+      AccountsManager        accountsManager        = new AccountsManager(accounts, directory, cacheClient);
       FederatedClientManager federatedClientManager = new FederatedClientManager(config.getFederationConfiguration());
 
       DirectoryUpdater update = new DirectoryUpdater(accountsManager, federatedClientManager, directory);

@@ -1,6 +1,5 @@
 package com.openchat.secureim.providers;
 
-import com.openchat.secureim.configuration.DirectoryConfiguration;
 import com.openchat.secureim.util.Util;
 
 import java.net.URI;

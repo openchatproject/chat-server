@@ -1,11 +1,10 @@
 package com.openchat.secureim;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.openchat.secureim.configuration.DirectoryConfiguration;
+import com.openchat.secureim.configuration.RedisConfiguration;
 import com.openchat.secureim.configuration.FederationConfiguration;
 import com.openchat.secureim.configuration.GraphiteConfiguration;
 import com.openchat.secureim.configuration.MemcacheConfiguration;
-import com.openchat.secureim.configuration.MessageStoreConfiguration;
 import com.openchat.secureim.configuration.NexmoConfiguration;
 import com.openchat.secureim.configuration.PushConfiguration;
 import com.openchat.secureim.configuration.RateLimitsConfiguration;
@@ -44,12 +43,12 @@ public class OpenChatSecureimConfiguration extends Configuration {
   @NotNull
   @Valid
   @JsonProperty
-  private MemcacheConfiguration memcache;
+  private RedisConfiguration cache;
 
   @NotNull
   @Valid
   @JsonProperty
-  private DirectoryConfiguration directory;
+  private RedisConfiguration directory;
 
   @Valid
   @NotNull
@@ -112,11 +111,11 @@ public class OpenChatSecureimConfiguration extends Configuration {
     return s3;
   }
 
-  public MemcacheConfiguration getMemcacheConfiguration() {
-    return memcache;
+  public RedisConfiguration getCacheConfiguration() {
+    return cache;
   }
 
-  public DirectoryConfiguration getDirectoryConfiguration() {
+  public RedisConfiguration getDirectoryConfiguration() {
     return directory;
   }
 
