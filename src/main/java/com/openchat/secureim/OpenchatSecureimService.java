@@ -23,6 +23,7 @@ import com.openchat.secureim.controllers.KeepAliveController;
 import com.openchat.secureim.controllers.KeysControllerV1;
 import com.openchat.secureim.controllers.KeysControllerV2;
 import com.openchat.secureim.controllers.MessageController;
+import com.openchat.secureim.controllers.ProvisioningController;
 import com.openchat.secureim.controllers.ReceiptController;
 import com.openchat.secureim.federation.FederatedClientManager;
 import com.openchat.secureim.federation.FederatedPeer;
@@ -166,6 +167,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     environment.jersey().register(new FederationControllerV1(accountsManager, attachmentController, messageController, keysControllerV1));
     environment.jersey().register(new FederationControllerV2(accountsManager, attachmentController, messageController, keysControllerV2));
     environment.jersey().register(new ReceiptController(accountsManager, federatedClientManager, pushSender));
+    environment.jersey().register(new ProvisioningController(rateLimiters, pushSender));
     environment.jersey().register(attachmentController);
     environment.jersey().register(keysControllerV1);
     environment.jersey().register(keysControllerV2);
@@ -187,3 +189,13 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
       ServletRegistration.Dynamic websocket    = environment.servlets().addServlet("WebSocket", webSocketServlet      );
       ServletRegistration.Dynamic provisioning = environment.servlets().addServlet("Provisioning", provisioningServlet);
 
+      websocket.addMapping("/v1/websocket/");
+      websocket.setAsyncSupported(true);
+
+      provisioning.addMapping("/v1/websocket/provisioning/");
+      provisioning.setAsyncSupported(true);
+
+      webSocketServlet.start();
+      provisioningServlet.start();
+
+      FilterRegistration.Dynamic filter = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
