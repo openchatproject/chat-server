@@ -23,6 +23,7 @@ import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.util.Base64;
+import com.openchat.secureim.util.Util;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -78,8 +79,8 @@ public class MessageController {
     try {
       boolean isSyncMessage = source.getNumber().equals(destinationName);
 
-      if (messages.getRelay() == null) sendLocalMessage(source, destinationName, messages, isSyncMessage);
-      else                             sendRelayMessage(source, destinationName, messages, isSyncMessage);
+      if (Util.isEmpty(messages.getRelay())) sendLocalMessage(source, destinationName, messages, isSyncMessage);
+      else                                   sendRelayMessage(source, destinationName, messages, isSyncMessage);
 
       return new SendMessageResponse(!isSyncMessage && source.getActiveDeviceCount() > 1);
     } catch (NoSuchUserException e) {
