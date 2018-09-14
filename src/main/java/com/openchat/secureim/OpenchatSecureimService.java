@@ -59,6 +59,7 @@ import com.openchat.secureim.storage.PubSubManager;
 import com.openchat.secureim.util.Constants;
 import com.openchat.secureim.util.UrlSigner;
 import com.openchat.secureim.websocket.AuthenticatedConnectListener;
+import com.openchat.secureim.websocket.DeadLetterHandler;
 import com.openchat.secureim.websocket.ProvisioningConnectListener;
 import com.openchat.secureim.websocket.WebSocketAccountAuthenticator;
 import com.openchat.secureim.workers.DirectoryCommand;
@@ -141,7 +142,8 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     AccountsManager        accountsManager        = new AccountsManager(accounts, directory, cacheClient);
     FederatedClientManager federatedClientManager = new FederatedClientManager(config.getFederationConfiguration());
     MessagesManager        messagesManager        = new MessagesManager(messages);
-    PubSubManager          pubSubManager          = new PubSubManager(cacheClient);
+    DeadLetterHandler      deadLetterHandler      = new DeadLetterHandler(messagesManager);
+    PubSubManager          pubSubManager          = new PubSubManager(cacheClient, deadLetterHandler);
     PushServiceClient      pushServiceClient      = new PushServiceClient(httpClient, config.getPushConfiguration());
     WebsocketSender        websocketSender        = new WebsocketSender(messagesManager, pubSubManager);
     AccountAuthenticator   deviceAuthenticator    = new AccountAuthenticator(accountsManager);
