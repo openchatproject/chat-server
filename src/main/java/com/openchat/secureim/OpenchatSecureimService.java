@@ -182,7 +182,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     environment.jersey().register(messageController);
 
     if (config.getWebsocketConfiguration().isEnabled()) {
-      WebSocketEnvironment webSocketEnvironment = new WebSocketEnvironment(environment, config);
+      WebSocketEnvironment webSocketEnvironment = new WebSocketEnvironment(environment, config, 90000);
       webSocketEnvironment.setAuthenticator(new WebSocketAccountAuthenticator(deviceAuthenticator));
       webSocketEnvironment.setConnectListener(new AuthenticatedConnectListener(accountsManager, pushSender, messagesManager, pubSubManager));
       webSocketEnvironment.jersey().register(new KeepAliveController());
