@@ -9,7 +9,14 @@ public class ApnRegistrationId {
   @NotEmpty
   private String apnRegistrationId;
 
+  @JsonProperty
+  String voipRegistrationId;
+
   public String getApnRegistrationId() {
     return apnRegistrationId;
+  }
+
+  public String getVoipRegistrationId() {
+    return voipRegistrationId;
   }
 }

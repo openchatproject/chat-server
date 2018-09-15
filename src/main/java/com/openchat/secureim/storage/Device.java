@@ -31,6 +31,9 @@ public class Device {
   private String  apnId;
 
   @JsonProperty
+  private String  voipApnId;
+
+  @JsonProperty
   private long pushTimestamp;
 
   @JsonProperty
@@ -49,8 +52,8 @@ public class Device {
 
   public Device(long id, String authToken, String salt,
                 String signalingKey, String gcmId, String apnId,
-                boolean fetchesMessages, int registrationId,
-                SignedPreKey signedPreKey, long lastSeen)
+                String voipApnId, boolean fetchesMessages,
+                int registrationId, SignedPreKey signedPreKey, long lastSeen)
   {
     this.id              = id;
     this.authToken       = authToken;
@@ -58,6 +61,7 @@ public class Device {
     this.signalingKey    = signalingKey;
     this.gcmId           = gcmId;
     this.apnId           = apnId;
+    this.voipApnId       = voipApnId;
     this.fetchesMessages = fetchesMessages;
     this.registrationId  = registrationId;
     this.signedPreKey    = signedPreKey;
@@ -74,6 +78,14 @@ public class Device {
     if (apnId != null) {
       this.pushTimestamp = System.currentTimeMillis();
     }
+  }
+
+  public String getVoipApnId() {
+    return voipApnId;
+  }
+
+  public void setVoipApnId(String voipApnId) {
+    this.voipApnId = voipApnId;
   }
 
   public void setLastSeen(long lastSeen) {
