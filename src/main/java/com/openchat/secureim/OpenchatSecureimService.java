@@ -190,11 +190,11 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
       WebSocketEnvironment webSocketEnvironment = new WebSocketEnvironment(environment, config, 90000);
       webSocketEnvironment.setAuthenticator(new WebSocketAccountAuthenticator(deviceAuthenticator));
       webSocketEnvironment.setConnectListener(new AuthenticatedConnectListener(accountsManager, pushSender, messagesManager, pubSubManager));
-      webSocketEnvironment.jersey().register(new KeepAliveController());
+      webSocketEnvironment.jersey().register(new KeepAliveController(pubSubManager));
 
       WebSocketEnvironment provisioningEnvironment = new WebSocketEnvironment(environment, config);
       provisioningEnvironment.setConnectListener(new ProvisioningConnectListener(pubSubManager));
-      provisioningEnvironment.jersey().register(new KeepAliveController());
+      provisioningEnvironment.jersey().register(new KeepAliveController(pubSubManager));
       
       WebSocketResourceProviderFactory webSocketServlet    = new WebSocketResourceProviderFactory(webSocketEnvironment   );
       WebSocketResourceProviderFactory provisioningServlet = new WebSocketResourceProviderFactory(provisioningEnvironment);
