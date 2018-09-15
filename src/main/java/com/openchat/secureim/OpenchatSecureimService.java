@@ -8,6 +8,8 @@ import com.sun.jersey.api.client.Client;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.skife.jdbi.v2.DBI;
+import com.openchat.dispatch.DispatchChannel;
+import com.openchat.dispatch.DispatchManager;
 import com.openchat.secureim.auth.AccountAuthenticator;
 import com.openchat.secureim.auth.FederatedPeerAuthenticator;
 import com.openchat.secureim.auth.MultiBasicAuthProvider;
@@ -131,10 +133,11 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     Keys            keys            = database.onDemand(Keys.class);
     Messages        messages        = messagedb.onDemand(Messages.class);
 
-    JedisPool       cacheClient        = new RedisClientFactory(config.getCacheConfiguration().getUrl()).getRedisClientPool();
-    JedisPool       directoryClient    = new RedisClientFactory(config.getDirectoryConfiguration().getUrl()).getRedisClientPool();
-    Client          httpClient         = new JerseyClientBuilder(environment).using(config.getJerseyClientConfiguration())
-                                                                             .build(getName());
+    RedisClientFactory cacheClientFactory = new RedisClientFactory(config.getCacheConfiguration().getUrl());
+    JedisPool          cacheClient        = cacheClientFactory.getRedisClientPool();
+    JedisPool          directoryClient    = new RedisClientFactory(config.getDirectoryConfiguration().getUrl()).getRedisClientPool();
+    Client             httpClient         = new JerseyClientBuilder(environment).using(config.getJerseyClientConfiguration())
+                                                                                .build(getName());
 
     DirectoryManager       directory              = new DirectoryManager(directoryClient);
     PendingAccountsManager pendingAccountsManager = new PendingAccountsManager(pendingAccounts, cacheClient);
@@ -143,7 +146,8 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     FederatedClientManager federatedClientManager = new FederatedClientManager(config.getFederationConfiguration());
     MessagesManager        messagesManager        = new MessagesManager(messages);
     DeadLetterHandler      deadLetterHandler      = new DeadLetterHandler(messagesManager);
-    PubSubManager          pubSubManager          = new PubSubManager(cacheClient, deadLetterHandler);
+    DispatchManager        dispatchManager        = new DispatchManager(cacheClientFactory, Optional.<DispatchChannel>of(deadLetterHandler));
+    PubSubManager          pubSubManager          = new PubSubManager(cacheClient, dispatchManager);
     PushServiceClient      pushServiceClient      = new PushServiceClient(httpClient, config.getPushConfiguration());
     WebsocketSender        websocketSender        = new WebsocketSender(messagesManager, pubSubManager);
     AccountAuthenticator   deviceAuthenticator    = new AccountAuthenticator(accountsManager);
@@ -157,6 +161,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     FeedbackHandler          feedbackHandler     = new FeedbackHandler(pushServiceClient, accountsManager);
     Optional<byte[]>         authorizationKey    = config.getRedphoneConfiguration().getAuthorizationKey();
 
+    environment.lifecycle().manage(pubSubManager);
     environment.lifecycle().manage(feedbackHandler);
 
     AttachmentController attachmentController = new AttachmentController(rateLimiters, federatedClientManager, urlSigner);
