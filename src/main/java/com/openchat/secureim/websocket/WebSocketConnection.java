@@ -1,5 +1,8 @@
 package com.openchat.secureim.websocket;
 
+import com.codahale.metrics.Histogram;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.SharedMetricRegistries;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -18,6 +21,7 @@ import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.MessagesManager;
 import com.openchat.secureim.storage.PubSubListener;
 import com.openchat.secureim.storage.PubSubManager;
+import com.openchat.secureim.util.Constants;
 import com.openchat.secureim.util.Pair;
 import com.openchat.websocket.WebSocketClient;
 import com.openchat.websocket.messages.WebSocketResponseMessage;
@@ -26,12 +30,16 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import static com.codahale.metrics.MetricRegistry.name;
 import static com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal;
 import static com.openchat.secureim.storage.PubSubProtos.PubSubMessage;
 
 public class WebSocketConnection implements PubSubListener {
 
   private static final Logger logger = LoggerFactory.getLogger(WebSocketConnection.class);
+
+  private static final MetricRegistry metricRegistry    = SharedMetricRegistries.getOrCreate(Constants.METRICS_NAME);
+  private static final Histogram      durationHistogram = metricRegistry.histogram(name(WebSocketConnection.class, "connected_duration"));
 
   private final AccountsManager  accountsManager;
   private final PushSender       pushSender;
@@ -42,6 +50,8 @@ public class WebSocketConnection implements PubSubListener {
   private final Device           device;
   private final WebsocketAddress address;
   private final WebSocketClient  client;
+
+  private long connectionStartTime;
 
   public WebSocketConnection(AccountsManager accountsManager,
                              PushSender pushSender,
@@ -62,11 +72,13 @@ public class WebSocketConnection implements PubSubListener {
   }
 
   public void onConnected() {
+    connectionStartTime = System.currentTimeMillis();
     pubSubManager.subscribe(address, this);
     processStoredMessages();
   }
 
   public void onConnectionLost() {
+    durationHistogram.update(System.currentTimeMillis() - connectionStartTime);
     pubSubManager.unsubscribe(address, this);
   }
 
