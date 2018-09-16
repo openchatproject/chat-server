@@ -42,6 +42,7 @@ import com.openchat.secureim.providers.TimeProvider;
 import com.openchat.secureim.push.FeedbackHandler;
 import com.openchat.secureim.push.PushSender;
 import com.openchat.secureim.push.PushServiceClient;
+import com.openchat.secureim.push.ReceiptSender;
 import com.openchat.secureim.push.WebsocketSender;
 import com.openchat.secureim.sms.NexmoSmsSender;
 import com.openchat.secureim.sms.SmsSender;
@@ -158,6 +159,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     SmsSender                smsSender           = new SmsSender(twilioSmsSender, nexmoSmsSender, config.getTwilioConfiguration().isInternational());
     UrlSigner                urlSigner           = new UrlSigner(config.getS3Configuration());
     PushSender               pushSender          = new PushSender(pushServiceClient, websocketSender);
+    ReceiptSender            receiptSender       = new ReceiptSender(accountsManager, pushSender, federatedClientManager);
     FeedbackHandler          feedbackHandler     = new FeedbackHandler(pushServiceClient, accountsManager);
     Optional<byte[]>         authorizationKey    = config.getRedphoneConfiguration().getAuthorizationKey();
 
@@ -167,7 +169,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     AttachmentController attachmentController = new AttachmentController(rateLimiters, federatedClientManager, urlSigner);
     KeysControllerV1     keysControllerV1     = new KeysControllerV1(rateLimiters, keys, accountsManager, federatedClientManager);
     KeysControllerV2     keysControllerV2     = new KeysControllerV2(rateLimiters, keys, accountsManager, federatedClientManager);
-    MessageController    messageController    = new MessageController(rateLimiters, pushSender, accountsManager, federatedClientManager);
+    MessageController    messageController    = new MessageController(rateLimiters, pushSender, receiptSender, accountsManager, messagesManager, federatedClientManager);
 
     environment.jersey().register(new MultiBasicAuthProvider<>(new FederatedPeerAuthenticator(config.getFederationConfiguration()),
                                                                FederatedPeer.class,
@@ -179,7 +181,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     environment.jersey().register(new DirectoryController(rateLimiters, directory));
     environment.jersey().register(new FederationControllerV1(accountsManager, attachmentController, messageController, keysControllerV1));
     environment.jersey().register(new FederationControllerV2(accountsManager, attachmentController, messageController, keysControllerV2));
-    environment.jersey().register(new ReceiptController(accountsManager, federatedClientManager, pushSender));
+    environment.jersey().register(new ReceiptController(receiptSender));
     environment.jersey().register(new ProvisioningController(rateLimiters, pushSender));
     environment.jersey().register(attachmentController);
     environment.jersey().register(keysControllerV1);
@@ -189,7 +191,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     if (config.getWebsocketConfiguration().isEnabled()) {
       WebSocketEnvironment webSocketEnvironment = new WebSocketEnvironment(environment, config, 90000);
       webSocketEnvironment.setAuthenticator(new WebSocketAccountAuthenticator(deviceAuthenticator));
-      webSocketEnvironment.setConnectListener(new AuthenticatedConnectListener(accountsManager, pushSender, messagesManager, pubSubManager));
+      webSocketEnvironment.setConnectListener(new AuthenticatedConnectListener(accountsManager, pushSender, receiptSender, messagesManager, pubSubManager));
       webSocketEnvironment.jersey().register(new KeepAliveController(pubSubManager));
 
       WebSocketEnvironment provisioningEnvironment = new WebSocketEnvironment(environment, config);

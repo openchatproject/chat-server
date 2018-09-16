@@ -10,6 +10,8 @@ import com.openchat.secureim.entities.IncomingMessageList;
 import com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal;
 import com.openchat.secureim.entities.MessageResponse;
 import com.openchat.secureim.entities.MismatchedDevices;
+import com.openchat.secureim.entities.OutgoingMessageEntity;
+import com.openchat.secureim.entities.OutgoingMessageEntityList;
 import com.openchat.secureim.entities.SendMessageResponse;
 import com.openchat.secureim.entities.StaleDevices;
 import com.openchat.secureim.federation.FederatedClient;
@@ -18,15 +20,19 @@ import com.openchat.secureim.federation.NoSuchPeerException;
 import com.openchat.secureim.limits.RateLimiters;
 import com.openchat.secureim.push.NotPushRegisteredException;
 import com.openchat.secureim.push.PushSender;
+import com.openchat.secureim.push.ReceiptSender;
 import com.openchat.secureim.push.TransientPushFailureException;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
+import com.openchat.secureim.storage.MessagesManager;
 import com.openchat.secureim.util.Base64;
 import com.openchat.secureim.util.Util;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -50,17 +56,23 @@ public class MessageController {
 
   private final RateLimiters           rateLimiters;
   private final PushSender             pushSender;
+  private final ReceiptSender          receiptSender;
   private final FederatedClientManager federatedClientManager;
   private final AccountsManager        accountsManager;
+  private final MessagesManager        messagesManager;
 
   public MessageController(RateLimiters rateLimiters,
                            PushSender pushSender,
+                           ReceiptSender receiptSender,
                            AccountsManager accountsManager,
+                           MessagesManager messagesManager,
                            FederatedClientManager federatedClientManager)
   {
     this.rateLimiters           = rateLimiters;
     this.pushSender             = pushSender;
+    this.receiptSender          = receiptSender;
     this.accountsManager        = accountsManager;
+    this.messagesManager        = messagesManager;
     this.federatedClientManager = federatedClientManager;
   }
 
@@ -120,6 +132,36 @@ public class MessageController {
       throw new WebApplicationException(Response.status(422).build());
     }
   }
+
+  @Timed
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public OutgoingMessageEntityList getPendingMessages(@Auth Account account) {
+    return new OutgoingMessageEntityList(messagesManager.getMessagesForDevice(account.getNumber(),
+                                                                              account.getAuthenticatedDevice()
+                                                                                     .get().getId()));
+  }
+
+  @Timed
+  @DELETE
+  @Path("/{message_id}")
+  public void removePendingMessage(@Auth Account account, @PathParam("message_id") long id)
+      throws IOException
+  {
+    try {
+      Optional<OutgoingMessageEntity> message = messagesManager.delete(account.getNumber(), id);
+
+      if (message.isPresent() && message.get().getType() != OutgoingMessageSignal.Type.RECEIPT_VALUE) {
+        receiptSender.sendReceipt(account,
+                                  message.get().getSource(),
+                                  message.get().getTimestamp(),
+                                  Optional.fromNullable(message.get().getRelay()));
+      }
+    } catch (NoSuchUserException | NotPushRegisteredException | TransientPushFailureException e) {
+      logger.warn("Sending delivery receipt", e);
+    }
+  }
+
 
   private void sendLocalMessage(Account source,
                                 String destinationName,

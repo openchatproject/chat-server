@@ -6,6 +6,7 @@ import com.codahale.metrics.SharedMetricRegistries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.push.PushSender;
+import com.openchat.secureim.push.ReceiptSender;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
@@ -27,14 +28,17 @@ public class AuthenticatedConnectListener implements WebSocketConnectListener {
 
   private final AccountsManager accountsManager;
   private final PushSender      pushSender;
+  private final ReceiptSender   receiptSender;
   private final MessagesManager messagesManager;
   private final PubSubManager   pubSubManager;
 
   public AuthenticatedConnectListener(AccountsManager accountsManager, PushSender pushSender,
-                                      MessagesManager messagesManager, PubSubManager pubSubManager)
+                                      ReceiptSender receiptSender,  MessagesManager messagesManager,
+                                      PubSubManager pubSubManager)
   {
     this.accountsManager = accountsManager;
     this.pushSender      = pushSender;
+    this.receiptSender   = receiptSender;
     this.messagesManager = messagesManager;
     this.pubSubManager   = pubSubManager;
   }
@@ -45,7 +49,7 @@ public class AuthenticatedConnectListener implements WebSocketConnectListener {
     final Device              device      = account.getAuthenticatedDevice().get();
     final long                connectTime = System.currentTimeMillis();
     final WebsocketAddress    address     = new WebsocketAddress(account.getNumber(), device.getId());
-    final WebSocketConnection connection  = new WebSocketConnection(accountsManager, pushSender,
+    final WebSocketConnection connection  = new WebSocketConnection(pushSender, receiptSender,
                                                                     messagesManager, account, device,
                                                                     context.getClient());
 
