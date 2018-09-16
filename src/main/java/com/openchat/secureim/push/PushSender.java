@@ -9,6 +9,7 @@ import com.openchat.secureim.entities.GcmMessage;
 import com.openchat.secureim.push.WebsocketSender.DeliveryStatus;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.Device;
+import com.openchat.secureim.util.Util;
 
 import static com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal;
 
@@ -83,8 +84,12 @@ public class PushSender {
     DeliveryStatus deliveryStatus = webSocketSender.sendMessage(account, device, outgoingMessage, WebsocketSender.Type.APN);
 
     if (!deliveryStatus.isDelivered() && outgoingMessage.getType() != OutgoingMessageSignal.Type.RECEIPT_VALUE) {
-      ApnMessage apnMessage = new ApnMessage(device.getApnId(), account.getNumber(), (int)device.getId(),
-                                             String.format(APN_PAYLOAD, deliveryStatus.getMessageQueueDepth()));
+      String  apnId  = Util.isEmpty(device.getVoipApnId()) ? device.getApnId() : device.getVoipApnId();
+      boolean isVoip = !Util.isEmpty(device.getVoipApnId());
+
+      ApnMessage apnMessage = new ApnMessage(apnId, account.getNumber(), (int)device.getId(),
+                                             String.format(APN_PAYLOAD, deliveryStatus.getMessageQueueDepth()),
+                                             isVoip);
       pushServiceClient.send(apnMessage);
     }
   }

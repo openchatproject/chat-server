@@ -10,7 +10,7 @@ public class ApnRegistrationId {
   private String apnRegistrationId;
 
   @JsonProperty
-  String voipRegistrationId;
+  private String voipRegistrationId;
 
   public String getApnRegistrationId() {
     return apnRegistrationId;
