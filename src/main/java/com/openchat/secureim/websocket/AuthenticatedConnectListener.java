@@ -5,6 +5,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.SharedMetricRegistries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.openchat.secureim.push.ApnFallbackManager;
 import com.openchat.secureim.push.PushSender;
 import com.openchat.secureim.push.ReceiptSender;
 import com.openchat.secureim.storage.Account;
@@ -25,22 +26,23 @@ public class AuthenticatedConnectListener implements WebSocketConnectListener {
   private static final MetricRegistry metricRegistry    = SharedMetricRegistries.getOrCreate(Constants.METRICS_NAME);
   private static final Histogram      durationHistogram = metricRegistry.histogram(name(WebSocketConnection.class, "connected_duration"));
 
-
-  private final AccountsManager accountsManager;
-  private final PushSender      pushSender;
-  private final ReceiptSender   receiptSender;
-  private final MessagesManager messagesManager;
-  private final PubSubManager   pubSubManager;
+  private final ApnFallbackManager apnFallbackManager;
+  private final AccountsManager    accountsManager;
+  private final PushSender         pushSender;
+  private final ReceiptSender      receiptSender;
+  private final MessagesManager    messagesManager;
+  private final PubSubManager      pubSubManager;
 
   public AuthenticatedConnectListener(AccountsManager accountsManager, PushSender pushSender,
                                       ReceiptSender receiptSender,  MessagesManager messagesManager,
-                                      PubSubManager pubSubManager)
+                                      PubSubManager pubSubManager, ApnFallbackManager apnFallbackManager)
   {
-    this.accountsManager = accountsManager;
-    this.pushSender      = pushSender;
-    this.receiptSender   = receiptSender;
-    this.messagesManager = messagesManager;
-    this.pubSubManager   = pubSubManager;
+    this.accountsManager    = accountsManager;
+    this.pushSender         = pushSender;
+    this.receiptSender      = receiptSender;
+    this.messagesManager    = messagesManager;
+    this.pubSubManager      = pubSubManager;
+    this.apnFallbackManager = apnFallbackManager;
   }
 
   @Override
@@ -53,6 +55,7 @@ public class AuthenticatedConnectListener implements WebSocketConnectListener {
                                                                     messagesManager, account, device,
                                                                     context.getClient());
 
+    apnFallbackManager.cancel(address);
     updateLastSeen(account, device);
     pubSubManager.subscribe(address, connection);
 

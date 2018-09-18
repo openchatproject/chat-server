@@ -6,11 +6,16 @@ import com.openchat.secureim.entities.ApnMessage;
 import com.openchat.secureim.entities.CryptoEncodingException;
 import com.openchat.secureim.entities.EncryptedOutgoingMessage;
 import com.openchat.secureim.entities.GcmMessage;
+import com.openchat.secureim.push.ApnFallbackManager.ApnFallbackTask;
 import com.openchat.secureim.push.WebsocketSender.DeliveryStatus;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.util.Util;
+import com.openchat.secureim.websocket.WebsocketAddress;
 
+import java.util.LinkedHashMap;
+
+import io.dropwizard.lifecycle.Managed;
 import static com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal;
 
 public class PushSender {
@@ -19,12 +24,14 @@ public class PushSender {
 
   private static final String APN_PAYLOAD = "{\"aps\":{\"sound\":\"default\",\"badge\":%d,\"alert\":{\"loc-key\":\"APN_Message\"}}}";
 
-  private final PushServiceClient pushServiceClient;
-  private final WebsocketSender   webSocketSender;
+  private final ApnFallbackManager apnFallbackManager;
+  private final PushServiceClient  pushServiceClient;
+  private final WebsocketSender    webSocketSender;
 
-  public PushSender(PushServiceClient pushServiceClient, WebsocketSender websocketSender) {
-    this.pushServiceClient = pushServiceClient;
-    this.webSocketSender   = websocketSender;
+  public PushSender(ApnFallbackManager apnFallbackManager, PushServiceClient pushServiceClient, WebsocketSender websocketSender) {
+    this.apnFallbackManager = apnFallbackManager;
+    this.pushServiceClient  = pushServiceClient;
+    this.webSocketSender    = websocketSender;
   }
 
   public void sendMessage(Account account, Device device, OutgoingMessageSignal message)
@@ -90,6 +97,12 @@ public class PushSender {
       ApnMessage apnMessage = new ApnMessage(apnId, account.getNumber(), (int)device.getId(),
                                              String.format(APN_PAYLOAD, deliveryStatus.getMessageQueueDepth()),
                                              isVoip);
+
+      if (isVoip) {
+        apnFallbackManager.schedule(new WebsocketAddress(account.getNumber(), device.getId()),
+                                    new ApnFallbackTask(device.getApnId(), apnMessage, 0));
+      }
+
       pushServiceClient.send(apnMessage);
     }
   }

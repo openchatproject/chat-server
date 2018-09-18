@@ -39,6 +39,7 @@ import com.openchat.secureim.metrics.NetworkSentGauge;
 import com.openchat.secureim.providers.RedisClientFactory;
 import com.openchat.secureim.providers.RedisHealthCheck;
 import com.openchat.secureim.providers.TimeProvider;
+import com.openchat.secureim.push.ApnFallbackManager;
 import com.openchat.secureim.push.FeedbackHandler;
 import com.openchat.secureim.push.PushSender;
 import com.openchat.secureim.push.PushServiceClient;
@@ -154,15 +155,17 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     AccountAuthenticator   deviceAuthenticator    = new AccountAuthenticator(accountsManager);
     RateLimiters           rateLimiters           = new RateLimiters(config.getLimitsConfiguration(), cacheClient);
 
+    ApnFallbackManager       apnFallbackManager  = new ApnFallbackManager(pushServiceClient);
     TwilioSmsSender          twilioSmsSender     = new TwilioSmsSender(config.getTwilioConfiguration());
     Optional<NexmoSmsSender> nexmoSmsSender      = initializeNexmoSmsSender(config.getNexmoConfiguration());
     SmsSender                smsSender           = new SmsSender(twilioSmsSender, nexmoSmsSender, config.getTwilioConfiguration().isInternational());
     UrlSigner                urlSigner           = new UrlSigner(config.getS3Configuration());
-    PushSender               pushSender          = new PushSender(pushServiceClient, websocketSender);
+    PushSender               pushSender          = new PushSender(apnFallbackManager, pushServiceClient, websocketSender);
     ReceiptSender            receiptSender       = new ReceiptSender(accountsManager, pushSender, federatedClientManager);
     FeedbackHandler          feedbackHandler     = new FeedbackHandler(pushServiceClient, accountsManager);
     Optional<byte[]>         authorizationKey    = config.getRedphoneConfiguration().getAuthorizationKey();
 
+    environment.lifecycle().manage(apnFallbackManager);
     environment.lifecycle().manage(pubSubManager);
     environment.lifecycle().manage(feedbackHandler);
 
@@ -191,7 +194,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     if (config.getWebsocketConfiguration().isEnabled()) {
       WebSocketEnvironment webSocketEnvironment = new WebSocketEnvironment(environment, config, 90000);
       webSocketEnvironment.setAuthenticator(new WebSocketAccountAuthenticator(deviceAuthenticator));
-      webSocketEnvironment.setConnectListener(new AuthenticatedConnectListener(accountsManager, pushSender, receiptSender, messagesManager, pubSubManager));
+      webSocketEnvironment.setConnectListener(new AuthenticatedConnectListener(accountsManager, pushSender, receiptSender, messagesManager, pubSubManager, apnFallbackManager));
       webSocketEnvironment.jersey().register(new KeepAliveController(pubSubManager));
 
       WebSocketEnvironment provisioningEnvironment = new WebSocketEnvironment(environment, config);
