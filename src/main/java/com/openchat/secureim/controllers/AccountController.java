@@ -266,6 +266,9 @@ public class AccountController {
     device.setSignalingKey(accountAttributes.getSignalingKey());
     device.setFetchesMessages(accountAttributes.getFetchesMessages());
     device.setRegistrationId(accountAttributes.getRegistrationId());
+    device.setName(accountAttributes.getName());
+    device.setCreated(System.currentTimeMillis());
+    device.setLastSeen(Util.todayInMillis());
 
     Account account = new Account();
     account.setNumber(number);
