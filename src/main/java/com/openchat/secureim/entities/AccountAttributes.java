@@ -10,9 +10,6 @@ public class AccountAttributes {
   private String signalingKey;
 
   @JsonProperty
-  private boolean supportsSms;
-
-  @JsonProperty
   private boolean fetchesMessages;
 
   @JsonProperty
@@ -20,19 +17,14 @@ public class AccountAttributes {
 
   public AccountAttributes() {}
 
-  public AccountAttributes(String signalingKey, boolean supportsSms, boolean fetchesMessages, int registrationId) {
+  public AccountAttributes(String signalingKey, boolean fetchesMessages, int registrationId) {
     this.signalingKey    = signalingKey;
-    this.supportsSms     = supportsSms;
     this.fetchesMessages = fetchesMessages;
     this.registrationId  = registrationId;
   }
 
   public String getSignalingKey() {
     return signalingKey;
-  }
-
-  public boolean getSupportsSms() {
-    return supportsSms;
   }
 
   public boolean getFetchesMessages() {

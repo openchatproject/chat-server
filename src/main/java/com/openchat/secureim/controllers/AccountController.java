@@ -269,7 +269,6 @@ public class AccountController {
 
     Account account = new Account();
     account.setNumber(number);
-    account.setSupportsSms(accountAttributes.getSupportsSms());
     account.addDevice(device);
 
     accounts.create(account);

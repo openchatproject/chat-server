@@ -18,12 +18,10 @@ public class ClientContact {
 
   private String  relay;
   private boolean inactive;
-  private boolean supportsSms;
 
-  public ClientContact(byte[] token, String relay, boolean supportsSms) {
-    this.token       = token;
-    this.relay       = relay;
-    this.supportsSms = supportsSms;
+  public ClientContact(byte[] token, String relay) {
+    this.token = token;
+    this.relay = relay;
   }
 
   public ClientContact() {}
@@ -38,10 +36,6 @@ public class ClientContact {
 
   public void setRelay(String relay) {
     this.relay = relay;
-  }
-
-  public boolean isSupportsSms() {
-    return supportsSms;
   }
 
   public boolean isInactive() {
@@ -65,7 +59,6 @@ public class ClientContact {
 
     return
         Arrays.equals(this.token, that.token) &&
-        this.supportsSms == that.supportsSms &&
         this.inactive == that.inactive &&
         (this.relay == null ? (that.relay == null) : this.relay.equals(that.relay));
   }
