@@ -4,9 +4,8 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.dispatch.DispatchChannel;
-import com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal;
+import com.openchat.secureim.entities.MessageProtos.Envelope;
 import com.openchat.secureim.storage.MessagesManager;
-import com.openchat.secureim.storage.PubSubProtos;
 import com.openchat.secureim.storage.PubSubProtos.PubSubMessage;
 
 public class DeadLetterHandler implements DispatchChannel {
@@ -29,7 +28,7 @@ public class DeadLetterHandler implements DispatchChannel {
 
       switch (pubSubMessage.getType().getNumber()) {
         case PubSubMessage.Type.DELIVER_VALUE:
-          OutgoingMessageSignal message = OutgoingMessageSignal.parseFrom(pubSubMessage.getContent());
+          Envelope message = Envelope.parseFrom(pubSubMessage.getContent());
           messagesManager.insert(address.getNumber(), address.getDeviceId(), message);
           break;
       }

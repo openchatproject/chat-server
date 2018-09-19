@@ -2,7 +2,7 @@ package com.openchat.secureim.push;
 
 import com.google.common.base.Optional;
 import com.openchat.secureim.controllers.NoSuchUserException;
-import com.openchat.secureim.entities.MessageProtos;
+import com.openchat.secureim.entities.MessageProtos.Envelope;
 import com.openchat.secureim.federation.FederatedClientManager;
 import com.openchat.secureim.federation.NoSuchPeerException;
 import com.openchat.secureim.storage.Account;
@@ -55,15 +55,13 @@ public class ReceiptSender {
   private void sendDirectReceipt(Account source, String destination, long messageId)
       throws NotPushRegisteredException, TransientPushFailureException, NoSuchUserException
   {
-    Account     destinationAccount = getDestinationAccount(destination);
-    Set<Device> destinationDevices = destinationAccount.getDevices();
-
-    MessageProtos.OutgoingMessageSignal.Builder message =
-        MessageProtos.OutgoingMessageSignal.newBuilder()
-                                           .setSource(source.getNumber())
-                                           .setSourceDevice((int) source.getAuthenticatedDevice().get().getId())
-                                           .setTimestamp(messageId)
-                                           .setType(MessageProtos.OutgoingMessageSignal.Type.RECEIPT_VALUE);
+    Account          destinationAccount = getDestinationAccount(destination);
+    Set<Device>      destinationDevices = destinationAccount.getDevices();
+    Envelope.Builder message            = Envelope.newBuilder()
+                                                  .setSource(source.getNumber())
+                                                  .setSourceDevice((int) source.getAuthenticatedDevice().get().getId())
+                                                  .setTimestamp(messageId)
+                                                  .setType(Envelope.Type.RECEIPT);
 
     if (source.getRelay().isPresent()) {
       message.setRelay(source.getRelay().get());

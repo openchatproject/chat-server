@@ -2,7 +2,7 @@ package com.openchat.secureim.entities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal;
+import com.openchat.secureim.entities.MessageProtos.Envelope;
 import com.openchat.secureim.util.Base64;
 import com.openchat.secureim.util.Util;
 
@@ -28,8 +28,7 @@ public class EncryptedOutgoingMessage {
   private final byte[] serialized;
   private final String serializedAndEncoded;
 
-  public EncryptedOutgoingMessage(OutgoingMessageSignal outgoingMessage,
-                                  String signalingKey)
+  public EncryptedOutgoingMessage(Envelope outgoingMessage, String signalingKey)
       throws CryptoEncodingException
   {
     byte[]        plaintext  = outgoingMessage.toByteArray();

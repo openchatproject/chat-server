@@ -15,7 +15,7 @@ import com.openchat.secureim.websocket.ProvisioningAddress;
 import com.openchat.secureim.websocket.WebsocketAddress;
 
 import static com.codahale.metrics.MetricRegistry.name;
-import static com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal;
+import static com.openchat.secureim.entities.MessageProtos.Envelope;
 import static com.openchat.secureim.storage.PubSubProtos.PubSubMessage;
 
 public class WebsocketSender {
@@ -50,7 +50,7 @@ public class WebsocketSender {
     this.pubSubManager   = pubSubManager;
   }
 
-  public DeliveryStatus sendMessage(Account account, Device device, OutgoingMessageSignal message, Type channel) {
+  public DeliveryStatus sendMessage(Account account, Device device, Envelope message, Type channel) {
     WebsocketAddress address       = new WebsocketAddress(account.getNumber(), device.getId());
     PubSubMessage    pubSubMessage = PubSubMessage.newBuilder()
                                                   .setType(PubSubMessage.Type.DELIVER)

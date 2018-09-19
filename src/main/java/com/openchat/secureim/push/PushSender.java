@@ -13,11 +13,9 @@ import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.util.Util;
 import com.openchat.secureim.websocket.WebsocketAddress;
 
-import java.util.LinkedHashMap;
 import java.util.concurrent.TimeUnit;
 
-import io.dropwizard.lifecycle.Managed;
-import static com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal;
+import static com.openchat.secureim.entities.MessageProtos.Envelope;
 
 public class PushSender {
 
@@ -35,7 +33,7 @@ public class PushSender {
     this.webSocketSender    = websocketSender;
   }
 
-  public void sendMessage(Account account, Device device, OutgoingMessageSignal message)
+  public void sendMessage(Account account, Device device, Envelope message)
       throws NotPushRegisteredException, TransientPushFailureException
   {
     if      (device.getGcmId() != null)   sendGcmMessage(account, device, message);
@@ -48,21 +46,21 @@ public class PushSender {
     return webSocketSender;
   }
 
-  private void sendGcmMessage(Account account, Device device, OutgoingMessageSignal message)
+  private void sendGcmMessage(Account account, Device device, Envelope message)
       throws TransientPushFailureException, NotPushRegisteredException
   {
     if (device.getFetchesMessages()) sendNotificationGcmMessage(account, device, message);
     else                             sendPayloadGcmMessage(account, device, message);
   }
 
-  private void sendPayloadGcmMessage(Account account, Device device, OutgoingMessageSignal message)
+  private void sendPayloadGcmMessage(Account account, Device device, Envelope message)
       throws TransientPushFailureException, NotPushRegisteredException
   {
     try {
       String                   number           = account.getNumber();
       long                     deviceId         = device.getId();
       String                   registrationId   = device.getGcmId();
-      boolean                  isReceipt        = message.getType() == OutgoingMessageSignal.Type.RECEIPT_VALUE;
+      boolean                  isReceipt        = message.getType() == Envelope.Type.RECEIPT;
       EncryptedOutgoingMessage encryptedMessage = new EncryptedOutgoingMessage(message, device.getSignalingKey());
       GcmMessage               gcmMessage       = new GcmMessage(registrationId, number, (int) deviceId,
                                                                  encryptedMessage.toEncodedString(), isReceipt, false);
@@ -73,7 +71,7 @@ public class PushSender {
     }
   }
 
-  private void sendNotificationGcmMessage(Account account, Device device, OutgoingMessageSignal message)
+  private void sendNotificationGcmMessage(Account account, Device device, Envelope message)
       throws TransientPushFailureException
   {
     DeliveryStatus deliveryStatus = webSocketSender.sendMessage(account, device, message, WebsocketSender.Type.GCM);
@@ -86,12 +84,12 @@ public class PushSender {
     }
   }
 
-  private void sendApnMessage(Account account, Device device, OutgoingMessageSignal outgoingMessage)
+  private void sendApnMessage(Account account, Device device, Envelope outgoingMessage)
       throws TransientPushFailureException
   {
     DeliveryStatus deliveryStatus = webSocketSender.sendMessage(account, device, outgoingMessage, WebsocketSender.Type.APN);
 
-    if (!deliveryStatus.isDelivered() && outgoingMessage.getType() != OutgoingMessageSignal.Type.RECEIPT_VALUE) {
+    if (!deliveryStatus.isDelivered() && outgoingMessage.getType() != Envelope.Type.RECEIPT) {
       ApnMessage apnMessage;
 
       if (!Util.isEmpty(device.getVoipApnId())) {
@@ -111,7 +109,7 @@ public class PushSender {
     }
   }
 
-  private void sendWebSocketMessage(Account account, Device device, OutgoingMessageSignal outgoingMessage)
+  private void sendWebSocketMessage(Account account, Device device, Envelope outgoingMessage)
   {
     webSocketSender.sendMessage(account, device, outgoingMessage, WebsocketSender.Type.WEB);
   }

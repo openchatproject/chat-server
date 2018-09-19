@@ -2,9 +2,8 @@ package com.openchat.secureim.storage;
 
 
 import com.google.common.base.Optional;
-import com.openchat.secureim.entities.MessageProtos.OutgoingMessageSignal;
+import com.openchat.secureim.entities.MessageProtos.Envelope;
 import com.openchat.secureim.entities.OutgoingMessageEntity;
-import com.openchat.secureim.util.Pair;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class MessagesManager {
     this.messages = messages;
   }
 
-  public int insert(String destination, long destinationDevice, OutgoingMessageSignal message) {
+  public int insert(String destination, long destinationDevice, Envelope message) {
     return this.messages.store(message, destination, destinationDevice) + 1;
   }
 

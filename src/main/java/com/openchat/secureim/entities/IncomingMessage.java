@@ -18,8 +18,10 @@ public class IncomingMessage {
   private int destinationRegistrationId;
 
   @JsonProperty
-  @NotEmpty
   private String body;
+
+  @JsonProperty
+  private String content;
 
   @JsonProperty
   private String relay;
@@ -50,5 +52,9 @@ public class IncomingMessage {
 
   public int getDestinationRegistrationId() {
     return destinationRegistrationId;
+  }
+
+  public String getContent() {
+    return content;
   }
 }
