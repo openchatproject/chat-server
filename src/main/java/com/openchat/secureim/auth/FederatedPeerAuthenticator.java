@@ -6,6 +6,7 @@ import com.codahale.metrics.SharedMetricRegistries;
 import com.google.common.base.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.openchat.dropwizard.simpleauth.Authenticator;
 import com.openchat.secureim.configuration.FederationConfiguration;
 import com.openchat.secureim.federation.FederatedPeer;
 import com.openchat.secureim.util.Constants;
@@ -14,7 +15,6 @@ import java.util.List;
 
 import static com.codahale.metrics.MetricRegistry.name;
 import io.dropwizard.auth.AuthenticationException;
-import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.basic.BasicCredentials;
 
 

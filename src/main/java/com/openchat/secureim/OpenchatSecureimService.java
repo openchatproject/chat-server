@@ -4,15 +4,16 @@ import com.codahale.metrics.SharedMetricRegistries;
 import com.codahale.metrics.graphite.GraphiteReporter;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.google.common.base.Optional;
-import com.sun.jersey.api.client.Client;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.skife.jdbi.v2.DBI;
 import com.openchat.dispatch.DispatchChannel;
 import com.openchat.dispatch.DispatchManager;
+import com.openchat.dropwizard.simpleauth.AuthDynamicFeature;
+import com.openchat.dropwizard.simpleauth.AuthValueFactoryProvider;
+import com.openchat.dropwizard.simpleauth.BasicCredentialAuthFilter;
 import com.openchat.secureim.auth.AccountAuthenticator;
 import com.openchat.secureim.auth.FederatedPeerAuthenticator;
-import com.openchat.secureim.auth.MultiBasicAuthProvider;
 import com.openchat.secureim.configuration.NexmoConfiguration;
 import com.openchat.secureim.controllers.AccountController;
 import com.openchat.secureim.controllers.AttachmentController;
@@ -50,9 +51,9 @@ import com.openchat.secureim.push.WebsocketSender;
 import com.openchat.secureim.sms.NexmoSmsSender;
 import com.openchat.secureim.sms.SmsSender;
 import com.openchat.secureim.sms.TwilioSmsSender;
+import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.Accounts;
 import com.openchat.secureim.storage.AccountsManager;
-import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.DirectoryManager;
 import com.openchat.secureim.storage.Keys;
 import com.openchat.secureim.storage.Messages;
@@ -76,6 +77,7 @@ import com.openchat.websocket.setup.WebSocketEnvironment;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletRegistration;
+import javax.ws.rs.client.Client;
 import java.security.Security;
 import java.util.EnumSet;
 import java.util.concurrent.TimeUnit;
@@ -143,19 +145,20 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     Client             httpClient         = new JerseyClientBuilder(environment).using(config.getJerseyClientConfiguration())
                                                                                 .build(getName());
 
-    DirectoryManager       directory              = new DirectoryManager(directoryClient);
-    PendingAccountsManager pendingAccountsManager = new PendingAccountsManager(pendingAccounts, cacheClient);
-    PendingDevicesManager  pendingDevicesManager  = new PendingDevicesManager (pendingDevices, cacheClient);
-    AccountsManager        accountsManager        = new AccountsManager(accounts, directory, cacheClient);
-    FederatedClientManager federatedClientManager = new FederatedClientManager(config.getFederationConfiguration());
-    MessagesManager        messagesManager        = new MessagesManager(messages);
-    DeadLetterHandler      deadLetterHandler      = new DeadLetterHandler(messagesManager);
-    DispatchManager        dispatchManager        = new DispatchManager(cacheClientFactory, Optional.<DispatchChannel>of(deadLetterHandler));
-    PubSubManager          pubSubManager          = new PubSubManager(cacheClient, dispatchManager);
-    PushServiceClient      pushServiceClient      = new PushServiceClient(httpClient, config.getPushConfiguration());
-    WebsocketSender        websocketSender        = new WebsocketSender(messagesManager, pubSubManager);
-    AccountAuthenticator   deviceAuthenticator    = new AccountAuthenticator(accountsManager);
-    RateLimiters           rateLimiters           = new RateLimiters(config.getLimitsConfiguration(), cacheClient);
+    DirectoryManager           directory                  = new DirectoryManager(directoryClient);
+    PendingAccountsManager     pendingAccountsManager     = new PendingAccountsManager(pendingAccounts, cacheClient);
+    PendingDevicesManager      pendingDevicesManager      = new PendingDevicesManager (pendingDevices, cacheClient );
+    AccountsManager            accountsManager            = new AccountsManager(accounts, directory, cacheClient);
+    FederatedClientManager     federatedClientManager     = new FederatedClientManager(environment, config.getJerseyClientConfiguration(), config.getFederationConfiguration());
+    MessagesManager            messagesManager            = new MessagesManager(messages);
+    DeadLetterHandler          deadLetterHandler          = new DeadLetterHandler(messagesManager);
+    DispatchManager            dispatchManager            = new DispatchManager(cacheClientFactory, Optional.<DispatchChannel>of(deadLetterHandler));
+    PubSubManager              pubSubManager              = new PubSubManager(cacheClient, dispatchManager);
+    PushServiceClient          pushServiceClient          = new PushServiceClient(httpClient, config.getPushConfiguration());
+    WebsocketSender            websocketSender            = new WebsocketSender(messagesManager, pubSubManager);
+    AccountAuthenticator       deviceAuthenticator        = new AccountAuthenticator(accountsManager                 );
+    FederatedPeerAuthenticator federatedPeerAuthenticator = new FederatedPeerAuthenticator(config.getFederationConfiguration());
+    RateLimiters               rateLimiters               = new RateLimiters(config.getLimitsConfiguration(), cacheClient);
 
     ApnFallbackManager       apnFallbackManager  = new ApnFallbackManager(pushServiceClient);
     TwilioSmsSender          twilioSmsSender     = new TwilioSmsSender(config.getTwilioConfiguration());
@@ -176,10 +179,15 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     KeysControllerV2     keysControllerV2     = new KeysControllerV2(rateLimiters, keys, accountsManager, federatedClientManager);
     MessageController    messageController    = new MessageController(rateLimiters, pushSender, receiptSender, accountsManager, messagesManager, federatedClientManager);
 
-    environment.jersey().register(new MultiBasicAuthProvider<>(new FederatedPeerAuthenticator(config.getFederationConfiguration()),
-                                                               FederatedPeer.class,
-                                                               deviceAuthenticator,
-                                                               Device.class, "OpenchatSecureimServer"));
+    environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<Account>()
+                                                             .setAuthenticator(deviceAuthenticator)
+                                                             .setPrincipal(Account.class)
+                                                             .buildAuthFilter(),
+                                                         new BasicCredentialAuthFilter.Builder<FederatedPeer>()
+                                                             .setAuthenticator(federatedPeerAuthenticator)
+                                                             .setPrincipal(FederatedPeer.class)
+                                                             .buildAuthFilter()));
+    environment.jersey().register(new AuthValueFactoryProvider.Binder());
 
     environment.jersey().register(new AccountController(pendingAccountsManager, accountsManager, rateLimiters, smsSender, messagesManager, new TimeProvider(), authorizationKey, config.getTestDevices()));
     environment.jersey().register(new DeviceController(pendingDevicesManager, accountsManager, rateLimiters));

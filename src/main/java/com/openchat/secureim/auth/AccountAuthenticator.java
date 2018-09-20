@@ -6,6 +6,7 @@ import com.codahale.metrics.SharedMetricRegistries;
 import com.google.common.base.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.openchat.dropwizard.simpleauth.Authenticator;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
@@ -13,7 +14,6 @@ import com.openchat.secureim.util.Constants;
 
 import static com.codahale.metrics.MetricRegistry.name;
 import io.dropwizard.auth.AuthenticationException;
-import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.basic.BasicCredentials;
 
 public class AccountAuthenticator implements Authenticator<BasicCredentials, Account> {

@@ -11,31 +11,40 @@ import com.openchat.secureim.storage.Accounts;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.DirectoryManager;
 
+import io.dropwizard.Application;
 import io.dropwizard.cli.ConfiguredCommand;
+import io.dropwizard.cli.EnvironmentCommand;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jdbi.ImmutableListContainerFactory;
 import io.dropwizard.jdbi.ImmutableSetContainerFactory;
 import io.dropwizard.jdbi.OptionalContainerFactory;
 import io.dropwizard.jdbi.args.OptionalArgumentFactory;
 import io.dropwizard.setup.Bootstrap;
+import io.dropwizard.setup.Environment;
 import redis.clients.jedis.JedisPool;
 
-public class DirectoryCommand extends ConfiguredCommand<OpenChatSecureimConfiguration> {
+public class DirectoryCommand extends EnvironmentCommand<OpenChatSecureimConfiguration> {
 
   private final Logger logger = LoggerFactory.getLogger(DirectoryCommand.class);
 
   public DirectoryCommand() {
-    super("directory", "Update directory from DB and peers.");
+    super(new Application<OpenChatSecureimConfiguration>() {
+      @Override
+      public void run(OpenChatSecureimConfiguration configuration, Environment environment)
+          throws Exception
+      {
+
+      }
+    }, "directory", "Update directory from DB and peers.");
   }
 
   @Override
-  protected void run(Bootstrap<OpenChatSecureimConfiguration> bootstrap,
-                     Namespace namespace,
-                     OpenChatSecureimConfiguration config)
+  protected void run(Environment environment, Namespace namespace,
+                     OpenChatSecureimConfiguration configuration)
       throws Exception
   {
     try {
-      DataSourceFactory dbConfig = config.getDataSourceFactory();
+      DataSourceFactory dbConfig = configuration.getDataSourceFactory();
       DBI               dbi      = new DBI(dbConfig.getUrl(), dbConfig.getUser(), dbConfig.getPassword());
 
       dbi.registerArgumentFactory(new OptionalArgumentFactory(dbConfig.getDriverClass()));
@@ -44,11 +53,13 @@ public class DirectoryCommand extends ConfiguredCommand<OpenChatSecureimConfigur
       dbi.registerContainerFactory(new OptionalContainerFactory());
 
       Accounts               accounts               = dbi.onDemand(Accounts.class);
-      JedisPool              cacheClient            = new RedisClientFactory(config.getCacheConfiguration().getUrl()).getRedisClientPool();
-      JedisPool              redisClient            = new RedisClientFactory(config.getDirectoryConfiguration().getUrl()).getRedisClientPool();
+      JedisPool              cacheClient            = new RedisClientFactory(configuration.getCacheConfiguration().getUrl()).getRedisClientPool();
+      JedisPool              redisClient            = new RedisClientFactory(configuration.getDirectoryConfiguration().getUrl()).getRedisClientPool();
       DirectoryManager       directory              = new DirectoryManager(redisClient);
       AccountsManager        accountsManager        = new AccountsManager(accounts, directory, cacheClient);
-      FederatedClientManager federatedClientManager = new FederatedClientManager(config.getFederationConfiguration());
+      FederatedClientManager federatedClientManager = new FederatedClientManager(environment,
+                                                                                 configuration.getJerseyClientConfiguration(),
+                                                                                 configuration.getFederationConfiguration());
 
       DirectoryUpdater update = new DirectoryUpdater(accountsManager, federatedClientManager, directory);
 
