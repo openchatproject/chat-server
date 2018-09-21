@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.google.common.base.Optional;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
+import org.glassfish.jersey.client.ClientProperties;
 import org.skife.jdbi.v2.DBI;
 import com.openchat.dispatch.DispatchChannel;
 import com.openchat.dispatch.DispatchManager;
@@ -142,8 +143,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     RedisClientFactory cacheClientFactory = new RedisClientFactory(config.getCacheConfiguration().getUrl());
     JedisPool          cacheClient        = cacheClientFactory.getRedisClientPool();
     JedisPool          directoryClient    = new RedisClientFactory(config.getDirectoryConfiguration().getUrl()).getRedisClientPool();
-    Client             httpClient         = new JerseyClientBuilder(environment).using(config.getJerseyClientConfiguration())
-                                                                                .build(getName());
+    Client             httpClient         = initializeHttpClient(environment, config);
 
     DirectoryManager           directory                  = new DirectoryManager(directoryClient);
     PendingAccountsManager     pendingAccountsManager     = new PendingAccountsManager(pendingAccounts, cacheClient);
