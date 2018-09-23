@@ -1,6 +1,7 @@
 package com.openchat.secureim.federation;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
@@ -26,6 +27,7 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -159,11 +161,10 @@ public class FederatedClient {
       response = client.target(peer.getUrl())
                        .path(String.format(RELAY_MESSAGE_PATH, source, sourceDeviceId, destination))
                        .request()
-                       .property(ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.BUFFERED)
-                       .put(Entity.entity(messages, MediaType.APPLICATION_JSON_TYPE));
+                       .put(Entity.json(messages));
 
       if (response.getStatus() != 200 && response.getStatus() != 204) {
-        throw new WebApplicationException(response);
+        throw new WebApplicationException(Response.status(response.getStatusInfo()).build());
       }
 
     } catch (ProcessingException e) {
@@ -187,7 +188,7 @@ public class FederatedClient {
                        .put(Entity.entity("", MediaType.APPLICATION_JSON_TYPE));
 
       if (response.getStatus() != 200 && response.getStatus() != 204) {
-        throw new WebApplicationException(response);
+        throw new WebApplicationException(Response.status(response.getStatusInfo()).build());
       }
     } catch (ProcessingException e) {
       logger.warn("sendMessage", e);
@@ -216,6 +217,7 @@ public class FederatedClient {
 
     client.property(ClientProperties.CONNECT_TIMEOUT, 5000);
     client.property(ClientProperties.READ_TIMEOUT, 10000);
+    client.property(ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.BUFFERED);
     client.register(HttpAuthenticationFeature.basic(federationName, peer.getAuthenticationToken()));
 
     return client;
