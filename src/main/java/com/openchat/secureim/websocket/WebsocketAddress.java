@@ -1,6 +1,8 @@
 package com.openchat.secureim.websocket;
 
-public class WebsocketAddress {
+import com.openchat.secureim.storage.PubSubAddress;
+
+public class WebsocketAddress implements PubSubAddress {
 
   private final String number;
   private final long   deviceId;

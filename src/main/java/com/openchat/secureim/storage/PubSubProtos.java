@@ -129,6 +129,7 @@ public final class PubSubProtos {
       DELIVER(2, 2),
       KEEPALIVE(3, 3),
       CLOSE(4, 4),
+      CONNECTED(5, 5),
       ;
 
       public static final int UNKNOWN_VALUE = 0;
@@ -136,6 +137,7 @@ public final class PubSubProtos {
       public static final int DELIVER_VALUE = 2;
       public static final int KEEPALIVE_VALUE = 3;
       public static final int CLOSE_VALUE = 4;
+      public static final int CONNECTED_VALUE = 5;
 
 
       public final int getNumber() { return value; }
@@ -147,6 +149,7 @@ public final class PubSubProtos {
           case 2: return DELIVER;
           case 3: return KEEPALIVE;
           case 4: return CLOSE;
+          case 5: return CONNECTED;
           default: return null;
         }
       }
@@ -533,13 +536,13 @@ public final class PubSubProtos {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\023PubSubMessage.proto\022\ntextsecure\"\230\001\n\rPu" +
+      "\n\023PubSubMessage.proto\022\ntextsecure\"\247\001\n\rPu" +
       "bSubMessage\022,\n\004type\030\001 \001(\0162\036.textsecure.P" +
-      "ubSubMessage.Type\022\017\n\007content\030\002 \001(\014\"H\n\004Ty" +
+      "ubSubMessage.Type\022\017\n\007content\030\002 \001(\014\"W\n\004Ty" +
       "pe\022\013\n\007UNKNOWN\020\000\022\014\n\010QUERY_DB\020\001\022\013\n\007DELIVER" +
-      "\020\002\022\r\n\tKEEPALIVE\020\003\022\t\n\005CLOSE\020\004B8\n(org.whis" +
-      "persystems.textsecuregcm.storageB\014PubSub" +
-      "Protos"
+      "\020\002\022\r\n\tKEEPALIVE\020\003\022\t\n\005CLOSE\020\004\022\r\n\tCONNECTE" +
+      "D\020\005B8\n(com.openchat.secureim." +
+      "storageB\014PubSubProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

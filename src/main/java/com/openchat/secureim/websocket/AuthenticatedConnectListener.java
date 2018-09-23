@@ -13,6 +13,8 @@ import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.MessagesManager;
 import com.openchat.secureim.storage.PubSubManager;
+import com.openchat.secureim.storage.PubSubProtos;
+import com.openchat.secureim.storage.PubSubProtos.PubSubMessage;
 import com.openchat.secureim.util.Constants;
 import com.openchat.secureim.util.Util;
 import com.openchat.websocket.session.WebSocketSessionContext;
@@ -47,15 +49,16 @@ public class AuthenticatedConnectListener implements WebSocketConnectListener {
 
   @Override
   public void onWebSocketConnect(WebSocketSessionContext context) {
-    final Account             account     = context.getAuthenticated(Account.class);
-    final Device              device      = account.getAuthenticatedDevice().get();
-    final long                connectTime = System.currentTimeMillis();
-    final WebsocketAddress    address     = new WebsocketAddress(account.getNumber(), device.getId());
-    final WebSocketConnection connection  = new WebSocketConnection(pushSender, receiptSender,
-                                                                    messagesManager, account, device,
-                                                                    context.getClient());
+    final Account                 account     = context.getAuthenticated(Account.class);
+    final Device                  device      = account.getAuthenticatedDevice().get();
+    final long                    connectTime = System.currentTimeMillis();
+    final WebsocketAddress        address     = new WebsocketAddress(account.getNumber(), device.getId());
+    final WebSocketConnectionInfo info        = new WebSocketConnectionInfo(address);
+    final WebSocketConnection     connection  = new WebSocketConnection(pushSender, receiptSender,
+                                                                        messagesManager, account, device,
+                                                                        context.getClient());
 
-    apnFallbackManager.cancel(address);
+    pubSubManager.publish(info, PubSubMessage.newBuilder().setType(PubSubMessage.Type.CONNECTED).build());
     updateLastSeen(account, device);
     pubSubManager.subscribe(address, connection);
 

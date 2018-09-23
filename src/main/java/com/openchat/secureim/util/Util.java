@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -111,6 +112,10 @@ public class Util {
     } catch (InterruptedException e) {
       throw new AssertionError(e);
     }
+  }
+
+  public static int hashCode(Object... objects) {
+    return Arrays.hashCode(objects);
   }
 
   public static long todayInMillis() {
