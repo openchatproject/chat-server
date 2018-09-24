@@ -37,6 +37,7 @@ import com.openchat.secureim.mappers.IOExceptionMapper;
 import com.openchat.secureim.mappers.InvalidWebsocketAddressExceptionMapper;
 import com.openchat.secureim.mappers.RateLimitExceededExceptionMapper;
 import com.openchat.secureim.metrics.CpuUsageGauge;
+import com.openchat.secureim.metrics.FileDescriptorGauge;
 import com.openchat.secureim.metrics.FreeMemoryGauge;
 import com.openchat.secureim.metrics.NetworkReceivedGauge;
 import com.openchat.secureim.metrics.NetworkSentGauge;
