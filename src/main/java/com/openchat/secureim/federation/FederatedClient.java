@@ -1,7 +1,6 @@
 package com.openchat.secureim.federation;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
@@ -27,7 +26,6 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -164,7 +162,8 @@ public class FederatedClient {
                        .put(Entity.json(messages));
 
       if (response.getStatus() != 200 && response.getStatus() != 204) {
-        throw new WebApplicationException(Response.status(response.getStatusInfo()).build());
+        if (response.getStatus() == 411) throw new WebApplicationException(Response.status(413).build());
+        else                             throw new WebApplicationException(Response.status(response.getStatusInfo()).build());
       }
 
     } catch (ProcessingException e) {
@@ -188,7 +187,8 @@ public class FederatedClient {
                        .put(Entity.entity("", MediaType.APPLICATION_JSON_TYPE));
 
       if (response.getStatus() != 200 && response.getStatus() != 204) {
-        throw new WebApplicationException(Response.status(response.getStatusInfo()).build());
+        if (response.getStatus() == 411) throw new WebApplicationException(Response.status(413).build());
+        else                             throw new WebApplicationException(Response.status(response.getStatusInfo()).build());
       }
     } catch (ProcessingException e) {
       logger.warn("sendMessage", e);
