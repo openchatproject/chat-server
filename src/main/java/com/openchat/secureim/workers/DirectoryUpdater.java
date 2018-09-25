@@ -10,7 +10,6 @@ import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.DirectoryManager;
 import com.openchat.secureim.storage.DirectoryManager.BatchOperationHandle;
-import com.openchat.secureim.util.Base64;
 import com.openchat.secureim.util.Util;
 
 import java.io.IOException;
@@ -57,7 +56,7 @@ public class DirectoryUpdater {
         for (Account account : accounts) {
           if (account.isActive()) {
             byte[]        token         = Util.getContactToken(account.getNumber());
-            ClientContact clientContact = new ClientContact(token, null);
+            ClientContact clientContact = new ClientContact(token, null, account.isVoiceSupported());
 
             directory.add(batchOperation, clientContact);
             contactsAdded++;

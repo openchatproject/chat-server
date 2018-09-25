@@ -5,10 +5,7 @@ import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.OpenChatSecureimConfiguration;
-import com.openchat.secureim.storage.Accounts;
-import com.openchat.secureim.storage.Keys;
 import com.openchat.secureim.storage.Messages;
-import com.openchat.secureim.storage.PendingAccounts;
 
 import java.util.concurrent.TimeUnit;
 
