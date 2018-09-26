@@ -13,10 +13,12 @@ import com.openchat.secureim.configuration.TwilioConfiguration;
 import com.openchat.secureim.util.Constants;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import static com.codahale.metrics.MetricRegistry.name;
 
@@ -31,16 +33,18 @@ public class TwilioSmsSender {
   private final Meter          smsMeter       = metricRegistry.meter(name(getClass(), "sms", "delivered"));
   private final Meter          voxMeter       = metricRegistry.meter(name(getClass(), "vox", "delivered"));
 
-  private final String accountId;
-  private final String accountToken;
-  private final String number;
-  private final String localDomain;
+  private final String            accountId;
+  private final String            accountToken;
+  private final ArrayList<String> numbers;
+  private final String            localDomain;
+  private final Random            random;
 
   public TwilioSmsSender(TwilioConfiguration config) {
     this.accountId    = config.getAccountId();
     this.accountToken = config.getAccountToken();
-    this.number       = config.getNumber();
+    this.numbers      = new ArrayList<>(config.getNumbers());
     this.localDomain  = config.getLocalDomain();
+    this.random       = new Random(System.currentTimeMillis());
   }
 
   public void deliverSmsVerification(String destination, String verificationCode)
@@ -50,7 +54,7 @@ public class TwilioSmsSender {
     MessageFactory      messageFactory = client.getAccount().getMessageFactory();
     List<NameValuePair> messageParams  = new LinkedList<>();
     messageParams.add(new BasicNameValuePair("To", destination));
-    messageParams.add(new BasicNameValuePair("From", number));
+    messageParams.add(new BasicNameValuePair("From", getRandom(random, numbers)));
     messageParams.add(new BasicNameValuePair("Body", SmsSender.SMS_VERIFICATION_TEXT + verificationCode));
 
     try {
@@ -69,7 +73,7 @@ public class TwilioSmsSender {
     CallFactory         callFactory = client.getAccount().getCallFactory();
     Map<String, String> callParams  = new HashMap<>();
     callParams.put("To", destination);
-    callParams.put("From", number);
+    callParams.put("From", getRandom(random, numbers));
     callParams.put("Url", "https://" + localDomain + "/v1/accounts/voice/twiml/" + verificationCode);
 
     try {
@@ -80,4 +84,9 @@ public class TwilioSmsSender {
 
     voxMeter.mark();
   }
+
+  private String getRandom(Random random, ArrayList<String> elements) {
+    return elements.get(random.nextInt(elements.size()));
+  }
+
 }

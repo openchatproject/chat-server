@@ -3,6 +3,9 @@ package com.openchat.secureim.configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
+import java.util.List;
+
 public class TwilioConfiguration {
 
   @NotEmpty
@@ -13,9 +16,9 @@ public class TwilioConfiguration {
   @JsonProperty
   private String accountToken;
 
-  @NotEmpty
+  @NotNull
   @JsonProperty
-  private String number;
+  private List<String> numbers;
 
   @NotEmpty
   @JsonProperty
@@ -32,8 +35,8 @@ public class TwilioConfiguration {
     return accountToken;
   }
 
-  public String getNumber() {
-    return number;
+  public List<String> getNumbers() {
+    return numbers;
   }
 
   public String getLocalDomain() {
