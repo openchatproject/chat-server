@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import com.openchat.secureim.entities.IncomingMessage;
 import com.openchat.secureim.entities.IncomingMessageList;
 import com.openchat.secureim.entities.MessageProtos.Envelope;
-import com.openchat.secureim.entities.MessageResponse;
 import com.openchat.secureim.entities.MismatchedDevices;
 import com.openchat.secureim.entities.OutgoingMessageEntity;
 import com.openchat.secureim.entities.OutgoingMessageEntityList;
@@ -33,7 +32,6 @@ import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -110,26 +108,6 @@ public class MessageController {
                                                 .build());
     } catch (InvalidDestinationException e) {
       throw new WebApplicationException(Response.status(400).build());
-    }
-  }
-
-  @Timed
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public MessageResponse sendMessageLegacy(@Auth Account source, @Valid IncomingMessageList messages)
-      throws IOException, RateLimitExceededException
-  {
-    try {
-      List<IncomingMessage> incomingMessages = messages.getMessages();
-      validateLegacyDestinations(incomingMessages);
-
-      messages.setRelay(incomingMessages.get(0).getRelay());
-      sendMessage(source, incomingMessages.get(0).getDestination(), messages);
-
-      return new MessageResponse(new LinkedList<String>(), new LinkedList<String>());
-    } catch (ValidationException e) {
-      throw new WebApplicationException(Response.status(422).build());
     }
   }
 
@@ -313,22 +291,6 @@ public class MessageController {
 
     if (!missingDeviceIds.isEmpty() || !extraDeviceIds.isEmpty()) {
       throw new MismatchedDevicesException(missingDeviceIds, extraDeviceIds);
-    }
-  }
-
-  private void validateLegacyDestinations(List<IncomingMessage> messages)
-      throws ValidationException
-  {
-    String destination = null;
-
-    for (IncomingMessage message : messages) {
-      if ((message.getDestination() == null) ||
-          (destination != null && !destination.equals(message.getDestination())))
-      {
-        throw new ValidationException("Multiple account destinations!");
-      }
-
-      destination = message.getDestination();
     }
   }
 
