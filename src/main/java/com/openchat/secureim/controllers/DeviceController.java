@@ -16,6 +16,7 @@ import com.openchat.secureim.limits.RateLimiters;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
+import com.openchat.secureim.storage.MessagesManager;
 import com.openchat.secureim.storage.PendingDevicesManager;
 import com.openchat.secureim.util.Util;
 import com.openchat.secureim.util.VerificationCode;
@@ -49,14 +50,17 @@ public class DeviceController {
 
   private final PendingDevicesManager pendingDevices;
   private final AccountsManager       accounts;
+  private final MessagesManager       messages;
   private final RateLimiters          rateLimiters;
 
   public DeviceController(PendingDevicesManager pendingDevices,
                           AccountsManager accounts,
+                          MessagesManager messages,
                           RateLimiters rateLimiters)
   {
     this.pendingDevices  = pendingDevices;
     this.accounts        = accounts;
+    this.messages        = messages;
     this.rateLimiters    = rateLimiters;
   }
 
@@ -84,6 +88,7 @@ public class DeviceController {
 
     account.removeDevice(deviceId);
     accounts.update(account);
+    messages.clear(account.getNumber(), deviceId);
   }
 
   @Timed
