@@ -1,7 +1,9 @@
 package com.openchat.secureim.controllers;
 
-import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
+import org.skife.jdbi.v2.exceptions.UnableToExecuteStatementException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.openchat.secureim.entities.PreKeyCount;
 import com.openchat.secureim.federation.FederatedClientManager;
 import com.openchat.secureim.limits.RateLimiters;
@@ -21,6 +23,8 @@ import java.util.List;
 import io.dropwizard.auth.Auth;
 
 public class KeysController {
+
+  private static final Logger logger = LoggerFactory.getLogger(KeysController.class);
 
   protected final RateLimiters           rateLimiters;
   protected final Keys                   keys;
@@ -70,8 +74,16 @@ public class KeysController {
         throw new NoSuchUserException("Target device is inactive.");
       }
 
-      Optional<List<KeyRecord>> preKeys = keys.get(number, deviceId);
-      return new TargetKeys(destination.get(), preKeys);
+      for (int i=0;i<20;i++) {
+        try {
+          Optional<List<KeyRecord>> preKeys = keys.get(number, deviceId);
+          return new TargetKeys(destination.get(), preKeys);
+        } catch (UnableToExecuteStatementException e) {
+          logger.info(e.getMessage());
+        }
+      }
+
+      throw new WebApplicationException(Response.status(500).build());
     } catch (NumberFormatException e) {
       throw new WebApplicationException(Response.status(422).build());
     }
