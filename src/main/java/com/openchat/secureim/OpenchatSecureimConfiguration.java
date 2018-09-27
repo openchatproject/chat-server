@@ -3,7 +3,6 @@ package com.openchat.secureim;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.openchat.secureim.configuration.FederationConfiguration;
 import com.openchat.secureim.configuration.GraphiteConfiguration;
-import com.openchat.secureim.configuration.NexmoConfiguration;
 import com.openchat.secureim.configuration.PushConfiguration;
 import com.openchat.secureim.configuration.RateLimitsConfiguration;
 import com.openchat.secureim.configuration.RedPhoneConfiguration;
@@ -15,7 +14,6 @@ import com.openchat.secureim.configuration.WebsocketConfiguration;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,9 +29,6 @@ public class OpenChatSecureimConfiguration extends Configuration {
   @Valid
   @JsonProperty
   private TwilioConfiguration twilio;
-
-  @JsonProperty
-  private NexmoConfiguration nexmo;
 
   @NotNull
   @Valid
@@ -102,10 +97,6 @@ public class OpenChatSecureimConfiguration extends Configuration {
 
   public TwilioConfiguration getTwilioConfiguration() {
     return twilio;
-  }
-
-  public NexmoConfiguration getNexmoConfiguration() {
-    return nexmo;
   }
 
   public PushConfiguration getPushConfiguration() {

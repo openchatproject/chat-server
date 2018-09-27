@@ -17,7 +17,6 @@ import com.openchat.dropwizard.simpleauth.AuthValueFactoryProvider;
 import com.openchat.dropwizard.simpleauth.BasicCredentialAuthFilter;
 import com.openchat.secureim.auth.AccountAuthenticator;
 import com.openchat.secureim.auth.FederatedPeerAuthenticator;
-import com.openchat.secureim.configuration.NexmoConfiguration;
 import com.openchat.secureim.controllers.AccountController;
 import com.openchat.secureim.controllers.AttachmentController;
 import com.openchat.secureim.controllers.DeviceController;
@@ -52,7 +51,6 @@ import com.openchat.secureim.push.PushSender;
 import com.openchat.secureim.push.PushServiceClient;
 import com.openchat.secureim.push.ReceiptSender;
 import com.openchat.secureim.push.WebsocketSender;
-import com.openchat.secureim.sms.NexmoSmsSender;
 import com.openchat.secureim.sms.SmsSender;
 import com.openchat.secureim.sms.TwilioSmsSender;
 import com.openchat.secureim.storage.Account;
@@ -169,8 +167,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
 
     ApnFallbackManager       apnFallbackManager  = new ApnFallbackManager(pushServiceClient, pubSubManager);
     TwilioSmsSender          twilioSmsSender     = new TwilioSmsSender(config.getTwilioConfiguration());
-    Optional<NexmoSmsSender> nexmoSmsSender      = initializeNexmoSmsSender(config.getNexmoConfiguration());
-    SmsSender                smsSender           = new SmsSender(twilioSmsSender, nexmoSmsSender, config.getTwilioConfiguration().isInternational());
+    SmsSender                smsSender           = new SmsSender(twilioSmsSender);
     UrlSigner                urlSigner           = new UrlSigner(config.getS3Configuration());
     PushSender               pushSender          = new PushSender(apnFallbackManager, pushServiceClient, websocketSender);
     ReceiptSender            receiptSender       = new ReceiptSender(accountsManager, pushSender, federatedClientManager);
