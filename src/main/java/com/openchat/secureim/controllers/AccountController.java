@@ -1,5 +1,9 @@
 package com.openchat.secureim.controllers;
 
+import com.codahale.metrics.Meter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.SharedMetricRegistries;
+import com.codahale.metrics.Timer;
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
@@ -22,8 +26,10 @@ import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.MessagesManager;
 import com.openchat.secureim.storage.PendingAccountsManager;
+import com.openchat.secureim.util.Constants;
 import com.openchat.secureim.util.Util;
 import com.openchat.secureim.util.VerificationCode;
+import com.openchat.secureim.websocket.WebSocketConnection;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -44,12 +50,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Map;
 
+import static com.codahale.metrics.MetricRegistry.name;
 import io.dropwizard.auth.Auth;
 
 @Path("/v1/accounts")
 public class AccountController {
 
-  private final Logger logger = LoggerFactory.getLogger(AccountController.class);
+  private final Logger         logger         = LoggerFactory.getLogger(AccountController.class);
+  private final MetricRegistry metricRegistry = SharedMetricRegistries.getOrCreate(Constants.METRICS_NAME);
+  private final Meter          newUserMeter   = metricRegistry.meter(name(AccountController.class, "brand_new_user"));
 
   private final PendingAccountsManager                pendingAccounts;
   private final AccountsManager                       accounts;
@@ -302,7 +311,10 @@ public class AccountController {
     account.setNumber(number);
     account.addDevice(device);
 
-    accounts.create(account);
+    if (accounts.create(account)) {
+      newUserMeter.mark();
+    }
+
     messagesManager.clear(number);
     pendingAccounts.remove(number);
   }
