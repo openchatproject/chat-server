@@ -24,6 +24,9 @@ public class TwilioConfiguration {
   @JsonProperty
   private String localDomain;
 
+  @JsonProperty
+  private String messagingServicesId;
+
   public String getAccountId() {
     return accountId;
   }
@@ -38,5 +41,9 @@ public class TwilioConfiguration {
 
   public String getLocalDomain() {
     return localDomain;
+  }
+
+  public String getMessagingServicesId() {
+    return messagingServicesId;
   }
 }
