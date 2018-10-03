@@ -1,5 +1,8 @@
 package com.openchat.secureim.websocket;
 
+import com.codahale.metrics.Histogram;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.SharedMetricRegistries;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -9,6 +12,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.dispatch.DispatchChannel;
+import com.openchat.secureim.controllers.MessageController;
 import com.openchat.secureim.controllers.NoSuchUserException;
 import com.openchat.secureim.entities.CryptoEncodingException;
 import com.openchat.secureim.entities.EncryptedOutgoingMessage;
@@ -21,6 +25,7 @@ import com.openchat.secureim.push.TransientPushFailureException;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.MessagesManager;
+import com.openchat.secureim.util.Constants;
 import com.openchat.websocket.WebSocketClient;
 import com.openchat.websocket.messages.WebSocketResponseMessage;
 
@@ -30,10 +35,14 @@ import javax.ws.rs.WebApplicationException;
 import java.io.IOException;
 import java.util.Iterator;
 
+import static com.codahale.metrics.MetricRegistry.name;
 import static com.openchat.secureim.entities.MessageProtos.Envelope;
 import static com.openchat.secureim.storage.PubSubProtos.PubSubMessage;
 
 public class WebSocketConnection implements DispatchChannel {
+
+  private static final MetricRegistry metricRegistry = SharedMetricRegistries.getOrCreate(Constants.METRICS_NAME);
+  public  static final Histogram      messageTime    = metricRegistry.histogram(name(MessageController.class, "message_delivery_duration"));
 
   private static final Logger logger = LoggerFactory.getLogger(WebSocketConnection.class);
 
@@ -102,6 +111,10 @@ public class WebSocketConnection implements DispatchChannel {
         @Override
         public void onSuccess(@Nullable WebSocketResponseMessage response) {
           boolean isReceipt = message.getType() == Envelope.Type.RECEIPT;
+
+          if (isSuccessResponse(response) && !isReceipt) {
+            messageTime.update(System.currentTimeMillis() - message.getTimestamp());
+          }
 
           if (isSuccessResponse(response)) {
             if (storedMessageId.isPresent()) messagesManager.delete(account.getNumber(), storedMessageId.get());

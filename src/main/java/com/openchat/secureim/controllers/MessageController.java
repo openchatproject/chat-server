@@ -27,6 +27,7 @@ import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.MessagesManager;
 import com.openchat.secureim.util.Base64;
 import com.openchat.secureim.util.Util;
+import com.openchat.secureim.websocket.WebSocketConnection;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -128,6 +129,8 @@ public class MessageController {
       throws IOException
   {
     try {
+      WebSocketConnection.messageTime.update(System.currentTimeMillis() - timestamp);
+
       Optional<OutgoingMessageEntity> message = messagesManager.delete(account.getNumber(),
                                                                        account.getAuthenticatedDevice().get().getId(),
                                                                        source, timestamp);
