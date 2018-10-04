@@ -1,7 +1,6 @@
 package com.openchat.secureim;
 
 import com.codahale.metrics.SharedMetricRegistries;
-import com.codahale.metrics.graphite.GraphiteReporter;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -17,6 +16,7 @@ import com.openchat.dropwizard.simpleauth.AuthValueFactoryProvider;
 import com.openchat.dropwizard.simpleauth.BasicCredentialAuthFilter;
 import com.openchat.secureim.auth.AccountAuthenticator;
 import com.openchat.secureim.auth.FederatedPeerAuthenticator;
+import com.openchat.secureim.auth.TurnTokenGenerator;
 import com.openchat.secureim.controllers.AccountController;
 import com.openchat.secureim.controllers.AttachmentController;
 import com.openchat.secureim.controllers.DeviceController;
@@ -84,14 +84,12 @@ import javax.servlet.ServletRegistration;
 import javax.ws.rs.client.Client;
 import java.security.Security;
 import java.util.EnumSet;
-import java.util.concurrent.TimeUnit;
 
 import static com.codahale.metrics.MetricRegistry.name;
 import io.dropwizard.Application;
 import io.dropwizard.client.JerseyClientBuilder;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jdbi.DBIFactory;
-import io.dropwizard.metrics.graphite.GraphiteReporterFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import redis.clients.jedis.JedisPool;
@@ -174,6 +172,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     PushSender               pushSender          = new PushSender(apnFallbackManager, pushServiceClient, websocketSender, config.getPushConfiguration().getQueueSize());
     ReceiptSender            receiptSender       = new ReceiptSender(accountsManager, pushSender, federatedClientManager);
     FeedbackHandler          feedbackHandler     = new FeedbackHandler(pushServiceClient, accountsManager);
+    TurnTokenGenerator       turnTokenGenerator  = new TurnTokenGenerator(config.getTurnConfiguration());
     Optional<byte[]>         authorizationKey    = config.getRedphoneConfiguration().getAuthorizationKey();
 
     environment.lifecycle().manage(apnFallbackManager);
@@ -196,7 +195,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
                                                              .buildAuthFilter()));
     environment.jersey().register(new AuthValueFactoryProvider.Binder());
 
-    environment.jersey().register(new AccountController(pendingAccountsManager, accountsManager, rateLimiters, smsSender, messagesManager, new TimeProvider(), authorizationKey, config.getTestDevices()));
+    environment.jersey().register(new AccountController(pendingAccountsManager, accountsManager, rateLimiters, smsSender, messagesManager, new TimeProvider(), authorizationKey, turnTokenGenerator, config.getTestDevices()));
     environment.jersey().register(new DeviceController(pendingDevicesManager, accountsManager, messagesManager, rateLimiters));
     environment.jersey().register(new DirectoryController(rateLimiters, directory));
     environment.jersey().register(new FederationControllerV1(accountsManager, attachmentController, messageController, keysControllerV1));

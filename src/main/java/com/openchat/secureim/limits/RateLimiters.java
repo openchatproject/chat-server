@@ -20,6 +20,8 @@ public class RateLimiters {
   private final RateLimiter allocateDeviceLimiter;
   private final RateLimiter verifyDeviceLimiter;
 
+  private final RateLimiter turnLimiter;
+
   public RateLimiters(RateLimitsConfiguration config, JedisPool cacheClient) {
     this.smsDestinationLimiter = new RateLimiter(cacheClient, "smsDestination",
                                                  config.getSmsDestination().getBucketSize(),
@@ -61,6 +63,9 @@ public class RateLimiters {
                                                config.getVerifyDevice().getBucketSize(),
                                                config.getVerifyDevice().getLeakRatePerMinute());
 
+    this.turnLimiter = new RateLimiter(cacheClient, "turnAllocate",
+                                       config.getTurnAllocations().getBucketSize(),
+                                       config.getTurnAllocations().getLeakRatePerMinute());
   }
 
   public RateLimiter getAllocateDeviceLimiter() {
@@ -101,6 +106,10 @@ public class RateLimiters {
 
   public RateLimiter getVerifyLimiter() {
     return verifyLimiter;
+  }
+
+  public RateLimiter getTurnLimiter() {
+    return turnLimiter;
   }
 
 }

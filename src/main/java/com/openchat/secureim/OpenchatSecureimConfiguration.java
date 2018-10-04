@@ -9,6 +9,7 @@ import com.openchat.secureim.configuration.RedPhoneConfiguration;
 import com.openchat.secureim.configuration.RedisConfiguration;
 import com.openchat.secureim.configuration.S3Configuration;
 import com.openchat.secureim.configuration.TestDeviceConfiguration;
+import com.openchat.secureim.configuration.TurnConfiguration;
 import com.openchat.secureim.configuration.TwilioConfiguration;
 import com.openchat.secureim.configuration.WebsocketConfiguration;
 
@@ -89,6 +90,11 @@ public class OpenChatSecureimConfiguration extends Configuration {
   @JsonProperty
   private JerseyClientConfiguration httpClient = new JerseyClientConfiguration();
 
+  @Valid
+  @NotNull
+  @JsonProperty
+  private TurnConfiguration turn;
+
 
   public WebsocketConfiguration getWebsocketConfiguration() {
     return websocket;
@@ -140,6 +146,10 @@ public class OpenChatSecureimConfiguration extends Configuration {
 
   public RedPhoneConfiguration getRedphoneConfiguration() {
     return redphone;
+  }
+
+  public TurnConfiguration getTurnConfiguration() {
+    return turn;
   }
 
   public Map<String, Integer> getTestDevices() {

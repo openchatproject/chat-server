@@ -3,7 +3,6 @@ package com.openchat.secureim.controllers;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.SharedMetricRegistries;
-import com.codahale.metrics.Timer;
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
@@ -14,6 +13,8 @@ import com.openchat.secureim.auth.AuthorizationHeader;
 import com.openchat.secureim.auth.AuthorizationToken;
 import com.openchat.secureim.auth.AuthorizationTokenGenerator;
 import com.openchat.secureim.auth.InvalidAuthorizationHeaderException;
+import com.openchat.secureim.auth.TurnToken;
+import com.openchat.secureim.auth.TurnTokenGenerator;
 import com.openchat.secureim.entities.AccountAttributes;
 import com.openchat.secureim.entities.ApnRegistrationId;
 import com.openchat.secureim.entities.GcmRegistrationId;
@@ -29,7 +30,6 @@ import com.openchat.secureim.storage.PendingAccountsManager;
 import com.openchat.secureim.util.Constants;
 import com.openchat.secureim.util.Util;
 import com.openchat.secureim.util.VerificationCode;
-import com.openchat.secureim.websocket.WebSocketConnection;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -67,6 +67,7 @@ public class AccountController {
   private final MessagesManager                       messagesManager;
   private final TimeProvider                          timeProvider;
   private final Optional<AuthorizationTokenGenerator> tokenGenerator;
+  private final TurnTokenGenerator                    turnTokenGenerator;
   private final Map<String, Integer>                  testDevices;
 
   public AccountController(PendingAccountsManager pendingAccounts,
@@ -76,15 +77,17 @@ public class AccountController {
                            MessagesManager messagesManager,
                            TimeProvider timeProvider,
                            Optional<byte[]> authorizationKey,
+                           TurnTokenGenerator turnTokenGenerator,
                            Map<String, Integer> testDevices)
   {
-    this.pendingAccounts  = pendingAccounts;
-    this.accounts         = accounts;
-    this.rateLimiters     = rateLimiters;
-    this.smsSender        = smsSenderFactory;
-    this.messagesManager  = messagesManager;
-    this.timeProvider     = timeProvider;
-    this.testDevices      = testDevices;
+    this.pendingAccounts    = pendingAccounts;
+    this.accounts           = accounts;
+    this.rateLimiters       = rateLimiters;
+    this.smsSender          = smsSenderFactory;
+    this.messagesManager    = messagesManager;
+    this.timeProvider       = timeProvider;
+    this.testDevices        = testDevices;
+    this.turnTokenGenerator = turnTokenGenerator;
 
     if (authorizationKey.isPresent()) {
       tokenGenerator = Optional.of(new AuthorizationTokenGenerator(authorizationKey.get()));
@@ -214,6 +217,15 @@ public class AccountController {
     }
 
     return tokenGenerator.get().generateFor(account.getNumber());
+  }
+
+  @Timed
+  @GET
+  @Path("/turn/")
+  @Produces(MediaType.APPLICATION_JSON)
+  public TurnToken getTurnToken(@Auth Account account) throws RateLimitExceededException {
+    rateLimiters.getTurnLimiter().validate(account.getNumber());
+    return turnTokenGenerator.generate();
   }
 
   @Timed
