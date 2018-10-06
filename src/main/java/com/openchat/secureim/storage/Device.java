@@ -58,6 +58,9 @@ public class Device {
   private boolean voice;
 
   @JsonProperty
+  private boolean video;
+
+  @JsonProperty
   private String userAgent;
 
   public Device() {}
@@ -66,7 +69,7 @@ public class Device {
                 String signalingKey, String gcmId, String apnId,
                 String voipApnId, boolean fetchesMessages,
                 int registrationId, SignedPreKey signedPreKey,
-                long lastSeen, long created, boolean voice,
+                long lastSeen, long created, boolean voice, boolean video,
                 String userAgent)
   {
     this.id              = id;
@@ -83,6 +86,7 @@ public class Device {
     this.lastSeen        = lastSeen;
     this.created         = created;
     this.voice           = voice;
+    this.video           = video;
     this.userAgent       = userAgent;
   }
 
@@ -156,6 +160,14 @@ public class Device {
 
   public void setVoiceSupported(boolean voice) {
     this.voice = voice;
+  }
+
+  public boolean isVideoSupported() {
+    return video;
+  }
+
+  public void setVideoSupported(boolean video) {
+    this.video = video;
   }
 
   public void setAuthenticationCredentials(AuthenticationCredentials credentials) {
