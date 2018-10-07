@@ -24,7 +24,6 @@ import com.openchat.secureim.controllers.DirectoryController;
 import com.openchat.secureim.controllers.FederationControllerV1;
 import com.openchat.secureim.controllers.FederationControllerV2;
 import com.openchat.secureim.controllers.KeepAliveController;
-import com.openchat.secureim.controllers.KeysControllerV1;
 import com.openchat.secureim.controllers.KeysControllerV2;
 import com.openchat.secureim.controllers.MessageController;
 import com.openchat.secureim.controllers.ProvisioningController;
@@ -183,7 +182,6 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     environment.lifecycle().manage(pushSender);
 
     AttachmentController attachmentController = new AttachmentController(rateLimiters, federatedClientManager, urlSigner);
-    KeysControllerV1     keysControllerV1     = new KeysControllerV1(rateLimiters, keys, accountsManager, federatedClientManager);
     KeysControllerV2     keysControllerV2     = new KeysControllerV2(rateLimiters, keys, accountsManager, federatedClientManager);
     MessageController    messageController    = new MessageController(rateLimiters, pushSender, receiptSender, accountsManager, messagesManager, federatedClientManager);
 
@@ -200,12 +198,11 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     environment.jersey().register(new AccountController(pendingAccountsManager, accountsManager, rateLimiters, smsSender, messagesManager, new TimeProvider(), authorizationKey, turnTokenGenerator, config.getTestDevices()));
     environment.jersey().register(new DeviceController(pendingDevicesManager, accountsManager, messagesManager, rateLimiters));
     environment.jersey().register(new DirectoryController(rateLimiters, directory));
-    environment.jersey().register(new FederationControllerV1(accountsManager, attachmentController, messageController, keysControllerV1));
+    environment.jersey().register(new FederationControllerV1(accountsManager, attachmentController, messageController));
     environment.jersey().register(new FederationControllerV2(accountsManager, attachmentController, messageController, keysControllerV2));
     environment.jersey().register(new ReceiptController(receiptSender));
     environment.jersey().register(new ProvisioningController(rateLimiters, pushSender));
     environment.jersey().register(attachmentController);
-    environment.jersey().register(keysControllerV1);
     environment.jersey().register(keysControllerV2);
     environment.jersey().register(messageController);
 
