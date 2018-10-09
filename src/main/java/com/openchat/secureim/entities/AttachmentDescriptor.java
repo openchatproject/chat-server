@@ -8,10 +8,14 @@ public class AttachmentDescriptor {
   private long id;
 
   @JsonProperty
+  private String idString;
+
+  @JsonProperty
   private String location;
 
   public AttachmentDescriptor(long id, String location) {
     this.id       = id;
+    this.idString = String.valueOf(id);
     this.location = location;
   }
 
@@ -23,5 +27,9 @@ public class AttachmentDescriptor {
 
   public String getLocation() {
     return location;
+  }
+
+  public String getIdString() {
+    return idString;
   }
 }
