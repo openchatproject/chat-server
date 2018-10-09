@@ -13,6 +13,7 @@ import com.openchat.secureim.auth.AuthorizationHeader;
 import com.openchat.secureim.auth.AuthorizationToken;
 import com.openchat.secureim.auth.AuthorizationTokenGenerator;
 import com.openchat.secureim.auth.InvalidAuthorizationHeaderException;
+import com.openchat.secureim.auth.StoredVerificationCode;
 import com.openchat.secureim.auth.TurnToken;
 import com.openchat.secureim.auth.TurnTokenGenerator;
 import com.openchat.secureim.entities.AccountAttributes;
@@ -121,8 +122,11 @@ public class AccountController {
         throw new WebApplicationException(Response.status(422).build());
     }
 
-    VerificationCode verificationCode = generateVerificationCode(number);
-    pendingAccounts.store(number, verificationCode.getVerificationCode());
+    VerificationCode       verificationCode       = generateVerificationCode(number);
+    StoredVerificationCode storedVerificationCode = new StoredVerificationCode(verificationCode.getVerificationCode(),
+                                                                               System.currentTimeMillis());
+
+    pendingAccounts.store(number, storedVerificationCode);
 
     if (testDevices.containsKey(number)) {
       // noop
@@ -152,11 +156,9 @@ public class AccountController {
 
       rateLimiters.getVerifyLimiter().validate(number);
 
-      Optional<String> storedVerificationCode = pendingAccounts.getCodeForNumber(number);
+      Optional<StoredVerificationCode> storedVerificationCode = pendingAccounts.getCodeForNumber(number);
 
-      if (!storedVerificationCode.isPresent() ||
-          !verificationCode.equals(storedVerificationCode.get()))
-      {
+      if (!storedVerificationCode.isPresent() || !storedVerificationCode.get().isValid(verificationCode)) {
         throw new WebApplicationException(Response.status(403).build());
       }
 
