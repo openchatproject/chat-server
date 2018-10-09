@@ -3,6 +3,7 @@ package com.openchat.secureim;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.openchat.secureim.configuration.FederationConfiguration;
 import com.openchat.secureim.configuration.GraphiteConfiguration;
+import com.openchat.secureim.configuration.MaxDeviceConfiguration;
 import com.openchat.secureim.configuration.PushConfiguration;
 import com.openchat.secureim.configuration.RateLimitsConfiguration;
 import com.openchat.secureim.configuration.RedPhoneConfiguration;
@@ -60,6 +61,11 @@ public class OpenChatSecureimConfiguration extends Configuration {
   @NotNull
   @JsonProperty
   private List<TestDeviceConfiguration> testDevices = new LinkedList<>();
+
+  @Valid
+  @NotNull
+  @JsonProperty
+  private List<MaxDeviceConfiguration> maxDevices = new LinkedList<>();
 
   @Valid
   @JsonProperty
@@ -158,6 +164,17 @@ public class OpenChatSecureimConfiguration extends Configuration {
     for (TestDeviceConfiguration testDeviceConfiguration : testDevices) {
       results.put(testDeviceConfiguration.getNumber(),
                   testDeviceConfiguration.getCode());
+    }
+
+    return results;
+  }
+
+  public Map<String, Integer> getMaxDevices() {
+    Map<String, Integer> results = new HashMap<>();
+
+    for (MaxDeviceConfiguration maxDeviceConfiguration : maxDevices) {
+      results.put(maxDeviceConfiguration.getNumber(),
+                  maxDeviceConfiguration.getCount());
     }
 
     return results;
