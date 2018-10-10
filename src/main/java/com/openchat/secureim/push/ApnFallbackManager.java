@@ -10,7 +10,6 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.dispatch.DispatchChannel;
-import com.openchat.secureim.entities.ApnMessage;
 import com.openchat.secureim.storage.PubSubManager;
 import com.openchat.secureim.storage.PubSubProtos.PubSubMessage;
 import com.openchat.secureim.util.Constants;
@@ -43,12 +42,12 @@ public class ApnFallbackManager implements Managed, Runnable, DispatchChannel {
 
   private final ApnFallbackTaskQueue taskQueue = new ApnFallbackTaskQueue();
 
-  private final PushServiceClient pushServiceClient;
-  private final PubSubManager     pubSubManager;
+  private final APNSender     apnSender;
+  private final PubSubManager pubSubManager;
 
-  public ApnFallbackManager(PushServiceClient pushServiceClient, PubSubManager pubSubManager) {
-    this.pushServiceClient = pushServiceClient;
-    this.pubSubManager     = pubSubManager;
+  public ApnFallbackManager(APNSender apnSender, PubSubManager pubSubManager) {
+    this.apnSender     = apnSender;
+    this.pubSubManager = pubSubManager;
   }
 
   public void schedule(final WebsocketAddress address, ApnFallbackTask task) {
@@ -102,7 +101,7 @@ public class ApnFallbackManager implements Managed, Runnable, DispatchChannel {
           pubSubManager.unsubscribe(new WebSocketConnectionInfo(taskEntry.getKey()), this);
         }
 
-        pushServiceClient.send(message);
+        apnSender.sendMessage(message);
       } catch (Throwable e) {
         logger.warn("ApnFallbackThread", e);
       }

@@ -4,8 +4,6 @@ import com.codahale.metrics.Gauge;
 import com.codahale.metrics.SharedMetricRegistries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.openchat.secureim.entities.ApnMessage;
-import com.openchat.secureim.entities.GcmMessage;
 import com.openchat.secureim.push.ApnFallbackManager.ApnFallbackTask;
 import com.openchat.secureim.push.WebsocketSender.DeliveryStatus;
 import com.openchat.secureim.storage.Account;
@@ -28,16 +26,19 @@ public class PushSender implements Managed {
   public static final String APN_PAYLOAD = "{\"aps\":{\"sound\":\"default\",\"badge\":%d,\"alert\":{\"loc-key\":\"APN_Message\"}}}";
 
   private final ApnFallbackManager         apnFallbackManager;
-  private final PushServiceClient          pushServiceClient;
+  private final GCMSender                  gcmSender;
+  private final APNSender                  apnSender;
   private final WebsocketSender            webSocketSender;
   private final BlockingThreadPoolExecutor executor;
   private final int                        queueSize;
 
-  public PushSender(ApnFallbackManager apnFallbackManager, PushServiceClient pushServiceClient,
+  public PushSender(ApnFallbackManager apnFallbackManager,
+                    GCMSender gcmSender, APNSender apnSender,
                     WebsocketSender websocketSender, int queueSize)
   {
     this.apnFallbackManager = apnFallbackManager;
-    this.pushServiceClient  = pushServiceClient;
+    this.gcmSender          = gcmSender;
+    this.apnSender          = apnSender;
     this.webSocketSender    = websocketSender;
     this.queueSize          = queueSize;
     this.executor           = new BlockingThreadPoolExecutor(50, queueSize);
@@ -99,14 +100,10 @@ public class PushSender implements Managed {
   }
 
   private void sendGcmNotification(Account account, Device device) {
-    try {
-      GcmMessage gcmMessage = new GcmMessage(device.getGcmId(), account.getNumber(),
-                                             (int)device.getId(), "", false, true);
+    GcmMessage gcmMessage = new GcmMessage(device.getGcmId(), account.getNumber(),
+                                           (int)device.getId(), false);
 
-      pushServiceClient.send(gcmMessage);
-    } catch (TransientPushFailureException e) {
-      logger.warn("SILENT PUSH LOSS", e);
-    }
+    gcmSender.sendMessage(gcmMessage);
   }
 
   private void sendApnMessage(Account account, Device device, Envelope outgoingMessage, boolean silent) {
@@ -137,7 +134,7 @@ public class PushSender implements Managed {
     }
 
     try {
-      pushServiceClient.send(apnMessage);
+      apnSender.sendMessage(apnMessage);
     } catch (TransientPushFailureException e) {
       logger.warn("SILENT PUSH LOSS", e);
     }
@@ -150,12 +147,16 @@ public class PushSender implements Managed {
 
   @Override
   public void start() throws Exception {
-
+    apnSender.start();
+    gcmSender.start();
   }
 
   @Override
   public void stop() throws Exception {
     executor.shutdown();
     executor.awaitTermination(5, TimeUnit.MINUTES);
+
+    apnSender.stop();
+    gcmSender.stop();
   }
 }

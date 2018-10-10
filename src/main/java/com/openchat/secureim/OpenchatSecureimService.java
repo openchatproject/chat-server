@@ -44,10 +44,10 @@ import com.openchat.secureim.metrics.NetworkSentGauge;
 import com.openchat.secureim.providers.RedisClientFactory;
 import com.openchat.secureim.providers.RedisHealthCheck;
 import com.openchat.secureim.providers.TimeProvider;
+import com.openchat.secureim.push.APNSender;
 import com.openchat.secureim.push.ApnFallbackManager;
-import com.openchat.secureim.push.FeedbackHandler;
+import com.openchat.secureim.push.GCMSender;
 import com.openchat.secureim.push.PushSender;
-import com.openchat.secureim.push.PushServiceClient;
 import com.openchat.secureim.push.ReceiptSender;
 import com.openchat.secureim.push.WebsocketSender;
 import com.openchat.secureim.sms.SmsSender;
@@ -73,7 +73,6 @@ import com.openchat.secureim.websocket.WebSocketAccountAuthenticator;
 import com.openchat.secureim.workers.DeleteUserCommand;
 import com.openchat.secureim.workers.DirectoryCommand;
 import com.openchat.secureim.workers.PeriodicStatsCommand;
-import com.openchat.secureim.workers.PushCommand;
 import com.openchat.secureim.workers.TrimMessagesCommand;
 import com.openchat.secureim.workers.VacuumCommand;
 import com.openchat.websocket.WebSocketResourceProviderFactory;
@@ -108,7 +107,6 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     bootstrap.addCommand(new TrimMessagesCommand());
     bootstrap.addCommand(new PeriodicStatsCommand());
     bootstrap.addCommand(new DeleteUserCommand());
-    bootstrap.addCommand(new PushCommand());
     bootstrap.addBundle(new NameableMigrationsBundle<OpenChatSecureimConfiguration>("accountdb", "accountsdb.xml") {
       @Override
       public DataSourceFactory getDataSourceFactory(OpenChatSecureimConfiguration configuration) {
@@ -162,25 +160,24 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     DeadLetterHandler          deadLetterHandler          = new DeadLetterHandler(messagesManager);
     DispatchManager            dispatchManager            = new DispatchManager(cacheClientFactory, Optional.<DispatchChannel>of(deadLetterHandler));
     PubSubManager              pubSubManager              = new PubSubManager(cacheClient, dispatchManager);
-    PushServiceClient          pushServiceClient          = new PushServiceClient(httpClient, config.getPushConfiguration());
+    APNSender                  apnSender                  = new APNSender(accountsManager, cacheClient, config.getApnConfiguration());
+    GCMSender                  gcmSender                  = new GCMSender(accountsManager, config.getGcmConfiguration().getApiKey());
     WebsocketSender            websocketSender            = new WebsocketSender(messagesManager, pubSubManager);
     AccountAuthenticator       deviceAuthenticator        = new AccountAuthenticator(accountsManager                 );
     FederatedPeerAuthenticator federatedPeerAuthenticator = new FederatedPeerAuthenticator(config.getFederationConfiguration());
     RateLimiters               rateLimiters               = new RateLimiters(config.getLimitsConfiguration(), cacheClient);
 
-    ApnFallbackManager       apnFallbackManager  = new ApnFallbackManager(pushServiceClient, pubSubManager);
+    ApnFallbackManager       apnFallbackManager  = new ApnFallbackManager(apnSender, pubSubManager);
     TwilioSmsSender          twilioSmsSender     = new TwilioSmsSender(config.getTwilioConfiguration());
     SmsSender                smsSender           = new SmsSender(twilioSmsSender);
     UrlSigner                urlSigner           = new UrlSigner(config.getS3Configuration());
-    PushSender               pushSender          = new PushSender(apnFallbackManager, pushServiceClient, websocketSender, config.getPushConfiguration().getQueueSize());
+    PushSender               pushSender          = new PushSender(apnFallbackManager, gcmSender, apnSender, websocketSender, config.getPushConfiguration().getQueueSize());
     ReceiptSender            receiptSender       = new ReceiptSender(accountsManager, pushSender, federatedClientManager);
-    FeedbackHandler          feedbackHandler     = new FeedbackHandler(pushServiceClient, accountsManager);
     TurnTokenGenerator       turnTokenGenerator  = new TurnTokenGenerator(config.getTurnConfiguration());
     Optional<byte[]>         authorizationKey    = config.getRedphoneConfiguration().getAuthorizationKey();
 
     environment.lifecycle().manage(apnFallbackManager);
     environment.lifecycle().manage(pubSubManager);
-    environment.lifecycle().manage(feedbackHandler);
     environment.lifecycle().manage(pushSender);
 
     AttachmentController attachmentController = new AttachmentController(rateLimiters, federatedClientManager, urlSigner);

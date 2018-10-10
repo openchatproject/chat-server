@@ -1,7 +1,9 @@
 package com.openchat.secureim;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.openchat.secureim.configuration.ApnConfiguration;
 import com.openchat.secureim.configuration.FederationConfiguration;
+import com.openchat.secureim.configuration.GcmConfiguration;
 import com.openchat.secureim.configuration.GraphiteConfiguration;
 import com.openchat.secureim.configuration.MaxDeviceConfiguration;
 import com.openchat.secureim.configuration.PushConfiguration;
@@ -101,6 +103,16 @@ public class OpenChatSecureimConfiguration extends Configuration {
   @JsonProperty
   private TurnConfiguration turn;
 
+  @Valid
+  @NotNull
+  @JsonProperty
+  private GcmConfiguration gcm;
+
+  @Valid
+  @NotNull
+  @JsonProperty
+  private ApnConfiguration apn;
+
 
   public WebsocketConfiguration getWebsocketConfiguration() {
     return websocket;
@@ -158,6 +170,14 @@ public class OpenChatSecureimConfiguration extends Configuration {
     return turn;
   }
 
+  public GcmConfiguration getGcmConfiguration() {
+    return gcm;
+  }
+
+  public ApnConfiguration getApnConfiguration() {
+    return apn;
+  }
+
   public Map<String, Integer> getTestDevices() {
     Map<String, Integer> results = new HashMap<>();
 
@@ -179,4 +199,5 @@ public class OpenChatSecureimConfiguration extends Configuration {
 
     return results;
   }
+
 }
