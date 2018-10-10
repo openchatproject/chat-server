@@ -73,6 +73,7 @@ import com.openchat.secureim.websocket.WebSocketAccountAuthenticator;
 import com.openchat.secureim.workers.DeleteUserCommand;
 import com.openchat.secureim.workers.DirectoryCommand;
 import com.openchat.secureim.workers.PeriodicStatsCommand;
+import com.openchat.secureim.workers.PushCommand;
 import com.openchat.secureim.workers.TrimMessagesCommand;
 import com.openchat.secureim.workers.VacuumCommand;
 import com.openchat.websocket.WebSocketResourceProviderFactory;
@@ -107,6 +108,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     bootstrap.addCommand(new TrimMessagesCommand());
     bootstrap.addCommand(new PeriodicStatsCommand());
     bootstrap.addCommand(new DeleteUserCommand());
+    bootstrap.addCommand(new PushCommand());
     bootstrap.addBundle(new NameableMigrationsBundle<OpenChatSecureimConfiguration>("accountdb", "accountsdb.xml") {
       @Override
       public DataSourceFactory getDataSourceFactory(OpenChatSecureimConfiguration configuration) {
