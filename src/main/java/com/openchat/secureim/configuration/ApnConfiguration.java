@@ -16,14 +16,7 @@ public class ApnConfiguration {
 
   @NotEmpty
   @JsonProperty
-  private String voipCertificate;
-
-  @NotEmpty
-  @JsonProperty
-  private String voipKey;
-
-  @JsonProperty
-  private boolean feedback = true;
+  private String bundleId;
 
   @JsonProperty
   private boolean sandbox = false;
@@ -36,16 +29,8 @@ public class ApnConfiguration {
     return pushKey;
   }
 
-  public String getVoipCertificate() {
-    return voipCertificate;
-  }
-
-  public String getVoipKey() {
-    return voipKey;
-  }
-
-  public boolean isFeedbackEnabled() {
-    return feedback;
+  public String getBundleId() {
+    return bundleId;
   }
 
   public boolean isSandboxEnabled() {
