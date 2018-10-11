@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.openchat.secureim.configuration.ApnConfiguration;
 import com.openchat.secureim.configuration.FederationConfiguration;
 import com.openchat.secureim.configuration.GcmConfiguration;
-import com.openchat.secureim.configuration.GraphiteConfiguration;
 import com.openchat.secureim.configuration.MaxDeviceConfiguration;
 import com.openchat.secureim.configuration.PushConfiguration;
 import com.openchat.secureim.configuration.RateLimitsConfiguration;
@@ -14,7 +13,7 @@ import com.openchat.secureim.configuration.S3Configuration;
 import com.openchat.secureim.configuration.TestDeviceConfiguration;
 import com.openchat.secureim.configuration.TurnConfiguration;
 import com.openchat.secureim.configuration.TwilioConfiguration;
-import com.openchat.secureim.configuration.WebsocketConfiguration;
+import com.openchat.websocket.configuration.WebSocketConfiguration;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -86,10 +85,6 @@ public class OpenChatSecureimConfiguration extends Configuration {
   @JsonProperty
   private RateLimitsConfiguration limits = new RateLimitsConfiguration();
 
-  @Valid
-  @JsonProperty
-  private WebsocketConfiguration websocket = new WebsocketConfiguration();
-
   @JsonProperty
   private RedPhoneConfiguration redphone = new RedPhoneConfiguration();
 
@@ -97,6 +92,11 @@ public class OpenChatSecureimConfiguration extends Configuration {
   @NotNull
   @JsonProperty
   private JerseyClientConfiguration httpClient = new JerseyClientConfiguration();
+
+  @Valid
+  @NotNull
+  @JsonProperty
+  private WebSocketConfiguration webSocket = new WebSocketConfiguration();
 
   @Valid
   @NotNull
@@ -113,9 +113,8 @@ public class OpenChatSecureimConfiguration extends Configuration {
   @JsonProperty
   private ApnConfiguration apn;
 
-
-  public WebsocketConfiguration getWebsocketConfiguration() {
-    return websocket;
+  public WebSocketConfiguration getWebSocketConfiguration() {
+    return webSocket;
   }
 
   public TwilioConfiguration getTwilioConfiguration() {

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.google.common.base.Optional;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
-import org.glassfish.jersey.client.ClientProperties;
 import org.skife.jdbi.v2.DBI;
 import com.openchat.dispatch.DispatchChannel;
 import com.openchat.dispatch.DispatchManager;
@@ -81,13 +80,11 @@ import com.openchat.websocket.setup.WebSocketEnvironment;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletRegistration;
-import javax.ws.rs.client.Client;
 import java.security.Security;
 import java.util.EnumSet;
 
 import static com.codahale.metrics.MetricRegistry.name;
 import io.dropwizard.Application;
-import io.dropwizard.client.JerseyClientBuilder;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Bootstrap;
@@ -149,7 +146,6 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     RedisClientFactory cacheClientFactory = new RedisClientFactory(config.getCacheConfiguration().getUrl());
     JedisPool          cacheClient        = cacheClientFactory.getRedisClientPool();
     JedisPool          directoryClient    = new RedisClientFactory(config.getDirectoryConfiguration().getUrl()).getRedisClientPool();
-    Client             httpClient         = initializeHttpClient(environment, config);
 
     DirectoryManager           directory                  = new DirectoryManager(directoryClient);
     PendingAccountsManager     pendingAccountsManager     = new PendingAccountsManager(pendingAccounts, cacheClient);
@@ -205,30 +201,30 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     environment.jersey().register(keysControllerV2);
     environment.jersey().register(messageController);
 
-    if (config.getWebsocketConfiguration().isEnabled()) {
-      WebSocketEnvironment webSocketEnvironment = new WebSocketEnvironment(environment, config, 90000);
-      webSocketEnvironment.setAuthenticator(new WebSocketAccountAuthenticator(deviceAuthenticator));
-      webSocketEnvironment.setConnectListener(new AuthenticatedConnectListener(accountsManager, pushSender, receiptSender, messagesManager, pubSubManager));
-      webSocketEnvironment.jersey().register(new KeepAliveController(pubSubManager));
-      webSocketEnvironment.jersey().register(messageController);
+    ///
+    WebSocketEnvironment webSocketEnvironment = new WebSocketEnvironment(environment, config.getWebSocketConfiguration(), 90000);
+    webSocketEnvironment.setAuthenticator(new WebSocketAccountAuthenticator(deviceAuthenticator));
+    webSocketEnvironment.setConnectListener(new AuthenticatedConnectListener(accountsManager, pushSender, receiptSender, messagesManager, pubSubManager));
+    webSocketEnvironment.jersey().register(new KeepAliveController(pubSubManager));
+    webSocketEnvironment.jersey().register(messageController);
 
-      WebSocketEnvironment provisioningEnvironment = new WebSocketEnvironment(environment, config);
-      provisioningEnvironment.setConnectListener(new ProvisioningConnectListener(pubSubManager));
-      provisioningEnvironment.jersey().register(new KeepAliveController(pubSubManager));
-      
-      WebSocketResourceProviderFactory webSocketServlet    = new WebSocketResourceProviderFactory(webSocketEnvironment   );
-      WebSocketResourceProviderFactory provisioningServlet = new WebSocketResourceProviderFactory(provisioningEnvironment);
+    WebSocketEnvironment provisioningEnvironment = new WebSocketEnvironment(environment, webSocketEnvironment.getRequestLog(), 60000);
+    provisioningEnvironment.setConnectListener(new ProvisioningConnectListener(pubSubManager));
+    provisioningEnvironment.jersey().register(new KeepAliveController(pubSubManager));
 
-      ServletRegistration.Dynamic websocket    = environment.servlets().addServlet("WebSocket", webSocketServlet      );
-      ServletRegistration.Dynamic provisioning = environment.servlets().addServlet("Provisioning", provisioningServlet);
+    WebSocketResourceProviderFactory webSocketServlet    = new WebSocketResourceProviderFactory(webSocketEnvironment   );
+    WebSocketResourceProviderFactory provisioningServlet = new WebSocketResourceProviderFactory(provisioningEnvironment);
 
-      websocket.addMapping("/v1/websocket/");
-      websocket.setAsyncSupported(true);
+    ServletRegistration.Dynamic websocket    = environment.servlets().addServlet("WebSocket", webSocketServlet      );
+    ServletRegistration.Dynamic provisioning = environment.servlets().addServlet("Provisioning", provisioningServlet);
 
-      provisioning.addMapping("/v1/websocket/provisioning/");
-      provisioning.setAsyncSupported(true);
+    websocket.addMapping("/v1/websocket/");
+    websocket.setAsyncSupported(true);
 
-      webSocketServlet.start();
-      provisioningServlet.start();
+    provisioning.addMapping("/v1/websocket/provisioning/");
+    provisioning.setAsyncSupported(true);
 
-      FilterRegistration.Dynamic filter = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
+    webSocketServlet.start();
+    provisioningServlet.start();
+
+    FilterRegistration.Dynamic filter = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
