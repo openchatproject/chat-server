@@ -25,6 +25,7 @@ import com.openchat.secureim.controllers.FederationControllerV2;
 import com.openchat.secureim.controllers.KeepAliveController;
 import com.openchat.secureim.controllers.KeysController;
 import com.openchat.secureim.controllers.MessageController;
+import com.openchat.secureim.controllers.ProfileController;
 import com.openchat.secureim.controllers.ProvisioningController;
 import com.openchat.secureim.controllers.ReceiptController;
 import com.openchat.secureim.federation.FederatedClientManager;
@@ -180,6 +181,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     AttachmentController attachmentController = new AttachmentController(rateLimiters, federatedClientManager, urlSigner);
     KeysController       keysController       = new KeysController(rateLimiters, keys, accountsManager, federatedClientManager);
     MessageController    messageController    = new MessageController(rateLimiters, pushSender, receiptSender, accountsManager, messagesManager, federatedClientManager);
+    ProfileController    profileController    = new ProfileController(rateLimiters , accountsManager);
 
     environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<Account>()
                                                              .setAuthenticator(deviceAuthenticator)
@@ -201,6 +203,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     environment.jersey().register(attachmentController);
     environment.jersey().register(keysController);
     environment.jersey().register(messageController);
+    environment.jersey().register(profileController);
 
     ///
     WebSocketEnvironment webSocketEnvironment = new WebSocketEnvironment(environment, config.getWebSocketConfiguration(), 90000);
@@ -208,6 +211,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     webSocketEnvironment.setConnectListener(new AuthenticatedConnectListener(accountsManager, pushSender, receiptSender, messagesManager, pubSubManager));
     webSocketEnvironment.jersey().register(new KeepAliveController(pubSubManager));
     webSocketEnvironment.jersey().register(messageController);
+    webSocketEnvironment.jersey().register(profileController);
 
     WebSocketEnvironment provisioningEnvironment = new WebSocketEnvironment(environment, webSocketEnvironment.getRequestLog(), 60000);
     provisioningEnvironment.setConnectListener(new ProvisioningConnectListener(pubSubManager));
