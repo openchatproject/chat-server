@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 
-public class PreKeyV2 implements PreKeyBase {
+public class PreKey {
 
   @JsonProperty
   @NotNull
@@ -16,15 +16,14 @@ public class PreKeyV2 implements PreKeyBase {
   @NotEmpty
   private String  publicKey;
 
-  public PreKeyV2() {}
+  public PreKey() {}
 
-  public PreKeyV2(long keyId, String publicKey)
+  public PreKey(long keyId, String publicKey)
   {
     this.keyId     = keyId;
     this.publicKey = publicKey;
   }
 
-  @Override
   public String getPublicKey() {
     return publicKey;
   }
@@ -33,7 +32,6 @@ public class PreKeyV2 implements PreKeyBase {
     this.publicKey = publicKey;
   }
 
-  @Override
   public long getKeyId() {
     return keyId;
   }
@@ -44,8 +42,8 @@ public class PreKeyV2 implements PreKeyBase {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof PreKeyV2)) return false;
-    PreKeyV2 that = (PreKeyV2)object;
+    if (object == null || !(object instanceof PreKey)) return false;
+    PreKey that = (PreKey)object;
 
     if (publicKey == null) {
       return this.keyId == that.keyId && that.publicKey == null;

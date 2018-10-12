@@ -3,7 +3,7 @@ package com.openchat.secureim.entities;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.annotations.VisibleForTesting;
 
-public class PreKeyResponseItemV2 {
+public class PreKeyResponseItem {
 
   @JsonProperty
   private long deviceId;
@@ -15,11 +15,11 @@ public class PreKeyResponseItemV2 {
   private SignedPreKey signedPreKey;
 
   @JsonProperty
-  private PreKeyV2 preKey;
+  private PreKey preKey;
 
-  public PreKeyResponseItemV2() {}
+  public PreKeyResponseItem() {}
 
-  public PreKeyResponseItemV2(long deviceId, int registrationId, SignedPreKey signedPreKey, PreKeyV2 preKey) {
+  public PreKeyResponseItem(long deviceId, int registrationId, SignedPreKey signedPreKey, PreKey preKey) {
     this.deviceId       = deviceId;
     this.registrationId = registrationId;
     this.signedPreKey   = signedPreKey;
@@ -32,7 +32,7 @@ public class PreKeyResponseItemV2 {
   }
 
   @VisibleForTesting
-  public PreKeyV2 getPreKey() {
+  public PreKey getPreKey() {
     return preKey;
   }
 

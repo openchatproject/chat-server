@@ -9,12 +9,12 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-public class PreKeyStateV2 {
+public class PreKeyState {
 
   @JsonProperty
   @NotNull
   @Valid
-  private List<PreKeyV2> preKeys;
+  private List<PreKey> preKeys;
 
   @JsonProperty
   @NotNull
@@ -22,27 +22,19 @@ public class PreKeyStateV2 {
   private SignedPreKey signedPreKey;
 
   @JsonProperty
-  @NotNull
-  @Valid
-  private PreKeyV2 lastResortKey;
-
-  @JsonProperty
   @NotEmpty
   private String identityKey;
 
-  public PreKeyStateV2() {}
+  public PreKeyState() {}
 
   @VisibleForTesting
-  public PreKeyStateV2(String identityKey, SignedPreKey signedPreKey,
-                       List<PreKeyV2> keys, PreKeyV2 lastResortKey)
-  {
+  public PreKeyState(String identityKey, SignedPreKey signedPreKey, List<PreKey> keys) {
     this.identityKey   = identityKey;
     this.signedPreKey  = signedPreKey;
     this.preKeys       = keys;
-    this.lastResortKey = lastResortKey;
   }
 
-  public List<PreKeyV2> getPreKeys() {
+  public List<PreKey> getPreKeys() {
     return preKeys;
   }
 
@@ -54,7 +46,4 @@ public class PreKeyStateV2 {
     return identityKey;
   }
 
-  public PreKeyV2 getLastResortKey() {
-    return lastResortKey;
-  }
 }

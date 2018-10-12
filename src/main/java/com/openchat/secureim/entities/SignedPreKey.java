@@ -3,9 +3,7 @@ package com.openchat.secureim.entities;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import java.io.Serializable;
-
-public class SignedPreKey extends PreKeyV2 {
+public class SignedPreKey extends PreKey {
 
   @JsonProperty
   @NotEmpty

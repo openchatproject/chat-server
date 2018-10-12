@@ -6,17 +6,17 @@ import com.google.common.annotations.VisibleForTesting;
 
 import java.util.List;
 
-public class PreKeyResponseV2 {
+public class PreKeyResponse {
 
   @JsonProperty
   private String identityKey;
 
   @JsonProperty
-  private List<PreKeyResponseItemV2> devices;
+  private List<PreKeyResponseItem> devices;
 
-  public PreKeyResponseV2() {}
+  public PreKeyResponse() {}
 
-  public PreKeyResponseV2(String identityKey, List<PreKeyResponseItemV2> devices) {
+  public PreKeyResponse(String identityKey, List<PreKeyResponseItem> devices) {
     this.identityKey = identityKey;
     this.devices     = devices;
   }
@@ -28,8 +28,8 @@ public class PreKeyResponseV2 {
 
   @VisibleForTesting
   @JsonIgnore
-  public PreKeyResponseItemV2 getDevice(int deviceId) {
-    for (PreKeyResponseItemV2 device : devices) {
+  public PreKeyResponseItem getDevice(int deviceId) {
+    for (PreKeyResponseItem device : devices) {
       if (device.getDeviceId() == deviceId) return device;
     }
 
