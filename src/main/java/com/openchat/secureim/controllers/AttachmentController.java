@@ -12,7 +12,7 @@ import com.openchat.secureim.federation.NoSuchPeerException;
 import com.openchat.secureim.limits.RateLimiters;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.util.Conversions;
-import com.openchat.secureim.util.UrlSigner;
+import com.openchat.secureim.s3.UrlSigner;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -24,7 +24,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URL;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 import io.dropwizard.auth.Auth;

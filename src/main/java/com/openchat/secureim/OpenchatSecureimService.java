@@ -50,6 +50,7 @@ import com.openchat.secureim.push.GCMSender;
 import com.openchat.secureim.push.PushSender;
 import com.openchat.secureim.push.ReceiptSender;
 import com.openchat.secureim.push.WebsocketSender;
+import com.openchat.secureim.s3.UrlSigner;
 import com.openchat.secureim.sms.SmsSender;
 import com.openchat.secureim.sms.TwilioSmsSender;
 import com.openchat.secureim.storage.Account;
@@ -65,7 +66,6 @@ import com.openchat.secureim.storage.PendingDevices;
 import com.openchat.secureim.storage.PendingDevicesManager;
 import com.openchat.secureim.storage.PubSubManager;
 import com.openchat.secureim.util.Constants;
-import com.openchat.secureim.util.UrlSigner;
 import com.openchat.secureim.websocket.AuthenticatedConnectListener;
 import com.openchat.secureim.websocket.DeadLetterHandler;
 import com.openchat.secureim.websocket.ProvisioningConnectListener;
@@ -167,7 +167,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     ApnFallbackManager       apnFallbackManager  = new ApnFallbackManager(apnSender, pubSubManager);
     TwilioSmsSender          twilioSmsSender     = new TwilioSmsSender(config.getTwilioConfiguration());
     SmsSender                smsSender           = new SmsSender(twilioSmsSender);
-    UrlSigner                urlSigner           = new UrlSigner(config.getS3Configuration());
+    UrlSigner                urlSigner           = new UrlSigner(config.getAttachmentsConfiguration());
     PushSender               pushSender          = new PushSender(apnFallbackManager, gcmSender, apnSender, websocketSender, config.getPushConfiguration().getQueueSize());
     ReceiptSender            receiptSender       = new ReceiptSender(accountsManager, pushSender, federatedClientManager);
     TurnTokenGenerator       turnTokenGenerator  = new TurnTokenGenerator(config.getTurnConfiguration());
@@ -181,7 +181,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     AttachmentController attachmentController = new AttachmentController(rateLimiters, federatedClientManager, urlSigner);
     KeysController       keysController       = new KeysController(rateLimiters, keys, accountsManager, federatedClientManager);
     MessageController    messageController    = new MessageController(rateLimiters, pushSender, receiptSender, accountsManager, messagesManager, federatedClientManager);
-    ProfileController    profileController    = new ProfileController(rateLimiters , accountsManager);
+    ProfileController    profileController    = new ProfileController(rateLimiters , accountsManager, config.getProfilesConfiguration());
 
     environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<Account>()
                                                              .setAuthenticator(deviceAuthenticator)

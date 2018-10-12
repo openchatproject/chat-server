@@ -3,8 +3,7 @@ package com.openchat.secureim.configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class S3Configuration {
-
+public class ProfilesConfiguration {
   @NotEmpty
   @JsonProperty
   private String accessKey;
@@ -15,7 +14,11 @@ public class S3Configuration {
 
   @NotEmpty
   @JsonProperty
-  private String attachmentsBucket;
+  private String bucket;
+
+  @NotEmpty
+  @JsonProperty
+  private String region;
 
   public String getAccessKey() {
     return accessKey;
@@ -25,7 +28,12 @@ public class S3Configuration {
     return accessSecret;
   }
 
-  public String getAttachmentsBucket() {
-    return attachmentsBucket;
+  public String getBucket() {
+    return bucket;
   }
+
+  public String getRegion() {
+    return region;
+  }
+
 }
