@@ -27,7 +27,6 @@ import com.openchat.secureim.controllers.KeysController;
 import com.openchat.secureim.controllers.MessageController;
 import com.openchat.secureim.controllers.ProfileController;
 import com.openchat.secureim.controllers.ProvisioningController;
-import com.openchat.secureim.controllers.ReceiptController;
 import com.openchat.secureim.federation.FederatedClientManager;
 import com.openchat.secureim.federation.FederatedPeer;
 import com.openchat.secureim.limits.RateLimiters;
@@ -198,7 +197,6 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     environment.jersey().register(new DirectoryController(rateLimiters, directory));
     environment.jersey().register(new FederationControllerV1(accountsManager, attachmentController, messageController));
     environment.jersey().register(new FederationControllerV2(accountsManager, attachmentController, messageController, keysController));
-    environment.jersey().register(new ReceiptController(receiptSender));
     environment.jersey().register(new ProvisioningController(rateLimiters, pushSender));
     environment.jersey().register(attachmentController);
     environment.jersey().register(keysController);

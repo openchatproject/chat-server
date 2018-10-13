@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URL;
 import java.security.SecureRandom;
+import java.util.stream.Stream;
 
 import io.dropwizard.auth.Auth;
 
@@ -33,6 +34,8 @@ import io.dropwizard.auth.Auth;
 public class AttachmentController {
 
   private final Logger logger = LoggerFactory.getLogger(AttachmentController.class);
+
+  private static final String[] UNACCELERATED_REGIONS = {"+20", "+971", "+968", "+974"};
 
   private final RateLimiters           rateLimiters;
   private final FederatedClientManager federatedClientManager;
@@ -58,7 +61,7 @@ public class AttachmentController {
     }
 
     long attachmentId = generateAttachmentId();
-    URL  url          = urlSigner.getPreSignedUrl(attachmentId, HttpMethod.PUT);
+    URL  url          = urlSigner.getPreSignedUrl(attachmentId, HttpMethod.PUT, Stream.of(UNACCELERATED_REGIONS).anyMatch(region -> account.getNumber().startsWith(region)));
 
     return new AttachmentDescriptor(attachmentId, url.toExternalForm());
 
@@ -75,7 +78,7 @@ public class AttachmentController {
   {
     try {
       if (!relay.isPresent()) {
-        return new AttachmentUri(urlSigner.getPreSignedUrl(attachmentId, HttpMethod.GET));
+        return new AttachmentUri(urlSigner.getPreSignedUrl(attachmentId, HttpMethod.GET, Stream.of(UNACCELERATED_REGIONS).anyMatch(region -> account.getNumber().startsWith(region))));
       } else {
         return new AttachmentUri(federatedClientManager.getClient(relay.get()).getSignedAttachmentUri(attachmentId));
       }
