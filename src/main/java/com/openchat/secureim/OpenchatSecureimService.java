@@ -42,7 +42,6 @@ import com.openchat.secureim.metrics.NetworkReceivedGauge;
 import com.openchat.secureim.metrics.NetworkSentGauge;
 import com.openchat.secureim.providers.RedisClientFactory;
 import com.openchat.secureim.providers.RedisHealthCheck;
-import com.openchat.secureim.providers.TimeProvider;
 import com.openchat.secureim.push.APNSender;
 import com.openchat.secureim.push.ApnFallbackManager;
 import com.openchat.secureim.push.GCMSender;
@@ -170,7 +169,6 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     PushSender               pushSender          = new PushSender(apnFallbackManager, gcmSender, apnSender, websocketSender, config.getPushConfiguration().getQueueSize());
     ReceiptSender            receiptSender       = new ReceiptSender(accountsManager, pushSender, federatedClientManager);
     TurnTokenGenerator       turnTokenGenerator  = new TurnTokenGenerator(config.getTurnConfiguration());
-    Optional<byte[]>         authorizationKey    = config.getRedphoneConfiguration().getAuthorizationKey();
 
     apnSender.setApnFallbackManager(apnFallbackManager);
     environment.lifecycle().manage(apnFallbackManager);
@@ -192,7 +190,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
                                                              .buildAuthFilter()));
     environment.jersey().register(new AuthValueFactoryProvider.Binder());
 
-    environment.jersey().register(new AccountController(pendingAccountsManager, accountsManager, rateLimiters, smsSender, messagesManager, new TimeProvider(), authorizationKey, turnTokenGenerator, config.getTestDevices()));
+    environment.jersey().register(new AccountController(pendingAccountsManager, accountsManager, rateLimiters, smsSender, messagesManager, turnTokenGenerator, config.getTestDevices()));
     environment.jersey().register(new DeviceController(pendingDevicesManager, accountsManager, messagesManager, rateLimiters, config.getMaxDevices()));
     environment.jersey().register(new DirectoryController(rateLimiters, directory));
     environment.jersey().register(new FederationControllerV1(accountsManager, attachmentController, messageController));

@@ -17,6 +17,9 @@ public class RateLimitsConfiguration {
   private RateLimitConfiguration verifyNumber = new RateLimitConfiguration(2, 2);
 
   @JsonProperty
+  private RateLimitConfiguration verifyPin = new RateLimitConfiguration(10, 1 / (24.0 * 60.0));
+
+  @JsonProperty
   private RateLimitConfiguration attachments = new RateLimitConfiguration(50, 50);
 
   @JsonProperty
@@ -78,6 +81,10 @@ public class RateLimitsConfiguration {
 
   public RateLimitConfiguration getVerifyNumber() {
     return verifyNumber;
+  }
+
+  public RateLimitConfiguration getVerifyPin() {
+    return verifyPin;
   }
 
   public RateLimitConfiguration getTurnAllocations() {

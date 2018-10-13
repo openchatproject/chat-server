@@ -32,6 +32,9 @@ public class Account {
   @JsonProperty
   private String avatarDigest;
 
+  @JsonProperty
+  private String pin;
+
   @JsonIgnore
   private Device authenticatedDevice;
 
@@ -187,5 +190,13 @@ public class Account {
 
   public void setAvatarDigest(String avatarDigest) {
     this.avatarDigest = avatarDigest;
+  }
+
+  public Optional<String> getPin() {
+    return Optional.fromNullable(pin);
+  }
+
+  public void setPin(String pin) {
+    this.pin = pin;
   }
 }
