@@ -20,12 +20,13 @@ import static com.openchat.secureim.storage.PubSubProtos.PubSubMessage;
 
 public class WebsocketSender {
 
-  public static enum Type {
+  public enum Type {
     APN,
     GCM,
     WEB
   }
 
+  @SuppressWarnings("unused")
   private static final Logger logger = LoggerFactory.getLogger(WebsocketSender.class);
 
   private final MetricRegistry metricRegistry = SharedMetricRegistries.getOrCreate(Constants.METRICS_NAME);
@@ -63,28 +64,26 @@ public class WebsocketSender {
       else if (channel == Type.GCM) gcmOnlineMeter.mark();
       else                          websocketOnlineMeter.mark();
 
-      return new DeliveryStatus(true, 0);
+      return new DeliveryStatus(true);
     } else {
       if      (channel == Type.APN) apnOfflineMeter.mark();
       else if (channel == Type.GCM) gcmOfflineMeter.mark();
       else                          websocketOfflineMeter.mark();
 
-      int queueDepth = queueMessage(account, device, message);
-      return new DeliveryStatus(false, queueDepth);
+      queueMessage(account, device, message);
+      return new DeliveryStatus(false);
     }
   }
 
-  public int queueMessage(Account account, Device device, Envelope message) {
+  public void queueMessage(Account account, Device device, Envelope message) {
     websocketRequeueMeter.mark();
 
-    WebsocketAddress address    = new WebsocketAddress(account.getNumber(), device.getId());
-    int              queueDepth = messagesManager.insert(account.getNumber(), device.getId(), message);
+    WebsocketAddress address = new WebsocketAddress(account.getNumber(), device.getId());
 
+    messagesManager.insert(account.getNumber(), device.getId(), message);
     pubSubManager.publish(address, PubSubMessage.newBuilder()
                                                 .setType(PubSubMessage.Type.QUERY_DB)
                                                 .build());
-
-    return queueDepth;
   }
 
   public boolean sendProvisioningMessage(ProvisioningAddress address, byte[] body) {
@@ -102,22 +101,17 @@ public class WebsocketSender {
     }
   }
 
-  public static class DeliveryStatus {
+  static class DeliveryStatus {
 
     private final boolean delivered;
-    private final int     messageQueueDepth;
 
-    public DeliveryStatus(boolean delivered, int messageQueueDepth) {
+    DeliveryStatus(boolean delivered) {
       this.delivered = delivered;
-      this.messageQueueDepth = messageQueueDepth;
     }
 
-    public boolean isDelivered() {
+    boolean isDelivered() {
       return delivered;
     }
 
-    public int getMessageQueueDepth() {
-      return messageQueueDepth;
-    }
   }
 }

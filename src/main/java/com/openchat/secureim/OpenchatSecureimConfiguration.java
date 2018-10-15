@@ -5,6 +5,7 @@ import com.openchat.secureim.configuration.ApnConfiguration;
 import com.openchat.secureim.configuration.FederationConfiguration;
 import com.openchat.secureim.configuration.GcmConfiguration;
 import com.openchat.secureim.configuration.MaxDeviceConfiguration;
+import com.openchat.secureim.configuration.MessageCacheConfiguration;
 import com.openchat.secureim.configuration.ProfilesConfiguration;
 import com.openchat.secureim.configuration.PushConfiguration;
 import com.openchat.secureim.configuration.RateLimitsConfiguration;
@@ -58,6 +59,11 @@ public class OpenChatSecureimConfiguration extends Configuration {
   @Valid
   @JsonProperty
   private RedisConfiguration directory;
+
+  @NotNull
+  @Valid
+  @JsonProperty
+  private MessageCacheConfiguration messageCache;
 
   @Valid
   @NotNull
@@ -142,6 +148,10 @@ public class OpenChatSecureimConfiguration extends Configuration {
 
   public RedisConfiguration getDirectoryConfiguration() {
     return directory;
+  }
+
+  public MessageCacheConfiguration getMessageCacheConfiguration() {
+    return messageCache;
   }
 
   public DataSourceFactory getMessageStoreConfiguration() {
