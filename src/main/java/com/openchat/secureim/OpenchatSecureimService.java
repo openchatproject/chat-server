@@ -47,6 +47,7 @@ import com.openchat.secureim.push.GCMSender;
 import com.openchat.secureim.push.PushSender;
 import com.openchat.secureim.push.ReceiptSender;
 import com.openchat.secureim.push.WebsocketSender;
+import com.openchat.secureim.redis.ReplicatedJedisPool;
 import com.openchat.secureim.s3.UrlSigner;
 import com.openchat.secureim.sms.SmsSender;
 import com.openchat.secureim.sms.TwilioSmsSender;
@@ -88,7 +89,6 @@ import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import redis.clients.jedis.JedisPool;
 
 public class OpenChatSecureimService extends Application<OpenChatSecureimConfiguration> {
 
@@ -142,10 +142,12 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     Keys            keys            = database.onDemand(Keys.class);
     Messages        messages        = messagedb.onDemand(Messages.class);
 
-    RedisClientFactory cacheClientFactory = new RedisClientFactory(config.getCacheConfiguration().getUrl());
-    JedisPool          cacheClient        = cacheClientFactory.getRedisClientPool();
-    JedisPool          directoryClient    = new RedisClientFactory(config.getDirectoryConfiguration().getUrl()).getRedisClientPool();
-    JedisPool          messagesClient     = new RedisClientFactory(config.getMessageCacheConfiguration().getRedisConfiguration().getUrl()).getRedisClientPool();
+    RedisClientFactory  cacheClientFactory     = new RedisClientFactory(config.getCacheConfiguration().getUrl(), config.getCacheConfiguration().getReplicaUrls()        );
+    RedisClientFactory  directoryClientFactory = new RedisClientFactory(config.getDirectoryConfiguration().getUrl(), config.getDirectoryConfiguration().getReplicaUrls());
+    RedisClientFactory  messagesClientFactory  = new RedisClientFactory(config.getMessageCacheConfiguration().getRedisConfiguration().getUrl(), config.getMessageCacheConfiguration().getRedisConfiguration().getReplicaUrls());
+    ReplicatedJedisPool cacheClient            = cacheClientFactory.getRedisClientPool();
+    ReplicatedJedisPool directoryClient        = directoryClientFactory.getRedisClientPool();
+    ReplicatedJedisPool messagesClient         = messagesClientFactory.getRedisClientPool();
 
     DirectoryManager           directory                  = new DirectoryManager(directoryClient);
     PendingAccountsManager     pendingAccountsManager     = new PendingAccountsManager(pendingAccounts, cacheClient);

@@ -7,6 +7,7 @@ import com.google.common.base.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.entities.ClientContact;
+import com.openchat.secureim.redis.ReplicatedJedisPool;
 import com.openchat.secureim.util.SystemMapper;
 import com.openchat.secureim.util.Util;
 
@@ -15,21 +16,17 @@ import java.util.Iterator;
 import java.util.List;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 public class AccountsManager {
 
   private final Logger logger = LoggerFactory.getLogger(AccountsManager.class);
 
-  private final Accounts         accounts;
-  private final JedisPool        cacheClient;
-  private final DirectoryManager directory;
-  private final ObjectMapper     mapper;
+  private final Accounts            accounts;
+  private final ReplicatedJedisPool cacheClient;
+  private final DirectoryManager    directory;
+  private final ObjectMapper        mapper;
 
-  public AccountsManager(Accounts accounts,
-                         DirectoryManager directory,
-                         JedisPool cacheClient)
-  {
+  public AccountsManager(Accounts accounts, DirectoryManager directory, ReplicatedJedisPool cacheClient) {
     this.accounts    = accounts;
     this.directory   = directory;
     this.cacheClient = cacheClient;
@@ -98,7 +95,7 @@ public class AccountsManager {
   }
 
   private void memcacheSet(String number, Account account) {
-    try (Jedis jedis = cacheClient.getResource()) {
+    try (Jedis jedis = cacheClient.getWriteResource()) {
       jedis.set(getKey(number), mapper.writeValueAsString(account));
     } catch (JsonProcessingException e) {
       throw new IllegalArgumentException(e);
@@ -106,7 +103,7 @@ public class AccountsManager {
   }
 
   private Optional<Account> memcacheGet(String number) {
-    try (Jedis jedis = cacheClient.getResource()) {
+    try (Jedis jedis = cacheClient.getReadResource()) {
       String json = jedis.get(getKey(number));
 
       if (json != null) return Optional.of(mapper.readValue(json, Account.class));

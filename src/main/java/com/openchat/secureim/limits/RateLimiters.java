@@ -2,8 +2,7 @@ package com.openchat.secureim.limits;
 
 
 import com.openchat.secureim.configuration.RateLimitsConfiguration;
-
-import redis.clients.jedis.JedisPool;
+import com.openchat.secureim.redis.ReplicatedJedisPool;
 
 public class RateLimiters {
 
@@ -25,7 +24,7 @@ public class RateLimiters {
 
   private final RateLimiter profileLimiter;
 
-  public RateLimiters(RateLimitsConfiguration config, JedisPool cacheClient) {
+  public RateLimiters(RateLimitsConfiguration config, ReplicatedJedisPool cacheClient) {
     this.smsDestinationLimiter = new RateLimiter(cacheClient, "smsDestination",
                                                  config.getSmsDestination().getBucketSize(),
                                                  config.getSmsDestination().getLeakRatePerMinute());

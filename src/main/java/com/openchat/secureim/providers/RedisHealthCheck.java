@@ -1,21 +1,21 @@
 package com.openchat.secureim.providers;
 
 import com.codahale.metrics.health.HealthCheck;
+import com.openchat.secureim.redis.ReplicatedJedisPool;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 public class RedisHealthCheck extends HealthCheck {
 
-  private final JedisPool clientPool;
+  private final ReplicatedJedisPool clientPool;
 
-  public RedisHealthCheck(JedisPool clientPool) {
+  public RedisHealthCheck(ReplicatedJedisPool clientPool) {
     this.clientPool = clientPool;
   }
 
   @Override
   protected Result check() throws Exception {
-    try (Jedis client = clientPool.getResource()) {
+    try (Jedis client = clientPool.getWriteResource()) {
       client.set("HEALTH", "test");
 
       if (!"test".equals(client.get("HEALTH"))) {

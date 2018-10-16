@@ -6,12 +6,12 @@ import com.google.common.base.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.auth.StoredVerificationCode;
+import com.openchat.secureim.redis.ReplicatedJedisPool;
 import com.openchat.secureim.util.SystemMapper;
 
 import java.io.IOException;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 public class PendingDevicesManager {
 
@@ -19,13 +19,11 @@ public class PendingDevicesManager {
 
   private static final String CACHE_PREFIX = "pending_devices2::";
 
-  private final PendingDevices  pendingDevices;
-  private final JedisPool       cacheClient;
-  private final ObjectMapper    mapper;
+  private final PendingDevices      pendingDevices;
+  private final ReplicatedJedisPool cacheClient;
+  private final ObjectMapper        mapper;
 
-  public PendingDevicesManager(PendingDevices pendingDevices,
-                               JedisPool      cacheClient)
-  {
+  public PendingDevicesManager(PendingDevices pendingDevices, ReplicatedJedisPool cacheClient) {
     this.pendingDevices = pendingDevices;
     this.cacheClient    = cacheClient;
     this.mapper         = SystemMapper.getMapper();
@@ -56,7 +54,7 @@ public class PendingDevicesManager {
   }
 
   private void memcacheSet(String number, StoredVerificationCode code) {
-    try (Jedis jedis = cacheClient.getResource()) {
+    try (Jedis jedis = cacheClient.getWriteResource()) {
       jedis.set(CACHE_PREFIX + number, mapper.writeValueAsString(code));
     } catch (JsonProcessingException e) {
       throw new IllegalArgumentException(e);
@@ -64,7 +62,7 @@ public class PendingDevicesManager {
   }
 
   private Optional<StoredVerificationCode> memcacheGet(String number) {
-    try (Jedis jedis = cacheClient.getResource()) {
+    try (Jedis jedis = cacheClient.getReadResource()) {
       String json = jedis.get(CACHE_PREFIX + number);
 
       if (json == null) return Optional.absent();
@@ -76,7 +74,7 @@ public class PendingDevicesManager {
   }
 
   private void memcacheDelete(String number) {
-    try (Jedis jedis = cacheClient.getResource()) {
+    try (Jedis jedis = cacheClient.getWriteResource()) {
       jedis.del(CACHE_PREFIX + number);
     }
   }

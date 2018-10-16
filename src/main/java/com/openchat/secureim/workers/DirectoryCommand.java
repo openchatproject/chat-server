@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.openchat.secureim.OpenChatSecureimConfiguration;
 import com.openchat.secureim.federation.FederatedClientManager;
 import com.openchat.secureim.providers.RedisClientFactory;
+import com.openchat.secureim.redis.ReplicatedJedisPool;
 import com.openchat.secureim.storage.Accounts;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.DirectoryManager;
@@ -55,11 +56,11 @@ public class DirectoryCommand extends EnvironmentCommand<OpenChatSecureimConfigu
       dbi.registerContainerFactory(new ImmutableSetContainerFactory());
       dbi.registerContainerFactory(new OptionalContainerFactory());
 
-      Accounts               accounts               = dbi.onDemand(Accounts.class);
-      JedisPool              cacheClient            = new RedisClientFactory(configuration.getCacheConfiguration().getUrl()).getRedisClientPool();
-      JedisPool              redisClient            = new RedisClientFactory(configuration.getDirectoryConfiguration().getUrl()).getRedisClientPool();
-      DirectoryManager       directory              = new DirectoryManager(redisClient);
-      AccountsManager        accountsManager        = new AccountsManager(accounts, directory, cacheClient);
+      Accounts            accounts        = dbi.onDemand(Accounts.class);
+      ReplicatedJedisPool cacheClient     = new RedisClientFactory(configuration.getCacheConfiguration().getUrl(), configuration.getCacheConfiguration().getReplicaUrls()).getRedisClientPool();
+      ReplicatedJedisPool redisClient     = new RedisClientFactory(configuration.getDirectoryConfiguration().getUrl(), configuration.getDirectoryConfiguration().getReplicaUrls()).getRedisClientPool();
+      DirectoryManager    directory       = new DirectoryManager(redisClient);
+      AccountsManager     accountsManager = new AccountsManager(accounts, directory, cacheClient);
 //      FederatedClientManager federatedClientManager = new FederatedClientManager(environment,
 //                                                                                 configuration.getJerseyClientConfiguration(),
 //                                                                                 configuration.getFederationConfiguration());
