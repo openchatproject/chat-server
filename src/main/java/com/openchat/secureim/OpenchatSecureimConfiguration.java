@@ -12,6 +12,7 @@ import com.openchat.secureim.configuration.RateLimitsConfiguration;
 import com.openchat.secureim.configuration.RedPhoneConfiguration;
 import com.openchat.secureim.configuration.RedisConfiguration;
 import com.openchat.secureim.configuration.AttachmentsConfiguration;
+import com.openchat.secureim.configuration.DirectoryConfiguration;
 import com.openchat.secureim.configuration.TestDeviceConfiguration;
 import com.openchat.secureim.configuration.TurnConfiguration;
 import com.openchat.secureim.configuration.TwilioConfiguration;
@@ -58,7 +59,7 @@ public class OpenChatSecureimConfiguration extends Configuration {
   @NotNull
   @Valid
   @JsonProperty
-  private RedisConfiguration directory;
+  private DirectoryConfiguration directory;
 
   @NotNull
   @Valid
@@ -151,7 +152,7 @@ public class OpenChatSecureimConfiguration extends Configuration {
     return cache;
   }
 
-  public RedisConfiguration getDirectoryConfiguration() {
+  public DirectoryConfiguration getDirectoryConfiguration() {
     return directory;
   }
 

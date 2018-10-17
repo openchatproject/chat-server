@@ -14,6 +14,7 @@ import com.openchat.secureim.entities.DeviceInfo;
 import com.openchat.secureim.entities.DeviceInfoList;
 import com.openchat.secureim.entities.DeviceResponse;
 import com.openchat.secureim.limits.RateLimiters;
+import com.openchat.secureim.sqs.ContactDiscoveryQueueSender;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
@@ -55,15 +56,19 @@ public class DeviceController {
   private final RateLimiters          rateLimiters;
   private final Map<String, Integer>  maxDeviceConfiguration;
 
+  private final ContactDiscoveryQueueSender cdsSender;
+
   public DeviceController(PendingDevicesManager pendingDevices,
                           AccountsManager accounts,
                           MessagesManager messages,
+                          ContactDiscoveryQueueSender cdsSender,
                           RateLimiters rateLimiters,
                           Map<String, Integer> maxDeviceConfiguration)
   {
     this.pendingDevices         = pendingDevices;
     this.accounts               = accounts;
     this.messages               = messages;
+    this.cdsSender              = cdsSender;
     this.rateLimiters           = rateLimiters;
     this.maxDeviceConfiguration = maxDeviceConfiguration;
   }
@@ -92,6 +97,9 @@ public class DeviceController {
 
     account.removeDevice(deviceId);
     accounts.update(account);
+    if (!account.isActive()) {
+      cdsSender.deleteRegisteredUser(account.getNumber());
+    }
     messages.clear(account.getNumber(), deviceId);
   }
 

@@ -22,6 +22,7 @@ import com.openchat.secureim.entities.RegistrationLockFailure;
 import com.openchat.secureim.limits.RateLimiters;
 import com.openchat.secureim.sms.SmsSender;
 import com.openchat.secureim.sms.TwilioSmsSender;
+import com.openchat.secureim.sqs.ContactDiscoveryQueueSender;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
@@ -65,6 +66,7 @@ public class AccountController {
   private final AccountsManager                       accounts;
   private final RateLimiters                          rateLimiters;
   private final SmsSender                             smsSender;
+  private final ContactDiscoveryQueueSender           cdsSender;
   private final MessagesManager                       messagesManager;
   private final TurnTokenGenerator                    turnTokenGenerator;
   private final Map<String, Integer>                  testDevices;
@@ -73,6 +75,7 @@ public class AccountController {
                            AccountsManager accounts,
                            RateLimiters rateLimiters,
                            SmsSender smsSenderFactory,
+                           ContactDiscoveryQueueSender cdsSender,
                            MessagesManager messagesManager,
                            TurnTokenGenerator turnTokenGenerator,
                            Map<String, Integer> testDevices)
@@ -81,6 +84,7 @@ public class AccountController {
     this.accounts           = accounts;
     this.rateLimiters       = rateLimiters;
     this.smsSender          = smsSenderFactory;
+    this.cdsSender          = cdsSender;
     this.messagesManager    = messagesManager;
     this.testDevices        = testDevices;
     this.turnTokenGenerator = turnTokenGenerator;
@@ -323,6 +327,7 @@ public class AccountController {
     if (accounts.create(account)) {
       newUserMeter.mark();
     }
+    cdsSender.addRegisteredUser(number);
 
     messagesManager.clear(number);
     pendingAccounts.remove(number);

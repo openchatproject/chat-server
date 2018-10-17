@@ -13,6 +13,7 @@ import com.openchat.dropwizard.simpleauth.AuthDynamicFeature;
 import com.openchat.dropwizard.simpleauth.AuthValueFactoryProvider;
 import com.openchat.dropwizard.simpleauth.BasicCredentialAuthFilter;
 import com.openchat.secureim.auth.AccountAuthenticator;
+import com.openchat.secureim.auth.DirectoryCredentialsGenerator;
 import com.openchat.secureim.auth.FederatedPeerAuthenticator;
 import com.openchat.secureim.auth.TurnTokenGenerator;
 import com.openchat.secureim.controllers.AccountController;
@@ -51,10 +52,14 @@ import com.openchat.secureim.redis.ReplicatedJedisPool;
 import com.openchat.secureim.s3.UrlSigner;
 import com.openchat.secureim.sms.SmsSender;
 import com.openchat.secureim.sms.TwilioSmsSender;
+import com.openchat.secureim.sqs.ContactDiscoveryQueueSender;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.Accounts;
 import com.openchat.secureim.storage.AccountsManager;
+import com.openchat.secureim.storage.DirectoryReconciliationClient;
 import com.openchat.secureim.storage.DirectoryManager;
+import com.openchat.secureim.storage.DirectoryReconciler;
+import com.openchat.secureim.storage.DirectoryReconciliationCache;
 import com.openchat.secureim.storage.Keys;
 import com.openchat.secureim.storage.Messages;
 import com.openchat.secureim.storage.MessagesCache;
@@ -143,7 +148,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     Messages        messages        = messagedb.onDemand(Messages.class);
 
     RedisClientFactory cacheClientFactory         = new RedisClientFactory(config.getCacheConfiguration().getUrl(), config.getCacheConfiguration().getReplicaUrls()                                                              );
-    RedisClientFactory directoryClientFactory     = new RedisClientFactory(config.getDirectoryConfiguration().getUrl(), config.getDirectoryConfiguration().getReplicaUrls()                                                      );
+    RedisClientFactory directoryClientFactory     = new RedisClientFactory(config.getDirectoryConfiguration().getRedisConfiguration().getUrl(), config.getDirectoryConfiguration().getRedisConfiguration().getReplicaUrls()      );
     RedisClientFactory messagesClientFactory      = new RedisClientFactory(config.getMessageCacheConfiguration().getRedisConfiguration().getUrl(), config.getMessageCacheConfiguration().getRedisConfiguration().getReplicaUrls());
     RedisClientFactory pushSchedulerClientFactory = new RedisClientFactory(config.getPushScheduler().getUrl(), config.getPushScheduler().getReplicaUrls()                                                                        );
 
@@ -177,6 +182,14 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     ReceiptSender            receiptSender       = new ReceiptSender(accountsManager, pushSender, federatedClientManager);
     TurnTokenGenerator       turnTokenGenerator  = new TurnTokenGenerator(config.getTurnConfiguration());
 
+    ContactDiscoveryQueueSender cdsSender = new ContactDiscoveryQueueSender(config.getDirectoryConfiguration().getSqsConfiguration());
+
+    DirectoryCredentialsGenerator directoryCredentialsGenerator = new DirectoryCredentialsGenerator(config.getDirectoryConfiguration().getDirectoryClientConfiguration().getUserAuthenticationTokenSharedSecret(),
+                                                                                                    config.getDirectoryConfiguration().getDirectoryClientConfiguration().getUserAuthenticationTokenUserIdSecret());
+    DirectoryReconciliationCache  directoryReconciliationCache  = new DirectoryReconciliationCache(cacheClient);
+    DirectoryReconciliationClient directoryReconciliationClient = new DirectoryReconciliationClient(config.getDirectoryConfiguration().getDirectoryServerConfiguration());
+    DirectoryReconciler           directoryReconciler           = new DirectoryReconciler(directoryReconciliationClient, directoryReconciliationCache, directory, accounts);
+
     messagesCache.setPubSubManager(pubSubManager, pushSender);
 
     apnSender.setApnFallbackManager(apnFallbackManager);
@@ -184,6 +197,7 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     environment.lifecycle().manage(pubSubManager);
     environment.lifecycle().manage(pushSender);
     environment.lifecycle().manage(messagesCache);
+    environment.lifecycle().manage(directoryReconciler);
 
     AttachmentController attachmentController = new AttachmentController(rateLimiters, federatedClientManager, urlSigner);
     KeysController       keysController       = new KeysController(rateLimiters, keys, accountsManager, federatedClientManager);
@@ -200,9 +214,9 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
                                                              .buildAuthFilter()));
     environment.jersey().register(new AuthValueFactoryProvider.Binder());
 
-    environment.jersey().register(new AccountController(pendingAccountsManager, accountsManager, rateLimiters, smsSender, messagesManager, turnTokenGenerator, config.getTestDevices()));
-    environment.jersey().register(new DeviceController(pendingDevicesManager, accountsManager, messagesManager, rateLimiters, config.getMaxDevices()));
-    environment.jersey().register(new DirectoryController(rateLimiters, directory));
+    environment.jersey().register(new AccountController(pendingAccountsManager, accountsManager, rateLimiters, smsSender, cdsSender, messagesManager, turnTokenGenerator, config.getTestDevices()));
+    environment.jersey().register(new DeviceController(pendingDevicesManager, accountsManager, messagesManager, cdsSender, rateLimiters, config.getMaxDevices()));
+    environment.jersey().register(new DirectoryController(rateLimiters, directory, directoryCredentialsGenerator));
     environment.jersey().register(new FederationControllerV1(accountsManager, attachmentController, messageController));
     environment.jersey().register(new FederationControllerV2(accountsManager, attachmentController, messageController, keysController));
     environment.jersey().register(new ProvisioningController(rateLimiters, pushSender));
