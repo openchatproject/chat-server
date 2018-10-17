@@ -2,8 +2,8 @@ package com.openchat.secureim.push;
 
 public class ApnMessage {
 
-  private static final String APN_PAYLOAD    = "{\"aps\":{\"sound\":\"default\",\"alert\":{\"loc-key\":\"APN_Message\"}}}";
-  private static final long   MAX_EXPIRATION = Integer.MAX_VALUE * 1000L;
+  public static final String APN_PAYLOAD    = "{\"aps\":{\"sound\":\"default\",\"alert\":{\"loc-key\":\"APN_Message\"}}}";
+  public static final long   MAX_EXPIRATION = Integer.MAX_VALUE * 1000L;
 
   private final String apnId;
   private final String number;

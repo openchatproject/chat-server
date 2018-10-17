@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.openchat.secureim.push.ApnFallbackManager;
 import com.openchat.secureim.push.PushSender;
 import com.openchat.secureim.push.ReceiptSender;
+import com.openchat.secureim.redis.RedisOperation;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.storage.MessagesManager;
@@ -61,7 +62,7 @@ public class AuthenticatedConnectListener implements WebSocketConnectListener {
                                                                 .setContent(ByteString.copyFrom(connectionId.getBytes()))
                                                                 .build();
 
-    apnFallbackManager.cancel(account, device);
+    RedisOperation.unchecked(() -> apnFallbackManager.cancel(account, device));
     pubSubManager.publish(address, connectMessage);
     pubSubManager.subscribe(address, connection);
 

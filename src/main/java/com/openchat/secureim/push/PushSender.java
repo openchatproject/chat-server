@@ -5,6 +5,7 @@ import com.codahale.metrics.SharedMetricRegistries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.push.WebsocketSender.DeliveryStatus;
+import com.openchat.secureim.redis.RedisOperation;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.util.BlockingThreadPoolExecutor;
@@ -63,7 +64,7 @@ public class PushSender implements Managed {
       throws NotPushRegisteredException
   {
     if      (device.getGcmId() != null)    sendGcmNotification(account, device);
-    else if (device.getApnId() != null)    sendApnNotification(account, device);
+    else if (device.getApnId() != null)    sendApnNotification(account, device, true);
     else if (!device.getFetchesMessages()) throw new NotPushRegisteredException("No notification possible!");
   }
 
@@ -97,16 +98,20 @@ public class PushSender implements Managed {
     DeliveryStatus deliveryStatus = webSocketSender.sendMessage(account, device, outgoingMessage, WebsocketSender.Type.APN);
 
     if (!deliveryStatus.isDelivered() && outgoingMessage.getType() != Envelope.Type.RECEIPT) {
-      sendApnNotification(account, device);
+      sendApnNotification(account, device, false);
     }
   }
 
-  private void sendApnNotification(Account account, Device device) {
+  private void sendApnNotification(Account account, Device device, boolean newOnly) {
     ApnMessage apnMessage;
+
+    if (newOnly && RedisOperation.unchecked(() -> apnFallbackManager.isScheduled(account, device))) {
+      return;
+    }
 
     if (!Util.isEmpty(device.getVoipApnId())) {
       apnMessage = new ApnMessage(device.getVoipApnId(), account.getNumber(), device.getId(), true);
-      apnFallbackManager.schedule(account, device);
+      RedisOperation.unchecked(() -> apnFallbackManager.schedule(account, device));
     } else {
       apnMessage = new ApnMessage(device.getApnId(), account.getNumber(), device.getId(), false);
     }
@@ -133,4 +138,5 @@ public class PushSender implements Managed {
     apnSender.stop();
     gcmSender.stop();
   }
+
 }

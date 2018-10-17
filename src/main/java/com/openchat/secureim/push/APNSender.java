@@ -1,5 +1,8 @@
 package com.openchat.secureim.push;
 
+import com.codahale.metrics.Meter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.SharedMetricRegistries;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.FutureCallback;
@@ -9,9 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.configuration.ApnConfiguration;
 import com.openchat.secureim.push.RetryingApnsClient.ApnResult;
+import com.openchat.secureim.redis.RedisOperation;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
+import com.openchat.secureim.util.Constants;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -20,11 +25,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static com.codahale.metrics.MetricRegistry.name;
 import io.dropwizard.lifecycle.Managed;
 
 public class APNSender implements Managed {
 
   private final Logger logger = LoggerFactory.getLogger(APNSender.class);
+
+  private static final MetricRegistry metricRegistry = SharedMetricRegistries.getOrCreate(Constants.METRICS_NAME);
+  private static final Meter unregisteredEventStale  = metricRegistry.meter(name(APNSender.class, "unregistered_event_stale"));
+  private static final Meter unregisteredEventFresh  = metricRegistry.meter(name(APNSender.class, "unregistered_event_fresh"));
 
   private ExecutorService    executor;
   private ApnFallbackManager fallbackManager;
@@ -87,13 +97,13 @@ public class APNSender implements Managed {
   }
 
   @Override
-  public void start() throws Exception {
+  public void start() {
     this.executor = Executors.newSingleThreadExecutor();
     this.apnsClient.connect(sandbox);
   }
 
   @Override
-  public void stop() throws Exception {
+  public void stop() {
     this.executor.shutdown();
     this.apnsClient.disconnect();
   }
@@ -109,6 +119,7 @@ public class APNSender implements Managed {
 
     if (!account.isPresent()) {
       logger.info("No account found: " + number);
+      unregisteredEventStale.mark();
       return;
     }
 
@@ -116,6 +127,7 @@ public class APNSender implements Managed {
 
     if (!device.isPresent()) {
       logger.info("No device found: " + number);
+      unregisteredEventStale.mark();
       return;
     }
 
@@ -123,6 +135,7 @@ public class APNSender implements Managed {
         !registrationId.equals(device.get().getVoipApnId()))
     {
       logger.info("Registration ID does not match: " + registrationId + ", " + device.get().getApnId() + ", " + device.get().getVoipApnId());
+      unregisteredEventStale.mark();
       return;
     }
 
@@ -137,6 +150,7 @@ public class APNSender implements Managed {
     if (tokenTimestamp != 0 && System.currentTimeMillis() < tokenTimestamp + TimeUnit.SECONDS.toMillis(10))
     {
       logger.info("APN Unregister push timestamp is more recent: " + tokenTimestamp + ", " + number);
+      unregisteredEventStale.mark();
       return;
     }
 
@@ -151,7 +165,8 @@ public class APNSender implements Managed {
 //    }
 
     if (fallbackManager != null) {
-      fallbackManager.cancel(account.get(), device.get());
+      RedisOperation.unchecked(() -> fallbackManager.cancel(account.get(), device.get()));
+      unregisteredEventFresh.mark();
     }
   }
 }

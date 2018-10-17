@@ -8,6 +8,7 @@ import com.google.common.base.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.secureim.redis.LuaScript;
+import com.openchat.secureim.redis.RedisException;
 import com.openchat.secureim.redis.ReplicatedJedisPool;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
@@ -24,6 +25,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.codahale.metrics.MetricRegistry.name;
 import io.dropwizard.lifecycle.Managed;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.exceptions.JedisException;
 
 @SuppressWarnings("Guava")
 public class ApnFallbackManager implements Managed, Runnable {
@@ -44,9 +47,10 @@ public class ApnFallbackManager implements Managed, Runnable {
   private final APNSender       apnSender;
   private final AccountsManager accountsManager;
 
-  private final InsertOperation insertOperation;
-  private final GetOperation    getOperation;
-  private final RemoveOperation removeOperation;
+  private final ReplicatedJedisPool jedisPool;
+  private final InsertOperation     insertOperation;
+  private final GetOperation        getOperation;
+  private final RemoveOperation     removeOperation;
 
 
   private AtomicBoolean running = new AtomicBoolean(false);
@@ -59,19 +63,40 @@ public class ApnFallbackManager implements Managed, Runnable {
   {
     this.apnSender       = apnSender;
     this.accountsManager = accountsManager;
+    this.jedisPool       = jedisPool;
     this.insertOperation = new InsertOperation(jedisPool);
     this.getOperation    = new GetOperation(jedisPool);
     this.removeOperation = new RemoveOperation(jedisPool);
   }
 
-  public void schedule(Account account, Device device) {
-    sent.mark();
-    insertOperation.insert(account, device, System.currentTimeMillis() + (15 * 1000), (15 * 1000));
+  public void schedule(Account account, Device device) throws RedisException {
+    try {
+      sent.mark();
+      insertOperation.insert(account, device, System.currentTimeMillis() + (15 * 1000), (15 * 1000));
+    } catch (JedisException e) {
+      throw new RedisException(e);
+    }
   }
 
-  public void cancel(Account account, Device device) {
-    if (removeOperation.remove(account, device)) {
-      delivered.mark();
+  public boolean isScheduled(Account account, Device device) throws RedisException {
+    try {
+      String endpoint = "apn_device::" + account.getNumber() + "::" + device.getId();
+
+      try (Jedis jedis = jedisPool.getReadResource()) {
+        return jedis.zscore(PENDING_NOTIFICATIONS_KEY, endpoint) != null;
+      }
+    } catch (JedisException e) {
+      throw new RedisException(e);
+    }
+  }
+
+  public void cancel(Account account, Device device) throws RedisException {
+    try {
+      if (removeOperation.remove(account, device)) {
+        delivered.mark();
+      }
+    } catch (JedisException e) {
+      throw new RedisException(e);
     }
   }
 
@@ -176,7 +201,7 @@ public class ApnFallbackManager implements Managed, Runnable {
         List<byte[]> keys = Arrays.asList(PENDING_NOTIFICATIONS_KEY.getBytes(), endpoint.getBytes());
         List<byte[]> args = Collections.emptyList();
 
-        return ((int)luaScript.execute(keys, args)) > 0;
+        return ((long)luaScript.execute(keys, args)) > 0;
       }
 
       return false;

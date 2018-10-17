@@ -22,6 +22,7 @@ import com.openchat.secureim.push.NotPushRegisteredException;
 import com.openchat.secureim.push.PushSender;
 import com.openchat.secureim.push.ReceiptSender;
 import com.openchat.secureim.push.TransientPushFailureException;
+import com.openchat.secureim.redis.RedisOperation;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
@@ -125,7 +126,7 @@ public class MessageController {
     assert account.getAuthenticatedDevice().isPresent();
 
     if (!Util.isEmpty(account.getAuthenticatedDevice().get().getApnId())) {
-      apnFallbackManager.cancel(account, account.getAuthenticatedDevice().get());
+      RedisOperation.unchecked(() -> apnFallbackManager.cancel(account, account.getAuthenticatedDevice().get()));
     }
 
     return messagesManager.getMessagesForDevice(account.getNumber(),
