@@ -17,6 +17,7 @@ import com.openchat.secureim.federation.FederatedClient;
 import com.openchat.secureim.federation.FederatedClientManager;
 import com.openchat.secureim.federation.NoSuchPeerException;
 import com.openchat.secureim.limits.RateLimiters;
+import com.openchat.secureim.push.ApnFallbackManager;
 import com.openchat.secureim.push.NotPushRegisteredException;
 import com.openchat.secureim.push.PushSender;
 import com.openchat.secureim.push.ReceiptSender;
@@ -59,13 +60,15 @@ public class MessageController {
   private final FederatedClientManager federatedClientManager;
   private final AccountsManager        accountsManager;
   private final MessagesManager        messagesManager;
+  private final ApnFallbackManager     apnFallbackManager;
 
   public MessageController(RateLimiters rateLimiters,
                            PushSender pushSender,
                            ReceiptSender receiptSender,
                            AccountsManager accountsManager,
                            MessagesManager messagesManager,
-                           FederatedClientManager federatedClientManager)
+                           FederatedClientManager federatedClientManager,
+                           ApnFallbackManager apnFallbackManager)
   {
     this.rateLimiters           = rateLimiters;
     this.pushSender             = pushSender;
@@ -73,6 +76,7 @@ public class MessageController {
     this.accountsManager        = accountsManager;
     this.messagesManager        = messagesManager;
     this.federatedClientManager = federatedClientManager;
+    this.apnFallbackManager     = apnFallbackManager;
   }
 
   @Timed
@@ -118,6 +122,12 @@ public class MessageController {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public OutgoingMessageEntityList getPendingMessages(@Auth Account account) {
+    assert account.getAuthenticatedDevice().isPresent();
+
+    if (!Util.isEmpty(account.getAuthenticatedDevice().get().getApnId())) {
+      apnFallbackManager.cancel(account, account.getAuthenticatedDevice().get());
+    }
+
     return messagesManager.getMessagesForDevice(account.getNumber(),
                                                 account.getAuthenticatedDevice().get().getId());
   }
@@ -203,7 +213,7 @@ public class MessageController {
         messageBuilder.setRelay(source.getRelay().get());
       }
 
-      pushSender.sendMessage(destinationAccount, destinationDevice, messageBuilder.build(), incomingMessage.isSilent());
+      pushSender.sendMessage(destinationAccount, destinationDevice, messageBuilder.build());
     } catch (NotPushRegisteredException e) {
       if (destinationDevice.isMaster()) throw new NoSuchUserException(e);
       else                              logger.debug("Not registered", e);

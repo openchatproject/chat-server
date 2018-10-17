@@ -12,7 +12,6 @@ import com.openchat.secureim.entities.MessageProtos.Envelope;
 import com.openchat.secureim.entities.OutgoingMessageEntity;
 import com.openchat.secureim.push.NotPushRegisteredException;
 import com.openchat.secureim.push.PushSender;
-import com.openchat.secureim.push.TransientPushFailureException;
 import com.openchat.secureim.redis.LuaScript;
 import com.openchat.secureim.redis.ReplicatedJedisPool;
 import com.openchat.secureim.util.Constants;
@@ -483,11 +482,9 @@ public class MessagesCache implements Managed {
 
             if (device.isPresent()) {
               try {
-                pushSender.sendQueuedNotification(account.get(), device.get(), false);
+                pushSender.sendQueuedNotification(account.get(), device.get());
               } catch (NotPushRegisteredException e) {
                 logger.warn("After message persistence, no longer push registered!");
-              } catch (TransientPushFailureException e) {
-                logger.warn("Transient push failure!", e);
               }
             }
           }

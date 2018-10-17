@@ -4,14 +4,12 @@ import com.codahale.metrics.Gauge;
 import com.codahale.metrics.SharedMetricRegistries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.openchat.secureim.push.ApnFallbackManager.ApnFallbackTask;
 import com.openchat.secureim.push.WebsocketSender.DeliveryStatus;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.Device;
 import com.openchat.secureim.util.BlockingThreadPoolExecutor;
 import com.openchat.secureim.util.Constants;
 import com.openchat.secureim.util.Util;
-import com.openchat.secureim.websocket.WebsocketAddress;
 
 import java.util.concurrent.TimeUnit;
 
@@ -21,9 +19,8 @@ import static com.openchat.secureim.entities.MessageProtos.Envelope;
 
 public class PushSender implements Managed {
 
+  @SuppressWarnings("unused")
   private final Logger logger = LoggerFactory.getLogger(PushSender.class);
-
-  private static final String APN_PAYLOAD = "{\"aps\":{\"sound\":\"default\",\"alert\":{\"loc-key\":\"APN_Message\"}}}";
 
   private final ApnFallbackManager         apnFallbackManager;
   private final GCMSender                  gcmSender;
@@ -48,7 +45,7 @@ public class PushSender implements Managed {
                                     (Gauge<Integer>) executor::getSize);
   }
 
-  public void sendMessage(final Account account, final Device device, final Envelope message, final boolean silent)
+  public void sendMessage(final Account account, final Device device, final Envelope message)
       throws NotPushRegisteredException
   {
     if (device.getGcmId() == null && device.getApnId() == null && !device.getFetchesMessages()) {
@@ -56,17 +53,17 @@ public class PushSender implements Managed {
     }
 
     if (queueSize > 0) {
-      executor.execute(() -> sendSynchronousMessage(account, device, message, silent));
+      executor.execute(() -> sendSynchronousMessage(account, device, message));
     } else {
-      sendSynchronousMessage(account, device, message, silent);
+      sendSynchronousMessage(account, device, message);
     }
   }
 
-  public void sendQueuedNotification(Account account, Device device, boolean fallback)
-      throws NotPushRegisteredException, TransientPushFailureException
+  public void sendQueuedNotification(Account account, Device device)
+      throws NotPushRegisteredException
   {
     if      (device.getGcmId() != null)    sendGcmNotification(account, device);
-    else if (device.getApnId() != null)    sendApnNotification(account, device, fallback);
+    else if (device.getApnId() != null)    sendApnNotification(account, device);
     else if (!device.getFetchesMessages()) throw new NotPushRegisteredException("No notification possible!");
   }
 
@@ -74,9 +71,9 @@ public class PushSender implements Managed {
     return webSocketSender;
   }
 
-  private void sendSynchronousMessage(Account account, Device device, Envelope message, boolean silent) {
+  private void sendSynchronousMessage(Account account, Device device, Envelope message) {
     if      (device.getGcmId() != null)   sendGcmMessage(account, device, message);
-    else if (device.getApnId() != null)   sendApnMessage(account, device, message, silent);
+    else if (device.getApnId() != null)   sendApnMessage(account, device, message);
     else if (device.getFetchesMessages()) sendWebSocketMessage(account, device, message);
     else                                  throw new AssertionError();
   }
@@ -96,36 +93,25 @@ public class PushSender implements Managed {
     gcmSender.sendMessage(gcmMessage);
   }
 
-  private void sendApnMessage(Account account, Device device, Envelope outgoingMessage, boolean silent) {
+  private void sendApnMessage(Account account, Device device, Envelope outgoingMessage) {
     DeliveryStatus deliveryStatus = webSocketSender.sendMessage(account, device, outgoingMessage, WebsocketSender.Type.APN);
 
     if (!deliveryStatus.isDelivered() && outgoingMessage.getType() != Envelope.Type.RECEIPT) {
-      boolean fallback = !silent && !outgoingMessage.getSource().equals(account.getNumber());
-      sendApnNotification(account, device, fallback);
+      sendApnNotification(account, device);
     }
   }
 
-  private void sendApnNotification(Account account, Device device, boolean fallback) {
+  private void sendApnNotification(Account account, Device device) {
     ApnMessage apnMessage;
 
     if (!Util.isEmpty(device.getVoipApnId())) {
-      apnMessage = new ApnMessage(device.getVoipApnId(), account.getNumber(), (int)device.getId(), APN_PAYLOAD, true,
-                                  System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(ApnFallbackManager.FALLBACK_DURATION));
-
-      if (fallback) {
-        apnFallbackManager.schedule(new WebsocketAddress(account.getNumber(), device.getId()),
-                                    new ApnFallbackTask(device.getApnId(), device.getVoipApnId(), apnMessage));
-      }
+      apnMessage = new ApnMessage(device.getVoipApnId(), account.getNumber(), device.getId(), true);
+      apnFallbackManager.schedule(account, device);
     } else {
-      apnMessage = new ApnMessage(device.getApnId(), account.getNumber(), (int)device.getId(), APN_PAYLOAD,
-                                  false, ApnMessage.MAX_EXPIRATION);
+      apnMessage = new ApnMessage(device.getApnId(), account.getNumber(), device.getId(), false);
     }
 
-    try {
-      apnSender.sendMessage(apnMessage);
-    } catch (TransientPushFailureException e) {
-      logger.warn("SILENT PUSH LOSS", e);
-    }
+    apnSender.sendMessage(apnMessage);
   }
 
   private void sendWebSocketMessage(Account account, Device device, Envelope outgoingMessage)
