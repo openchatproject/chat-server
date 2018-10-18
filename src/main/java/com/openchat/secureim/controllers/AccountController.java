@@ -22,7 +22,7 @@ import com.openchat.secureim.entities.RegistrationLockFailure;
 import com.openchat.secureim.limits.RateLimiters;
 import com.openchat.secureim.sms.SmsSender;
 import com.openchat.secureim.sms.TwilioSmsSender;
-import com.openchat.secureim.sqs.ContactDiscoveryQueueSender;
+import com.openchat.secureim.sqs.DirectoryQueue;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
@@ -66,7 +66,7 @@ public class AccountController {
   private final AccountsManager                       accounts;
   private final RateLimiters                          rateLimiters;
   private final SmsSender                             smsSender;
-  private final ContactDiscoveryQueueSender           cdsSender;
+  private final DirectoryQueue                        directoryQueue;
   private final MessagesManager                       messagesManager;
   private final TurnTokenGenerator                    turnTokenGenerator;
   private final Map<String, Integer>                  testDevices;
@@ -75,7 +75,7 @@ public class AccountController {
                            AccountsManager accounts,
                            RateLimiters rateLimiters,
                            SmsSender smsSenderFactory,
-                           ContactDiscoveryQueueSender cdsSender,
+                           DirectoryQueue directoryQueue,
                            MessagesManager messagesManager,
                            TurnTokenGenerator turnTokenGenerator,
                            Map<String, Integer> testDevices)
@@ -84,7 +84,7 @@ public class AccountController {
     this.accounts           = accounts;
     this.rateLimiters       = rateLimiters;
     this.smsSender          = smsSenderFactory;
-    this.cdsSender          = cdsSender;
+    this.directoryQueue     = directoryQueue;
     this.messagesManager    = messagesManager;
     this.testDevices        = testDevices;
     this.turnTokenGenerator = turnTokenGenerator;
@@ -229,7 +229,12 @@ public class AccountController {
     Device device = account.getAuthenticatedDevice().get();
     device.setGcmId(null);
     device.setFetchesMessages(false);
+
     accounts.update(account);
+
+    if (!account.isActive()) {
+      directoryQueue.deleteRegisteredUser(account.getNumber());
+    }
   }
 
   @Timed
@@ -252,7 +257,12 @@ public class AccountController {
     Device device = account.getAuthenticatedDevice().get();
     device.setApnId(null);
     device.setFetchesMessages(false);
+
     accounts.update(account);
+
+    if (!account.isActive()) {
+      directoryQueue.deleteRegisteredUser(account.getNumber());
+    }
   }
 
   @Timed
@@ -327,7 +337,8 @@ public class AccountController {
     if (accounts.create(account)) {
       newUserMeter.mark();
     }
-    cdsSender.addRegisteredUser(number);
+
+    directoryQueue.addRegisteredUser(number);
 
     messagesManager.clear(number);
     pendingAccounts.remove(number);

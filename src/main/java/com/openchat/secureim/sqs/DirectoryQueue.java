@@ -7,15 +7,13 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
-import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.amazonaws.services.sqs.model.MessageAttributeValue;
-
+import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.SharedMetricRegistries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.openchat.secureim.configuration.DirectoryConfiguration;
 import com.openchat.secureim.configuration.SqsConfiguration;
 import com.openchat.secureim.util.Constants;
 
@@ -24,18 +22,18 @@ import java.util.Map;
 
 import static com.codahale.metrics.MetricRegistry.name;
 
-public class ContactDiscoveryQueueSender {
+public class DirectoryQueue {
 
-  private static final Logger  logger = LoggerFactory.getLogger(ContactDiscoveryQueueSender.class);
+  private static final Logger  logger = LoggerFactory.getLogger(DirectoryQueue.class);
 
   private final MetricRegistry metricRegistry    = SharedMetricRegistries.getOrCreate(Constants.METRICS_NAME);
-  private final Meter          serviceErrorMeter = metricRegistry.meter(name(ContactDiscoveryQueueSender.class, "serviceError"));
-  private final Meter          clientErrorMeter  = metricRegistry.meter(name(ContactDiscoveryQueueSender.class, "clientError"));
+  private final Meter          serviceErrorMeter = metricRegistry.meter(name(DirectoryQueue.class, "serviceError"));
+  private final Meter          clientErrorMeter  = metricRegistry.meter(name(DirectoryQueue.class, "clientError"));
 
   private final String         queueUrl;
   private final AmazonSQS      sqs;
 
-  public ContactDiscoveryQueueSender(SqsConfiguration sqsConfig) {
+  public DirectoryQueue(SqsConfiguration sqsConfig) {
     final AWSCredentials               credentials         = new BasicAWSCredentials(sqsConfig.getAccessKey(), sqsConfig.getAccessSecret());
     final AWSStaticCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(credentials);
     

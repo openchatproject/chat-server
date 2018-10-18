@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.openchat.gcm.server.Message;
 import com.openchat.gcm.server.Result;
 import com.openchat.gcm.server.Sender;
+import com.openchat.secureim.sqs.DirectoryQueue;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
@@ -46,17 +47,20 @@ public class GCMSender implements Managed {
 
   private final AccountsManager   accountsManager;
   private final Sender            signalSender;
+  private final DirectoryQueue    directoryQueue;
   private       ExecutorService   executor;
 
-  public GCMSender(AccountsManager accountsManager, String signalKey) {
+  public GCMSender(AccountsManager accountsManager, String signalKey, DirectoryQueue directoryQueue) {
     this.accountsManager = accountsManager;
     this.signalSender    = new Sender(signalKey, 50);
+    this.directoryQueue  = directoryQueue;
   }
 
   @VisibleForTesting
-  public GCMSender(AccountsManager accountsManager, Sender sender, ExecutorService executor) {
+  public GCMSender(AccountsManager accountsManager, Sender sender, DirectoryQueue directoryQueue, ExecutorService executor) {
     this.accountsManager = accountsManager;
     this.signalSender    = sender;
+    this.directoryQueue  = directoryQueue;
     this.executor        = executor;
   }
 
@@ -115,6 +119,10 @@ public class GCMSender implements Managed {
       device.setFetchesMessages(false);
 
       accountsManager.update(account.get());
+
+      if (!account.get().isActive()) {
+        directoryQueue.deleteRegisteredUser(account.get().getNumber());
+      }
     }
 
     unregistered.mark();

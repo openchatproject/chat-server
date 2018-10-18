@@ -14,7 +14,7 @@ import com.openchat.secureim.entities.DeviceInfo;
 import com.openchat.secureim.entities.DeviceInfoList;
 import com.openchat.secureim.entities.DeviceResponse;
 import com.openchat.secureim.limits.RateLimiters;
-import com.openchat.secureim.sqs.ContactDiscoveryQueueSender;
+import com.openchat.secureim.sqs.DirectoryQueue;
 import com.openchat.secureim.storage.Account;
 import com.openchat.secureim.storage.AccountsManager;
 import com.openchat.secureim.storage.Device;
@@ -35,7 +35,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.LinkedList;
 import java.util.List;
@@ -55,20 +54,19 @@ public class DeviceController {
   private final MessagesManager       messages;
   private final RateLimiters          rateLimiters;
   private final Map<String, Integer>  maxDeviceConfiguration;
-
-  private final ContactDiscoveryQueueSender cdsSender;
+  private final DirectoryQueue        directoryQueue;
 
   public DeviceController(PendingDevicesManager pendingDevices,
                           AccountsManager accounts,
                           MessagesManager messages,
-                          ContactDiscoveryQueueSender cdsSender,
+                          DirectoryQueue directoryQueue,
                           RateLimiters rateLimiters,
                           Map<String, Integer> maxDeviceConfiguration)
   {
     this.pendingDevices         = pendingDevices;
     this.accounts               = accounts;
     this.messages               = messages;
-    this.cdsSender              = cdsSender;
+    this.directoryQueue         = directoryQueue;
     this.rateLimiters           = rateLimiters;
     this.maxDeviceConfiguration = maxDeviceConfiguration;
   }
@@ -97,9 +95,11 @@ public class DeviceController {
 
     account.removeDevice(deviceId);
     accounts.update(account);
+
     if (!account.isActive()) {
-      cdsSender.deleteRegisteredUser(account.getNumber());
+      directoryQueue.deleteRegisteredUser(account.getNumber());
     }
+
     messages.clear(account.getNumber(), deviceId);
   }
 
