@@ -188,7 +188,9 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
                                                                                                     config.getDirectoryConfiguration().getDirectoryClientConfiguration().getUserAuthenticationTokenUserIdSecret());
     DirectoryReconciliationCache  directoryReconciliationCache  = new DirectoryReconciliationCache(cacheClient);
     DirectoryReconciliationClient directoryReconciliationClient = new DirectoryReconciliationClient(config.getDirectoryConfiguration().getDirectoryServerConfiguration());
-    DirectoryReconciler           directoryReconciler           = new DirectoryReconciler(directoryReconciliationClient, directoryReconciliationCache, directory, accounts);
+    DirectoryReconciler           directoryReconciler           = new DirectoryReconciler(directoryReconciliationClient, directoryReconciliationCache, directory, accounts,
+                                                                                          config.getDirectoryConfiguration().getDirectoryServerConfiguration().getReconciliationChunkSize(),
+                                                                                          config.getDirectoryConfiguration().getDirectoryServerConfiguration().getReconciliationChunkIntervalMs());
 
     messagesCache.setPubSubManager(pubSubManager, pushSender);
 
