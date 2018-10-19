@@ -1,8 +1,7 @@
 package com.openchat.dropwizard.simpleauth;
 
 
-import java.util.Optional;
-
+import com.google.common.base.Optional;
 import io.dropwizard.auth.AuthenticationException;
 
 
