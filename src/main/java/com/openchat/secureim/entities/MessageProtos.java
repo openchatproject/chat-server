@@ -12,37 +12,54 @@ public final class MessageProtos {
       extends com.google.protobuf.MessageOrBuilder {
 
     // optional .textsecure.Envelope.Type type = 1;
+    
     boolean hasType();
+    
     com.openchat.secureim.entities.MessageProtos.Envelope.Type getType();
 
     // optional string source = 2;
+    
     boolean hasSource();
+    
     java.lang.String getSource();
+    
     com.google.protobuf.ByteString
         getSourceBytes();
 
     // optional uint32 sourceDevice = 7;
+    
     boolean hasSourceDevice();
+    
     int getSourceDevice();
 
     // optional string relay = 3;
+    
     boolean hasRelay();
+    
     java.lang.String getRelay();
+    
     com.google.protobuf.ByteString
         getRelayBytes();
 
     // optional uint64 timestamp = 5;
+    
     boolean hasTimestamp();
+    
     long getTimestamp();
 
     // optional bytes legacyMessage = 6;
+    
     boolean hasLegacyMessage();
+    
     com.google.protobuf.ByteString getLegacyMessage();
 
     // optional bytes content = 8;
+    
     boolean hasContent();
+    
     com.google.protobuf.ByteString getContent();
   }
+  
   public static final class Envelope extends
       com.google.protobuf.GeneratedMessage
       implements EnvelopeOrBuilder {
@@ -171,19 +188,30 @@ public final class MessageProtos {
       return PARSER;
     }
 
+    
     public enum Type
         implements com.google.protobuf.ProtocolMessageEnum {
+      
       UNKNOWN(0, 0),
+      
       CIPHERTEXT(1, 1),
+      
       KEY_EXCHANGE(2, 2),
+      
       PREKEY_BUNDLE(3, 3),
+      
       RECEIPT(4, 5),
       ;
 
+      
       public static final int UNKNOWN_VALUE = 0;
+      
       public static final int CIPHERTEXT_VALUE = 1;
+      
       public static final int KEY_EXCHANGE_VALUE = 2;
+      
       public static final int PREKEY_BUNDLE_VALUE = 3;
+      
       public static final int RECEIPT_VALUE = 5;
 
 
@@ -251,9 +279,11 @@ public final class MessageProtos {
     // optional .textsecure.Envelope.Type type = 1;
     public static final int TYPE_FIELD_NUMBER = 1;
     private com.openchat.secureim.entities.MessageProtos.Envelope.Type type_;
+    
     public boolean hasType() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
+    
     public com.openchat.secureim.entities.MessageProtos.Envelope.Type getType() {
       return type_;
     }
@@ -261,9 +291,11 @@ public final class MessageProtos {
     // optional string source = 2;
     public static final int SOURCE_FIELD_NUMBER = 2;
     private java.lang.Object source_;
+    
     public boolean hasSource() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
+    
     public java.lang.String getSource() {
       java.lang.Object ref = source_;
       if (ref instanceof java.lang.String) {
@@ -278,6 +310,7 @@ public final class MessageProtos {
         return s;
       }
     }
+    
     public com.google.protobuf.ByteString
         getSourceBytes() {
       java.lang.Object ref = source_;
@@ -295,9 +328,11 @@ public final class MessageProtos {
     // optional uint32 sourceDevice = 7;
     public static final int SOURCEDEVICE_FIELD_NUMBER = 7;
     private int sourceDevice_;
+    
     public boolean hasSourceDevice() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
+    
     public int getSourceDevice() {
       return sourceDevice_;
     }
@@ -305,9 +340,11 @@ public final class MessageProtos {
     // optional string relay = 3;
     public static final int RELAY_FIELD_NUMBER = 3;
     private java.lang.Object relay_;
+    
     public boolean hasRelay() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
+    
     public java.lang.String getRelay() {
       java.lang.Object ref = relay_;
       if (ref instanceof java.lang.String) {
@@ -322,6 +359,7 @@ public final class MessageProtos {
         return s;
       }
     }
+    
     public com.google.protobuf.ByteString
         getRelayBytes() {
       java.lang.Object ref = relay_;
@@ -339,9 +377,11 @@ public final class MessageProtos {
     // optional uint64 timestamp = 5;
     public static final int TIMESTAMP_FIELD_NUMBER = 5;
     private long timestamp_;
+    
     public boolean hasTimestamp() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
+    
     public long getTimestamp() {
       return timestamp_;
     }
@@ -349,9 +389,11 @@ public final class MessageProtos {
     // optional bytes legacyMessage = 6;
     public static final int LEGACYMESSAGE_FIELD_NUMBER = 6;
     private com.google.protobuf.ByteString legacyMessage_;
+    
     public boolean hasLegacyMessage() {
       return ((bitField0_ & 0x00000020) == 0x00000020);
     }
+    
     public com.google.protobuf.ByteString getLegacyMessage() {
       return legacyMessage_;
     }
@@ -359,9 +401,11 @@ public final class MessageProtos {
     // optional bytes content = 8;
     public static final int CONTENT_FIELD_NUMBER = 8;
     private com.google.protobuf.ByteString content_;
+    
     public boolean hasContent() {
       return ((bitField0_ & 0x00000040) == 0x00000040);
     }
+    
     public com.google.protobuf.ByteString getContent() {
       return content_;
     }
@@ -523,6 +567,7 @@ public final class MessageProtos {
       Builder builder = new Builder(parent);
       return builder;
     }
+    
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements com.openchat.secureim.entities.MessageProtos.EnvelopeOrBuilder {
@@ -698,12 +743,15 @@ public final class MessageProtos {
 
       // optional .textsecure.Envelope.Type type = 1;
       private com.openchat.secureim.entities.MessageProtos.Envelope.Type type_ = com.openchat.secureim.entities.MessageProtos.Envelope.Type.UNKNOWN;
+      
       public boolean hasType() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
+      
       public com.openchat.secureim.entities.MessageProtos.Envelope.Type getType() {
         return type_;
       }
+      
       public Builder setType(com.openchat.secureim.entities.MessageProtos.Envelope.Type value) {
         if (value == null) {
           throw new NullPointerException();
@@ -713,6 +761,7 @@ public final class MessageProtos {
         onChanged();
         return this;
       }
+      
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000001);
         type_ = com.openchat.secureim.entities.MessageProtos.Envelope.Type.UNKNOWN;
@@ -722,9 +771,11 @@ public final class MessageProtos {
 
       // optional string source = 2;
       private java.lang.Object source_ = "";
+      
       public boolean hasSource() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
+      
       public java.lang.String getSource() {
         java.lang.Object ref = source_;
         if (!(ref instanceof java.lang.String)) {
@@ -736,6 +787,7 @@ public final class MessageProtos {
           return (java.lang.String) ref;
         }
       }
+      
       public com.google.protobuf.ByteString
           getSourceBytes() {
         java.lang.Object ref = source_;
@@ -749,6 +801,7 @@ public final class MessageProtos {
           return (com.google.protobuf.ByteString) ref;
         }
       }
+      
       public Builder setSource(
           java.lang.String value) {
         if (value == null) {
@@ -759,12 +812,14 @@ public final class MessageProtos {
         onChanged();
         return this;
       }
+      
       public Builder clearSource() {
         bitField0_ = (bitField0_ & ~0x00000002);
         source_ = getDefaultInstance().getSource();
         onChanged();
         return this;
       }
+      
       public Builder setSourceBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
@@ -778,18 +833,22 @@ public final class MessageProtos {
 
       // optional uint32 sourceDevice = 7;
       private int sourceDevice_ ;
+      
       public boolean hasSourceDevice() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
+      
       public int getSourceDevice() {
         return sourceDevice_;
       }
+      
       public Builder setSourceDevice(int value) {
         bitField0_ |= 0x00000004;
         sourceDevice_ = value;
         onChanged();
         return this;
       }
+      
       public Builder clearSourceDevice() {
         bitField0_ = (bitField0_ & ~0x00000004);
         sourceDevice_ = 0;
@@ -799,9 +858,11 @@ public final class MessageProtos {
 
       // optional string relay = 3;
       private java.lang.Object relay_ = "";
+      
       public boolean hasRelay() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
+      
       public java.lang.String getRelay() {
         java.lang.Object ref = relay_;
         if (!(ref instanceof java.lang.String)) {
@@ -813,6 +874,7 @@ public final class MessageProtos {
           return (java.lang.String) ref;
         }
       }
+      
       public com.google.protobuf.ByteString
           getRelayBytes() {
         java.lang.Object ref = relay_;
@@ -826,6 +888,7 @@ public final class MessageProtos {
           return (com.google.protobuf.ByteString) ref;
         }
       }
+      
       public Builder setRelay(
           java.lang.String value) {
         if (value == null) {
@@ -836,12 +899,14 @@ public final class MessageProtos {
         onChanged();
         return this;
       }
+      
       public Builder clearRelay() {
         bitField0_ = (bitField0_ & ~0x00000008);
         relay_ = getDefaultInstance().getRelay();
         onChanged();
         return this;
       }
+      
       public Builder setRelayBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
@@ -855,18 +920,22 @@ public final class MessageProtos {
 
       // optional uint64 timestamp = 5;
       private long timestamp_ ;
+      
       public boolean hasTimestamp() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
+      
       public long getTimestamp() {
         return timestamp_;
       }
+      
       public Builder setTimestamp(long value) {
         bitField0_ |= 0x00000010;
         timestamp_ = value;
         onChanged();
         return this;
       }
+      
       public Builder clearTimestamp() {
         bitField0_ = (bitField0_ & ~0x00000010);
         timestamp_ = 0L;
@@ -876,12 +945,15 @@ public final class MessageProtos {
 
       // optional bytes legacyMessage = 6;
       private com.google.protobuf.ByteString legacyMessage_ = com.google.protobuf.ByteString.EMPTY;
+      
       public boolean hasLegacyMessage() {
         return ((bitField0_ & 0x00000020) == 0x00000020);
       }
+      
       public com.google.protobuf.ByteString getLegacyMessage() {
         return legacyMessage_;
       }
+      
       public Builder setLegacyMessage(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
@@ -891,6 +963,7 @@ public final class MessageProtos {
         onChanged();
         return this;
       }
+      
       public Builder clearLegacyMessage() {
         bitField0_ = (bitField0_ & ~0x00000020);
         legacyMessage_ = getDefaultInstance().getLegacyMessage();
@@ -900,12 +973,15 @@ public final class MessageProtos {
 
       // optional bytes content = 8;
       private com.google.protobuf.ByteString content_ = com.google.protobuf.ByteString.EMPTY;
+      
       public boolean hasContent() {
         return ((bitField0_ & 0x00000040) == 0x00000040);
       }
+      
       public com.google.protobuf.ByteString getContent() {
         return content_;
       }
+      
       public Builder setContent(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
@@ -915,6 +991,7 @@ public final class MessageProtos {
         onChanged();
         return this;
       }
+      
       public Builder clearContent() {
         bitField0_ = (bitField0_ & ~0x00000040);
         content_ = getDefaultInstance().getContent();
@@ -937,11 +1014,15 @@ public final class MessageProtos {
       extends com.google.protobuf.MessageOrBuilder {
 
     // optional string uuid = 1;
+    
     boolean hasUuid();
+    
     java.lang.String getUuid();
+    
     com.google.protobuf.ByteString
         getUuidBytes();
   }
+  
   public static final class ProvisioningUuid extends
       com.google.protobuf.GeneratedMessage
       implements ProvisioningUuidOrBuilder {
@@ -1038,9 +1119,11 @@ public final class MessageProtos {
     // optional string uuid = 1;
     public static final int UUID_FIELD_NUMBER = 1;
     private java.lang.Object uuid_;
+    
     public boolean hasUuid() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
+    
     public java.lang.String getUuid() {
       java.lang.Object ref = uuid_;
       if (ref instanceof java.lang.String) {
@@ -1055,6 +1138,7 @@ public final class MessageProtos {
         return s;
       }
     }
+    
     public com.google.protobuf.ByteString
         getUuidBytes() {
       java.lang.Object ref = uuid_;
@@ -1178,6 +1262,7 @@ public final class MessageProtos {
       Builder builder = new Builder(parent);
       return builder;
     }
+    
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements com.openchat.secureim.entities.MessageProtos.ProvisioningUuidOrBuilder {
@@ -1297,9 +1382,11 @@ public final class MessageProtos {
 
       // optional string uuid = 1;
       private java.lang.Object uuid_ = "";
+      
       public boolean hasUuid() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
+      
       public java.lang.String getUuid() {
         java.lang.Object ref = uuid_;
         if (!(ref instanceof java.lang.String)) {
@@ -1311,6 +1398,7 @@ public final class MessageProtos {
           return (java.lang.String) ref;
         }
       }
+      
       public com.google.protobuf.ByteString
           getUuidBytes() {
         java.lang.Object ref = uuid_;
@@ -1324,6 +1412,7 @@ public final class MessageProtos {
           return (com.google.protobuf.ByteString) ref;
         }
       }
+      
       public Builder setUuid(
           java.lang.String value) {
         if (value == null) {
@@ -1334,12 +1423,14 @@ public final class MessageProtos {
         onChanged();
         return this;
       }
+      
       public Builder clearUuid() {
         bitField0_ = (bitField0_ & ~0x00000001);
         uuid_ = getDefaultInstance().getUuid();
         onChanged();
         return this;
       }
+      
       public Builder setUuidBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {

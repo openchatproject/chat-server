@@ -239,3 +239,30 @@ public class OpenChatSecureimService extends Application<OpenChatSecureimConfigu
     provisioningServlet.start();
 
     FilterRegistration.Dynamic filter = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
+    filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+    filter.setInitParameter("allowedOrigins", "*");
+    filter.setInitParameter("allowedHeaders", "Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,X-Signal-Agent");
+    filter.setInitParameter("allowedMethods", "GET,PUT,POST,DELETE,OPTIONS");
+    filter.setInitParameter("preflightMaxAge", "5184000");
+    filter.setInitParameter("allowCredentials", "true");
+///
+
+    environment.healthChecks().register("directory", new RedisHealthCheck(directoryClient));
+    environment.healthChecks().register("cache", new RedisHealthCheck(cacheClient));
+
+    environment.jersey().register(new IOExceptionMapper());
+    environment.jersey().register(new RateLimitExceededExceptionMapper());
+    environment.jersey().register(new InvalidWebsocketAddressExceptionMapper());
+    environment.jersey().register(new DeviceLimitExceededExceptionMapper());
+
+    environment.metrics().register(name(CpuUsageGauge.class, "cpu"), new CpuUsageGauge());
+    environment.metrics().register(name(FreeMemoryGauge.class, "free_memory"), new FreeMemoryGauge());
+    environment.metrics().register(name(NetworkSentGauge.class, "bytes_sent"), new NetworkSentGauge());
+    environment.metrics().register(name(NetworkReceivedGauge.class, "bytes_received"), new NetworkReceivedGauge());
+    environment.metrics().register(name(FileDescriptorGauge.class, "fd_count"), new FileDescriptorGauge());
+  }
+
+  public static void main(String[] args) throws Exception {
+    new OpenChatSecureimService().run(args);
+  }
+}

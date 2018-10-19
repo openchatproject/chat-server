@@ -12,13 +12,18 @@ public final class PubSubProtos {
       extends com.google.protobuf.MessageOrBuilder {
 
     // optional .textsecure.PubSubMessage.Type type = 1;
+    
     boolean hasType();
+    
     com.openchat.secureim.storage.PubSubProtos.PubSubMessage.Type getType();
 
     // optional bytes content = 2;
+    
     boolean hasContent();
+    
     com.google.protobuf.ByteString getContent();
   }
+  
   public static final class PubSubMessage extends
       com.google.protobuf.GeneratedMessage
       implements PubSubMessageOrBuilder {
@@ -122,21 +127,34 @@ public final class PubSubProtos {
       return PARSER;
     }
 
+    
     public enum Type
         implements com.google.protobuf.ProtocolMessageEnum {
+      
       UNKNOWN(0, 0),
+      
       QUERY_DB(1, 1),
+      
       DELIVER(2, 2),
+      
       KEEPALIVE(3, 3),
+      
       CLOSE(4, 4),
+      
       CONNECTED(5, 5),
       ;
 
+      
       public static final int UNKNOWN_VALUE = 0;
+      
       public static final int QUERY_DB_VALUE = 1;
+      
       public static final int DELIVER_VALUE = 2;
+      
       public static final int KEEPALIVE_VALUE = 3;
+      
       public static final int CLOSE_VALUE = 4;
+      
       public static final int CONNECTED_VALUE = 5;
 
 
@@ -205,9 +223,11 @@ public final class PubSubProtos {
     // optional .textsecure.PubSubMessage.Type type = 1;
     public static final int TYPE_FIELD_NUMBER = 1;
     private com.openchat.secureim.storage.PubSubProtos.PubSubMessage.Type type_;
+    
     public boolean hasType() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
+    
     public com.openchat.secureim.storage.PubSubProtos.PubSubMessage.Type getType() {
       return type_;
     }
@@ -215,9 +235,11 @@ public final class PubSubProtos {
     // optional bytes content = 2;
     public static final int CONTENT_FIELD_NUMBER = 2;
     private com.google.protobuf.ByteString content_;
+    
     public boolean hasContent() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
+    
     public com.google.protobuf.ByteString getContent() {
       return content_;
     }
@@ -339,6 +361,7 @@ public final class PubSubProtos {
       Builder builder = new Builder(parent);
       return builder;
     }
+    
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements com.openchat.secureim.storage.PubSubProtos.PubSubMessageOrBuilder {
@@ -465,12 +488,15 @@ public final class PubSubProtos {
 
       // optional .textsecure.PubSubMessage.Type type = 1;
       private com.openchat.secureim.storage.PubSubProtos.PubSubMessage.Type type_ = com.openchat.secureim.storage.PubSubProtos.PubSubMessage.Type.UNKNOWN;
+      
       public boolean hasType() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
+      
       public com.openchat.secureim.storage.PubSubProtos.PubSubMessage.Type getType() {
         return type_;
       }
+      
       public Builder setType(com.openchat.secureim.storage.PubSubProtos.PubSubMessage.Type value) {
         if (value == null) {
           throw new NullPointerException();
@@ -480,6 +506,7 @@ public final class PubSubProtos {
         onChanged();
         return this;
       }
+      
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000001);
         type_ = com.openchat.secureim.storage.PubSubProtos.PubSubMessage.Type.UNKNOWN;
@@ -489,12 +516,15 @@ public final class PubSubProtos {
 
       // optional bytes content = 2;
       private com.google.protobuf.ByteString content_ = com.google.protobuf.ByteString.EMPTY;
+      
       public boolean hasContent() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
+      
       public com.google.protobuf.ByteString getContent() {
         return content_;
       }
+      
       public Builder setContent(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
@@ -504,6 +534,7 @@ public final class PubSubProtos {
         onChanged();
         return this;
       }
+      
       public Builder clearContent() {
         bitField0_ = (bitField0_ & ~0x00000002);
         content_ = getDefaultInstance().getContent();

@@ -1,5 +1,6 @@
 package com.openchat.secureim.util;
 
+
 public class Hex {
 
   private final static int HEX_DIGITS_START = 10;

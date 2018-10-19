@@ -164,6 +164,7 @@ public class LoggingNetworkAppenderFactory extends AbstractAppenderFactory<ILogg
       }
     }
 
+    
     public int getSeverityForEvent(Object eventObject) {
       if (eventObject instanceof ILoggingEvent) {
         ILoggingEvent event = (ILoggingEvent) eventObject;

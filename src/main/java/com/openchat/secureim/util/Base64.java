@@ -1,27 +1,65 @@
 package com.openchat.secureim.util;
 
+
 public class Base64
 {
     
+   
+    
+    
+    
     public final static int NO_OPTIONS = 0;
+    
+    
+    public final static int ENCODE = 1;
+    
+    
     
     public final static int DECODE = 0;
     
 
+    
+    public final static int GZIP = 2;
+
+    
     public final static int DONT_GUNZIP = 4;
     
+    
+    
+    public final static int DO_BREAK_LINES = 8;
+	
     
      public final static int URL_SAFE = 16;
 
 
+     
      public final static int ORDERED = 32;
+    
+    
+  
+    
     
     
     private final static int MAX_LINE_LENGTH = 76;
     
     
+    
+    private final static byte EQUALS_SIGN = (byte)'=';
+    
+    
+    
     private final static byte NEW_LINE = (byte)'\n';
     
+    
+    
+    private final static String PREFERRED_ENCODING = "US-ASCII";
+    
+	
+    private final static byte WHITE_SPACE_ENC = -5; // Indicates white space in encoding
+    private final static byte EQUALS_SIGN_ENC = -1; // Indicates equals sign in encoding
+	
+	
+	
     
     
     private final static byte[] _STANDARD_ALPHABET = {
@@ -37,6 +75,7 @@ public class Base64
         (byte)'6', (byte)'7', (byte)'8', (byte)'9', (byte)'+', (byte)'/'
     };
 	
+    
     
     private final static byte[] _STANDARD_DECODABET = {
         -9,-9,-9,-9,-9,-9,-9,-9,-9,                 // Decimal  0 -  8
@@ -60,9 +99,13 @@ public class Base64
         26,27,28,29,30,31,32,33,34,35,36,37,38,     // Letters 'a' through 'm'
         39,40,41,42,43,44,45,46,47,48,49,50,51,     // Letters 'n' through 'z'
         -9,-9,-9,-9                                 // Decimal 123 - 126
+        
     };
 	
 	
+
+	
+    
     private final static byte[] _URL_SAFE_ALPHABET = {
       (byte)'A', (byte)'B', (byte)'C', (byte)'D', (byte)'E', (byte)'F', (byte)'G',
       (byte)'H', (byte)'I', (byte)'J', (byte)'K', (byte)'L', (byte)'M', (byte)'N',
@@ -76,6 +119,7 @@ public class Base64
       (byte)'6', (byte)'7', (byte)'8', (byte)'9', (byte)'-', (byte)'_'
     };
 	
+    
     private final static byte[] _URL_SAFE_DECODABET = {
       -9,-9,-9,-9,-9,-9,-9,-9,-9,                 // Decimal  0 -  8
       -5,-5,                                      // Whitespace: Tab and Linefeed
@@ -102,10 +146,14 @@ public class Base64
       26,27,28,29,30,31,32,33,34,35,36,37,38,     // Letters 'a' through 'm'
       39,40,41,42,43,44,45,46,47,48,49,50,51,     // Letters 'n' through 'z'
       -9,-9,-9,-9                                 // Decimal 123 - 126
+      
     };
 
 
 
+
+
+    
     private final static byte[] _ORDERED_ALPHABET = {
       (byte)'-',
       (byte)'0', (byte)'1', (byte)'2', (byte)'3', (byte)'4',
@@ -121,6 +169,7 @@ public class Base64
       (byte)'v', (byte)'w', (byte)'x', (byte)'y', (byte)'z'
     };
 	
+    
     private final static byte[] _ORDERED_DECODABET = {
       -9,-9,-9,-9,-9,-9,-9,-9,-9,                 // Decimal  0 -  8
       -5,-5,                                      // Whitespace: Tab and Linefeed
@@ -147,9 +196,14 @@ public class Base64
       38,39,40,41,42,43,44,45,46,47,48,49,50,     // Letters 'a' through 'm'
       51,52,53,54,55,56,57,58,59,60,61,62,63,     // Letters 'n' through 'z'
       -9,-9,-9,-9                                 // Decimal 123 - 126
+      
     };
 
 	
+
+
+
+    
     private final static byte[] getAlphabet( int options ) {
         if ((options & URL_SAFE) == URL_SAFE) {
             return _URL_SAFE_ALPHABET;
@@ -161,6 +215,7 @@ public class Base64
     }	// end getAlphabet
 
 
+    
     private final static byte[] getDecodabet( int options ) {
         if( (options & URL_SAFE) == URL_SAFE) {
             return _URL_SAFE_DECODABET;
@@ -174,12 +229,35 @@ public class Base64
 
     
     
+    private Base64(){}
+    
+
+    
+    public static int getEncodedLengthWithoutPadding(int unencodedLength) {
+    	int remainderBytes = unencodedLength % 3;
+    	int paddingBytes   = 0;
+    	
+    	if (remainderBytes != 0)
+    		paddingBytes = 3 - remainderBytes;
+    	
+    	return (((int)((unencodedLength+2)/3))*4) - paddingBytes;
+    }
+    
+    public static int getEncodedBytesForTarget(int targetSize) {
+    	return ((int)(targetSize * 3)) / 4;
+    }
+    
+    
+    
+    
+    
     
     private static byte[] encode3to4( byte[] b4, byte[] threeBytes, int numSigBytes, int options ) {
         encode3to4( threeBytes, 0, numSigBytes, b4, 0, options );
         return b4;
     }   // end encode3to4
 
+    
     
     private static byte[] encode3to4( 
     byte[] source, int srcOffset, int numSigBytes,
@@ -232,6 +310,7 @@ public class Base64
 
 
 
+    
     public static void encode( java.nio.ByteBuffer raw, java.nio.ByteBuffer encoded ){
         byte[] raw3 = new byte[3];
         byte[] enc4 = new byte[4];
@@ -245,6 +324,7 @@ public class Base64
     }
 
 
+    
     public static void encode( java.nio.ByteBuffer raw, java.nio.CharBuffer encoded ){
         byte[] raw3 = new byte[3];
         byte[] enc4 = new byte[4];
@@ -262,6 +342,7 @@ public class Base64
 
     
     
+    
     public static String encodeObject( java.io.Serializable serializableObject )
     throws java.io.IOException {
         return encodeObject( serializableObject, NO_OPTIONS );
@@ -269,6 +350,7 @@ public class Base64
     
 
 
+    
     public static String encodeObject( java.io.Serializable serializableObject, int options )
     throws java.io.IOException {
 
@@ -322,6 +404,7 @@ public class Base64
     
     
 
+    
     public static String encodeBytes( byte[] source ) {
         // Since we're not going to have the GZIP encoding turned on,
         // we're not going to have an java.io.IOException thrown, so
@@ -359,9 +442,11 @@ public class Base64
     }
 
 
+    
     public static String encodeBytes( byte[] source, int options ) throws java.io.IOException {
         return encodeBytes( source, 0, source.length, options );
     }   // end encodeBytes
+    
     
     
     public static String encodeBytes( byte[] source, int off, int len ) {
@@ -380,6 +465,7 @@ public class Base64
     
     
 
+    
     public static String encodeBytes( byte[] source, int off, int len, int options ) throws java.io.IOException {
         byte[] encoded = encodeBytesToBytes( source, off, len, options );
 
@@ -396,6 +482,7 @@ public class Base64
 
 
 
+    
     public static byte[] encodeBytesToBytes( byte[] source ) {
         byte[] encoded = null;
         try {
@@ -407,6 +494,7 @@ public class Base64
     }
 
 
+    
     public static byte[] encodeBytesToBytes( byte[] source, int off, int len, int options ) throws java.io.IOException {
 
         if( source == null ){
@@ -516,6 +604,10 @@ public class Base64
     
     
     
+
+    
+    
+    
     private static int decode4to3( 
     byte[] source, int srcOffset, 
     byte[] destination, int destOffset, int options ) {
@@ -591,6 +683,7 @@ public class Base64
 
 
 
+    
     public static byte[] decode( byte[] source ){
         byte[] decoded = null;
         try {
@@ -601,6 +694,7 @@ public class Base64
         return decoded;
     }
        
+    
     
     public static byte[] decode( byte[] source, int off, int len, int options )
     throws java.io.IOException {
@@ -670,6 +764,7 @@ public class Base64
     
 	
 	
+    
     public static byte[] decode( String s ) throws java.io.IOException {
         return decode( s, DONT_GUNZIP );
     }
@@ -685,6 +780,7 @@ public class Base64
 		return decode(source);
     }
 
+    
     
     
     public static byte[] decode( String s, int options ) throws java.io.IOException {
@@ -749,12 +845,14 @@ public class Base64
 
 
 
+    
     public static Object decodeToObject( String encodedObject )
     throws java.io.IOException, java.lang.ClassNotFoundException {
         return decodeToObject(encodedObject,NO_OPTIONS,null);
     }
     
 
+    
     public static Object decodeToObject( 
     String encodedObject, int options, final ClassLoader loader )
     throws java.io.IOException, java.lang.ClassNotFoundException {
@@ -809,6 +907,7 @@ public class Base64
     
     
     
+    
     public static void encodeToFile( byte[] dataToEncode, String filename )
     throws java.io.IOException {
         
@@ -832,6 +931,7 @@ public class Base64
     }   // end encodeToFile
     
     
+    
     public static void decodeToFile( String dataToDecode, String filename )
     throws java.io.IOException {
         
@@ -849,6 +949,7 @@ public class Base64
         }   // end finally
         
     }   // end decodeToFile
+    
     
     
     
@@ -900,6 +1001,7 @@ public class Base64
     
     
     
+    
     public static String encodeFromFile( String filename )
     throws java.io.IOException {
         
@@ -937,6 +1039,7 @@ public class Base64
         return encodedData;
         }   // end encodeFromFile
     
+    
     public static void encodeFileToFile( String infile, String outfile )
     throws java.io.IOException {
         
@@ -957,6 +1060,7 @@ public class Base64
     }   // end encodeFileToFile
 
 
+    
     public static void decodeFileToFile( String infile, String outfile )
     throws java.io.IOException {
         
@@ -977,6 +1081,11 @@ public class Base64
     }   // end decodeFileToFile
     
     
+    
+    
+    
+    
+    
     public static class InputStream extends java.io.FilterInputStream {
         
         private boolean encode;         // Encoding or decoding
@@ -990,9 +1099,11 @@ public class Base64
         private byte[]  decodabet;      // Local copies to avoid extra method calls
         
         
+        
         public InputStream( java.io.InputStream in ) {
             this( in, DECODE );
         }   // end constructor
+        
         
         
         public InputStream( java.io.InputStream in, int options ) {
@@ -1007,6 +1118,7 @@ public class Base64
             this.lineLength   = 0;
             this.decodabet    = getDecodabet(options);
         }   // end constructor
+        
         
         @Override
         public int read() throws java.io.IOException  {
@@ -1074,6 +1186,38 @@ public class Base64
             // Got data?
             if( position >= 0 ) {
                 // End of relevant data?
+                if(  position >= numSigBytes ){
+                    return -1;
+                }   // end if: got data
+                
+                if( encode && breakLines && lineLength >= MAX_LINE_LENGTH ) {
+                    lineLength = 0;
+                    return '\n';
+                }   // end if
+                else {
+                    lineLength++;   // This isn't important when decoding
+                                    // but throwing an extra "if" seems
+                                    // just as wasteful.
+                    
+                    int b = buffer[ position++ ];
+
+                    if( position >= bufferLength ) {
+                        position = -1;
+                    }   // end if: end
+
+                    return b & 0xFF; // This is how you "cast" a byte that's
+                                     // intended to be unsigned.
+                }   // end else
+            }   // end if: position >= 0
+            
+            // Else error
+            else {
+                throw new java.io.IOException( "Error in Base64 code reading stream." );
+            }   // end else
+        }   // end read
+        
+        
+        
         @Override
         public int read( byte[] dest, int off, int len ) 
         throws java.io.IOException {
@@ -1102,6 +1246,11 @@ public class Base64
     
     
     
+    
+    
+    
+    
+    
     public static class OutputStream extends java.io.FilterOutputStream {
         
         private boolean encode;
@@ -1115,9 +1264,11 @@ public class Base64
         private int     options;    // Record for later
         private byte[]  decodabet;  // Local copies to avoid extra method calls
         
+        
         public OutputStream( java.io.OutputStream out ) {
             this( out, ENCODE );
         }   // end constructor
+        
         
         
         public OutputStream( java.io.OutputStream out, int options ) {
@@ -1133,6 +1284,7 @@ public class Base64
             this.options      = options;
             this.decodabet    = getDecodabet(options);
         }   // end constructor
+        
         
         
         @Override
@@ -1181,6 +1333,7 @@ public class Base64
         
         
         
+        
         @Override
         public void write( byte[] theBytes, int off, int len ) 
         throws java.io.IOException {
@@ -1198,6 +1351,7 @@ public class Base64
         
         
         
+        
         public void flushBase64() throws java.io.IOException  {
             if( position > 0 ) {
                 if( encode ) {
@@ -1211,6 +1365,7 @@ public class Base64
 
         }   // end flush
 
+        
         
         @Override
         public void close() throws java.io.IOException {
@@ -1227,10 +1382,12 @@ public class Base64
         
         
         
+        
         public void suspendEncoding() throws java.io.IOException  {
             flushBase64();
             this.suspendEncoding = true;
         }   // end suspendEncoding
+        
         
         
         public void resumeEncoding() {
