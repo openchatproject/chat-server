@@ -185,6 +185,7 @@ public class WebSocketServletResponse implements HttpServletResponse {
       byte[] response = messageFactory.createResponse(responseBuilder.getRequestId(),
                                                       responseBuilder.getStatusCode(),
                                                       responseBuilder.getMessage(),
+                                                      new LinkedList<String>(),
                                                       Optional.fromNullable(body))
                                       .toByteArray();
 

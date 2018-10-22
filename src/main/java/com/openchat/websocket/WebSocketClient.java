@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Map;
 
 public class WebSocketClient {
@@ -38,6 +39,7 @@ public class WebSocketClient {
   }
 
   public ListenableFuture<WebSocketResponseMessage> sendRequest(String verb, String path,
+                                                                List<String> headers,
                                                                 Optional<byte[]> body)
   {
     long                                     requestId = generateRequestId();
@@ -45,7 +47,7 @@ public class WebSocketClient {
 
     pendingRequestMapper.put(requestId, future);
 
-    WebSocketMessage requestMessage = messageFactory.createRequest(Optional.of(requestId), verb, path, body);
+    WebSocketMessage requestMessage = messageFactory.createRequest(Optional.of(requestId), verb, path, headers, body);
 
     try {
       remoteEndpoint.sendBytes(ByteBuffer.wrap(requestMessage.toByteArray()));

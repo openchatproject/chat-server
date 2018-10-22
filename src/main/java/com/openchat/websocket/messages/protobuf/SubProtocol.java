@@ -3,8 +3,6 @@
 
 package com.openchat.websocket.messages.protobuf;
 
-import com.google.protobuf.AbstractMessage;
-
 public final class SubProtocol {
   private SubProtocol() {}
   public static void registerAllExtensions(
@@ -30,6 +28,18 @@ public final class SubProtocol {
     
     com.google.protobuf.ByteString
         getPathBytes();
+
+    // repeated string headers = 5;
+    
+    java.util.List<java.lang.String>
+    getHeadersList();
+    
+    int getHeadersCount();
+    
+    java.lang.String getHeaders(int index);
+    
+    com.google.protobuf.ByteString
+        getHeadersBytes(int index);
 
     // optional bytes body = 3;
     
@@ -112,6 +122,14 @@ public final class SubProtocol {
               id_ = input.readUInt64();
               break;
             }
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                headers_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              headers_.add(input.readBytes());
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -120,20 +138,23 @@ public final class SubProtocol {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          headers_ = new com.google.protobuf.UnmodifiableLazyStringList(headers_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return SubProtocol.internal_static_textsecure_WebSocketRequestMessage_descriptor;
+      return com.openchat.websocket.messages.protobuf.SubProtocol.internal_static_textsecure_WebSocketRequestMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return SubProtocol.internal_static_textsecure_WebSocketRequestMessage_fieldAccessorTable
+      return com.openchat.websocket.messages.protobuf.SubProtocol.internal_static_textsecure_WebSocketRequestMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              SubProtocol.WebSocketRequestMessage.class, SubProtocol.WebSocketRequestMessage.Builder.class);
+              com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.class, com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.Builder.class);
     }
 
     public static com.google.protobuf.Parser<WebSocketRequestMessage> PARSER =
@@ -226,6 +247,28 @@ public final class SubProtocol {
       }
     }
 
+    // repeated string headers = 5;
+    public static final int HEADERS_FIELD_NUMBER = 5;
+    private com.google.protobuf.LazyStringList headers_;
+    
+    public java.util.List<java.lang.String>
+        getHeadersList() {
+      return headers_;
+    }
+    
+    public int getHeadersCount() {
+      return headers_.size();
+    }
+    
+    public java.lang.String getHeaders(int index) {
+      return headers_.get(index);
+    }
+    
+    public com.google.protobuf.ByteString
+        getHeadersBytes(int index) {
+      return headers_.getByteString(index);
+    }
+
     // optional bytes body = 3;
     public static final int BODY_FIELD_NUMBER = 3;
     private com.google.protobuf.ByteString body_;
@@ -253,6 +296,7 @@ public final class SubProtocol {
     private void initFields() {
       verb_ = "";
       path_ = "";
+      headers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       body_ = com.google.protobuf.ByteString.EMPTY;
       id_ = 0L;
     }
@@ -280,6 +324,9 @@ public final class SubProtocol {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeUInt64(4, id_);
       }
+      for (int i = 0; i < headers_.size(); i++) {
+        output.writeBytes(5, headers_.getByteString(i));
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -305,6 +352,15 @@ public final class SubProtocol {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt64Size(4, id_);
       }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < headers_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(headers_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getHeadersList().size();
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
       return size;
@@ -317,53 +373,53 @@ public final class SubProtocol {
       return super.writeReplace();
     }
 
-    public static SubProtocol.WebSocketRequestMessage parseFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static SubProtocol.WebSocketRequestMessage parseFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static SubProtocol.WebSocketRequestMessage parseFrom(byte[] data)
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static SubProtocol.WebSocketRequestMessage parseFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static SubProtocol.WebSocketRequestMessage parseFrom(java.io.InputStream input)
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static SubProtocol.WebSocketRequestMessage parseFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static SubProtocol.WebSocketRequestMessage parseDelimitedFrom(java.io.InputStream input)
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static SubProtocol.WebSocketRequestMessage parseDelimitedFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static SubProtocol.WebSocketRequestMessage parseFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static SubProtocol.WebSocketRequestMessage parseFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -372,7 +428,7 @@ public final class SubProtocol {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(SubProtocol.WebSocketRequestMessage prototype) {
+    public static Builder newBuilder(com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -386,17 +442,17 @@ public final class SubProtocol {
     
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements SubProtocol.WebSocketRequestMessageOrBuilder {
+       implements com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return SubProtocol.internal_static_textsecure_WebSocketRequestMessage_descriptor;
+        return com.openchat.websocket.messages.protobuf.SubProtocol.internal_static_textsecure_WebSocketRequestMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return SubProtocol.internal_static_textsecure_WebSocketRequestMessage_fieldAccessorTable
+        return com.openchat.websocket.messages.protobuf.SubProtocol.internal_static_textsecure_WebSocketRequestMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                SubProtocol.WebSocketRequestMessage.class, SubProtocol.WebSocketRequestMessage.Builder.class);
+                com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.class, com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.Builder.class);
       }
 
       // Construct using com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.newBuilder()
@@ -423,10 +479,12 @@ public final class SubProtocol {
         bitField0_ = (bitField0_ & ~0x00000001);
         path_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        body_ = com.google.protobuf.ByteString.EMPTY;
+        headers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000004);
-        id_ = 0L;
+        body_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000008);
+        id_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -436,23 +494,23 @@ public final class SubProtocol {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return SubProtocol.internal_static_textsecure_WebSocketRequestMessage_descriptor;
+        return com.openchat.websocket.messages.protobuf.SubProtocol.internal_static_textsecure_WebSocketRequestMessage_descriptor;
       }
 
-      public SubProtocol.WebSocketRequestMessage getDefaultInstanceForType() {
-        return SubProtocol.WebSocketRequestMessage.getDefaultInstance();
+      public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage getDefaultInstanceForType() {
+        return com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.getDefaultInstance();
       }
 
-      public SubProtocol.WebSocketRequestMessage build() {
-        SubProtocol.WebSocketRequestMessage result = buildPartial();
+      public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage build() {
+        com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage result = buildPartial();
         if (!result.isInitialized()) {
-          throw AbstractMessage.Builder.newUninitializedMessageException(result);
+          throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public SubProtocol.WebSocketRequestMessage buildPartial() {
-        SubProtocol.WebSocketRequestMessage result = new SubProtocol.WebSocketRequestMessage(this);
+      public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage buildPartial() {
+        com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage result = new com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -463,11 +521,17 @@ public final class SubProtocol {
           to_bitField0_ |= 0x00000002;
         }
         result.path_ = path_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          headers_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              headers_);
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.headers_ = headers_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000004;
         }
         result.body_ = body_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
           to_bitField0_ |= 0x00000008;
         }
         result.id_ = id_;
@@ -477,16 +541,16 @@ public final class SubProtocol {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof SubProtocol.WebSocketRequestMessage) {
-          return mergeFrom((SubProtocol.WebSocketRequestMessage)other);
+        if (other instanceof com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage) {
+          return mergeFrom((com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(SubProtocol.WebSocketRequestMessage other) {
-        if (other == SubProtocol.WebSocketRequestMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage other) {
+        if (other == com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.getDefaultInstance()) return this;
         if (other.hasVerb()) {
           bitField0_ |= 0x00000001;
           verb_ = other.verb_;
@@ -495,6 +559,16 @@ public final class SubProtocol {
         if (other.hasPath()) {
           bitField0_ |= 0x00000002;
           path_ = other.path_;
+          onChanged();
+        }
+        if (!other.headers_.isEmpty()) {
+          if (headers_.isEmpty()) {
+            headers_ = other.headers_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureHeadersIsMutable();
+            headers_.addAll(other.headers_);
+          }
           onChanged();
         }
         if (other.hasBody()) {
@@ -515,11 +589,11 @@ public final class SubProtocol {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        SubProtocol.WebSocketRequestMessage parsedMessage = null;
+        com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (SubProtocol.WebSocketRequestMessage) e.getUnfinishedMessage();
+          parsedMessage = (com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -654,11 +728,86 @@ public final class SubProtocol {
         return this;
       }
 
+      // repeated string headers = 5;
+      private com.google.protobuf.LazyStringList headers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureHeadersIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          headers_ = new com.google.protobuf.LazyStringArrayList(headers_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+      
+      public java.util.List<java.lang.String>
+          getHeadersList() {
+        return java.util.Collections.unmodifiableList(headers_);
+      }
+      
+      public int getHeadersCount() {
+        return headers_.size();
+      }
+      
+      public java.lang.String getHeaders(int index) {
+        return headers_.get(index);
+      }
+      
+      public com.google.protobuf.ByteString
+          getHeadersBytes(int index) {
+        return headers_.getByteString(index);
+      }
+      
+      public Builder setHeaders(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureHeadersIsMutable();
+        headers_.set(index, value);
+        onChanged();
+        return this;
+      }
+      
+      public Builder addHeaders(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureHeadersIsMutable();
+        headers_.add(value);
+        onChanged();
+        return this;
+      }
+      
+      public Builder addAllHeaders(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureHeadersIsMutable();
+        super.addAll(values, headers_);
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearHeaders() {
+        headers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+        return this;
+      }
+      
+      public Builder addHeadersBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureHeadersIsMutable();
+        headers_.add(value);
+        onChanged();
+        return this;
+      }
+
       // optional bytes body = 3;
       private com.google.protobuf.ByteString body_ = com.google.protobuf.ByteString.EMPTY;
       
       public boolean hasBody() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
+        return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       
       public com.google.protobuf.ByteString getBody() {
@@ -669,14 +818,14 @@ public final class SubProtocol {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000008;
         body_ = value;
         onChanged();
         return this;
       }
       
       public Builder clearBody() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000008);
         body_ = getDefaultInstance().getBody();
         onChanged();
         return this;
@@ -686,7 +835,7 @@ public final class SubProtocol {
       private long id_ ;
       
       public boolean hasId() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
+        return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       
       public long getId() {
@@ -694,14 +843,14 @@ public final class SubProtocol {
       }
       
       public Builder setId(long value) {
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000010;
         id_ = value;
         onChanged();
         return this;
       }
       
       public Builder clearId() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000010);
         id_ = 0L;
         onChanged();
         return this;
@@ -741,6 +890,18 @@ public final class SubProtocol {
     
     com.google.protobuf.ByteString
         getMessageBytes();
+
+    // repeated string headers = 5;
+    
+    java.util.List<java.lang.String>
+    getHeadersList();
+    
+    int getHeadersCount();
+    
+    java.lang.String getHeaders(int index);
+    
+    com.google.protobuf.ByteString
+        getHeadersBytes(int index);
 
     // optional bytes body = 4;
     
@@ -817,6 +978,14 @@ public final class SubProtocol {
               body_ = input.readBytes();
               break;
             }
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                headers_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              headers_.add(input.readBytes());
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -825,20 +994,23 @@ public final class SubProtocol {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          headers_ = new com.google.protobuf.UnmodifiableLazyStringList(headers_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return SubProtocol.internal_static_textsecure_WebSocketResponseMessage_descriptor;
+      return com.openchat.websocket.messages.protobuf.SubProtocol.internal_static_textsecure_WebSocketResponseMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return SubProtocol.internal_static_textsecure_WebSocketResponseMessage_fieldAccessorTable
+      return com.openchat.websocket.messages.protobuf.SubProtocol.internal_static_textsecure_WebSocketResponseMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              SubProtocol.WebSocketResponseMessage.class, SubProtocol.WebSocketResponseMessage.Builder.class);
+              com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.class, com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.Builder.class);
     }
 
     public static com.google.protobuf.Parser<WebSocketResponseMessage> PARSER =
@@ -918,6 +1090,28 @@ public final class SubProtocol {
       }
     }
 
+    // repeated string headers = 5;
+    public static final int HEADERS_FIELD_NUMBER = 5;
+    private com.google.protobuf.LazyStringList headers_;
+    
+    public java.util.List<java.lang.String>
+        getHeadersList() {
+      return headers_;
+    }
+    
+    public int getHeadersCount() {
+      return headers_.size();
+    }
+    
+    public java.lang.String getHeaders(int index) {
+      return headers_.get(index);
+    }
+    
+    public com.google.protobuf.ByteString
+        getHeadersBytes(int index) {
+      return headers_.getByteString(index);
+    }
+
     // optional bytes body = 4;
     public static final int BODY_FIELD_NUMBER = 4;
     private com.google.protobuf.ByteString body_;
@@ -934,6 +1128,7 @@ public final class SubProtocol {
       id_ = 0L;
       status_ = 0;
       message_ = "";
+      headers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       body_ = com.google.protobuf.ByteString.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
@@ -960,6 +1155,9 @@ public final class SubProtocol {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeBytes(4, body_);
       }
+      for (int i = 0; i < headers_.size(); i++) {
+        output.writeBytes(5, headers_.getByteString(i));
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -985,6 +1183,15 @@ public final class SubProtocol {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(4, body_);
       }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < headers_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(headers_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getHeadersList().size();
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
       return size;
@@ -997,53 +1204,53 @@ public final class SubProtocol {
       return super.writeReplace();
     }
 
-    public static SubProtocol.WebSocketResponseMessage parseFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static SubProtocol.WebSocketResponseMessage parseFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static SubProtocol.WebSocketResponseMessage parseFrom(byte[] data)
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static SubProtocol.WebSocketResponseMessage parseFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static SubProtocol.WebSocketResponseMessage parseFrom(java.io.InputStream input)
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static SubProtocol.WebSocketResponseMessage parseFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static SubProtocol.WebSocketResponseMessage parseDelimitedFrom(java.io.InputStream input)
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static SubProtocol.WebSocketResponseMessage parseDelimitedFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static SubProtocol.WebSocketResponseMessage parseFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static SubProtocol.WebSocketResponseMessage parseFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1052,7 +1259,7 @@ public final class SubProtocol {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(SubProtocol.WebSocketResponseMessage prototype) {
+    public static Builder newBuilder(com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -1066,17 +1273,17 @@ public final class SubProtocol {
     
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements SubProtocol.WebSocketResponseMessageOrBuilder {
+       implements com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return SubProtocol.internal_static_textsecure_WebSocketResponseMessage_descriptor;
+        return com.openchat.websocket.messages.protobuf.SubProtocol.internal_static_textsecure_WebSocketResponseMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return SubProtocol.internal_static_textsecure_WebSocketResponseMessage_fieldAccessorTable
+        return com.openchat.websocket.messages.protobuf.SubProtocol.internal_static_textsecure_WebSocketResponseMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                SubProtocol.WebSocketResponseMessage.class, SubProtocol.WebSocketResponseMessage.Builder.class);
+                com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.class, com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.Builder.class);
       }
 
       // Construct using com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.newBuilder()
@@ -1105,8 +1312,10 @@ public final class SubProtocol {
         bitField0_ = (bitField0_ & ~0x00000002);
         message_ = "";
         bitField0_ = (bitField0_ & ~0x00000004);
-        body_ = com.google.protobuf.ByteString.EMPTY;
+        headers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000008);
+        body_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -1116,23 +1325,23 @@ public final class SubProtocol {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return SubProtocol.internal_static_textsecure_WebSocketResponseMessage_descriptor;
+        return com.openchat.websocket.messages.protobuf.SubProtocol.internal_static_textsecure_WebSocketResponseMessage_descriptor;
       }
 
-      public SubProtocol.WebSocketResponseMessage getDefaultInstanceForType() {
-        return SubProtocol.WebSocketResponseMessage.getDefaultInstance();
+      public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage getDefaultInstanceForType() {
+        return com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.getDefaultInstance();
       }
 
-      public SubProtocol.WebSocketResponseMessage build() {
-        SubProtocol.WebSocketResponseMessage result = buildPartial();
+      public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage build() {
+        com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage result = buildPartial();
         if (!result.isInitialized()) {
-          throw AbstractMessage.Builder.newUninitializedMessageException(result);
+          throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public SubProtocol.WebSocketResponseMessage buildPartial() {
-        SubProtocol.WebSocketResponseMessage result = new SubProtocol.WebSocketResponseMessage(this);
+      public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage buildPartial() {
+        com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage result = new com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -1147,7 +1356,13 @@ public final class SubProtocol {
           to_bitField0_ |= 0x00000004;
         }
         result.message_ = message_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          headers_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              headers_);
+          bitField0_ = (bitField0_ & ~0x00000008);
+        }
+        result.headers_ = headers_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
           to_bitField0_ |= 0x00000008;
         }
         result.body_ = body_;
@@ -1157,16 +1372,16 @@ public final class SubProtocol {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof SubProtocol.WebSocketResponseMessage) {
-          return mergeFrom((SubProtocol.WebSocketResponseMessage)other);
+        if (other instanceof com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage) {
+          return mergeFrom((com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(SubProtocol.WebSocketResponseMessage other) {
-        if (other == SubProtocol.WebSocketResponseMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage other) {
+        if (other == com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.getDefaultInstance()) return this;
         if (other.hasId()) {
           setId(other.getId());
         }
@@ -1176,6 +1391,16 @@ public final class SubProtocol {
         if (other.hasMessage()) {
           bitField0_ |= 0x00000004;
           message_ = other.message_;
+          onChanged();
+        }
+        if (!other.headers_.isEmpty()) {
+          if (headers_.isEmpty()) {
+            headers_ = other.headers_;
+            bitField0_ = (bitField0_ & ~0x00000008);
+          } else {
+            ensureHeadersIsMutable();
+            headers_.addAll(other.headers_);
+          }
           onChanged();
         }
         if (other.hasBody()) {
@@ -1193,11 +1418,11 @@ public final class SubProtocol {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        SubProtocol.WebSocketResponseMessage parsedMessage = null;
+        com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (SubProtocol.WebSocketResponseMessage) e.getUnfinishedMessage();
+          parsedMessage = (com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -1320,11 +1545,86 @@ public final class SubProtocol {
         return this;
       }
 
+      // repeated string headers = 5;
+      private com.google.protobuf.LazyStringList headers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureHeadersIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          headers_ = new com.google.protobuf.LazyStringArrayList(headers_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+      
+      public java.util.List<java.lang.String>
+          getHeadersList() {
+        return java.util.Collections.unmodifiableList(headers_);
+      }
+      
+      public int getHeadersCount() {
+        return headers_.size();
+      }
+      
+      public java.lang.String getHeaders(int index) {
+        return headers_.get(index);
+      }
+      
+      public com.google.protobuf.ByteString
+          getHeadersBytes(int index) {
+        return headers_.getByteString(index);
+      }
+      
+      public Builder setHeaders(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureHeadersIsMutable();
+        headers_.set(index, value);
+        onChanged();
+        return this;
+      }
+      
+      public Builder addHeaders(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureHeadersIsMutable();
+        headers_.add(value);
+        onChanged();
+        return this;
+      }
+      
+      public Builder addAllHeaders(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureHeadersIsMutable();
+        super.addAll(values, headers_);
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearHeaders() {
+        headers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        onChanged();
+        return this;
+      }
+      
+      public Builder addHeadersBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureHeadersIsMutable();
+        headers_.add(value);
+        onChanged();
+        return this;
+      }
+
       // optional bytes body = 4;
       private com.google.protobuf.ByteString body_ = com.google.protobuf.ByteString.EMPTY;
       
       public boolean hasBody() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
+        return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       
       public com.google.protobuf.ByteString getBody() {
@@ -1335,14 +1635,14 @@ public final class SubProtocol {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000008;
+  bitField0_ |= 0x00000010;
         body_ = value;
         onChanged();
         return this;
       }
       
       public Builder clearBody() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000010);
         body_ = getDefaultInstance().getBody();
         onChanged();
         return this;
@@ -1366,23 +1666,23 @@ public final class SubProtocol {
     
     boolean hasType();
     
-    SubProtocol.WebSocketMessage.Type getType();
+    com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.Type getType();
 
     // optional .textsecure.WebSocketRequestMessage request = 2;
     
     boolean hasRequest();
     
-    SubProtocol.WebSocketRequestMessage getRequest();
+    com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage getRequest();
     
-    SubProtocol.WebSocketRequestMessageOrBuilder getRequestOrBuilder();
+    com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessageOrBuilder getRequestOrBuilder();
 
     // optional .textsecure.WebSocketResponseMessage response = 3;
     
     boolean hasResponse();
     
-    SubProtocol.WebSocketResponseMessage getResponse();
+    com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage getResponse();
     
-    SubProtocol.WebSocketResponseMessageOrBuilder getResponseOrBuilder();
+    com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessageOrBuilder getResponseOrBuilder();
   }
   
   public static final class WebSocketMessage extends
@@ -1435,7 +1735,7 @@ public final class SubProtocol {
             }
             case 8: {
               int rawValue = input.readEnum();
-              SubProtocol.WebSocketMessage.Type value = SubProtocol.WebSocketMessage.Type.valueOf(rawValue);
+              com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.Type value = com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.Type.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(1, rawValue);
               } else {
@@ -1445,11 +1745,11 @@ public final class SubProtocol {
               break;
             }
             case 18: {
-              SubProtocol.WebSocketRequestMessage.Builder subBuilder = null;
+              com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.Builder subBuilder = null;
               if (((bitField0_ & 0x00000002) == 0x00000002)) {
                 subBuilder = request_.toBuilder();
               }
-              request_ = input.readMessage(SubProtocol.WebSocketRequestMessage.PARSER, extensionRegistry);
+              request_ = input.readMessage(com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(request_);
                 request_ = subBuilder.buildPartial();
@@ -1458,11 +1758,11 @@ public final class SubProtocol {
               break;
             }
             case 26: {
-              SubProtocol.WebSocketResponseMessage.Builder subBuilder = null;
+              com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.Builder subBuilder = null;
               if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 subBuilder = response_.toBuilder();
               }
-              response_ = input.readMessage(SubProtocol.WebSocketResponseMessage.PARSER, extensionRegistry);
+              response_ = input.readMessage(com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(response_);
                 response_ = subBuilder.buildPartial();
@@ -1484,14 +1784,14 @@ public final class SubProtocol {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return SubProtocol.internal_static_textsecure_WebSocketMessage_descriptor;
+      return com.openchat.websocket.messages.protobuf.SubProtocol.internal_static_textsecure_WebSocketMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return SubProtocol.internal_static_textsecure_WebSocketMessage_fieldAccessorTable
+      return com.openchat.websocket.messages.protobuf.SubProtocol.internal_static_textsecure_WebSocketMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              SubProtocol.WebSocketMessage.class, SubProtocol.WebSocketMessage.Builder.class);
+              com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.class, com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.Builder.class);
     }
 
     public static com.google.protobuf.Parser<WebSocketMessage> PARSER =
@@ -1561,7 +1861,7 @@ public final class SubProtocol {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return SubProtocol.WebSocketMessage.getDescriptor().getEnumTypes().get(0);
+        return com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final Type[] VALUES = values();
@@ -1589,52 +1889,52 @@ public final class SubProtocol {
     private int bitField0_;
     // optional .textsecure.WebSocketMessage.Type type = 1;
     public static final int TYPE_FIELD_NUMBER = 1;
-    private SubProtocol.WebSocketMessage.Type type_;
+    private com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.Type type_;
     
     public boolean hasType() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     
-    public SubProtocol.WebSocketMessage.Type getType() {
+    public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.Type getType() {
       return type_;
     }
 
     // optional .textsecure.WebSocketRequestMessage request = 2;
     public static final int REQUEST_FIELD_NUMBER = 2;
-    private SubProtocol.WebSocketRequestMessage request_;
+    private com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage request_;
     
     public boolean hasRequest() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     
-    public SubProtocol.WebSocketRequestMessage getRequest() {
+    public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage getRequest() {
       return request_;
     }
     
-    public SubProtocol.WebSocketRequestMessageOrBuilder getRequestOrBuilder() {
+    public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessageOrBuilder getRequestOrBuilder() {
       return request_;
     }
 
     // optional .textsecure.WebSocketResponseMessage response = 3;
     public static final int RESPONSE_FIELD_NUMBER = 3;
-    private SubProtocol.WebSocketResponseMessage response_;
+    private com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage response_;
     
     public boolean hasResponse() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     
-    public SubProtocol.WebSocketResponseMessage getResponse() {
+    public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage getResponse() {
       return response_;
     }
     
-    public SubProtocol.WebSocketResponseMessageOrBuilder getResponseOrBuilder() {
+    public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessageOrBuilder getResponseOrBuilder() {
       return response_;
     }
 
     private void initFields() {
-      type_ = SubProtocol.WebSocketMessage.Type.UNKNOWN;
-      request_ = SubProtocol.WebSocketRequestMessage.getDefaultInstance();
-      response_ = SubProtocol.WebSocketResponseMessage.getDefaultInstance();
+      type_ = com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.Type.UNKNOWN;
+      request_ = com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.getDefaultInstance();
+      response_ = com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -1690,53 +1990,53 @@ public final class SubProtocol {
       return super.writeReplace();
     }
 
-    public static SubProtocol.WebSocketMessage parseFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static SubProtocol.WebSocketMessage parseFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static SubProtocol.WebSocketMessage parseFrom(byte[] data)
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static SubProtocol.WebSocketMessage parseFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static SubProtocol.WebSocketMessage parseFrom(java.io.InputStream input)
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static SubProtocol.WebSocketMessage parseFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static SubProtocol.WebSocketMessage parseDelimitedFrom(java.io.InputStream input)
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static SubProtocol.WebSocketMessage parseDelimitedFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static SubProtocol.WebSocketMessage parseFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static SubProtocol.WebSocketMessage parseFrom(
+    public static com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1745,7 +2045,7 @@ public final class SubProtocol {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(SubProtocol.WebSocketMessage prototype) {
+    public static Builder newBuilder(com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -1759,17 +2059,17 @@ public final class SubProtocol {
     
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements SubProtocol.WebSocketMessageOrBuilder {
+       implements com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return SubProtocol.internal_static_textsecure_WebSocketMessage_descriptor;
+        return com.openchat.websocket.messages.protobuf.SubProtocol.internal_static_textsecure_WebSocketMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return SubProtocol.internal_static_textsecure_WebSocketMessage_fieldAccessorTable
+        return com.openchat.websocket.messages.protobuf.SubProtocol.internal_static_textsecure_WebSocketMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                SubProtocol.WebSocketMessage.class, SubProtocol.WebSocketMessage.Builder.class);
+                com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.class, com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.Builder.class);
       }
 
       // Construct using com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.newBuilder()
@@ -1794,16 +2094,16 @@ public final class SubProtocol {
 
       public Builder clear() {
         super.clear();
-        type_ = SubProtocol.WebSocketMessage.Type.UNKNOWN;
+        type_ = com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.Type.UNKNOWN;
         bitField0_ = (bitField0_ & ~0x00000001);
         if (requestBuilder_ == null) {
-          request_ = SubProtocol.WebSocketRequestMessage.getDefaultInstance();
+          request_ = com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.getDefaultInstance();
         } else {
           requestBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
         if (responseBuilder_ == null) {
-          response_ = SubProtocol.WebSocketResponseMessage.getDefaultInstance();
+          response_ = com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.getDefaultInstance();
         } else {
           responseBuilder_.clear();
         }
@@ -1817,23 +2117,23 @@ public final class SubProtocol {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return SubProtocol.internal_static_textsecure_WebSocketMessage_descriptor;
+        return com.openchat.websocket.messages.protobuf.SubProtocol.internal_static_textsecure_WebSocketMessage_descriptor;
       }
 
-      public SubProtocol.WebSocketMessage getDefaultInstanceForType() {
-        return SubProtocol.WebSocketMessage.getDefaultInstance();
+      public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage getDefaultInstanceForType() {
+        return com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.getDefaultInstance();
       }
 
-      public SubProtocol.WebSocketMessage build() {
-        SubProtocol.WebSocketMessage result = buildPartial();
+      public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage build() {
+        com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage result = buildPartial();
         if (!result.isInitialized()) {
-          throw AbstractMessage.Builder.newUninitializedMessageException(result);
+          throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public SubProtocol.WebSocketMessage buildPartial() {
-        SubProtocol.WebSocketMessage result = new SubProtocol.WebSocketMessage(this);
+      public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage buildPartial() {
+        com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage result = new com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -1862,16 +2162,16 @@ public final class SubProtocol {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof SubProtocol.WebSocketMessage) {
-          return mergeFrom((SubProtocol.WebSocketMessage)other);
+        if (other instanceof com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage) {
+          return mergeFrom((com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(SubProtocol.WebSocketMessage other) {
-        if (other == SubProtocol.WebSocketMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage other) {
+        if (other == com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.getDefaultInstance()) return this;
         if (other.hasType()) {
           setType(other.getType());
         }
@@ -1893,11 +2193,11 @@ public final class SubProtocol {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        SubProtocol.WebSocketMessage parsedMessage = null;
+        com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (SubProtocol.WebSocketMessage) e.getUnfinishedMessage();
+          parsedMessage = (com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -1909,17 +2209,17 @@ public final class SubProtocol {
       private int bitField0_;
 
       // optional .textsecure.WebSocketMessage.Type type = 1;
-      private SubProtocol.WebSocketMessage.Type type_ = SubProtocol.WebSocketMessage.Type.UNKNOWN;
+      private com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.Type type_ = com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.Type.UNKNOWN;
       
       public boolean hasType() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       
-      public SubProtocol.WebSocketMessage.Type getType() {
+      public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.Type getType() {
         return type_;
       }
       
-      public Builder setType(SubProtocol.WebSocketMessage.Type value) {
+      public Builder setType(com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.Type value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1931,21 +2231,21 @@ public final class SubProtocol {
       
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        type_ = SubProtocol.WebSocketMessage.Type.UNKNOWN;
+        type_ = com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketMessage.Type.UNKNOWN;
         onChanged();
         return this;
       }
 
       // optional .textsecure.WebSocketRequestMessage request = 2;
-      private SubProtocol.WebSocketRequestMessage request_ = SubProtocol.WebSocketRequestMessage.getDefaultInstance();
+      private com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage request_ = com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          SubProtocol.WebSocketRequestMessage, SubProtocol.WebSocketRequestMessage.Builder, SubProtocol.WebSocketRequestMessageOrBuilder> requestBuilder_;
+          com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage, com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.Builder, com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessageOrBuilder> requestBuilder_;
       
       public boolean hasRequest() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       
-      public SubProtocol.WebSocketRequestMessage getRequest() {
+      public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage getRequest() {
         if (requestBuilder_ == null) {
           return request_;
         } else {
@@ -1953,7 +2253,7 @@ public final class SubProtocol {
         }
       }
       
-      public Builder setRequest(SubProtocol.WebSocketRequestMessage value) {
+      public Builder setRequest(com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage value) {
         if (requestBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1968,7 +2268,7 @@ public final class SubProtocol {
       }
       
       public Builder setRequest(
-          SubProtocol.WebSocketRequestMessage.Builder builderForValue) {
+          com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.Builder builderForValue) {
         if (requestBuilder_ == null) {
           request_ = builderForValue.build();
           onChanged();
@@ -1979,12 +2279,12 @@ public final class SubProtocol {
         return this;
       }
       
-      public Builder mergeRequest(SubProtocol.WebSocketRequestMessage value) {
+      public Builder mergeRequest(com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage value) {
         if (requestBuilder_ == null) {
           if (((bitField0_ & 0x00000002) == 0x00000002) &&
-              request_ != SubProtocol.WebSocketRequestMessage.getDefaultInstance()) {
+              request_ != com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.getDefaultInstance()) {
             request_ =
-              SubProtocol.WebSocketRequestMessage.newBuilder(request_).mergeFrom(value).buildPartial();
+              com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.newBuilder(request_).mergeFrom(value).buildPartial();
           } else {
             request_ = value;
           }
@@ -1998,7 +2298,7 @@ public final class SubProtocol {
       
       public Builder clearRequest() {
         if (requestBuilder_ == null) {
-          request_ = SubProtocol.WebSocketRequestMessage.getDefaultInstance();
+          request_ = com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.getDefaultInstance();
           onChanged();
         } else {
           requestBuilder_.clear();
@@ -2007,13 +2307,13 @@ public final class SubProtocol {
         return this;
       }
       
-      public SubProtocol.WebSocketRequestMessage.Builder getRequestBuilder() {
+      public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.Builder getRequestBuilder() {
         bitField0_ |= 0x00000002;
         onChanged();
         return getRequestFieldBuilder().getBuilder();
       }
       
-      public SubProtocol.WebSocketRequestMessageOrBuilder getRequestOrBuilder() {
+      public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessageOrBuilder getRequestOrBuilder() {
         if (requestBuilder_ != null) {
           return requestBuilder_.getMessageOrBuilder();
         } else {
@@ -2022,11 +2322,11 @@ public final class SubProtocol {
       }
       
       private com.google.protobuf.SingleFieldBuilder<
-          SubProtocol.WebSocketRequestMessage, SubProtocol.WebSocketRequestMessage.Builder, SubProtocol.WebSocketRequestMessageOrBuilder>
+          com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage, com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.Builder, com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessageOrBuilder> 
           getRequestFieldBuilder() {
         if (requestBuilder_ == null) {
           requestBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              SubProtocol.WebSocketRequestMessage, SubProtocol.WebSocketRequestMessage.Builder, SubProtocol.WebSocketRequestMessageOrBuilder>(
+              com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage, com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessage.Builder, com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketRequestMessageOrBuilder>(
                   request_,
                   getParentForChildren(),
                   isClean());
@@ -2036,15 +2336,15 @@ public final class SubProtocol {
       }
 
       // optional .textsecure.WebSocketResponseMessage response = 3;
-      private SubProtocol.WebSocketResponseMessage response_ = SubProtocol.WebSocketResponseMessage.getDefaultInstance();
+      private com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage response_ = com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          SubProtocol.WebSocketResponseMessage, SubProtocol.WebSocketResponseMessage.Builder, SubProtocol.WebSocketResponseMessageOrBuilder> responseBuilder_;
+          com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage, com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.Builder, com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessageOrBuilder> responseBuilder_;
       
       public boolean hasResponse() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       
-      public SubProtocol.WebSocketResponseMessage getResponse() {
+      public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage getResponse() {
         if (responseBuilder_ == null) {
           return response_;
         } else {
@@ -2052,7 +2352,7 @@ public final class SubProtocol {
         }
       }
       
-      public Builder setResponse(SubProtocol.WebSocketResponseMessage value) {
+      public Builder setResponse(com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage value) {
         if (responseBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -2067,7 +2367,7 @@ public final class SubProtocol {
       }
       
       public Builder setResponse(
-          SubProtocol.WebSocketResponseMessage.Builder builderForValue) {
+          com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.Builder builderForValue) {
         if (responseBuilder_ == null) {
           response_ = builderForValue.build();
           onChanged();
@@ -2078,12 +2378,12 @@ public final class SubProtocol {
         return this;
       }
       
-      public Builder mergeResponse(SubProtocol.WebSocketResponseMessage value) {
+      public Builder mergeResponse(com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage value) {
         if (responseBuilder_ == null) {
           if (((bitField0_ & 0x00000004) == 0x00000004) &&
-              response_ != SubProtocol.WebSocketResponseMessage.getDefaultInstance()) {
+              response_ != com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.getDefaultInstance()) {
             response_ =
-              SubProtocol.WebSocketResponseMessage.newBuilder(response_).mergeFrom(value).buildPartial();
+              com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.newBuilder(response_).mergeFrom(value).buildPartial();
           } else {
             response_ = value;
           }
@@ -2097,7 +2397,7 @@ public final class SubProtocol {
       
       public Builder clearResponse() {
         if (responseBuilder_ == null) {
-          response_ = SubProtocol.WebSocketResponseMessage.getDefaultInstance();
+          response_ = com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.getDefaultInstance();
           onChanged();
         } else {
           responseBuilder_.clear();
@@ -2106,13 +2406,13 @@ public final class SubProtocol {
         return this;
       }
       
-      public SubProtocol.WebSocketResponseMessage.Builder getResponseBuilder() {
+      public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.Builder getResponseBuilder() {
         bitField0_ |= 0x00000004;
         onChanged();
         return getResponseFieldBuilder().getBuilder();
       }
       
-      public SubProtocol.WebSocketResponseMessageOrBuilder getResponseOrBuilder() {
+      public com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessageOrBuilder getResponseOrBuilder() {
         if (responseBuilder_ != null) {
           return responseBuilder_.getMessageOrBuilder();
         } else {
@@ -2121,11 +2421,11 @@ public final class SubProtocol {
       }
       
       private com.google.protobuf.SingleFieldBuilder<
-          SubProtocol.WebSocketResponseMessage, SubProtocol.WebSocketResponseMessage.Builder, SubProtocol.WebSocketResponseMessageOrBuilder>
+          com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage, com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.Builder, com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessageOrBuilder> 
           getResponseFieldBuilder() {
         if (responseBuilder_ == null) {
           responseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              SubProtocol.WebSocketResponseMessage, SubProtocol.WebSocketResponseMessage.Builder, SubProtocol.WebSocketResponseMessageOrBuilder>(
+              com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage, com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessage.Builder, com.openchat.websocket.messages.protobuf.SubProtocol.WebSocketResponseMessageOrBuilder>(
                   response_,
                   getParentForChildren(),
                   isClean());
@@ -2169,18 +2469,19 @@ public final class SubProtocol {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\021SubProtocol.proto\022\ntextsecure\"O\n\027WebSo" +
+      "\n\021SubProtocol.proto\022\ntextsecure\"`\n\027WebSo" +
       "cketRequestMessage\022\014\n\004verb\030\001 \001(\t\022\014\n\004path" +
-      "\030\002 \001(\t\022\014\n\004body\030\003 \001(\014\022\n\n\002id\030\004 \001(\004\"U\n\030WebS" +
-      "ocketResponseMessage\022\n\n\002id\030\001 \001(\004\022\016\n\006stat" +
-      "us\030\002 \001(\r\022\017\n\007message\030\003 \001(\t\022\014\n\004body\030\004 \001(\014\"" +
-      "\341\001\n\020WebSocketMessage\022/\n\004type\030\001 \001(\0162!.tex" +
-      "tsecure.WebSocketMessage.Type\0224\n\007request" +
-      "\030\002 \001(\0132#.textsecure.WebSocketRequestMess" +
-      "age\0226\n\010response\030\003 \001(\0132$.textsecure.WebSo" +
-      "cketResponseMessage\".\n\004Type\022\013\n\007UNKNOWN\020\000",
-      "\022\013\n\007REQUEST\020\001\022\014\n\010RESPONSE\020\002B1\n/org.whisp" +
-      "ersystems.websocket.resources.messages"
+      "\030\002 \001(\t\022\017\n\007headers\030\005 \003(\t\022\014\n\004body\030\003 \001(\014\022\n\n" +
+      "\002id\030\004 \001(\004\"f\n\030WebSocketResponseMessage\022\n\n" +
+      "\002id\030\001 \001(\004\022\016\n\006status\030\002 \001(\r\022\017\n\007message\030\003 \001" +
+      "(\t\022\017\n\007headers\030\005 \003(\t\022\014\n\004body\030\004 \001(\014\"\341\001\n\020We" +
+      "bSocketMessage\022/\n\004type\030\001 \001(\0162!.textsecur" +
+      "e.WebSocketMessage.Type\0224\n\007request\030\002 \001(\013" +
+      "2#.textsecure.WebSocketRequestMessage\0226\n" +
+      "\010response\030\003 \001(\0132$.textsecure.WebSocketRe",
+      "sponseMessage\".\n\004Type\022\013\n\007UNKNOWN\020\000\022\013\n\007RE" +
+      "QUEST\020\001\022\014\n\010RESPONSE\020\002B0\n.org.whispersyst" +
+      "ems.websocket.messages.protobuf"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -2192,13 +2493,13 @@ public final class SubProtocol {
           internal_static_textsecure_WebSocketRequestMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_textsecure_WebSocketRequestMessage_descriptor,
-              new java.lang.String[] { "Verb", "Path", "Body", "Id", });
+              new java.lang.String[] { "Verb", "Path", "Headers", "Body", "Id", });
           internal_static_textsecure_WebSocketResponseMessage_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_textsecure_WebSocketResponseMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_textsecure_WebSocketResponseMessage_descriptor,
-              new java.lang.String[] { "Id", "Status", "Message", "Body", });
+              new java.lang.String[] { "Id", "Status", "Message", "Headers", "Body", });
           internal_static_textsecure_WebSocketMessage_descriptor =
             getDescriptor().getMessageTypes().get(2);
           internal_static_textsecure_WebSocketMessage_fieldAccessorTable = new
