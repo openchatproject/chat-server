@@ -5,12 +5,15 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.AttributesMap;
 import org.eclipse.jetty.websocket.api.UpgradeRequest;
 import org.eclipse.jetty.websocket.api.UpgradeResponse;
+import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.openchat.websocket.auth.AuthenticationException;
 import com.openchat.websocket.auth.WebSocketAuthProvider;
+import com.openchat.websocket.auth.WebSocketAuthenticator;
 import com.openchat.websocket.session.WebSocketSessionContextProvider;
 import com.openchat.websocket.setup.WebSocketEnvironment;
 
@@ -25,6 +28,8 @@ import javax.servlet.ServletRegistration;
 import javax.servlet.SessionCookieConfig;
 import javax.servlet.SessionTrackingMode;
 import javax.servlet.descriptor.JspConfigDescriptor;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -59,12 +64,31 @@ public class WebSocketResourceProviderFactory extends WebSocketServlet implement
   }
 
   @Override
-  public Object createWebSocket(UpgradeRequest req, UpgradeResponse resp) {
-    return new WebSocketResourceProvider(this.environment.getJerseyServletContainer(),
-                                         this.environment.getRequestLog(),
-                                         Optional.fromNullable(this.environment.getAuthenticator()),
-                                         this.environment.getMessageFactory(),
-                                         Optional.fromNullable(this.environment.getConnectListener()));
+  public Object createWebSocket(UpgradeRequest request, UpgradeResponse response) {
+    try {
+      Optional<WebSocketAuthenticator> authenticator = Optional.fromNullable(environment.getAuthenticator());
+      Object                           authenticated = null;
+
+      if (authenticator.isPresent()) {
+        Optional<Object> authenticatedOptional = authenticator.get().authenticate(request);
+
+        if (!authenticatedOptional.isPresent()) {
+          response.sendForbidden("Unauthorized");
+          return null;
+        } else {
+          authenticated = authenticatedOptional.get();
+        }
+      }
+
+      return new WebSocketResourceProvider(this.environment.getJerseyServletContainer(),
+                                           this.environment.getRequestLog(),
+                                           authenticated,
+                                           this.environment.getMessageFactory(),
+                                           Optional.fromNullable(this.environment.getConnectListener()));
+    } catch (AuthenticationException | IOException e) {
+      logger.warn("Authentication failure", e);
+      return null;
+    }
   }
 
   @Override
