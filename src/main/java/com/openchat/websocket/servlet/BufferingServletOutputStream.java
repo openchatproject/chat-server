@@ -1,6 +1,7 @@
 package com.openchat.websocket.servlet;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -34,6 +35,16 @@ public class BufferingServletOutputStream extends ServletOutputStream {
 
   @Override
   public void close() {
+
+  }
+
+  @Override
+  public boolean isReady() {
+    return true;
+  }
+
+  @Override
+  public void setWriteListener(WriteListener writeListener) {
 
   }
 }

@@ -3,6 +3,7 @@ package com.openchat.websocket;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
+import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketException;
 import org.slf4j.Logger;
@@ -22,14 +23,16 @@ public class WebSocketClient {
   private static final Logger logger = LoggerFactory.getLogger(WebSocketClient.class);
 
   private final Session                                             session;
+  private final RemoteEndpoint                                      remoteEndpoint;
   private final WebSocketMessageFactory                             messageFactory;
   private final Map<Long, SettableFuture<WebSocketResponseMessage>> pendingRequestMapper;
 
-  public WebSocketClient(Session session,
+  public WebSocketClient(Session session, RemoteEndpoint remoteEndpoint,
                          WebSocketMessageFactory messageFactory,
                          Map<Long, SettableFuture<WebSocketResponseMessage>> pendingRequestMapper)
   {
     this.session              = session;
+    this.remoteEndpoint       = remoteEndpoint;
     this.messageFactory       = messageFactory;
     this.pendingRequestMapper = pendingRequestMapper;
   }
@@ -45,7 +48,7 @@ public class WebSocketClient {
     WebSocketMessage requestMessage = messageFactory.createRequest(Optional.of(requestId), verb, path, body);
 
     try {
-      session.getRemote().sendBytes(ByteBuffer.wrap(requestMessage.toByteArray()));
+      remoteEndpoint.sendBytes(ByteBuffer.wrap(requestMessage.toByteArray()));
     } catch (IOException | WebSocketException e) {
       logger.debug("Write", e);
       pendingRequestMapper.remove(requestId);
@@ -56,11 +59,7 @@ public class WebSocketClient {
   }
 
   public void close(int code, String message) {
-    try {
-      session.close(code, message);
-    } catch (IOException e) {
-      logger.debug("Closing", e);
-    }
+    session.close(code, message);
   }
 
   private long generateRequestId() {

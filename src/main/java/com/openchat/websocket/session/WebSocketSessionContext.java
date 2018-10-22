@@ -1,6 +1,5 @@
 package com.openchat.websocket.session;
 
-import com.google.common.base.Optional;
 import com.openchat.websocket.WebSocketClient;
 
 import java.util.LinkedList;
@@ -12,7 +11,7 @@ public class WebSocketSessionContext {
 
   private final WebSocketClient webSocketClient;
 
-  private Object  authenticated;
+  private Object authenticated;
   private boolean closed;
 
   public WebSocketSessionContext(WebSocketClient webSocketClient) {
@@ -23,12 +22,12 @@ public class WebSocketSessionContext {
     this.authenticated = authenticated;
   }
 
-  public <T> Optional<T> getAuthenticated(Class<T> clazz) {
-    if (clazz.isInstance(authenticated)) {
-      return Optional.fromNullable(clazz.cast(authenticated));
+  public <T> T getAuthenticated(Class<T> clazz) {
+    if (authenticated != null && clazz.equals(authenticated.getClass())) {
+      return clazz.cast(authenticated);
     }
 
-    return Optional.absent();
+    throw new IllegalArgumentException("No authenticated type for: " + clazz);
   }
 
   public synchronized void addListener(WebSocketEventListener listener) {

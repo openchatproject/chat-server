@@ -227,11 +227,6 @@ public class LoggableRequest extends Request {
   }
 
   @Override
-  public MultiMap<String> getParameters() {
-    throw new AssertionError();
-  }
-
-  @Override
   public String[] getParameterValues(String name) {
     return request.getParameterValues(name);
   }
@@ -557,11 +552,6 @@ public class LoggableRequest extends Request {
   }
 
   @Override
-  public void setParameters(MultiMap<String> parameters) {
-    throw new AssertionError();
-  }
-
-  @Override
   public void setPathInfo(String pathInfo) {
     throw new AssertionError();
   }
@@ -686,8 +676,4 @@ public class LoggableRequest extends Request {
     throw new AssertionError();
   }
 
-  @Override
-  public void mergeQueryString(String query) {
-    throw new AssertionError();
-  }
 }

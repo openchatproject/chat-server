@@ -1,12 +1,13 @@
 package com.openchat.websocket.setup;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.jersey.spi.container.servlet.ServletContainer;
 import org.eclipse.jetty.server.RequestLog;
+import org.glassfish.jersey.servlet.ServletContainer;
 import com.openchat.websocket.auth.WebSocketAuthenticator;
 import com.openchat.websocket.messages.WebSocketMessageFactory;
 import com.openchat.websocket.messages.protobuf.ProtobufWebSocketMessageFactory;
 
+import javax.servlet.http.HttpServlet;
 import javax.validation.Validator;
 
 import io.dropwizard.Configuration;
@@ -25,9 +26,9 @@ public class WebSocketEnvironment {
   private final RequestLog            requestLog;
   private final long                  idleTimeoutMillis;
 
-  private WebSocketAuthenticator authenticator;
-  private WebSocketMessageFactory   messageFactory;
-  private WebSocketConnectListener  connectListener;
+  private WebSocketAuthenticator   authenticator;
+  private WebSocketMessageFactory  messageFactory;
+  private WebSocketConnectListener connectListener;
 
   public WebSocketEnvironment(Environment environment, Configuration configuration) {
     this(environment, configuration, 60000);
@@ -73,8 +74,8 @@ public class WebSocketEnvironment {
     return validator;
   }
 
-  public ServletContainer getJerseyServletContainer() {
-    return jerseyServletContainer.getContainer();
+  public HttpServlet getJerseyServletContainer() {
+    return (HttpServlet)jerseyServletContainer.getContainer();
   }
 
   public WebSocketMessageFactory getMessageFactory() {

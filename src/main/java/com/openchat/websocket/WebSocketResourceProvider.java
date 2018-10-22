@@ -4,6 +4,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.SettableFuture;
 import org.eclipse.jetty.server.RequestLog;
+import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketListener;
 import org.slf4j.Logger;
@@ -46,6 +47,7 @@ public class WebSocketResourceProvider implements WebSocketListener {
   private final long                               idleTimeoutMillis;
 
   private Session                 session;
+  private RemoteEndpoint          remoteEndpoint;
   private WebSocketSessionContext context;
 
   public WebSocketResourceProvider(HttpServlet                        servlet,
@@ -65,8 +67,9 @@ public class WebSocketResourceProvider implements WebSocketListener {
 
   @Override
   public void onWebSocketConnect(Session session) {
-    this.session = session;
-    this.context = new WebSocketSessionContext(new WebSocketClient(session, messageFactory, requestMap));
+    this.session        = session;
+    this.remoteEndpoint = session.getRemote();
+    this.context        = new WebSocketSessionContext(new WebSocketClient(session, remoteEndpoint, messageFactory, requestMap));
     this.context.setAuthenticated(authenticated);
     this.session.setIdleTimeout(idleTimeoutMillis);
 
@@ -146,11 +149,7 @@ public class WebSocketResourceProvider implements WebSocketListener {
   }
 
   private void close(Session session, int status, String message) {
-    try {
-      session.close(status, message);
-    } catch (IOException e) {
-      logger.debug("Close", e);
-    }
+    session.close(status, message);
   }
 
   private HttpServletRequest createRequest(WebSocketRequestMessage message,
@@ -161,7 +160,7 @@ public class WebSocketResourceProvider implements WebSocketListener {
 
   private HttpServletResponse createResponse(WebSocketRequestMessage message) {
     if (message.hasRequestId()) {
-      return new WebSocketServletResponse(session.getRemote(), message.getRequestId(), messageFactory);
+      return new WebSocketServletResponse(remoteEndpoint, message.getRequestId(), messageFactory);
     } else {
       return new NullServletResponse();
     }
@@ -174,7 +173,7 @@ public class WebSocketResourceProvider implements WebSocketListener {
                                                                 "Error response",
                                                                 Optional.<byte[]>absent());
 
-      session.getRemote().sendBytesByFuture(ByteBuffer.wrap(response.toByteArray()));
+      remoteEndpoint.sendBytesByFuture(ByteBuffer.wrap(response.toByteArray()));
     }
   }
 

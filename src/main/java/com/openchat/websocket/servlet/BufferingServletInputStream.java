@@ -1,5 +1,6 @@
 package com.openchat.websocket.servlet;
 
+import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -30,5 +31,20 @@ public class BufferingServletInputStream extends ServletInputStream {
   @Override
   public int available() {
     return buffer.available();
+  }
+
+  @Override
+  public boolean isFinished() {
+    return available() > 0;
+  }
+
+  @Override
+  public boolean isReady() {
+    return true;
+  }
+
+  @Override
+  public void setReadListener(ReadListener readListener) {
+
   }
 }

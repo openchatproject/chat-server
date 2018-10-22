@@ -15,6 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpUpgradeHandler;
 import javax.servlet.http.Part;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -180,6 +181,11 @@ public class WebSocketServletRequest implements HttpServletRequest {
   }
 
   @Override
+  public String changeSessionId() {
+    return null;
+  }
+
+  @Override
   public boolean isRequestedSessionIdValid() {
     return false;
   }
@@ -225,6 +231,11 @@ public class WebSocketServletRequest implements HttpServletRequest {
   }
 
   @Override
+  public <T extends HttpUpgradeHandler> T upgrade(Class<T> handlerClass) throws IOException, ServletException {
+    return null;
+  }
+
+  @Override
   public Object getAttribute(String name) {
     return attributes.get(name);
   }
@@ -249,6 +260,11 @@ public class WebSocketServletRequest implements HttpServletRequest {
     } else {
       return 0;
     }
+  }
+
+  @Override
+  public long getContentLengthLong() {
+    return getContentLength();
   }
 
   @Override

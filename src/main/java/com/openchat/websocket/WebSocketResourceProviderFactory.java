@@ -3,8 +3,7 @@ package com.openchat.websocket;
 import com.google.common.base.Optional;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.AttributesMap;
-import org.eclipse.jetty.websocket.api.UpgradeRequest;
-import org.eclipse.jetty.websocket.api.UpgradeResponse;
+import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
@@ -12,9 +11,9 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.websocket.auth.AuthenticationException;
-import com.openchat.websocket.auth.WebSocketAuthProvider;
 import com.openchat.websocket.auth.WebSocketAuthenticator;
-import com.openchat.websocket.session.WebSocketSessionContextProvider;
+import com.openchat.websocket.auth.internal.WebSocketAuthValueFactoryProvider;
+import com.openchat.websocket.session.WebSocketSessionContextValueFactoryProvider;
 import com.openchat.websocket.setup.WebSocketEnvironment;
 
 import javax.servlet.Filter;
@@ -28,7 +27,6 @@ import javax.servlet.ServletRegistration;
 import javax.servlet.SessionCookieConfig;
 import javax.servlet.SessionTrackingMode;
 import javax.servlet.descriptor.JspConfigDescriptor;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -53,8 +51,8 @@ public class WebSocketResourceProviderFactory extends WebSocketServlet implement
   {
     this.environment = environment;
 
-    environment.jersey().register(new WebSocketAuthProvider());
-    environment.jersey().register(new WebSocketSessionContextProvider());
+    environment.jersey().register(new WebSocketSessionContextValueFactoryProvider.Binder());
+    environment.jersey().register(new WebSocketAuthValueFactoryProvider.Binder());
     environment.jersey().register(new JacksonMessageBodyProvider(environment.getObjectMapper(),
                                                                  environment.getValidator()));
   }
@@ -64,7 +62,7 @@ public class WebSocketResourceProviderFactory extends WebSocketServlet implement
   }
 
   @Override
-  public Object createWebSocket(UpgradeRequest request, UpgradeResponse response) {
+  public Object createWebSocket(ServletUpgradeRequest request, ServletUpgradeResponse response) {
     try {
       Optional<WebSocketAuthenticator> authenticator = Optional.fromNullable(environment.getAuthenticator());
       Object                           authenticated = null;
@@ -118,7 +116,17 @@ public class WebSocketResourceProviderFactory extends WebSocketServlet implement
 
     @Override
     public Enumeration<String> getInitParameterNames() {
-      return null;
+      return new Enumeration<String>() {
+        @Override
+        public boolean hasMoreElements() {
+          return false;
+        }
+
+        @Override
+        public String nextElement() {
+          return null;
+        }
+      };
     }
   }
 
@@ -433,6 +441,11 @@ public class WebSocketResourceProviderFactory extends WebSocketServlet implement
     @Override
     public void declareRoles(String... roleNames)
     {
+    }
+
+    @Override
+    public String getVirtualServerName() {
+      return null;
     }
   }
 
