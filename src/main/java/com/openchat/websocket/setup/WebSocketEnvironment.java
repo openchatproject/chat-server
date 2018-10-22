@@ -2,7 +2,6 @@ package com.openchat.websocket.setup;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
-
 import org.eclipse.jetty.server.RequestLog;
 import com.openchat.websocket.auth.WebSocketAuthenticator;
 import com.openchat.websocket.messages.WebSocketMessageFactory;
@@ -24,12 +23,17 @@ public class WebSocketEnvironment {
   private final ObjectMapper          objectMapper;
   private final Validator             validator;
   private final RequestLog            requestLog;
+  private final long                  idleTimeoutMillis;
 
   private WebSocketAuthenticator authenticator;
   private WebSocketMessageFactory   messageFactory;
   private WebSocketConnectListener  connectListener;
 
   public WebSocketEnvironment(Environment environment, Configuration configuration) {
+    this(environment, configuration, 60000);
+  }
+
+  public WebSocketEnvironment(Environment environment, Configuration configuration, long idleTimeoutMillis) {
     DropwizardResourceConfig jerseyConfig = new DropwizardResourceConfig(environment.metrics());
 
     this.objectMapper           = environment.getObjectMapper();
@@ -38,6 +42,7 @@ public class WebSocketEnvironment {
     this.jerseyServletContainer = new JerseyContainerHolder(new ServletContainer(jerseyConfig)  );
     this.jerseyEnvironment      = new JerseyEnvironment(jerseyServletContainer, jerseyConfig);
     this.messageFactory         = new ProtobufWebSocketMessageFactory();
+    this.idleTimeoutMillis      = idleTimeoutMillis;
   }
 
   public JerseyEnvironment jersey() {
@@ -50,6 +55,10 @@ public class WebSocketEnvironment {
 
   public void setAuthenticator(WebSocketAuthenticator authenticator) {
     this.authenticator = authenticator;
+  }
+
+  public long getIdleTimeoutMillis() {
+    return idleTimeoutMillis;
   }
 
   public ObjectMapper getObjectMapper() {
