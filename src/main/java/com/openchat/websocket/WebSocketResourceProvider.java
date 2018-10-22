@@ -2,6 +2,7 @@ package com.openchat.websocket;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.SettableFuture;
+import org.eclipse.jetty.server.RequestLog;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketListener;
 import org.slf4j.Logger;
@@ -13,6 +14,8 @@ import com.openchat.websocket.messages.WebSocketMessage;
 import com.openchat.websocket.messages.WebSocketMessageFactory;
 import com.openchat.websocket.messages.WebSocketRequestMessage;
 import com.openchat.websocket.messages.WebSocketResponseMessage;
+import com.openchat.websocket.servlet.LoggableRequest;
+import com.openchat.websocket.servlet.LoggableResponse;
 import com.openchat.websocket.servlet.NullServletResponse;
 import com.openchat.websocket.servlet.WebSocketServletRequest;
 import com.openchat.websocket.servlet.WebSocketServletResponse;
@@ -40,16 +43,19 @@ public class WebSocketResourceProvider implements WebSocketListener {
   private final WebSocketMessageFactory            messageFactory;
   private final Optional<WebSocketConnectListener> connectListener;
   private final HttpServlet                        servlet;
+  private final RequestLog                         requestLog;
 
   private Session                 session;
   private WebSocketSessionContext context;
 
   public WebSocketResourceProvider(HttpServlet                        servlet,
+                                   RequestLog                         requestLog,
                                    Optional<WebSocketAuthenticator>   authenticator,
                                    WebSocketMessageFactory            messageFactory,
                                    Optional<WebSocketConnectListener> connectListener)
   {
     this.servlet         = servlet;
+    this.requestLog      = requestLog;
     this.authenticator   = authenticator;
     this.messageFactory  = messageFactory;
     this.connectListener = connectListener;
@@ -138,6 +144,7 @@ public class WebSocketResourceProvider implements WebSocketListener {
 
       servlet.service(servletRequest, servletResponse);
       servletResponse.flushBuffer();
+      requestLog.log(new LoggableRequest(servletRequest), new LoggableResponse(servletResponse));
     } catch (IOException | ServletException e) {
       logger.warn("Servlet Error", e);
       sendErrorResponse(requestMessage, Response.status(500).build());
