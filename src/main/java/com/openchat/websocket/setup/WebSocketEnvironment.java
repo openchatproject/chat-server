@@ -1,10 +1,8 @@
 package com.openchat.websocket.setup;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
 import org.eclipse.jetty.server.RequestLog;
 import org.glassfish.jersey.servlet.ServletContainer;
-import org.slf4j.LoggerFactory;
 import com.openchat.websocket.auth.WebSocketAuthenticator;
 import com.openchat.websocket.configuration.WebSocketConfiguration;
 import com.openchat.websocket.messages.WebSocketMessageFactory;
@@ -13,23 +11,9 @@ import com.openchat.websocket.messages.protobuf.ProtobufWebSocketMessageFactory;
 import javax.servlet.http.HttpServlet;
 import javax.validation.Validator;
 
-import ch.qos.logback.access.spi.IAccessEvent;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
 import io.dropwizard.jersey.DropwizardResourceConfig;
 import io.dropwizard.jersey.setup.JerseyContainerHolder;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
-import io.dropwizard.logging.AppenderFactory;
-import io.dropwizard.logging.async.AsyncAppenderFactory;
-import io.dropwizard.logging.filter.LevelFilterFactory;
-import io.dropwizard.logging.filter.NullLevelFilterFactory;
-import io.dropwizard.logging.layout.LayoutFactory;
-import io.dropwizard.request.logging.LogbackAccessRequestLog;
-import io.dropwizard.request.logging.LogbackAccessRequestLogFactory;
-import io.dropwizard.request.logging.RequestLogFactory;
-import io.dropwizard.request.logging.async.AsyncAccessEventAppenderFactory;
-import io.dropwizard.request.logging.layout.LogbackAccessRequestLayoutFactory;
-import io.dropwizard.server.AbstractServerFactory;
 import io.dropwizard.setup.Environment;
 
 public class WebSocketEnvironment {
