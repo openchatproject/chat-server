@@ -1,7 +1,6 @@
 package com.openchat.websocket;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Optional;
 import com.google.common.util.concurrent.SettableFuture;
 import org.eclipse.jetty.server.RequestLog;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
@@ -32,9 +31,11 @@ import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class WebSocketResourceProvider implements WebSocketListener {
 
   private static final Logger logger = LoggerFactory.getLogger(WebSocketResourceProvider.class);
@@ -180,7 +181,7 @@ public class WebSocketResourceProvider implements WebSocketListener {
                                                                 error.getStatus(),
                                                                 "Error response",
                                                                 headers,
-                                                                Optional.<byte[]>absent());
+                                                                Optional.<byte[]>empty());
 
       remoteEndpoint.sendBytesByFuture(ByteBuffer.wrap(response.toByteArray()));
     }

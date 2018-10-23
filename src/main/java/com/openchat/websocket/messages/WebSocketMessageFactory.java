@@ -1,9 +1,10 @@
 package com.openchat.websocket.messages;
 
-import com.google.common.base.Optional;
 
 import java.util.List;
+import java.util.Optional;
 
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public interface WebSocketMessageFactory {
 
   public WebSocketMessage parseMessage(byte[] serialized, int offset, int len)

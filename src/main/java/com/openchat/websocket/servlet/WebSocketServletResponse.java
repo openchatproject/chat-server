@@ -1,6 +1,5 @@
 package com.openchat.websocket.servlet;
 
-import com.google.common.base.Optional;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +15,12 @@ import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Optional;
 
 
 public class WebSocketServletResponse implements HttpServletResponse {
 
+  @SuppressWarnings("unused")
   private static final Logger logger = LoggerFactory.getLogger(WebSocketServletResponse.class);
 
   private final RemoteEndpoint          endPoint;
@@ -185,8 +186,8 @@ public class WebSocketServletResponse implements HttpServletResponse {
       byte[] response = messageFactory.createResponse(responseBuilder.getRequestId(),
                                                       responseBuilder.getStatusCode(),
                                                       responseBuilder.getMessage(),
-                                                      new LinkedList<String>(),
-                                                      Optional.fromNullable(body))
+                                                      new LinkedList<>(),
+                                                      Optional.ofNullable(body))
                                       .toByteArray();
 
       endPoint.sendBytesByFuture(ByteBuffer.wrap(response));

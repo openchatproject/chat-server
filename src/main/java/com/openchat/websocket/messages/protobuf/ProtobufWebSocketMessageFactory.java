@@ -1,12 +1,12 @@
 package com.openchat.websocket.messages.protobuf;
 
-import com.google.common.base.Optional;
 import com.google.protobuf.ByteString;
 import com.openchat.websocket.messages.InvalidMessageException;
 import com.openchat.websocket.messages.WebSocketMessage;
 import com.openchat.websocket.messages.WebSocketMessageFactory;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ProtobufWebSocketMessageFactory implements WebSocketMessageFactory {
 

@@ -1,6 +1,5 @@
 package com.openchat.websocket;
 
-import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
@@ -18,7 +17,9 @@ import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class WebSocketClient {
 
   private static final Logger logger = LoggerFactory.getLogger(WebSocketClient.class);

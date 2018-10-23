@@ -1,10 +1,10 @@
 package com.openchat.websocket.messages.protobuf;
 
-import com.google.common.base.Optional;
 import com.openchat.websocket.messages.WebSocketRequestMessage;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class ProtobufWebSocketRequestMessage implements WebSocketRequestMessage {
 
@@ -29,7 +29,7 @@ public class ProtobufWebSocketRequestMessage implements WebSocketRequestMessage 
     if (message.hasBody()) {
       return Optional.of(message.getBody().toByteArray());
     } else {
-      return Optional.absent();
+      return Optional.empty();
     }
   }
 
