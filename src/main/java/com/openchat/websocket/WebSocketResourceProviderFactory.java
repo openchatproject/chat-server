@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openchat.websocket.auth.AuthenticationException;
 import com.openchat.websocket.auth.WebSocketAuthenticator;
+import com.openchat.websocket.auth.WebSocketAuthenticator.AuthenticationResult;
 import com.openchat.websocket.auth.internal.WebSocketAuthValueFactoryProvider;
 import com.openchat.websocket.session.WebSocketSessionContextValueFactoryProvider;
 import com.openchat.websocket.setup.WebSocketEnvironment;
@@ -67,13 +68,13 @@ public class WebSocketResourceProviderFactory extends WebSocketServlet implement
       Object                           authenticated = null;
 
       if (authenticator.isPresent()) {
-        Optional<Object> authenticatedOptional = authenticator.get().authenticate(request);
+        AuthenticationResult authenticationResult = authenticator.get().authenticate(request);
 
-        if (!authenticatedOptional.isPresent()) {
+        if (!authenticationResult.getUser().isPresent() && authenticationResult.isRequired()) {
           response.sendForbidden("Unauthorized");
           return null;
         } else {
-          authenticated = authenticatedOptional.get();
+          authenticated = authenticationResult.getUser().orElse(null);
         }
       }
 
