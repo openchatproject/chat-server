@@ -30,6 +30,10 @@ public class WebSocketSessionContext {
     throw new IllegalArgumentException("No authenticated type for: " + clazz);
   }
 
+  public Object getAuthenticated() {
+    return authenticated;
+  }
+
   public synchronized void addListener(WebSocketEventListener listener) {
     if (!closed) this.closeListeners.add(listener);
     else         listener.onWebSocketClose(this, 1000, "Closed");
