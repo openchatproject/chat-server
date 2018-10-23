@@ -3,7 +3,7 @@ package com.openchat.websocket.auth;
 import org.eclipse.jetty.server.Authentication;
 import org.eclipse.jetty.websocket.api.UpgradeRequest;
 
-import java.util.Optional;
+import com.google.common.base.Optional;
 
 public interface WebSocketAuthenticator<T> {
   AuthenticationResult<T> authenticate(UpgradeRequest request) throws AuthenticationException;

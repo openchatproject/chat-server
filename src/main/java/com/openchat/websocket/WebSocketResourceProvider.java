@@ -31,7 +31,7 @@ import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import com.google.common.base.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -181,7 +181,7 @@ public class WebSocketResourceProvider implements WebSocketListener {
                                                                 error.getStatus(),
                                                                 "Error response",
                                                                 headers,
-                                                                Optional.<byte[]>empty());
+                                                                Optional.<byte[]>absent());
 
       remoteEndpoint.sendBytesByFuture(ByteBuffer.wrap(response.toByteArray()));
     }

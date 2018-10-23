@@ -15,7 +15,7 @@ import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Locale;
-import java.util.Optional;
+import com.google.common.base.Optional;
 
 
 public class WebSocketServletResponse implements HttpServletResponse {
@@ -187,7 +187,7 @@ public class WebSocketServletResponse implements HttpServletResponse {
                                                       responseBuilder.getStatusCode(),
                                                       responseBuilder.getMessage(),
                                                       new LinkedList<>(),
-                                                      Optional.ofNullable(body))
+                                                      Optional.fromNullable(body))
                                       .toByteArray();
 
       endPoint.sendBytesByFuture(ByteBuffer.wrap(response));

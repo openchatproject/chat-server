@@ -2,7 +2,7 @@ package com.openchat.websocket.messages;
 
 
 import java.util.Map;
-import java.util.Optional;
+import com.google.common.base.Optional;
 
 public interface WebSocketResponseMessage {
   public long               getRequestId();

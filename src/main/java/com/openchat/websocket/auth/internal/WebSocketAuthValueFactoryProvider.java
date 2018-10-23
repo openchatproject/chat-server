@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.WebApplicationException;
 import java.security.Principal;
-import java.util.Optional;
+import com.google.common.base.Optional;
 
 import io.dropwizard.auth.Auth;
 
@@ -58,8 +58,8 @@ public class WebSocketAuthValueFactoryProvider extends AbstractValueFactoryProvi
         throw new IllegalArgumentException("Can't inject non-ContextPrincipal into request");
       }
 
-      if (principal == null) return Optional.empty();
-      else                   return Optional.ofNullable(((WebSocketServletRequest.ContextPrincipal)principal).getContext().getAuthenticated());
+      if (principal == null) return Optional.absent();
+      else                   return Optional.fromNullable(((WebSocketServletRequest.ContextPrincipal)principal).getContext().getAuthenticated());
 
     }
   }

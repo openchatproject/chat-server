@@ -2,7 +2,7 @@ package com.openchat.websocket.messages;
 
 
 import java.util.List;
-import java.util.Optional;
+import com.google.common.base.Optional;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public interface WebSocketMessageFactory {
