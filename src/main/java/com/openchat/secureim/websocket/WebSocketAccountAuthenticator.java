@@ -23,7 +23,7 @@ public class WebSocketAccountAuthenticator implements WebSocketAuthenticator<Acc
   }
 
   @Override
-  public Optional<Account> authenticate(UpgradeRequest request) throws AuthenticationException {
+  public AuthenticationResult<Account> authenticate(UpgradeRequest request) throws AuthenticationException {
     try {
       Map<String, List<String>> parameters = request.getParameterMap();
       List<String>              usernames  = parameters.get("login");
@@ -32,13 +32,13 @@ public class WebSocketAccountAuthenticator implements WebSocketAuthenticator<Acc
       if (usernames == null || usernames.size() == 0 ||
           passwords == null || passwords.size() == 0)
       {
-        return Optional.absent();
+        return new AuthenticationResult<>(Optional.absent(), true);
       }
 
       BasicCredentials credentials = new BasicCredentials(usernames.get(0).replace(" ", "+"),
                                                           passwords.get(0).replace(" ", "+"));
-      
-      return accountAuthenticator.authenticate(credentials);
+
+      return new AuthenticationResult<>(accountAuthenticator.authenticate(credentials), true);
     } catch (io.dropwizard.auth.AuthenticationException e) {
       throw new AuthenticationException(e);
     }
