@@ -36,6 +36,7 @@ public class Message {
     return objectMapper.writeValueAsString(requestEntity);
   }
 
+  
   public static Builder newBuilder() {
     return new Builder();
   }
@@ -50,21 +51,25 @@ public class Message {
 
     private Builder() {}
 
+    
     public Builder withCollapseKey(String collapseKey) {
       this.collapseKey = collapseKey;
       return this;
     }
 
+    
     public Builder withTtl(long seconds) {
       this.ttl = seconds;
       return this;
     }
 
+    
     public Builder withDelayWhileIdle(boolean delayWhileIdle) {
       this.delayWhileIdle = delayWhileIdle;
       return this;
     }
 
+    
     public Builder withDataPart(String key, String value) {
       if (data == null) {
         data = new HashMap<>();
@@ -73,12 +78,14 @@ public class Message {
       return this;
     }
 
+    
     public Builder withDestination(String registrationId) {
       this.registrationIds.clear();
       this.registrationIds.add(registrationId);
       return this;
     }
 
+    
     public Message build() {
       if (registrationIds.isEmpty()) {
         throw new IllegalArgumentException("You must specify a destination!");

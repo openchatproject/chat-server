@@ -26,6 +26,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeoutException;
 
+
 public class Sender {
 
   private static final String PRODUCTION_URL = "https://android.googleapis.com/gcm/send";
@@ -35,10 +36,12 @@ public class Sender {
   private final RetryExecutor            executor;
   private final String                   url;
 
+  
   public Sender(String apiKey) {
     this(apiKey, 10);
   }
 
+  
   public Sender(String apiKey, int retryCount) {
     this(apiKey, retryCount, PRODUCTION_URL);
   }
@@ -66,10 +69,12 @@ public class Sender {
     this.client.start();
   }
 
+  
   public ListenableFuture<Result> send(Message message) {
     return send(message, null);
   }
 
+  
   public ListenableFuture<Result> send(final Message message, final Object requestContext) {
     return executor.getFutureWithRetry(new RetryCallable<ListenableFuture<Result>>() {
       @Override
@@ -88,6 +93,7 @@ public class Sender {
     });
   }
 
+  
   public void stop() throws IOException {
     this.client.close();
   }
