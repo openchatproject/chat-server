@@ -1,0 +1,7 @@
+dependencies {
+    compile group: 'io.dropwizard', name: 'dropwizard-core', version:'1.1.0'
+    compile group: 'org.apache.httpcomponents', name:'httpasyncclient', version:'4.0.2'
+    compile group: 'com.nurkiewicz.asyncretry', name:'asyncretry-jdk7', version:'0.0.5'
+    testCompile group: 'org.mockito', name: 'mockito-core', version:'2.7.22'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
