@@ -18,20 +18,23 @@ public class Message {
   private final Boolean             delayWhileIdle;
   private final Map<String, String> data;
   private final List<String>        registrationIds;
+  private final String              priority;
 
   private Message(String collapseKey, Long ttl, Boolean delayWhileIdle,
-                  Map<String, String> data, List<String> registrationIds)
+                  Map<String, String> data, List<String> registrationIds,
+                  String priority)
   {
     this.collapseKey     = collapseKey;
     this.ttl             = ttl;
     this.delayWhileIdle  = delayWhileIdle;
     this.data            = data;
     this.registrationIds = registrationIds;
+    this.priority        = priority;
   }
 
   public String serialize() throws JsonProcessingException {
     GcmRequestEntity requestEntity = new GcmRequestEntity(collapseKey, ttl, delayWhileIdle,
-                                                          data, registrationIds);
+                                                          data, registrationIds, priority);
 
     return objectMapper.writeValueAsString(requestEntity);
   }
@@ -48,6 +51,7 @@ public class Message {
     private Boolean             delayWhileIdle  = null;
     private Map<String, String> data            = null;
     private List<String>        registrationIds = new LinkedList<>();
+    private String              priority        = null;
 
     private Builder() {}
 
@@ -86,12 +90,18 @@ public class Message {
     }
 
     
+    public Builder withPriority(String priority) {
+      this.priority = priority;
+      return this;
+    }
+
+    
     public Message build() {
       if (registrationIds.isEmpty()) {
         throw new IllegalArgumentException("You must specify a destination!");
       }
 
-      return new Message(collapseKey, ttl, delayWhileIdle, data, registrationIds);
+      return new Message(collapseKey, ttl, delayWhileIdle, data, registrationIds, priority);
     }
   }
 

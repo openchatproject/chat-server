@@ -20,6 +20,7 @@ import org.apache.http.util.EntityUtils;
 import com.openchat.messaging.server.internal.GcmResponseEntity;
 import com.openchat.messaging.server.internal.GcmResponseListEntity;
 
+import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Executors;
