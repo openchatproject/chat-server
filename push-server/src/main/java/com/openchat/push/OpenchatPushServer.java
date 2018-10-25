@@ -47,7 +47,8 @@ public class OpenchatPushServer extends Application<OpenchatPushConfiguration> {
 
     APNSender apnSender = new APNSender(redisClient, apnQueue,
                                         config.getApnConfiguration().getCertificate(),
-                                        config.getApnConfiguration().getKey());
+                                        config.getApnConfiguration().getKey(),
+                                        config.getApnConfiguration().isFeedbackEnabled());
     GCMSender gcmSender = new GCMSender(gcmQueue,
                                         config.getGcmConfiguration().getSenderId(),
                                         config.getGcmConfiguration().getApiKey());
