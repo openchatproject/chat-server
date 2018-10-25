@@ -2,6 +2,7 @@ package com.openchat.push;
 
 import com.codahale.metrics.SharedMetricRegistries;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import com.openchat.push.auth.Server;
 import com.openchat.push.auth.ServerAuthenticator;
 import com.openchat.push.controllers.FeedbackController;
@@ -13,6 +14,7 @@ import com.openchat.push.senders.GCMSender;
 import com.openchat.push.senders.UnregisteredQueue;
 import com.openchat.push.util.Constants;
 
+import java.security.Security;
 import java.util.List;
 
 import io.dropwizard.Application;
@@ -23,10 +25,12 @@ import redis.clients.jedis.JedisPool;
 
 public class OpenchatPushServer extends Application<OpenchatPushConfiguration> {
 
-  @Override
-  public void initialize(Bootstrap<OpenchatPushConfiguration> bootstrap) {
-
+  static {
+    Security.addProvider(new BouncyCastleProvider());
   }
+
+  @Override
+  public void initialize(Bootstrap<OpenchatPushConfiguration> bootstrap) {}
 
   @Override
   public void run(OpenchatPushConfiguration config, Environment environment) throws Exception {
@@ -54,5 +58,9 @@ public class OpenchatPushServer extends Application<OpenchatPushConfiguration> {
     environment.jersey().register(new FeedbackController(gcmQueue, apnQueue));
 
     environment.healthChecks().register("Redis", new RedisHealthCheck(redisClient));
+  }
+
+  public static void main(String[] args) throws Exception {
+    new OpenchatPushServer().run(args);
   }
 }
