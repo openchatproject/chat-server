@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.openchat.push.config.ApnConfiguration;
 import com.openchat.push.config.AuthenticationConfiguration;
 import com.openchat.push.config.GcmConfiguration;
+import com.openchat.push.config.MetricsConfiguration;
 import com.openchat.push.config.RedisConfiguration;
 
 import javax.validation.Valid;
@@ -32,6 +33,15 @@ public class OpenchatPushConfiguration extends Configuration {
   @Valid
   @NotNull
   private GcmConfiguration gcm;
+
+  @JsonProperty
+  @Valid
+  @NotNull
+  private MetricsConfiguration viz = new MetricsConfiguration();
+
+  public MetricsConfiguration getMetricsConfiguration() {
+    return viz;
+  }
 
   public AuthenticationConfiguration getAuthenticationConfiguration() {
     return authentication;

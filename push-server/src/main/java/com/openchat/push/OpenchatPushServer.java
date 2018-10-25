@@ -7,6 +7,7 @@ import com.openchat.push.auth.Server;
 import com.openchat.push.auth.ServerAuthenticator;
 import com.openchat.push.controllers.FeedbackController;
 import com.openchat.push.controllers.PushController;
+import com.openchat.push.metrics.JsonMetricsReporter;
 import com.openchat.push.providers.RedisClientFactory;
 import com.openchat.push.providers.RedisHealthCheck;
 import com.openchat.push.senders.APNSender;
@@ -16,6 +17,7 @@ import com.openchat.push.util.Constants;
 
 import java.security.Security;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.dropwizard.Application;
 import io.dropwizard.auth.basic.BasicAuthProvider;
@@ -58,6 +60,13 @@ public class OpenchatPushServer extends Application<OpenchatPushConfiguration> {
     environment.jersey().register(new FeedbackController(gcmQueue, apnQueue));
 
     environment.healthChecks().register("Redis", new RedisHealthCheck(redisClient));
+
+    if (config.getMetricsConfiguration().isEnabled()) {
+      new JsonMetricsReporter(environment.metrics(),
+                              config.getMetricsConfiguration().getToken(),
+                              config.getMetricsConfiguration().getHost())
+          .start(60, TimeUnit.SECONDS);
+    }
   }
 
   public static void main(String[] args) throws Exception {
