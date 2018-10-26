@@ -64,13 +64,6 @@ public class OpenchatPushServer extends Application<OpenchatPushConfiguration> {
     environment.jersey().register(new FeedbackController(gcmQueue, apnQueue));
 
     environment.healthChecks().register("Redis", new RedisHealthCheck(redisClient));
-
-    if (config.getMetricsConfiguration().isEnabled()) {
-      new JsonMetricsReporter(environment.metrics(),
-                              config.getMetricsConfiguration().getToken(),
-                              config.getMetricsConfiguration().getHost())
-          .start(60, TimeUnit.SECONDS);
-    }
   }
 
   private APNSender initializeApnSender(JedisPool redisClient,
