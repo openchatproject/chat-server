@@ -3,8 +3,12 @@ package com.openchat.push;
 import com.codahale.metrics.SharedMetricRegistries;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.openchat.push.auth.Server;
 import com.openchat.push.auth.ServerAuthenticator;
+import com.openchat.push.config.ApnConfiguration;
+import com.openchat.push.config.GcmConfiguration;
 import com.openchat.push.controllers.FeedbackController;
 import com.openchat.push.controllers.PushController;
 import com.openchat.push.metrics.JsonMetricsReporter;
@@ -12,6 +16,8 @@ import com.openchat.push.providers.RedisClientFactory;
 import com.openchat.push.providers.RedisHealthCheck;
 import com.openchat.push.senders.APNSender;
 import com.openchat.push.senders.GCMSender;
+import com.openchat.push.senders.HttpGCMSender;
+import com.openchat.push.senders.XmppGCMSender;
 import com.openchat.push.senders.UnregisteredQueue;
 import com.openchat.push.util.Constants;
 
@@ -26,6 +32,8 @@ import io.dropwizard.setup.Environment;
 import redis.clients.jedis.JedisPool;
 
 public class OpenchatPushServer extends Application<OpenchatPushConfiguration> {
+
+  private final Logger logger = LoggerFactory.getLogger(OpenchatPushServer.class);
 
   static {
     Security.addProvider(new BouncyCastleProvider());
@@ -45,13 +53,8 @@ public class OpenchatPushServer extends Application<OpenchatPushConfiguration> {
     UnregisteredQueue   apnQueue            = new UnregisteredQueue(redisClient, environment.getObjectMapper(), servers, "apn");
     UnregisteredQueue   gcmQueue            = new UnregisteredQueue(redisClient, environment.getObjectMapper(), servers, "gcm");
 
-    APNSender apnSender = new APNSender(redisClient, apnQueue,
-                                        config.getApnConfiguration().getCertificate(),
-                                        config.getApnConfiguration().getKey(),
-                                        config.getApnConfiguration().isFeedbackEnabled());
-    GCMSender gcmSender = new GCMSender(gcmQueue,
-                                        config.getGcmConfiguration().getSenderId(),
-                                        config.getGcmConfiguration().getApiKey());
+    APNSender apnSender = initializeApnSender(redisClient, apnQueue, config.getApnConfiguration());
+    GCMSender gcmSender = initializeGcmSender(gcmQueue, config.getGcmConfiguration());
 
     environment.lifecycle().manage(apnSender);
     environment.lifecycle().manage(gcmSender);
@@ -67,6 +70,28 @@ public class OpenchatPushServer extends Application<OpenchatPushConfiguration> {
                               config.getMetricsConfiguration().getToken(),
                               config.getMetricsConfiguration().getHost())
           .start(60, TimeUnit.SECONDS);
+    }
+  }
+
+  private APNSender initializeApnSender(JedisPool redisClient,
+                                        UnregisteredQueue apnQueue,
+                                        ApnConfiguration configuration)
+  {
+    return new APNSender(redisClient, apnQueue,
+                         configuration.getCertificate(),
+                         configuration.getKey(),
+                         configuration.isFeedbackEnabled());
+  }
+
+  private GCMSender initializeGcmSender(UnregisteredQueue gcmQueue,
+                                        GcmConfiguration configuration)
+  {
+    if (configuration.isXmpp()) {
+      logger.info("Using XMPP GCM Interface.");
+      return new XmppGCMSender(gcmQueue, configuration.getSenderId(), configuration.getApiKey());
+    } else {
+      logger.info("Using HTTP GCM Interface.");
+      return new HttpGCMSender(gcmQueue, configuration.getApiKey());
     }
   }
 
