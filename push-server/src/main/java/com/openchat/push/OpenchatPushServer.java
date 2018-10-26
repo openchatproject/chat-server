@@ -11,19 +11,17 @@ import com.openchat.push.config.ApnConfiguration;
 import com.openchat.push.config.GcmConfiguration;
 import com.openchat.push.controllers.FeedbackController;
 import com.openchat.push.controllers.PushController;
-import com.openchat.push.metrics.JsonMetricsReporter;
 import com.openchat.push.providers.RedisClientFactory;
 import com.openchat.push.providers.RedisHealthCheck;
 import com.openchat.push.senders.APNSender;
 import com.openchat.push.senders.GCMSender;
 import com.openchat.push.senders.HttpGCMSender;
-import com.openchat.push.senders.XmppGCMSender;
 import com.openchat.push.senders.UnregisteredQueue;
+import com.openchat.push.senders.XmppGCMSender;
 import com.openchat.push.util.Constants;
 
 import java.security.Security;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import io.dropwizard.Application;
 import io.dropwizard.auth.basic.BasicAuthProvider;
@@ -71,8 +69,10 @@ public class OpenchatPushServer extends Application<OpenchatPushConfiguration> {
                                         ApnConfiguration configuration)
   {
     return new APNSender(redisClient, apnQueue,
-                         configuration.getCertificate(),
-                         configuration.getKey(),
+                         configuration.getPushCertificate(),
+                         configuration.getPushKey(),
+                         configuration.getVoipCertificate(),
+                         configuration.getVoipKey(),
                          configuration.isFeedbackEnabled());
   }
 
