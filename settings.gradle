@@ -1,4 +1,4 @@
 rootProject.name = 'chat-server'
-include ':im-server'
-include ':message-lib'
-include ':push-server'
+include ':server-im'
+include ':lib-push'
+include ':server-push'

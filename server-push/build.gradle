@@ -1,5 +1,5 @@
 dependencies {
-    compile project(":message-lib")
+    compile project(":lib-push")
     compile group: 'io.dropwizard', name: 'dropwizard-core', version:'0.8.1'
     compile group: 'io.dropwizard', name: 'dropwizard-auth', version:'0.8.1'
     compile group: 'io.dropwizard', name: 'dropwizard-client', version:'0.8.1'
