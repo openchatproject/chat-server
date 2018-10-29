@@ -15,6 +15,10 @@ public class GcmConfiguration {
   @JsonProperty
   private String apiKey;
 
+  @NotEmpty
+  @JsonProperty
+  private String redphoneApiKey;
+
   @JsonProperty
   private boolean xmpp = false;
 
@@ -28,5 +32,9 @@ public class GcmConfiguration {
 
   public boolean isXmpp() {
     return xmpp;
+  }
+
+  public String getRedphoneApiKey() {
+    return redphoneApiKey;
   }
 }

@@ -85,7 +85,7 @@ public class OpenchatPushServer extends Application<OpenchatPushConfiguration> {
       return new XmppGCMSender(gcmQueue, configuration.getSenderId(), configuration.getApiKey());
     } else {
       logger.info("Using HTTP GCM Interface.");
-      return new HttpGCMSender(gcmQueue, configuration.getApiKey());
+      return new HttpGCMSender(gcmQueue, configuration.getApiKey(), configuration.getRedphoneApiKey());
     }
   }
 
