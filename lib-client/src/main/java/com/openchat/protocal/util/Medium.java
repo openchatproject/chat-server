@@ -1,0 +1,5 @@
+package com.openchat.protocal.util;
+
+public class Medium {
+  public static int MAX_VALUE = 0xFFFFFF;
+}
