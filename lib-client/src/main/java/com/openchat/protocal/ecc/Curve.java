@@ -1,23 +1,22 @@
 package com.openchat.protocal.ecc;
 
-import com.openchat.curve25519.Curve25519KeyPair;
-import com.openchat.protocal.InvalidKeyException;
 import com.openchat.curve25519.Curve25519;
+import com.openchat.curve25519.Curve25519KeyPair;
+import com.openchat.curve25519.NoSuchProviderException;
+import com.openchat.protocal.InvalidKeyException;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import static com.openchat.curve25519.Curve25519.BEST;
 
 public class Curve {
 
   public  static final int DJB_TYPE   = 0x05;
 
   public static boolean isNative() {
-    return Curve25519.isNative();
+    return Curve25519.getInstance(BEST).isNative();
   }
 
   public static ECKeyPair generateKeyPair() {
-    SecureRandom      secureRandom = getSecureRandom();
-    Curve25519KeyPair keyPair      = Curve25519.generateKeyPair(secureRandom);
+    Curve25519KeyPair keyPair = Curve25519.getInstance(BEST).generateKeyPair();
 
     return new ECKeyPair(new DjbECPublicKey(keyPair.getPublicKey()),
                          new DjbECPrivateKey(keyPair.getPrivateKey()));
@@ -50,8 +49,9 @@ public class Curve {
     }
 
     if (publicKey.getType() == DJB_TYPE) {
-      return Curve25519.calculateAgreement(((DjbECPublicKey)publicKey).getPublicKey(),
-                                           ((DjbECPrivateKey)privateKey).getPrivateKey());
+      return Curve25519.getInstance(BEST)
+                       .calculateAgreement(((DjbECPublicKey) publicKey).getPublicKey(),
+                                           ((DjbECPrivateKey) privateKey).getPrivateKey());
     } else {
       throw new InvalidKeyException("Unknown type: " + publicKey.getType());
     }
@@ -61,7 +61,8 @@ public class Curve {
       throws InvalidKeyException
   {
     if (signingKey.getType() == DJB_TYPE) {
-      return Curve25519.verifySignature(((DjbECPublicKey)signingKey).getPublicKey(), message, signature);
+      return Curve25519.getInstance(BEST)
+                       .verifySignature(((DjbECPublicKey) signingKey).getPublicKey(), message, signature);
     } else {
       throw new InvalidKeyException("Unknown type: " + signingKey.getType());
     }
@@ -71,17 +72,10 @@ public class Curve {
       throws InvalidKeyException
   {
     if (signingKey.getType() == DJB_TYPE) {
-      return Curve25519.calculateSignature(getSecureRandom(), ((DjbECPrivateKey)signingKey).getPrivateKey(), message);
+      return Curve25519.getInstance(BEST)
+                       .calculateSignature(((DjbECPrivateKey) signingKey).getPrivateKey(), message);
     } else {
       throw new InvalidKeyException("Unknown type: " + signingKey.getType());
-    }
-  }
-
-  private static SecureRandom getSecureRandom() {
-    try {
-      return SecureRandom.getInstance("SHA1PRNG");
-    } catch (NoSuchAlgorithmException e) {
-      throw new AssertionError(e);
     }
   }
 }
