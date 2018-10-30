@@ -22,18 +22,20 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+
 public class GroupCipher {
 
   static final Object LOCK = new Object();
 
   private final SenderKeyStore senderKeyStore;
-  private final String         senderKeyId;
+  private final SenderKeyName senderKeyId;
 
-  public GroupCipher(SenderKeyStore senderKeyStore, String senderKeyId) {
+  public GroupCipher(SenderKeyStore senderKeyStore, SenderKeyName senderKeyId) {
     this.senderKeyStore = senderKeyStore;
     this.senderKeyId    = senderKeyId;
   }
 
+  
   public byte[] encrypt(byte[] paddedPlaintext) throws NoSessionException {
     synchronized (LOCK) {
       try {
@@ -58,6 +60,7 @@ public class GroupCipher {
     }
   }
 
+  
   public byte[] decrypt(byte[] senderKeyMessageBytes)
       throws LegacyMessageException, InvalidMessageException, DuplicateMessageException
   {

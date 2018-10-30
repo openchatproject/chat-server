@@ -3,6 +3,7 @@ package com.openchat.protocal.groups.ratchet;
 import com.openchat.protocal.kdf.HKDFv3;
 import com.openchat.protocal.util.ByteUtil;
 
+
 public class SenderMessageKey {
 
   private final int    iteration;

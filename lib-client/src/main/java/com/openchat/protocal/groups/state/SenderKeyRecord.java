@@ -11,6 +11,7 @@ import java.util.List;
 
 import static com.openchat.protocal.state.StorageProtos.SenderKeyRecordStructure;
 
+
 public class SenderKeyRecord {
 
   private List<SenderKeyState> senderKeyStates = new LinkedList<>();
@@ -23,6 +24,10 @@ public class SenderKeyRecord {
     for (StorageProtos.SenderKeyStateStructure structure : senderKeyRecordStructure.getSenderKeyStatesList()) {
       this.senderKeyStates.add(new SenderKeyState(structure));
     }
+  }
+
+  public boolean isEmpty() {
+    return senderKeyStates.isEmpty();
   }
 
   public SenderKeyState getSenderKeyState() throws InvalidKeyIdException {

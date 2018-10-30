@@ -17,6 +17,7 @@ import java.util.List;
 
 import static com.openchat.protocal.state.StorageProtos.SenderKeyStateStructure;
 
+
 public class SenderKeyState {
 
   private SenderKeyStateStructure senderKeyStateStructure;

@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+
 public class SenderChainKey {
 
   private static final byte[] MESSAGE_KEY_SEED = {0x01};
