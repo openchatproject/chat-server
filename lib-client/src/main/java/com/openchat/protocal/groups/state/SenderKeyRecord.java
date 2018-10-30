@@ -14,7 +14,9 @@ import static com.openchat.protocal.state.StorageProtos.SenderKeyRecordStructure
 
 public class SenderKeyRecord {
 
-  private List<SenderKeyState> senderKeyStates = new LinkedList<>();
+  private static final int MAX_STATES = 5;
+
+  private LinkedList<SenderKeyState> senderKeyStates = new LinkedList<>();
 
   public SenderKeyRecord() {}
 
@@ -50,6 +52,10 @@ public class SenderKeyRecord {
 
   public void addSenderKeyState(int id, int iteration, byte[] chainKey, ECPublicKey signatureKey) {
     senderKeyStates.add(new SenderKeyState(id, iteration, chainKey, signatureKey));
+
+    if (senderKeyStates.size() > MAX_STATES) {
+      senderKeyStates.removeLast();
+    }
   }
 
   public void setSenderKeyState(int id, int iteration, byte[] chainKey, ECKeyPair signatureKey) {
