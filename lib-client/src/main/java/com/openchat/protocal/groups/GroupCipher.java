@@ -1,5 +1,6 @@
 package com.openchat.protocal.groups;
 
+import com.openchat.protocal.DecryptionCallback;
 import com.openchat.protocal.DuplicateMessageException;
 import com.openchat.protocal.InvalidKeyIdException;
 import com.openchat.protocal.InvalidMessageException;
@@ -62,6 +63,13 @@ public class GroupCipher {
 
   
   public byte[] decrypt(byte[] senderKeyMessageBytes)
+      throws LegacyMessageException, DuplicateMessageException, InvalidMessageException
+  {
+    return decrypt(senderKeyMessageBytes, new NullDecryptionCallback());
+  }
+
+  
+  public byte[] decrypt(byte[] senderKeyMessageBytes, DecryptionCallback callback)
       throws LegacyMessageException, InvalidMessageException, DuplicateMessageException
   {
     synchronized (LOCK) {
@@ -75,6 +83,8 @@ public class GroupCipher {
         SenderMessageKey senderKey = getSenderKey(senderKeyState, senderKeyMessage.getIteration());
 
         byte[] plaintext = getPlainText(senderKey.getIv(), senderKey.getCipherKey(), senderKeyMessage.getCipherText());
+
+        callback.handlePlaintext(plaintext);
 
         senderKeyStore.storeSenderKey(senderKeyId, record);
 
@@ -144,6 +154,11 @@ public class GroupCipher {
     {
       throw new AssertionError(e);
     }
+  }
+
+  private static class NullDecryptionCallback implements DecryptionCallback {
+    @Override
+    public void handlePlaintext(byte[] plaintext) {}
   }
 
 }
