@@ -1,26 +1,28 @@
 package com.openchat.protocal.state;
 
+import com.openchat.protocal.OpenchatAddress;
+
 import java.util.List;
 
 
 public interface SessionStore {
 
   
-  public SessionRecord loadSession(long recipientId, int deviceId);
+  public SessionRecord loadSession(OpenchatAddress address);
 
   
-  public List<Integer> getSubDeviceSessions(long recipientId);
+  public List<Integer> getSubDeviceSessions(String name);
 
   
-  public void storeSession(long recipientId, int deviceId, SessionRecord record);
+  public void storeSession(OpenchatAddress address, SessionRecord record);
 
   
-  public boolean containsSession(long recipientId, int deviceId);
+  public boolean containsSession(OpenchatAddress address);
 
   
-  public void deleteSession(long recipientId, int deviceId);
+  public void deleteSession(OpenchatAddress address);
 
   
-  public void deleteAllSessions(long recipientId);
+  public void deleteAllSessions(String name);
 
 }

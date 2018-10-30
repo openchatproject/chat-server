@@ -13,10 +13,10 @@ public interface IdentityKeyStore {
   public int             getLocalRegistrationId();
 
   
-  public void            saveIdentity(long recipientId, IdentityKey identityKey);
+  public void            saveIdentity(String name, IdentityKey identityKey);
 
 
   
-  public boolean         isTrustedIdentity(long recipientId, IdentityKey identityKey);
+  public boolean         isTrustedIdentity(String name, IdentityKey identityKey);
 
 }

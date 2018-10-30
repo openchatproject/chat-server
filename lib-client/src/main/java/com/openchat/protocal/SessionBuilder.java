@@ -33,27 +33,25 @@ public class SessionBuilder {
   private final PreKeyStore       preKeyStore;
   private final SignedPreKeyStore signedPreKeyStore;
   private final IdentityKeyStore  identityKeyStore;
-  private final long              recipientId;
-  private final int               deviceId;
+  private final OpenchatAddress    remoteAddress;
 
   
   public SessionBuilder(SessionStore sessionStore,
                         PreKeyStore preKeyStore,
                         SignedPreKeyStore signedPreKeyStore,
                         IdentityKeyStore identityKeyStore,
-                        long recipientId, int deviceId)
+                        OpenchatAddress remoteAddress)
   {
     this.sessionStore      = sessionStore;
     this.preKeyStore       = preKeyStore;
     this.signedPreKeyStore = signedPreKeyStore;
     this.identityKeyStore  = identityKeyStore;
-    this.recipientId       = recipientId;
-    this.deviceId          = deviceId;
+    this.remoteAddress     = remoteAddress;
   }
 
   
-  public SessionBuilder(OpenchatStore store, long recipientId, int deviceId) {
-    this(store, store, store, store, recipientId, deviceId);
+  public SessionBuilder(OpenchatStore store, OpenchatAddress remoteAddress) {
+    this(store, store, store, store, remoteAddress);
   }
 
   
@@ -65,7 +63,7 @@ public class SessionBuilder {
 
     Optional<Integer> unsignedPreKeyId;
 
-    if (!identityKeyStore.isTrustedIdentity(recipientId, theirIdentityKey)) {
+    if (!identityKeyStore.isTrustedIdentity(remoteAddress.getName(), theirIdentityKey)) {
       throw new UntrustedIdentityException();
     }
 
@@ -75,7 +73,7 @@ public class SessionBuilder {
       default: throw new AssertionError("Unknown version: " + messageVersion);
     }
 
-    identityKeyStore.saveIdentity(recipientId, theirIdentityKey);
+    identityKeyStore.saveIdentity(remoteAddress.getName(), theirIdentityKey);
     return unsignedPreKeyId;
   }
 
@@ -127,7 +125,7 @@ public class SessionBuilder {
     }
 
     if (!preKeyStore.containsPreKey(message.getPreKeyId().get()) &&
-        sessionStore.containsSession(recipientId, deviceId))
+        sessionStore.containsSession(remoteAddress))
     {
       Log.w(TAG, "We've already processed the prekey part of this V2 session, letting bundled message fall through...");
       return Optional.absent();
@@ -162,7 +160,7 @@ public class SessionBuilder {
   
   public void process(PreKeyBundle preKey) throws InvalidKeyException, UntrustedIdentityException {
     synchronized (SessionCipher.SESSION_LOCK) {
-      if (!identityKeyStore.isTrustedIdentity(recipientId, preKey.getIdentityKey())) {
+      if (!identityKeyStore.isTrustedIdentity(remoteAddress.getName(), preKey.getIdentityKey())) {
         throw new UntrustedIdentityException();
       }
 
@@ -179,7 +177,7 @@ public class SessionBuilder {
       }
 
       boolean               supportsV3           = preKey.getSignedPreKey() != null;
-      SessionRecord         sessionRecord        = sessionStore.loadSession(recipientId, deviceId);
+      SessionRecord         sessionRecord        = sessionStore.loadSession(remoteAddress);
       ECKeyPair             ourBaseKey           = Curve.generateKeyPair();
       ECPublicKey           theirSignedPreKey    = supportsV3 ? preKey.getSignedPreKey() : preKey.getPreKey();
       Optional<ECPublicKey> theirOneTimePreKey   = Optional.fromNullable(preKey.getPreKey());
@@ -206,8 +204,8 @@ public class SessionBuilder {
       sessionRecord.getSessionState().setRemoteRegistrationId(preKey.getRegistrationId());
       sessionRecord.getSessionState().setAliceBaseKey(ourBaseKey.getPublicKey().serialize());
 
-      sessionStore.storeSession(recipientId, deviceId, sessionRecord);
-      identityKeyStore.saveIdentity(recipientId, preKey.getIdentityKey());
+      sessionStore.storeSession(remoteAddress, sessionRecord);
+      identityKeyStore.saveIdentity(remoteAddress.getName(), preKey.getIdentityKey());
     }
   }
 
@@ -216,7 +214,7 @@ public class SessionBuilder {
       throws InvalidKeyException, UntrustedIdentityException, StaleKeyExchangeException
   {
     synchronized (SessionCipher.SESSION_LOCK) {
-      if (!identityKeyStore.isTrustedIdentity(recipientId, message.getIdentityKey())) {
+      if (!identityKeyStore.isTrustedIdentity(remoteAddress.getName(), message.getIdentityKey())) {
         throw new UntrustedIdentityException();
       }
 
@@ -231,7 +229,7 @@ public class SessionBuilder {
 
   private KeyExchangeMessage processInitiate(KeyExchangeMessage message) throws InvalidKeyException {
     int           flags         = KeyExchangeMessage.RESPONSE_FLAG;
-    SessionRecord sessionRecord = sessionStore.loadSession(recipientId, deviceId);
+    SessionRecord sessionRecord = sessionStore.loadSession(remoteAddress);
 
     if (message.getVersion() >= 3 &&
         !Curve.verifySignature(message.getIdentityKey().getPublicKey(),
@@ -266,8 +264,8 @@ public class SessionBuilder {
                                         Math.min(message.getMaxVersion(), CiphertextMessage.CURRENT_VERSION),
                                         parameters);
 
-    sessionStore.storeSession(recipientId, deviceId, sessionRecord);
-    identityKeyStore.saveIdentity(recipientId, message.getIdentityKey());
+    sessionStore.storeSession(remoteAddress, sessionRecord);
+    identityKeyStore.saveIdentity(remoteAddress.getName(), message.getIdentityKey());
 
     byte[] baseKeySignature = Curve.calculateSignature(parameters.getOurIdentityKey().getPrivateKey(),
                                                        parameters.getOurBaseKey().getPublicKey().serialize());
@@ -282,7 +280,7 @@ public class SessionBuilder {
   private void processResponse(KeyExchangeMessage message)
       throws StaleKeyExchangeException, InvalidKeyException
   {
-    SessionRecord sessionRecord                  = sessionStore.loadSession(recipientId, deviceId);
+    SessionRecord sessionRecord                  = sessionStore.loadSession(remoteAddress);
     SessionState  sessionState                   = sessionRecord.getSessionState();
     boolean       hasPendingKeyExchange          = sessionState.hasPendingKeyExchange();
     boolean       isSimultaneousInitiateResponse = message.isResponseForSimultaneousInitiate();
@@ -316,8 +314,8 @@ public class SessionBuilder {
       throw new InvalidKeyException("Base key signature doesn't match!");
     }
 
-    sessionStore.storeSession(recipientId, deviceId, sessionRecord);
-    identityKeyStore.saveIdentity(recipientId, message.getIdentityKey());
+    sessionStore.storeSession(remoteAddress, sessionRecord);
+    identityKeyStore.saveIdentity(remoteAddress.getName(), message.getIdentityKey());
 
   }
 
@@ -331,10 +329,10 @@ public class SessionBuilder {
         ECKeyPair       ratchetKey       = Curve.generateKeyPair();
         IdentityKeyPair identityKey      = identityKeyStore.getIdentityKeyPair();
         byte[]          baseKeySignature = Curve.calculateSignature(identityKey.getPrivateKey(), baseKey.getPublicKey().serialize());
-        SessionRecord   sessionRecord    = sessionStore.loadSession(recipientId, deviceId);
+        SessionRecord   sessionRecord    = sessionStore.loadSession(remoteAddress);
 
         sessionRecord.getSessionState().setPendingKeyExchange(sequence, baseKey, ratchetKey, identityKey);
-        sessionStore.storeSession(recipientId, deviceId, sessionRecord);
+        sessionStore.storeSession(remoteAddress, sessionRecord);
 
         return new KeyExchangeMessage(2, sequence, flags, baseKey.getPublicKey(), baseKeySignature,
                                       ratchetKey.getPublicKey(), identityKey.getPublicKey());
