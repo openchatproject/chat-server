@@ -115,7 +115,7 @@ public class GroupCipher {
       }
     }
 
-    if (senderChainKey.getIteration() - iteration > 2000) {
+    if (iteration - senderChainKey.getIteration() > 2000) {
       throw new InvalidMessageException("Over 2000 messages into the future!");
     }
 
