@@ -5,6 +5,8 @@ import com.openchat.protocal.ecc.Curve;
 import com.openchat.protocal.ecc.ECKeyPair;
 import com.openchat.protocal.ecc.ECPublicKey;
 import com.openchat.protocal.kdf.HKDF;
+import com.openchat.protocal.kdf.HKDFv3;
+import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.protocal.state.SessionState;
 import com.openchat.protocal.util.ByteUtil;
 import com.openchat.protocal.util.Pair;
@@ -16,9 +18,7 @@ import java.util.Arrays;
 
 public class RatchetingSession {
 
-  public static void initializeSession(SessionState sessionState,
-                                       int sessionVersion,
-                                       SymmetricOpenchatParameters parameters)
+  public static void initializeSession(SessionState sessionState, SymmetricOpenchatParameters parameters)
       throws InvalidKeyException
   {
     if (isAlice(parameters.getOurBaseKey().getPublicKey(), parameters.getTheirBaseKey())) {
@@ -31,7 +31,7 @@ public class RatchetingSession {
                      .setTheirSignedPreKey(parameters.getTheirBaseKey())
                      .setTheirOneTimePreKey(Optional.<ECPublicKey>absent());
 
-      RatchetingSession.initializeSession(sessionState, sessionVersion, aliceParameters.create());
+      RatchetingSession.initializeSession(sessionState, aliceParameters.create());
     } else {
       BobOpenchatParameters.Builder bobParameters = BobOpenchatParameters.newBuilder();
 
@@ -42,26 +42,22 @@ public class RatchetingSession {
                    .setTheirBaseKey(parameters.getTheirBaseKey())
                    .setTheirIdentityKey(parameters.getTheirIdentityKey());
 
-      RatchetingSession.initializeSession(sessionState, sessionVersion, bobParameters.create());
+      RatchetingSession.initializeSession(sessionState, bobParameters.create());
     }
   }
 
-  public static void initializeSession(SessionState sessionState,
-                                       int sessionVersion,
-                                       AliceOpenchatParameters parameters)
+  public static void initializeSession(SessionState sessionState, AliceOpenchatParameters parameters)
       throws InvalidKeyException
   {
     try {
-      sessionState.setSessionVersion(sessionVersion);
+      sessionState.setSessionVersion(CiphertextMessage.CURRENT_VERSION);
       sessionState.setRemoteIdentityKey(parameters.getTheirIdentityKey());
       sessionState.setLocalIdentityKey(parameters.getOurIdentityKey().getPublicKey());
 
       ECKeyPair             sendingRatchetKey = Curve.generateKeyPair();
       ByteArrayOutputStream secrets           = new ByteArrayOutputStream();
 
-      if (sessionVersion >= 3) {
-        secrets.write(getDiscontinuityBytes());
-      }
+      secrets.write(getDiscontinuityBytes());
 
       secrets.write(Curve.calculateAgreement(parameters.getTheirSignedPreKey(),
                                              parameters.getOurIdentityKey().getPrivateKey()));
@@ -70,12 +66,12 @@ public class RatchetingSession {
       secrets.write(Curve.calculateAgreement(parameters.getTheirSignedPreKey(),
                                              parameters.getOurBaseKey().getPrivateKey()));
 
-      if (sessionVersion >= 3 && parameters.getTheirOneTimePreKey().isPresent()) {
+      if (parameters.getTheirOneTimePreKey().isPresent()) {
         secrets.write(Curve.calculateAgreement(parameters.getTheirOneTimePreKey().get(),
                                                parameters.getOurBaseKey().getPrivateKey()));
       }
 
-      DerivedKeys             derivedKeys  = calculateDerivedKeys(sessionVersion, secrets.toByteArray());
+      DerivedKeys             derivedKeys  = calculateDerivedKeys(secrets.toByteArray());
       Pair<RootKey, ChainKey> sendingChain = derivedKeys.getRootKey().createChain(parameters.getTheirRatchetKey(), sendingRatchetKey);
 
       sessionState.addReceiverChain(parameters.getTheirRatchetKey(), derivedKeys.getChainKey());
@@ -86,22 +82,18 @@ public class RatchetingSession {
     }
   }
 
-  public static void initializeSession(SessionState sessionState,
-                                       int sessionVersion,
-                                       BobOpenchatParameters parameters)
+  public static void initializeSession(SessionState sessionState, BobOpenchatParameters parameters)
       throws InvalidKeyException
   {
 
     try {
-      sessionState.setSessionVersion(sessionVersion);
+      sessionState.setSessionVersion(CiphertextMessage.CURRENT_VERSION);
       sessionState.setRemoteIdentityKey(parameters.getTheirIdentityKey());
       sessionState.setLocalIdentityKey(parameters.getOurIdentityKey().getPublicKey());
 
       ByteArrayOutputStream secrets = new ByteArrayOutputStream();
 
-      if (sessionVersion >= 3) {
-        secrets.write(getDiscontinuityBytes());
-      }
+      secrets.write(getDiscontinuityBytes());
 
       secrets.write(Curve.calculateAgreement(parameters.getTheirIdentityKey().getPublicKey(),
                                              parameters.getOurSignedPreKey().getPrivateKey()));
@@ -110,12 +102,12 @@ public class RatchetingSession {
       secrets.write(Curve.calculateAgreement(parameters.getTheirBaseKey(),
                                              parameters.getOurSignedPreKey().getPrivateKey()));
 
-      if (sessionVersion >= 3 && parameters.getOurOneTimePreKey().isPresent()) {
+      if (parameters.getOurOneTimePreKey().isPresent()) {
         secrets.write(Curve.calculateAgreement(parameters.getTheirBaseKey(),
                                                parameters.getOurOneTimePreKey().get().getPrivateKey()));
       }
 
-      DerivedKeys derivedKeys = calculateDerivedKeys(sessionVersion, secrets.toByteArray());
+      DerivedKeys derivedKeys = calculateDerivedKeys(secrets.toByteArray());
 
       sessionState.setSenderChain(parameters.getOurRatchetKey(), derivedKeys.getChainKey());
       sessionState.setRootKey(derivedKeys.getRootKey());
@@ -130,8 +122,8 @@ public class RatchetingSession {
     return discontinuity;
   }
 
-  private static DerivedKeys calculateDerivedKeys(int sessionVersion, byte[] masterSecret) {
-    HKDF     kdf                = HKDF.createFor(sessionVersion);
+  private static DerivedKeys calculateDerivedKeys(byte[] masterSecret) {
+    HKDF     kdf                = new HKDFv3();
     byte[]   derivedSecretBytes = kdf.deriveSecrets(masterSecret, "OpenchatText".getBytes(), 64);
     byte[][] derivedSecrets     = ByteUtil.split(derivedSecretBytes, 32, 32);
 

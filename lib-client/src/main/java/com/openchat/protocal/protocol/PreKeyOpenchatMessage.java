@@ -35,14 +35,17 @@ public class PreKeyOpenchatMessage implements CiphertextMessage {
         throw new InvalidVersionException("Unknown version: " + this.version);
       }
 
+      if (this.version < CiphertextMessage.CURRENT_VERSION) {
+        throw new LegacyMessageException("Legacy version: " + this.version);
+      }
+
       OpenchatProtos.PreKeyOpenchatMessage preKeyOpenchatMessage
           = OpenchatProtos.PreKeyOpenchatMessage.parseFrom(ByteString.copyFrom(serialized, 1,
                                                                              serialized.length-1));
 
-      if ((version == 2 && !preKeyOpenchatMessage.hasPreKeyId())        ||
-          (version == 3 && !preKeyOpenchatMessage.hasSignedPreKeyId())  ||
-          !preKeyOpenchatMessage.hasBaseKey()                           ||
-          !preKeyOpenchatMessage.hasIdentityKey()                       ||
+      if (!preKeyOpenchatMessage.hasSignedPreKeyId()  ||
+          !preKeyOpenchatMessage.hasBaseKey()         ||
+          !preKeyOpenchatMessage.hasIdentityKey()     ||
           !preKeyOpenchatMessage.hasMessage())
       {
         throw new InvalidMessageException("Incomplete message.");
