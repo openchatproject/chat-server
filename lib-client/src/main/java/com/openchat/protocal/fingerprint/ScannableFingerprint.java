@@ -35,7 +35,9 @@ public class ScannableFingerprint {
 
   
   public boolean compareTo(byte[] scannedFingerprintData)
-      throws FingerprintVersionMismatchException, FingerprintIdentifierMismatchException
+      throws FingerprintVersionMismatchException,
+             FingerprintIdentifierMismatchException,
+             FingerprintParsingException
   {
     try {
       CombinedFingerprint scannedFingerprint = CombinedFingerprint.parseFrom(scannedFingerprintData);
@@ -58,7 +60,7 @@ public class ScannableFingerprint {
       return MessageDigest.isEqual(combinedFingerprint.getLocalFingerprint().toByteArray(), scannedFingerprint.getRemoteFingerprint().toByteArray()) &&
              MessageDigest.isEqual(combinedFingerprint.getRemoteFingerprint().toByteArray(), scannedFingerprint.getLocalFingerprint().toByteArray());
     } catch (InvalidProtocolBufferException e) {
-      throw new FingerprintVersionMismatchException(e);
+      throw new FingerprintParsingException(e);
     }
   }
 }
