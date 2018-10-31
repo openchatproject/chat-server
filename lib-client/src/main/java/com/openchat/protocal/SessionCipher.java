@@ -74,19 +74,19 @@ public class SessionCipher {
 
       byte[]            ciphertextBody    = getCiphertext(sessionVersion, messageKeys, paddedMessage);
       CiphertextMessage ciphertextMessage = new OpenchatMessage(sessionVersion, messageKeys.getMacKey(),
-                                                               senderEphemeral, chainKey.getIndex(),
-                                                               previousCounter, ciphertextBody,
-                                                               sessionState.getLocalIdentityKey(),
-                                                               sessionState.getRemoteIdentityKey());
+                                                              senderEphemeral, chainKey.getIndex(),
+                                                              previousCounter, ciphertextBody,
+                                                              sessionState.getLocalIdentityKey(),
+                                                              sessionState.getRemoteIdentityKey());
 
       if (sessionState.hasUnacknowledgedPreKeyMessage()) {
         UnacknowledgedPreKeyMessageItems items = sessionState.getUnacknowledgedPreKeyMessageItems();
         int localRegistrationId = sessionState.getLocalRegistrationId();
 
         ciphertextMessage = new PreKeyOpenchatMessage(sessionVersion, localRegistrationId, items.getPreKeyId(),
-                                                     items.getSignedPreKeyId(), items.getBaseKey(),
-                                                     sessionState.getLocalIdentityKey(),
-                                                     (OpenchatMessage) ciphertextMessage);
+                                                    items.getSignedPreKeyId(), items.getBaseKey(),
+                                                    sessionState.getLocalIdentityKey(),
+                                                    (OpenchatMessage) ciphertextMessage);
       }
 
       sessionState.setSenderChainKey(chainKey.getNextChainKey());

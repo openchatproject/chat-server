@@ -8,6 +8,7 @@ import com.openchat.protocal.logging.Log;
 import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.protocal.protocol.KeyExchangeMessage;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
+import com.openchat.protocal.protocol.OpenchatMessage;
 import com.openchat.protocal.ratchet.AliceOpenchatProtocolParameters;
 import com.openchat.protocal.ratchet.BobOpenchatProtocolParameters;
 import com.openchat.protocal.ratchet.RatchetingSession;

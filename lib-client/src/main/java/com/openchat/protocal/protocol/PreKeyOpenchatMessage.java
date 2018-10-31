@@ -22,7 +22,7 @@ public class PreKeyOpenchatMessage implements CiphertextMessage {
   private final int               signedPreKeyId;
   private final ECPublicKey       baseKey;
   private final IdentityKey       identityKey;
-  private final OpenchatMessage    message;
+  private final OpenchatMessage message;
   private final byte[]            serialized;
 
   public PreKeyOpenchatMessage(byte[] serialized)
@@ -64,8 +64,8 @@ public class PreKeyOpenchatMessage implements CiphertextMessage {
   }
 
   public PreKeyOpenchatMessage(int messageVersion, int registrationId, Optional<Integer> preKeyId,
-                              int signedPreKeyId, ECPublicKey baseKey, IdentityKey identityKey,
-                              OpenchatMessage message)
+                             int signedPreKeyId, ECPublicKey baseKey, IdentityKey identityKey,
+                             OpenchatMessage message)
   {
     this.version        = messageVersion;
     this.registrationId = registrationId;

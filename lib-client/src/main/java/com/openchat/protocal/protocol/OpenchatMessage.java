@@ -65,9 +65,9 @@ public class OpenchatMessage implements CiphertextMessage {
   }
 
   public OpenchatMessage(int messageVersion, SecretKeySpec macKey, ECPublicKey senderRatchetKey,
-                        int counter, int previousCounter, byte[] ciphertext,
-                        IdentityKey senderIdentityKey,
-                        IdentityKey receiverIdentityKey)
+                       int counter, int previousCounter, byte[] ciphertext,
+                       IdentityKey senderIdentityKey,
+                       IdentityKey receiverIdentityKey)
   {
     byte[] version = {ByteUtil.intsToByteHighAndLow(messageVersion, CURRENT_VERSION)};
     byte[] message = OpenchatProtos.OpenchatMessage.newBuilder()
