@@ -6,7 +6,7 @@ import com.openchat.protocal.ecc.ECKeyPair;
 import com.openchat.protocal.ecc.ECPublicKey;
 import com.openchat.protocal.util.guava.Optional;
 
-public class BobOpenchatParameters {
+public class BobOpenchatProtocolParameters {
 
   private final IdentityKeyPair     ourIdentityKey;
   private final ECKeyPair           ourSignedPreKey;
@@ -16,9 +16,9 @@ public class BobOpenchatParameters {
   private final IdentityKey         theirIdentityKey;
   private final ECPublicKey         theirBaseKey;
 
-  BobOpenchatParameters(IdentityKeyPair ourIdentityKey, ECKeyPair ourSignedPreKey,
-                       ECKeyPair ourRatchetKey, Optional<ECKeyPair> ourOneTimePreKey,
-                       IdentityKey theirIdentityKey, ECPublicKey theirBaseKey)
+  BobOpenchatProtocolParameters(IdentityKeyPair ourIdentityKey, ECKeyPair ourSignedPreKey,
+                              ECKeyPair ourRatchetKey, Optional<ECKeyPair> ourOneTimePreKey,
+                              IdentityKey theirIdentityKey, ECPublicKey theirBaseKey)
   {
     this.ourIdentityKey   = ourIdentityKey;
     this.ourSignedPreKey  = ourSignedPreKey;
@@ -101,9 +101,9 @@ public class BobOpenchatParameters {
       return this;
     }
 
-    public BobOpenchatParameters create() {
-      return new BobOpenchatParameters(ourIdentityKey, ourSignedPreKey, ourRatchetKey,
-                                      ourOneTimePreKey, theirIdentityKey, theirBaseKey);
+    public BobOpenchatProtocolParameters create() {
+      return new BobOpenchatProtocolParameters(ourIdentityKey, ourSignedPreKey, ourRatchetKey,
+                                             ourOneTimePreKey, theirIdentityKey, theirBaseKey);
     }
   }
 }

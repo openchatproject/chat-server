@@ -1,6 +1,6 @@
 package com.openchat.protocal.state;
 
-public interface OpenchatStore
+public interface OpenchatProtocolStore
     extends IdentityKeyStore, PreKeyStore, SessionStore, SignedPreKeyStore
 {
 }

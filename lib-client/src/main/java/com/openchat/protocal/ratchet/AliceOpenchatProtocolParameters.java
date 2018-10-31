@@ -6,7 +6,7 @@ import com.openchat.protocal.ecc.ECKeyPair;
 import com.openchat.protocal.ecc.ECPublicKey;
 import com.openchat.protocal.util.guava.Optional;
 
-public class AliceOpenchatParameters {
+public class AliceOpenchatProtocolParameters {
 
   private final IdentityKeyPair       ourIdentityKey;
   private final ECKeyPair             ourBaseKey;
@@ -16,9 +16,9 @@ public class AliceOpenchatParameters {
   private final Optional<ECPublicKey> theirOneTimePreKey;
   private final ECPublicKey           theirRatchetKey;
 
-  private AliceOpenchatParameters(IdentityKeyPair ourIdentityKey, ECKeyPair ourBaseKey,
-                                 IdentityKey theirIdentityKey, ECPublicKey theirSignedPreKey,
-                                 ECPublicKey theirRatchetKey, Optional<ECPublicKey> theirOneTimePreKey)
+  private AliceOpenchatProtocolParameters(IdentityKeyPair ourIdentityKey, ECKeyPair ourBaseKey,
+                                        IdentityKey theirIdentityKey, ECPublicKey theirSignedPreKey,
+                                        ECPublicKey theirRatchetKey, Optional<ECPublicKey> theirOneTimePreKey)
   {
     this.ourIdentityKey     = ourIdentityKey;
     this.ourBaseKey         = ourBaseKey;
@@ -101,9 +101,9 @@ public class AliceOpenchatParameters {
       return this;
     }
 
-    public AliceOpenchatParameters create() {
-      return new AliceOpenchatParameters(ourIdentityKey, ourBaseKey, theirIdentityKey,
-                                        theirSignedPreKey, theirRatchetKey, theirOneTimePreKey);
+    public AliceOpenchatProtocolParameters create() {
+      return new AliceOpenchatProtocolParameters(ourIdentityKey, ourBaseKey, theirIdentityKey,
+                                               theirSignedPreKey, theirRatchetKey, theirOneTimePreKey);
     }
   }
 }

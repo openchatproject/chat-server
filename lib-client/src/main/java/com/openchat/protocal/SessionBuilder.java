@@ -8,11 +8,11 @@ import com.openchat.protocal.logging.Log;
 import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.protocal.protocol.KeyExchangeMessage;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
-import com.openchat.protocal.ratchet.AliceOpenchatParameters;
-import com.openchat.protocal.ratchet.BobOpenchatParameters;
+import com.openchat.protocal.ratchet.AliceOpenchatProtocolParameters;
+import com.openchat.protocal.ratchet.BobOpenchatProtocolParameters;
 import com.openchat.protocal.ratchet.RatchetingSession;
-import com.openchat.protocal.ratchet.SymmetricOpenchatParameters;
-import com.openchat.protocal.state.OpenchatStore;
+import com.openchat.protocal.ratchet.SymmetricOpenchatProtocolParameters;
+import com.openchat.protocal.state.OpenchatProtocolStore;
 import com.openchat.protocal.state.IdentityKeyStore;
 import com.openchat.protocal.state.PreKeyBundle;
 import com.openchat.protocal.state.PreKeyStore;
@@ -33,14 +33,14 @@ public class SessionBuilder {
   private final PreKeyStore       preKeyStore;
   private final SignedPreKeyStore signedPreKeyStore;
   private final IdentityKeyStore  identityKeyStore;
-  private final OpenchatAddress    remoteAddress;
+  private final OpenchatProtocolAddress remoteAddress;
 
   
   public SessionBuilder(SessionStore sessionStore,
                         PreKeyStore preKeyStore,
                         SignedPreKeyStore signedPreKeyStore,
                         IdentityKeyStore identityKeyStore,
-                        OpenchatAddress remoteAddress)
+                        OpenchatProtocolAddress remoteAddress)
   {
     this.sessionStore      = sessionStore;
     this.preKeyStore       = preKeyStore;
@@ -50,7 +50,7 @@ public class SessionBuilder {
   }
 
   
-  public SessionBuilder(OpenchatStore store, OpenchatAddress remoteAddress) {
+  public SessionBuilder(OpenchatProtocolStore store, OpenchatProtocolAddress remoteAddress) {
     this(store, store, store, store, remoteAddress);
   }
 
@@ -81,7 +81,7 @@ public class SessionBuilder {
 
     ECKeyPair ourSignedPreKey = signedPreKeyStore.loadSignedPreKey(message.getSignedPreKeyId()).getKeyPair();
 
-    BobOpenchatParameters.Builder parameters = BobOpenchatParameters.newBuilder();
+    BobOpenchatProtocolParameters.Builder parameters = BobOpenchatProtocolParameters.newBuilder();
 
     parameters.setTheirBaseKey(message.getBaseKey())
               .setTheirIdentityKey(message.getIdentityKey())
@@ -136,7 +136,7 @@ public class SessionBuilder {
       Optional<Integer>     theirOneTimePreKeyId = theirOneTimePreKey.isPresent() ? Optional.of(preKey.getPreKeyId()) :
                                                                                     Optional.<Integer>absent();
 
-      AliceOpenchatParameters.Builder parameters = AliceOpenchatParameters.newBuilder();
+      AliceOpenchatProtocolParameters.Builder parameters = AliceOpenchatProtocolParameters.newBuilder();
 
       parameters.setOurBaseKey(ourBaseKey)
                 .setOurIdentityKey(identityKeyStore.getIdentityKeyPair())
@@ -188,7 +188,7 @@ public class SessionBuilder {
       throw new InvalidKeyException("Bad signature!");
     }
 
-    SymmetricOpenchatParameters.Builder builder = SymmetricOpenchatParameters.newBuilder();
+    SymmetricOpenchatProtocolParameters.Builder builder = SymmetricOpenchatProtocolParameters.newBuilder();
 
     if (!sessionRecord.getSessionState().hasPendingKeyExchange()) {
       builder.setOurIdentityKey(identityKeyStore.getIdentityKeyPair())
@@ -205,7 +205,7 @@ public class SessionBuilder {
            .setTheirRatchetKey(message.getRatchetKey())
            .setTheirIdentityKey(message.getIdentityKey());
 
-    SymmetricOpenchatParameters parameters = builder.create();
+    SymmetricOpenchatProtocolParameters parameters = builder.create();
 
     if (!sessionRecord.isFresh()) sessionRecord.archiveCurrentState();
 
@@ -238,7 +238,7 @@ public class SessionBuilder {
       else                                 return;
     }
 
-    SymmetricOpenchatParameters.Builder parameters = SymmetricOpenchatParameters.newBuilder();
+    SymmetricOpenchatProtocolParameters.Builder parameters = SymmetricOpenchatProtocolParameters.newBuilder();
 
     parameters.setOurBaseKey(sessionRecord.getSessionState().getPendingKeyExchangeBaseKey())
               .setOurRatchetKey(sessionRecord.getSessionState().getPendingKeyExchangeRatchetKey())

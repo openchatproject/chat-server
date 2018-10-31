@@ -9,47 +9,47 @@ public class Log {
   private Log() {}
 
   public static void v(String tag, String msg) {
-    log(OpenchatLogger.VERBOSE, tag, msg);
+    log(OpenchatProtocolLogger.VERBOSE, tag, msg);
   }
 
   public static void v(String tag, String msg, Throwable tr) {
-    log(OpenchatLogger.VERBOSE, tag, msg + '\n' + getStackTraceString(tr));
+    log(OpenchatProtocolLogger.VERBOSE, tag, msg + '\n' + getStackTraceString(tr));
   }
 
   public static void d(String tag, String msg) {
-    log(OpenchatLogger.DEBUG, tag, msg);
+    log(OpenchatProtocolLogger.DEBUG, tag, msg);
   }
 
   public static void d(String tag, String msg, Throwable tr) {
-    log(OpenchatLogger.DEBUG, tag, msg + '\n' + getStackTraceString(tr));
+    log(OpenchatProtocolLogger.DEBUG, tag, msg + '\n' + getStackTraceString(tr));
   }
 
   public static void i(String tag, String msg) {
-    log(OpenchatLogger.INFO, tag, msg);
+    log(OpenchatProtocolLogger.INFO, tag, msg);
   }
 
   public static void i(String tag, String msg, Throwable tr) {
-    log(OpenchatLogger.INFO, tag, msg + '\n' + getStackTraceString(tr));
+    log(OpenchatProtocolLogger.INFO, tag, msg + '\n' + getStackTraceString(tr));
   }
 
   public static void w(String tag, String msg) {
-    log(OpenchatLogger.WARN, tag, msg);
+    log(OpenchatProtocolLogger.WARN, tag, msg);
   }
 
   public static void w(String tag, String msg, Throwable tr) {
-    log(OpenchatLogger.WARN, tag, msg + '\n' + getStackTraceString(tr));
+    log(OpenchatProtocolLogger.WARN, tag, msg + '\n' + getStackTraceString(tr));
   }
 
   public static void w(String tag, Throwable tr) {
-    log(OpenchatLogger.WARN, tag, getStackTraceString(tr));
+    log(OpenchatProtocolLogger.WARN, tag, getStackTraceString(tr));
   }
 
   public static void e(String tag, String msg) {
-    log(OpenchatLogger.ERROR, tag, msg);
+    log(OpenchatProtocolLogger.ERROR, tag, msg);
   }
 
   public static void e(String tag, String msg, Throwable tr) {
-    log(OpenchatLogger.ERROR, tag, msg + '\n' + getStackTraceString(tr));
+    log(OpenchatProtocolLogger.ERROR, tag, msg + '\n' + getStackTraceString(tr));
   }
 
   private static String getStackTraceString(Throwable tr) {
@@ -75,7 +75,7 @@ public class Log {
   }
 
   private static void log(int priority, String tag, String msg) {
-    OpenchatLogger logger = OpenchatLoggerProvider.getProvider();
+    OpenchatProtocolLogger logger = OpenchatProtocolLoggerProvider.getProvider();
 
     if (logger != null) {
       logger.log(priority, tag, msg);

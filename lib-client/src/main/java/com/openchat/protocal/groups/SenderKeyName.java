@@ -1,14 +1,14 @@
 package com.openchat.protocal.groups;
 
-import com.openchat.protocal.OpenchatAddress;
+import com.openchat.protocal.OpenchatProtocolAddress;
 
 
 public class SenderKeyName {
 
-  private final String         groupId;
-  private final OpenchatAddress sender;
+  private final String                groupId;
+  private final OpenchatProtocolAddress sender;
 
-  public SenderKeyName(String groupId, OpenchatAddress sender) {
+  public SenderKeyName(String groupId, OpenchatProtocolAddress sender) {
     this.groupId  = groupId;
     this.sender   = sender;
   }
@@ -17,7 +17,7 @@ public class SenderKeyName {
     return groupId;
   }
 
-  public OpenchatAddress getSender() {
+  public OpenchatProtocolAddress getSender() {
     return sender;
   }
 

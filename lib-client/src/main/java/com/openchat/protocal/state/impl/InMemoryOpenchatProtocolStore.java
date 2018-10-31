@@ -1,17 +1,17 @@
 package com.openchat.protocal.state.impl;
 
-import com.openchat.protocal.OpenchatAddress;
+import com.openchat.protocal.OpenchatProtocolAddress;
 import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.IdentityKeyPair;
 import com.openchat.protocal.InvalidKeyIdException;
-import com.openchat.protocal.state.OpenchatStore;
+import com.openchat.protocal.state.OpenchatProtocolStore;
 import com.openchat.protocal.state.PreKeyRecord;
 import com.openchat.protocal.state.SessionRecord;
 import com.openchat.protocal.state.SignedPreKeyRecord;
 
 import java.util.List;
 
-public class InMemoryOpenchatStore implements OpenchatStore {
+public class InMemoryOpenchatProtocolStore implements OpenchatProtocolStore {
 
   private final InMemoryPreKeyStore       preKeyStore       = new InMemoryPreKeyStore();
   private final InMemorySessionStore      sessionStore      = new InMemorySessionStore();
@@ -19,7 +19,7 @@ public class InMemoryOpenchatStore implements OpenchatStore {
 
   private final InMemoryIdentityKeyStore  identityKeyStore;
 
-  public InMemoryOpenchatStore(IdentityKeyPair identityKeyPair, int registrationId) {
+  public InMemoryOpenchatProtocolStore(IdentityKeyPair identityKeyPair, int registrationId) {
     this.identityKeyStore = new InMemoryIdentityKeyStore(identityKeyPair, registrationId);
   }
 
@@ -64,7 +64,7 @@ public class InMemoryOpenchatStore implements OpenchatStore {
   }
 
   @Override
-  public SessionRecord loadSession(OpenchatAddress address) {
+  public SessionRecord loadSession(OpenchatProtocolAddress address) {
     return sessionStore.loadSession(address);
   }
 
@@ -74,17 +74,17 @@ public class InMemoryOpenchatStore implements OpenchatStore {
   }
 
   @Override
-  public void storeSession(OpenchatAddress address, SessionRecord record) {
+  public void storeSession(OpenchatProtocolAddress address, SessionRecord record) {
     sessionStore.storeSession(address, record);
   }
 
   @Override
-  public boolean containsSession(OpenchatAddress address) {
+  public boolean containsSession(OpenchatProtocolAddress address) {
     return sessionStore.containsSession(address);
   }
 
   @Override
-  public void deleteSession(OpenchatAddress address) {
+  public void deleteSession(OpenchatProtocolAddress address) {
     sessionStore.deleteSession(address);
   }
 

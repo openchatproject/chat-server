@@ -18,11 +18,11 @@ import java.util.Arrays;
 
 public class RatchetingSession {
 
-  public static void initializeSession(SessionState sessionState, SymmetricOpenchatParameters parameters)
+  public static void initializeSession(SessionState sessionState, SymmetricOpenchatProtocolParameters parameters)
       throws InvalidKeyException
   {
     if (isAlice(parameters.getOurBaseKey().getPublicKey(), parameters.getTheirBaseKey())) {
-      AliceOpenchatParameters.Builder aliceParameters = AliceOpenchatParameters.newBuilder();
+      AliceOpenchatProtocolParameters.Builder aliceParameters = AliceOpenchatProtocolParameters.newBuilder();
 
       aliceParameters.setOurBaseKey(parameters.getOurBaseKey())
                      .setOurIdentityKey(parameters.getOurIdentityKey())
@@ -33,7 +33,7 @@ public class RatchetingSession {
 
       RatchetingSession.initializeSession(sessionState, aliceParameters.create());
     } else {
-      BobOpenchatParameters.Builder bobParameters = BobOpenchatParameters.newBuilder();
+      BobOpenchatProtocolParameters.Builder bobParameters = BobOpenchatProtocolParameters.newBuilder();
 
       bobParameters.setOurIdentityKey(parameters.getOurIdentityKey())
                    .setOurRatchetKey(parameters.getOurRatchetKey())
@@ -46,7 +46,7 @@ public class RatchetingSession {
     }
   }
 
-  public static void initializeSession(SessionState sessionState, AliceOpenchatParameters parameters)
+  public static void initializeSession(SessionState sessionState, AliceOpenchatProtocolParameters parameters)
       throws InvalidKeyException
   {
     try {
@@ -82,7 +82,7 @@ public class RatchetingSession {
     }
   }
 
-  public static void initializeSession(SessionState sessionState, BobOpenchatParameters parameters)
+  public static void initializeSession(SessionState sessionState, BobOpenchatProtocolParameters parameters)
       throws InvalidKeyException
   {
 

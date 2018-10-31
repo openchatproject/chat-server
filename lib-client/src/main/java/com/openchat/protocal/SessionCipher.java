@@ -9,7 +9,7 @@ import com.openchat.protocal.protocol.OpenchatMessage;
 import com.openchat.protocal.ratchet.ChainKey;
 import com.openchat.protocal.ratchet.MessageKeys;
 import com.openchat.protocal.ratchet.RootKey;
-import com.openchat.protocal.state.OpenchatStore;
+import com.openchat.protocal.state.OpenchatProtocolStore;
 import com.openchat.protocal.state.IdentityKeyStore;
 import com.openchat.protocal.state.PreKeyStore;
 import com.openchat.protocal.state.SessionRecord;
@@ -40,15 +40,15 @@ public class SessionCipher {
 
   public static final Object SESSION_LOCK = new Object();
 
-  private final SessionStore   sessionStore;
-  private final SessionBuilder sessionBuilder;
-  private final PreKeyStore    preKeyStore;
-  private final OpenchatAddress remoteAddress;
+  private final SessionStore          sessionStore;
+  private final SessionBuilder        sessionBuilder;
+  private final PreKeyStore           preKeyStore;
+  private final OpenchatProtocolAddress remoteAddress;
 
   
   public SessionCipher(SessionStore sessionStore, PreKeyStore preKeyStore,
                        SignedPreKeyStore signedPreKeyStore, IdentityKeyStore identityKeyStore,
-                       OpenchatAddress remoteAddress)
+                       OpenchatProtocolAddress remoteAddress)
   {
     this.sessionStore   = sessionStore;
     this.preKeyStore    = preKeyStore;
@@ -57,7 +57,7 @@ public class SessionCipher {
                                              identityKeyStore, remoteAddress);
   }
 
-  public SessionCipher(OpenchatStore store, OpenchatAddress remoteAddress) {
+  public SessionCipher(OpenchatProtocolStore store, OpenchatProtocolAddress remoteAddress) {
     this(store, store, store, store, remoteAddress);
   }
 

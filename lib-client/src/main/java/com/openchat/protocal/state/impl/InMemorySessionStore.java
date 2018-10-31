@@ -1,6 +1,6 @@
 package com.openchat.protocal.state.impl;
 
-import com.openchat.protocal.OpenchatAddress;
+import com.openchat.protocal.OpenchatProtocolAddress;
 import com.openchat.protocal.state.SessionRecord;
 import com.openchat.protocal.state.SessionStore;
 
@@ -12,12 +12,12 @@ import java.util.Map;
 
 public class InMemorySessionStore implements SessionStore {
 
-  private Map<OpenchatAddress, byte[]> sessions = new HashMap<>();
+  private Map<OpenchatProtocolAddress, byte[]> sessions = new HashMap<>();
 
   public InMemorySessionStore() {}
 
   @Override
-  public synchronized SessionRecord loadSession(OpenchatAddress remoteAddress) {
+  public synchronized SessionRecord loadSession(OpenchatProtocolAddress remoteAddress) {
     try {
       if (containsSession(remoteAddress)) {
         return new SessionRecord(sessions.get(remoteAddress));
@@ -33,7 +33,7 @@ public class InMemorySessionStore implements SessionStore {
   public synchronized List<Integer> getSubDeviceSessions(String name) {
     List<Integer> deviceIds = new LinkedList<>();
 
-    for (OpenchatAddress key : sessions.keySet()) {
+    for (OpenchatProtocolAddress key : sessions.keySet()) {
       if (key.getName().equals(name) &&
           key.getDeviceId() != 1)
       {
@@ -45,23 +45,23 @@ public class InMemorySessionStore implements SessionStore {
   }
 
   @Override
-  public synchronized void storeSession(OpenchatAddress address, SessionRecord record) {
+  public synchronized void storeSession(OpenchatProtocolAddress address, SessionRecord record) {
     sessions.put(address, record.serialize());
   }
 
   @Override
-  public synchronized boolean containsSession(OpenchatAddress address) {
+  public synchronized boolean containsSession(OpenchatProtocolAddress address) {
     return sessions.containsKey(address);
   }
 
   @Override
-  public synchronized void deleteSession(OpenchatAddress address) {
+  public synchronized void deleteSession(OpenchatProtocolAddress address) {
     sessions.remove(address);
   }
 
   @Override
   public synchronized void deleteAllSessions(String name) {
-    for (OpenchatAddress key : sessions.keySet()) {
+    for (OpenchatProtocolAddress key : sessions.keySet()) {
       if (key.getName().equals(name)) {
         sessions.remove(key);
       }

@@ -5,7 +5,7 @@ import com.openchat.protocal.IdentityKeyPair;
 import com.openchat.protocal.ecc.ECKeyPair;
 import com.openchat.protocal.ecc.ECPublicKey;
 
-public class SymmetricOpenchatParameters {
+public class SymmetricOpenchatProtocolParameters {
 
   private final ECKeyPair       ourBaseKey;
   private final ECKeyPair       ourRatchetKey;
@@ -15,9 +15,9 @@ public class SymmetricOpenchatParameters {
   private final ECPublicKey     theirRatchetKey;
   private final IdentityKey     theirIdentityKey;
 
-  SymmetricOpenchatParameters(ECKeyPair ourBaseKey, ECKeyPair ourRatchetKey,
-                             IdentityKeyPair ourIdentityKey, ECPublicKey theirBaseKey,
-                             ECPublicKey theirRatchetKey, IdentityKey theirIdentityKey)
+  SymmetricOpenchatProtocolParameters(ECKeyPair ourBaseKey, ECKeyPair ourRatchetKey,
+                                    IdentityKeyPair ourIdentityKey, ECPublicKey theirBaseKey,
+                                    ECPublicKey theirRatchetKey, IdentityKey theirIdentityKey)
   {
     this.ourBaseKey       = ourBaseKey;
     this.ourRatchetKey    = ourRatchetKey;
@@ -100,9 +100,9 @@ public class SymmetricOpenchatParameters {
       return this;
     }
 
-    public SymmetricOpenchatParameters create() {
-      return new SymmetricOpenchatParameters(ourBaseKey, ourRatchetKey, ourIdentityKey,
-                                            theirBaseKey, theirRatchetKey, theirIdentityKey);
+    public SymmetricOpenchatProtocolParameters create() {
+      return new SymmetricOpenchatProtocolParameters(ourBaseKey, ourRatchetKey, ourIdentityKey,
+                                                   theirBaseKey, theirRatchetKey, theirIdentityKey);
     }
   }
 }

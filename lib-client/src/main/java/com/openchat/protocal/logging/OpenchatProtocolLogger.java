@@ -1,6 +1,6 @@
 package com.openchat.protocal.logging;
 
-public interface OpenchatLogger {
+public interface OpenchatProtocolLogger {
 
   public static final int VERBOSE = 2;
   public static final int DEBUG   = 3;

@@ -1,11 +1,11 @@
 package com.openchat.protocal;
 
-public class OpenchatAddress {
+public class OpenchatProtocolAddress {
 
   private final String name;
   private final int    deviceId;
 
-  public OpenchatAddress(String name, int deviceId) {
+  public OpenchatProtocolAddress(String name, int deviceId) {
     this.name     = name;
     this.deviceId = deviceId;
   }
@@ -26,9 +26,9 @@ public class OpenchatAddress {
   @Override
   public boolean equals(Object other) {
     if (other == null)                       return false;
-    if (!(other instanceof  OpenchatAddress)) return false;
+    if (!(other instanceof OpenchatProtocolAddress)) return false;
 
-    OpenchatAddress that = (OpenchatAddress)other;
+    OpenchatProtocolAddress that = (OpenchatProtocolAddress)other;
     return this.name.equals(that.name) && this.deviceId == that.deviceId;
   }
 
