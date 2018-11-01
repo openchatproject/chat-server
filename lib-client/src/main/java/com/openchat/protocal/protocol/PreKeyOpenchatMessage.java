@@ -22,7 +22,7 @@ public class PreKeyOpenchatMessage implements CiphertextMessage {
   private final int               signedPreKeyId;
   private final ECPublicKey       baseKey;
   private final IdentityKey       identityKey;
-  private final OpenchatMessage message;
+  private final OpenchatMessage     message;
   private final byte[]            serialized;
 
   public PreKeyOpenchatMessage(byte[] serialized)
@@ -41,7 +41,7 @@ public class PreKeyOpenchatMessage implements CiphertextMessage {
 
       OpenchatProtos.PreKeyOpenchatMessage preKeyOpenchatMessage
           = OpenchatProtos.PreKeyOpenchatMessage.parseFrom(ByteString.copyFrom(serialized, 1,
-                                                                             serialized.length-1));
+                                                                           serialized.length-1));
 
       if (!preKeyOpenchatMessage.hasSignedPreKeyId()  ||
           !preKeyOpenchatMessage.hasBaseKey()         ||
@@ -77,11 +77,11 @@ public class PreKeyOpenchatMessage implements CiphertextMessage {
 
     OpenchatProtos.PreKeyOpenchatMessage.Builder builder =
         OpenchatProtos.PreKeyOpenchatMessage.newBuilder()
-                                          .setSignedPreKeyId(signedPreKeyId)
-                                          .setBaseKey(ByteString.copyFrom(baseKey.serialize()))
-                                          .setIdentityKey(ByteString.copyFrom(identityKey.serialize()))
-                                          .setMessage(ByteString.copyFrom(message.serialize()))
-                                          .setRegistrationId(registrationId);
+                                        .setSignedPreKeyId(signedPreKeyId)
+                                        .setBaseKey(ByteString.copyFrom(baseKey.serialize()))
+                                        .setIdentityKey(ByteString.copyFrom(identityKey.serialize()))
+                                        .setMessage(ByteString.copyFrom(message.serialize()))
+                                        .setRegistrationId(registrationId);
 
     if (preKeyId.isPresent()) {
       builder.setPreKeyId(preKeyId.get());

@@ -60,10 +60,10 @@ public class SenderKeyMessage implements CiphertextMessage {
   public SenderKeyMessage(int keyId, int iteration, byte[] ciphertext, ECPrivateKey signatureKey) {
     byte[] version = {ByteUtil.intsToByteHighAndLow(CURRENT_VERSION, CURRENT_VERSION)};
     byte[] message = OpenchatProtos.SenderKeyMessage.newBuilder()
-                                                   .setId(keyId)
-                                                   .setIteration(iteration)
-                                                   .setCiphertext(ByteString.copyFrom(ciphertext))
-                                                   .build().toByteArray();
+                                                  .setId(keyId)
+                                                  .setIteration(iteration)
+                                                  .setCiphertext(ByteString.copyFrom(ciphertext))
+                                                  .build().toByteArray();
 
     byte[] signature = getSignature(signatureKey, ByteUtil.combine(version, message));
 

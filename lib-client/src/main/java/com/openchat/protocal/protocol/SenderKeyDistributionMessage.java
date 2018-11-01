@@ -21,11 +21,11 @@ public class SenderKeyDistributionMessage implements CiphertextMessage {
   public SenderKeyDistributionMessage(int id, int iteration, byte[] chainKey, ECPublicKey signatureKey) {
     byte[] version = {ByteUtil.intsToByteHighAndLow(CURRENT_VERSION, CURRENT_VERSION)};
     byte[] protobuf = OpenchatProtos.SenderKeyDistributionMessage.newBuilder()
-                                                                .setId(id)
-                                                                .setIteration(iteration)
-                                                                .setChainKey(ByteString.copyFrom(chainKey))
-                                                                .setSigningKey(ByteString.copyFrom(signatureKey.serialize()))
-                                                                .build().toByteArray();
+                                                               .setId(id)
+                                                               .setIteration(iteration)
+                                                               .setChainKey(ByteString.copyFrom(chainKey))
+                                                               .setSigningKey(ByteString.copyFrom(signatureKey.serialize()))
+                                                               .build().toByteArray();
 
     this.id           = id;
     this.iteration    = iteration;

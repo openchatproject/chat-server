@@ -71,11 +71,11 @@ public class OpenchatMessage implements CiphertextMessage {
   {
     byte[] version = {ByteUtil.intsToByteHighAndLow(messageVersion, CURRENT_VERSION)};
     byte[] message = OpenchatProtos.OpenchatMessage.newBuilder()
-                                   .setRatchetKey(ByteString.copyFrom(senderRatchetKey.serialize()))
-                                   .setCounter(counter)
-                                   .setPreviousCounter(previousCounter)
-                                   .setCiphertext(ByteString.copyFrom(ciphertext))
-                                   .build().toByteArray();
+                                               .setRatchetKey(ByteString.copyFrom(senderRatchetKey.serialize()))
+                                               .setCounter(counter)
+                                               .setPreviousCounter(previousCounter)
+                                               .setCiphertext(ByteString.copyFrom(ciphertext))
+                                               .build().toByteArray();
 
     byte[] mac     = getMac(messageVersion, senderIdentityKey, receiverIdentityKey, macKey,
                             ByteUtil.combine(version, message));
