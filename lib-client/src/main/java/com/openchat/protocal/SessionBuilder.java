@@ -5,23 +5,18 @@ import com.openchat.protocal.ecc.Curve;
 import com.openchat.protocal.ecc.ECKeyPair;
 import com.openchat.protocal.ecc.ECPublicKey;
 import com.openchat.protocal.logging.Log;
-import com.openchat.protocal.protocol.CiphertextMessage;
-import com.openchat.protocal.protocol.KeyExchangeMessage;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
 import com.openchat.protocal.protocol.OpenchatMessage;
 import com.openchat.protocal.ratchet.AliceOpenchatProtocolParameters;
 import com.openchat.protocal.ratchet.BobOpenchatProtocolParameters;
 import com.openchat.protocal.ratchet.RatchetingSession;
-import com.openchat.protocal.ratchet.SymmetricOpenchatProtocolParameters;
 import com.openchat.protocal.state.IdentityKeyStore;
 import com.openchat.protocal.state.PreKeyBundle;
 import com.openchat.protocal.state.PreKeyStore;
 import com.openchat.protocal.state.SessionRecord;
-import com.openchat.protocal.state.SessionState;
 import com.openchat.protocal.state.SessionStore;
 import com.openchat.protocal.state.OpenchatProtocolStore;
 import com.openchat.protocal.state.SignedPreKeyStore;
-import com.openchat.protocal.util.KeyHelper;
 import com.openchat.protocal.util.Medium;
 import com.openchat.protocal.util.guava.Optional;
 
@@ -159,133 +154,5 @@ public class SessionBuilder {
       identityKeyStore.saveIdentity(remoteAddress, preKey.getIdentityKey());
     }
   }
-
-  
-  public KeyExchangeMessage process(KeyExchangeMessage message)
-      throws InvalidKeyException, UntrustedIdentityException, StaleKeyExchangeException
-  {
-    synchronized (SessionCipher.SESSION_LOCK) {
-      if (!identityKeyStore.isTrustedIdentity(remoteAddress, message.getIdentityKey())) {
-        throw new UntrustedIdentityException(remoteAddress.getName(), message.getIdentityKey());
-      }
-
-      KeyExchangeMessage responseMessage = null;
-
-      if (message.isInitiate()) responseMessage = processInitiate(message);
-      else                      processResponse(message);
-
-      return responseMessage;
-    }
-  }
-
-  private KeyExchangeMessage processInitiate(KeyExchangeMessage message) throws InvalidKeyException {
-    int           flags         = KeyExchangeMessage.RESPONSE_FLAG;
-    SessionRecord sessionRecord = sessionStore.loadSession(remoteAddress);
-
-    if (!Curve.verifySignature(message.getIdentityKey().getPublicKey(),
-                               message.getBaseKey().serialize(),
-                               message.getBaseKeySignature()))
-    {
-      throw new InvalidKeyException("Bad signature!");
-    }
-
-    SymmetricOpenchatProtocolParameters.Builder builder = SymmetricOpenchatProtocolParameters.newBuilder();
-
-    if (!sessionRecord.getSessionState().hasPendingKeyExchange()) {
-      builder.setOurIdentityKey(identityKeyStore.getIdentityKeyPair())
-             .setOurBaseKey(Curve.generateKeyPair())
-             .setOurRatchetKey(Curve.generateKeyPair());
-    } else {
-      builder.setOurIdentityKey(sessionRecord.getSessionState().getPendingKeyExchangeIdentityKey())
-             .setOurBaseKey(sessionRecord.getSessionState().getPendingKeyExchangeBaseKey())
-             .setOurRatchetKey(sessionRecord.getSessionState().getPendingKeyExchangeRatchetKey());
-      flags |= KeyExchangeMessage.SIMULTAENOUS_INITIATE_FLAG;
-    }
-
-    builder.setTheirBaseKey(message.getBaseKey())
-           .setTheirRatchetKey(message.getRatchetKey())
-           .setTheirIdentityKey(message.getIdentityKey());
-
-    SymmetricOpenchatProtocolParameters parameters = builder.create();
-
-    if (!sessionRecord.isFresh()) sessionRecord.archiveCurrentState();
-
-    RatchetingSession.initializeSession(sessionRecord.getSessionState(), parameters);
-
-    sessionStore.storeSession(remoteAddress, sessionRecord);
-    identityKeyStore.saveIdentity(remoteAddress, message.getIdentityKey());
-
-    byte[] baseKeySignature = Curve.calculateSignature(parameters.getOurIdentityKey().getPrivateKey(),
-                                                       parameters.getOurBaseKey().getPublicKey().serialize());
-
-    return new KeyExchangeMessage(sessionRecord.getSessionState().getSessionVersion(),
-                                  message.getSequence(), flags,
-                                  parameters.getOurBaseKey().getPublicKey(),
-                                  baseKeySignature, parameters.getOurRatchetKey().getPublicKey(),
-                                  parameters.getOurIdentityKey().getPublicKey());
-  }
-
-  private void processResponse(KeyExchangeMessage message)
-      throws StaleKeyExchangeException, InvalidKeyException
-  {
-    SessionRecord sessionRecord                  = sessionStore.loadSession(remoteAddress);
-    SessionState  sessionState                   = sessionRecord.getSessionState();
-    boolean       hasPendingKeyExchange          = sessionState.hasPendingKeyExchange();
-    boolean       isSimultaneousInitiateResponse = message.isResponseForSimultaneousInitiate();
-
-    if (!hasPendingKeyExchange || sessionState.getPendingKeyExchangeSequence() != message.getSequence()) {
-      Log.w(TAG, "No matching sequence for response. Is simultaneous initiate response: " + isSimultaneousInitiateResponse);
-      if (!isSimultaneousInitiateResponse) throw new StaleKeyExchangeException();
-      else                                 return;
-    }
-
-    SymmetricOpenchatProtocolParameters.Builder parameters = SymmetricOpenchatProtocolParameters.newBuilder();
-
-    parameters.setOurBaseKey(sessionRecord.getSessionState().getPendingKeyExchangeBaseKey())
-              .setOurRatchetKey(sessionRecord.getSessionState().getPendingKeyExchangeRatchetKey())
-              .setOurIdentityKey(sessionRecord.getSessionState().getPendingKeyExchangeIdentityKey())
-              .setTheirBaseKey(message.getBaseKey())
-              .setTheirRatchetKey(message.getRatchetKey())
-              .setTheirIdentityKey(message.getIdentityKey());
-
-    if (!sessionRecord.isFresh()) sessionRecord.archiveCurrentState();
-
-    RatchetingSession.initializeSession(sessionRecord.getSessionState(), parameters.create());
-
-    if (!Curve.verifySignature(message.getIdentityKey().getPublicKey(),
-                               message.getBaseKey().serialize(),
-                               message.getBaseKeySignature()))
-    {
-      throw new InvalidKeyException("Base key signature doesn't match!");
-    }
-
-    sessionStore.storeSession(remoteAddress, sessionRecord);
-    identityKeyStore.saveIdentity(remoteAddress, message.getIdentityKey());
-  }
-
-  
-  public KeyExchangeMessage process() {
-    synchronized (SessionCipher.SESSION_LOCK) {
-      try {
-        int             sequence         = KeyHelper.getRandomSequence(65534) + 1;
-        int             flags            = KeyExchangeMessage.INITIATE_FLAG;
-        ECKeyPair       baseKey          = Curve.generateKeyPair();
-        ECKeyPair       ratchetKey       = Curve.generateKeyPair();
-        IdentityKeyPair identityKey      = identityKeyStore.getIdentityKeyPair();
-        byte[]          baseKeySignature = Curve.calculateSignature(identityKey.getPrivateKey(), baseKey.getPublicKey().serialize());
-        SessionRecord   sessionRecord    = sessionStore.loadSession(remoteAddress);
-
-        sessionRecord.getSessionState().setPendingKeyExchange(sequence, baseKey, ratchetKey, identityKey);
-        sessionStore.storeSession(remoteAddress, sessionRecord);
-
-        return new KeyExchangeMessage(CiphertextMessage.CURRENT_VERSION,
-                                      sequence, flags, baseKey.getPublicKey(), baseKeySignature,
-                                      ratchetKey.getPublicKey(), identityKey.getPublicKey());
-      } catch (InvalidKeyException e) {
-        throw new AssertionError(e);
-      }
-    }
-  }
-
 
 }
