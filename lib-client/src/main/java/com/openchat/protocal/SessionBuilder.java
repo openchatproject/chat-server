@@ -13,13 +13,13 @@ import com.openchat.protocal.ratchet.AliceOpenchatProtocolParameters;
 import com.openchat.protocal.ratchet.BobOpenchatProtocolParameters;
 import com.openchat.protocal.ratchet.RatchetingSession;
 import com.openchat.protocal.ratchet.SymmetricOpenchatProtocolParameters;
-import com.openchat.protocal.state.OpenchatProtocolStore;
 import com.openchat.protocal.state.IdentityKeyStore;
 import com.openchat.protocal.state.PreKeyBundle;
 import com.openchat.protocal.state.PreKeyStore;
 import com.openchat.protocal.state.SessionRecord;
 import com.openchat.protocal.state.SessionState;
 import com.openchat.protocal.state.SessionStore;
+import com.openchat.protocal.state.OpenchatProtocolStore;
 import com.openchat.protocal.state.SignedPreKeyStore;
 import com.openchat.protocal.util.KeyHelper;
 import com.openchat.protocal.util.Medium;
@@ -61,13 +61,13 @@ public class SessionBuilder {
   {
     IdentityKey theirIdentityKey = message.getIdentityKey();
 
-    if (!identityKeyStore.isTrustedIdentity(remoteAddress.getName(), theirIdentityKey)) {
+    if (!identityKeyStore.isTrustedIdentity(remoteAddress, theirIdentityKey)) {
       throw new UntrustedIdentityException(remoteAddress.getName(), theirIdentityKey);
     }
 
     Optional<Integer> unsignedPreKeyId = processV3(sessionRecord, message);
 
-    identityKeyStore.saveIdentity(remoteAddress.getName(), theirIdentityKey);
+    identityKeyStore.saveIdentity(remoteAddress, theirIdentityKey);
     return unsignedPreKeyId;
   }
 
@@ -114,7 +114,7 @@ public class SessionBuilder {
   
   public void process(PreKeyBundle preKey) throws InvalidKeyException, UntrustedIdentityException {
     synchronized (SessionCipher.SESSION_LOCK) {
-      if (!identityKeyStore.isTrustedIdentity(remoteAddress.getName(), preKey.getIdentityKey())) {
+      if (!identityKeyStore.isTrustedIdentity(remoteAddress, preKey.getIdentityKey())) {
         throw new UntrustedIdentityException(remoteAddress.getName(), preKey.getIdentityKey());
       }
 
@@ -156,7 +156,7 @@ public class SessionBuilder {
       sessionRecord.getSessionState().setAliceBaseKey(ourBaseKey.getPublicKey().serialize());
 
       sessionStore.storeSession(remoteAddress, sessionRecord);
-      identityKeyStore.saveIdentity(remoteAddress.getName(), preKey.getIdentityKey());
+      identityKeyStore.saveIdentity(remoteAddress, preKey.getIdentityKey());
     }
   }
 
@@ -165,7 +165,7 @@ public class SessionBuilder {
       throws InvalidKeyException, UntrustedIdentityException, StaleKeyExchangeException
   {
     synchronized (SessionCipher.SESSION_LOCK) {
-      if (!identityKeyStore.isTrustedIdentity(remoteAddress.getName(), message.getIdentityKey())) {
+      if (!identityKeyStore.isTrustedIdentity(remoteAddress, message.getIdentityKey())) {
         throw new UntrustedIdentityException(remoteAddress.getName(), message.getIdentityKey());
       }
 
@@ -213,7 +213,7 @@ public class SessionBuilder {
     RatchetingSession.initializeSession(sessionRecord.getSessionState(), parameters);
 
     sessionStore.storeSession(remoteAddress, sessionRecord);
-    identityKeyStore.saveIdentity(remoteAddress.getName(), message.getIdentityKey());
+    identityKeyStore.saveIdentity(remoteAddress, message.getIdentityKey());
 
     byte[] baseKeySignature = Curve.calculateSignature(parameters.getOurIdentityKey().getPrivateKey(),
                                                        parameters.getOurBaseKey().getPublicKey().serialize());
@@ -260,7 +260,7 @@ public class SessionBuilder {
     }
 
     sessionStore.storeSession(remoteAddress, sessionRecord);
-    identityKeyStore.saveIdentity(remoteAddress.getName(), message.getIdentityKey());
+    identityKeyStore.saveIdentity(remoteAddress, message.getIdentityKey());
   }
 
   

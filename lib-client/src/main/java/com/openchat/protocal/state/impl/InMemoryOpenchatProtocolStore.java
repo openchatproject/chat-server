@@ -34,13 +34,13 @@ public class InMemoryOpenchatProtocolStore implements OpenchatProtocolStore {
   }
 
   @Override
-  public void saveIdentity(String name, IdentityKey identityKey) {
-    identityKeyStore.saveIdentity(name, identityKey);
+  public void saveIdentity(OpenchatProtocolAddress address, IdentityKey identityKey) {
+    identityKeyStore.saveIdentity(address, identityKey);
   }
 
   @Override
-  public boolean isTrustedIdentity(String name, IdentityKey identityKey) {
-    return identityKeyStore.isTrustedIdentity(name, identityKey);
+  public boolean isTrustedIdentity(OpenchatProtocolAddress address, IdentityKey identityKey) {
+    return identityKeyStore.isTrustedIdentity(address, identityKey);
   }
 
   @Override

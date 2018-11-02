@@ -2,18 +2,15 @@ package com.openchat.protocal.state.impl;
 
 import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.IdentityKeyPair;
-import com.openchat.protocal.ecc.Curve;
-import com.openchat.protocal.ecc.ECKeyPair;
+import com.openchat.protocal.OpenchatProtocolAddress;
 import com.openchat.protocal.state.IdentityKeyStore;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
 public class InMemoryIdentityKeyStore implements IdentityKeyStore {
 
-  private final Map<String, IdentityKey> trustedKeys = new HashMap<>();
+  private final Map<OpenchatProtocolAddress, IdentityKey> trustedKeys = new HashMap<>();
 
   private final IdentityKeyPair identityKeyPair;
   private final int             localRegistrationId;
@@ -34,13 +31,13 @@ public class InMemoryIdentityKeyStore implements IdentityKeyStore {
   }
 
   @Override
-  public void saveIdentity(String name, IdentityKey identityKey) {
-    trustedKeys.put(name, identityKey);
+  public void saveIdentity(OpenchatProtocolAddress address, IdentityKey identityKey) {
+    trustedKeys.put(address, identityKey);
   }
 
   @Override
-  public boolean isTrustedIdentity(String name, IdentityKey identityKey) {
-    IdentityKey trusted = trustedKeys.get(name);
+  public boolean isTrustedIdentity(OpenchatProtocolAddress address, IdentityKey identityKey) {
+    IdentityKey trusted = trustedKeys.get(address);
     return (trusted == null || trusted.equals(identityKey));
   }
 }
