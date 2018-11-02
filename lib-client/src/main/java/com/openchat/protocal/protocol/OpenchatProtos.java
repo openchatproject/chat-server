@@ -3029,6 +3029,450 @@ public final class OpenchatProtos {
     // @@protoc_insertion_point(class_scope:secureim.SenderKeyDistributionMessage)
   }
 
+  public interface DeviceConsistencyCodeMessageOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional uint32 generation = 1;
+    
+    boolean hasGeneration();
+    
+    int getGeneration();
+
+    // optional bytes signature = 2;
+    
+    boolean hasSignature();
+    
+    com.google.protobuf.ByteString getSignature();
+  }
+  
+  public static final class DeviceConsistencyCodeMessage extends
+      com.google.protobuf.GeneratedMessage
+      implements DeviceConsistencyCodeMessageOrBuilder {
+    // Use DeviceConsistencyCodeMessage.newBuilder() to construct.
+    private DeviceConsistencyCodeMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private DeviceConsistencyCodeMessage(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final DeviceConsistencyCodeMessage defaultInstance;
+    public static DeviceConsistencyCodeMessage getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public DeviceConsistencyCodeMessage getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private DeviceConsistencyCodeMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              generation_ = input.readUInt32();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              signature_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.openchat.protocal.protocol.OpenchatProtos.internal_static_secureim_DeviceConsistencyCodeMessage_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.openchat.protocal.protocol.OpenchatProtos.internal_static_secureim_DeviceConsistencyCodeMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage.class, com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<DeviceConsistencyCodeMessage> PARSER =
+        new com.google.protobuf.AbstractParser<DeviceConsistencyCodeMessage>() {
+      public DeviceConsistencyCodeMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new DeviceConsistencyCodeMessage(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DeviceConsistencyCodeMessage> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional uint32 generation = 1;
+    public static final int GENERATION_FIELD_NUMBER = 1;
+    private int generation_;
+    
+    public boolean hasGeneration() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    
+    public int getGeneration() {
+      return generation_;
+    }
+
+    // optional bytes signature = 2;
+    public static final int SIGNATURE_FIELD_NUMBER = 2;
+    private com.google.protobuf.ByteString signature_;
+    
+    public boolean hasSignature() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    
+    public com.google.protobuf.ByteString getSignature() {
+      return signature_;
+    }
+
+    private void initFields() {
+      generation_ = 0;
+      signature_ = com.google.protobuf.ByteString.EMPTY;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeUInt32(1, generation_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, signature_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(1, generation_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, signature_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.openchat.protocal.protocol.OpenchatProtos.internal_static_secureim_DeviceConsistencyCodeMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.openchat.protocal.protocol.OpenchatProtos.internal_static_secureim_DeviceConsistencyCodeMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage.class, com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage.Builder.class);
+      }
+
+      // Construct using com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        generation_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        signature_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.openchat.protocal.protocol.OpenchatProtos.internal_static_secureim_DeviceConsistencyCodeMessage_descriptor;
+      }
+
+      public com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage getDefaultInstanceForType() {
+        return com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage.getDefaultInstance();
+      }
+
+      public com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage build() {
+        com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage buildPartial() {
+        com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage result = new com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.generation_ = generation_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.signature_ = signature_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage) {
+          return mergeFrom((com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage other) {
+        if (other == com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage.getDefaultInstance()) return this;
+        if (other.hasGeneration()) {
+          setGeneration(other.getGeneration());
+        }
+        if (other.hasSignature()) {
+          setSignature(other.getSignature());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.openchat.protocal.protocol.OpenchatProtos.DeviceConsistencyCodeMessage) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional uint32 generation = 1;
+      private int generation_ ;
+      
+      public boolean hasGeneration() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      
+      public int getGeneration() {
+        return generation_;
+      }
+      
+      public Builder setGeneration(int value) {
+        bitField0_ |= 0x00000001;
+        generation_ = value;
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearGeneration() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        generation_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional bytes signature = 2;
+      private com.google.protobuf.ByteString signature_ = com.google.protobuf.ByteString.EMPTY;
+      
+      public boolean hasSignature() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      
+      public com.google.protobuf.ByteString getSignature() {
+        return signature_;
+      }
+      
+      public Builder setSignature(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        signature_ = value;
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearSignature() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        signature_ = getDefaultInstance().getSignature();
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:secureim.DeviceConsistencyCodeMessage)
+    }
+
+    static {
+      defaultInstance = new DeviceConsistencyCodeMessage(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:secureim.DeviceConsistencyCodeMessage)
+  }
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_secureim_OpenchatMessage_descriptor;
   private static
@@ -3054,6 +3498,11 @@ public final class OpenchatProtos {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_secureim_SenderKeyDistributionMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_secureim_DeviceConsistencyCodeMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_secureim_DeviceConsistencyCodeMessage_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -3098,6 +3547,12 @@ public final class OpenchatProtos {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_secureim_SenderKeyDistributionMessage_descriptor,
               new java.lang.String[] { "Id", "Iteration", "ChainKey", "SigningKey", });
+          internal_static_secureim_DeviceConsistencyCodeMessage_descriptor =
+            getDescriptor().getMessageTypes().get(5);
+          internal_static_secureim_DeviceConsistencyCodeMessage_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_secureim_DeviceConsistencyCodeMessage_descriptor,
+              new java.lang.String[] { "Generation", "Signature", });
           return null;
         }
       };
