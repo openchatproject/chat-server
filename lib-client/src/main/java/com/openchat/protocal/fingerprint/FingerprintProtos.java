@@ -8,38 +8,32 @@ public final class FingerprintProtos {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
-  public interface FingerprintDataOrBuilder
+  public interface LogicalFingerprintOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // optional bytes publicKey = 1;
+    // optional bytes content = 1;
     
-    boolean hasPublicKey();
+    boolean hasContent();
     
-    com.google.protobuf.ByteString getPublicKey();
-
-    // optional bytes identifier = 2;
-    
-    boolean hasIdentifier();
-    
-    com.google.protobuf.ByteString getIdentifier();
+    com.google.protobuf.ByteString getContent();
   }
   
-  public static final class FingerprintData extends
+  public static final class LogicalFingerprint extends
       com.google.protobuf.GeneratedMessage
-      implements FingerprintDataOrBuilder {
-    // Use FingerprintData.newBuilder() to construct.
-    private FingerprintData(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements LogicalFingerprintOrBuilder {
+    // Use LogicalFingerprint.newBuilder() to construct.
+    private LogicalFingerprint(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private FingerprintData(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private LogicalFingerprint(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final FingerprintData defaultInstance;
-    public static FingerprintData getDefaultInstance() {
+    private static final LogicalFingerprint defaultInstance;
+    public static LogicalFingerprint getDefaultInstance() {
       return defaultInstance;
     }
 
-    public FingerprintData getDefaultInstanceForType() {
+    public LogicalFingerprint getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -49,7 +43,7 @@ public final class FingerprintProtos {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private FingerprintData(
+    private LogicalFingerprint(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -74,12 +68,7 @@ public final class FingerprintProtos {
             }
             case 10: {
               bitField0_ |= 0x00000001;
-              publicKey_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              identifier_ = input.readBytes();
+              content_ = input.readBytes();
               break;
             }
           }
@@ -96,59 +85,46 @@ public final class FingerprintProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_FingerprintData_descriptor;
+      return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_LogicalFingerprint_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_FingerprintData_fieldAccessorTable
+      return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_LogicalFingerprint_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.class, com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.Builder.class);
+              com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.class, com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<FingerprintData> PARSER =
-        new com.google.protobuf.AbstractParser<FingerprintData>() {
-      public FingerprintData parsePartialFrom(
+    public static com.google.protobuf.Parser<LogicalFingerprint> PARSER =
+        new com.google.protobuf.AbstractParser<LogicalFingerprint>() {
+      public LogicalFingerprint parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new FingerprintData(input, extensionRegistry);
+        return new LogicalFingerprint(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<FingerprintData> getParserForType() {
+    public com.google.protobuf.Parser<LogicalFingerprint> getParserForType() {
       return PARSER;
     }
 
     private int bitField0_;
-    // optional bytes publicKey = 1;
-    public static final int PUBLICKEY_FIELD_NUMBER = 1;
-    private com.google.protobuf.ByteString publicKey_;
+    // optional bytes content = 1;
+    public static final int CONTENT_FIELD_NUMBER = 1;
+    private com.google.protobuf.ByteString content_;
     
-    public boolean hasPublicKey() {
+    public boolean hasContent() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     
-    public com.google.protobuf.ByteString getPublicKey() {
-      return publicKey_;
-    }
-
-    // optional bytes identifier = 2;
-    public static final int IDENTIFIER_FIELD_NUMBER = 2;
-    private com.google.protobuf.ByteString identifier_;
-    
-    public boolean hasIdentifier() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    
-    public com.google.protobuf.ByteString getIdentifier() {
-      return identifier_;
+    public com.google.protobuf.ByteString getContent() {
+      return content_;
     }
 
     private void initFields() {
-      publicKey_ = com.google.protobuf.ByteString.EMPTY;
-      identifier_ = com.google.protobuf.ByteString.EMPTY;
+      content_ = com.google.protobuf.ByteString.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -163,10 +139,7 @@ public final class FingerprintProtos {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, publicKey_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, identifier_);
+        output.writeBytes(1, content_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -179,11 +152,7 @@ public final class FingerprintProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, publicKey_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, identifier_);
+          .computeBytesSize(1, content_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -197,53 +166,53 @@ public final class FingerprintProtos {
       return super.writeReplace();
     }
 
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData parseFrom(
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData parseFrom(
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData parseFrom(byte[] data)
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData parseFrom(
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData parseFrom(java.io.InputStream input)
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData parseFrom(
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData parseDelimitedFrom(java.io.InputStream input)
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData parseDelimitedFrom(
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData parseFrom(
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData parseFrom(
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -252,7 +221,7 @@ public final class FingerprintProtos {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData prototype) {
+    public static Builder newBuilder(com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -266,20 +235,20 @@ public final class FingerprintProtos {
     
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintDataOrBuilder {
+       implements com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprintOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_FingerprintData_descriptor;
+        return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_LogicalFingerprint_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_FingerprintData_fieldAccessorTable
+        return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_LogicalFingerprint_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.class, com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.Builder.class);
+                com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.class, com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.Builder.class);
       }
 
-      // Construct using com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.newBuilder()
+      // Construct using com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -299,10 +268,8 @@ public final class FingerprintProtos {
 
       public Builder clear() {
         super.clear();
-        publicKey_ = com.google.protobuf.ByteString.EMPTY;
+        content_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000001);
-        identifier_ = com.google.protobuf.ByteString.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -312,54 +279,47 @@ public final class FingerprintProtos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_FingerprintData_descriptor;
+        return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_LogicalFingerprint_descriptor;
       }
 
-      public com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData getDefaultInstanceForType() {
-        return com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.getDefaultInstance();
+      public com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint getDefaultInstanceForType() {
+        return com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.getDefaultInstance();
       }
 
-      public com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData build() {
-        com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData result = buildPartial();
+      public com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint build() {
+        com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData buildPartial() {
-        com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData result = new com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData(this);
+      public com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint buildPartial() {
+        com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint result = new com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.publicKey_ = publicKey_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.identifier_ = identifier_;
+        result.content_ = content_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData) {
-          return mergeFrom((com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData)other);
+        if (other instanceof com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint) {
+          return mergeFrom((com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData other) {
-        if (other == com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.getDefaultInstance()) return this;
-        if (other.hasPublicKey()) {
-          setPublicKey(other.getPublicKey());
-        }
-        if (other.hasIdentifier()) {
-          setIdentifier(other.getIdentifier());
+      public Builder mergeFrom(com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint other) {
+        if (other == com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.getDefaultInstance()) return this;
+        if (other.hasContent()) {
+          setContent(other.getContent());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -373,11 +333,11 @@ public final class FingerprintProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData parsedMessage = null;
+        com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData) e.getUnfinishedMessage();
+          parsedMessage = (com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -388,74 +348,46 @@ public final class FingerprintProtos {
       }
       private int bitField0_;
 
-      // optional bytes publicKey = 1;
-      private com.google.protobuf.ByteString publicKey_ = com.google.protobuf.ByteString.EMPTY;
+      // optional bytes content = 1;
+      private com.google.protobuf.ByteString content_ = com.google.protobuf.ByteString.EMPTY;
       
-      public boolean hasPublicKey() {
+      public boolean hasContent() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       
-      public com.google.protobuf.ByteString getPublicKey() {
-        return publicKey_;
+      public com.google.protobuf.ByteString getContent() {
+        return content_;
       }
       
-      public Builder setPublicKey(com.google.protobuf.ByteString value) {
+      public Builder setContent(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000001;
-        publicKey_ = value;
+        content_ = value;
         onChanged();
         return this;
       }
       
-      public Builder clearPublicKey() {
+      public Builder clearContent() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        publicKey_ = getDefaultInstance().getPublicKey();
+        content_ = getDefaultInstance().getContent();
         onChanged();
         return this;
       }
 
-      // optional bytes identifier = 2;
-      private com.google.protobuf.ByteString identifier_ = com.google.protobuf.ByteString.EMPTY;
-      
-      public boolean hasIdentifier() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      
-      public com.google.protobuf.ByteString getIdentifier() {
-        return identifier_;
-      }
-      
-      public Builder setIdentifier(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        identifier_ = value;
-        onChanged();
-        return this;
-      }
-      
-      public Builder clearIdentifier() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        identifier_ = getDefaultInstance().getIdentifier();
-        onChanged();
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:secureim.FingerprintData)
+      // @@protoc_insertion_point(builder_scope:secureim.LogicalFingerprint)
     }
 
     static {
-      defaultInstance = new FingerprintData(true);
+      defaultInstance = new LogicalFingerprint(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:secureim.FingerprintData)
+    // @@protoc_insertion_point(class_scope:secureim.LogicalFingerprint)
   }
 
-  public interface CombinedFingerprintOrBuilder
+  public interface CombinedFingerprintsOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
     // optional uint32 version = 1;
@@ -464,39 +396,39 @@ public final class FingerprintProtos {
     
     int getVersion();
 
-    // optional .secureim.FingerprintData localFingerprint = 2;
+    // optional .secureim.LogicalFingerprint localFingerprint = 2;
     
     boolean hasLocalFingerprint();
     
-    com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData getLocalFingerprint();
+    com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint getLocalFingerprint();
     
-    com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintDataOrBuilder getLocalFingerprintOrBuilder();
+    com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprintOrBuilder getLocalFingerprintOrBuilder();
 
-    // optional .secureim.FingerprintData remoteFingerprint = 3;
+    // optional .secureim.LogicalFingerprint remoteFingerprint = 3;
     
     boolean hasRemoteFingerprint();
     
-    com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData getRemoteFingerprint();
+    com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint getRemoteFingerprint();
     
-    com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintDataOrBuilder getRemoteFingerprintOrBuilder();
+    com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprintOrBuilder getRemoteFingerprintOrBuilder();
   }
   
-  public static final class CombinedFingerprint extends
+  public static final class CombinedFingerprints extends
       com.google.protobuf.GeneratedMessage
-      implements CombinedFingerprintOrBuilder {
-    // Use CombinedFingerprint.newBuilder() to construct.
-    private CombinedFingerprint(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements CombinedFingerprintsOrBuilder {
+    // Use CombinedFingerprints.newBuilder() to construct.
+    private CombinedFingerprints(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private CombinedFingerprint(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private CombinedFingerprints(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final CombinedFingerprint defaultInstance;
-    public static CombinedFingerprint getDefaultInstance() {
+    private static final CombinedFingerprints defaultInstance;
+    public static CombinedFingerprints getDefaultInstance() {
       return defaultInstance;
     }
 
-    public CombinedFingerprint getDefaultInstanceForType() {
+    public CombinedFingerprints getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -506,7 +438,7 @@ public final class FingerprintProtos {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private CombinedFingerprint(
+    private CombinedFingerprints(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -535,11 +467,11 @@ public final class FingerprintProtos {
               break;
             }
             case 18: {
-              com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.Builder subBuilder = null;
+              com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.Builder subBuilder = null;
               if (((bitField0_ & 0x00000002) == 0x00000002)) {
                 subBuilder = localFingerprint_.toBuilder();
               }
-              localFingerprint_ = input.readMessage(com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.PARSER, extensionRegistry);
+              localFingerprint_ = input.readMessage(com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(localFingerprint_);
                 localFingerprint_ = subBuilder.buildPartial();
@@ -548,11 +480,11 @@ public final class FingerprintProtos {
               break;
             }
             case 26: {
-              com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.Builder subBuilder = null;
+              com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.Builder subBuilder = null;
               if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 subBuilder = remoteFingerprint_.toBuilder();
               }
-              remoteFingerprint_ = input.readMessage(com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.PARSER, extensionRegistry);
+              remoteFingerprint_ = input.readMessage(com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(remoteFingerprint_);
                 remoteFingerprint_ = subBuilder.buildPartial();
@@ -574,28 +506,28 @@ public final class FingerprintProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_CombinedFingerprint_descriptor;
+      return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_CombinedFingerprints_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_CombinedFingerprint_fieldAccessorTable
+      return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_CombinedFingerprints_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint.class, com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint.Builder.class);
+              com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints.class, com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<CombinedFingerprint> PARSER =
-        new com.google.protobuf.AbstractParser<CombinedFingerprint>() {
-      public CombinedFingerprint parsePartialFrom(
+    public static com.google.protobuf.Parser<CombinedFingerprints> PARSER =
+        new com.google.protobuf.AbstractParser<CombinedFingerprints>() {
+      public CombinedFingerprints parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new CombinedFingerprint(input, extensionRegistry);
+        return new CombinedFingerprints(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<CombinedFingerprint> getParserForType() {
+    public com.google.protobuf.Parser<CombinedFingerprints> getParserForType() {
       return PARSER;
     }
 
@@ -612,42 +544,42 @@ public final class FingerprintProtos {
       return version_;
     }
 
-    // optional .secureim.FingerprintData localFingerprint = 2;
+    // optional .secureim.LogicalFingerprint localFingerprint = 2;
     public static final int LOCALFINGERPRINT_FIELD_NUMBER = 2;
-    private com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData localFingerprint_;
+    private com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint localFingerprint_;
     
     public boolean hasLocalFingerprint() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     
-    public com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData getLocalFingerprint() {
+    public com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint getLocalFingerprint() {
       return localFingerprint_;
     }
     
-    public com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintDataOrBuilder getLocalFingerprintOrBuilder() {
+    public com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprintOrBuilder getLocalFingerprintOrBuilder() {
       return localFingerprint_;
     }
 
-    // optional .secureim.FingerprintData remoteFingerprint = 3;
+    // optional .secureim.LogicalFingerprint remoteFingerprint = 3;
     public static final int REMOTEFINGERPRINT_FIELD_NUMBER = 3;
-    private com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData remoteFingerprint_;
+    private com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint remoteFingerprint_;
     
     public boolean hasRemoteFingerprint() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     
-    public com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData getRemoteFingerprint() {
+    public com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint getRemoteFingerprint() {
       return remoteFingerprint_;
     }
     
-    public com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintDataOrBuilder getRemoteFingerprintOrBuilder() {
+    public com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprintOrBuilder getRemoteFingerprintOrBuilder() {
       return remoteFingerprint_;
     }
 
     private void initFields() {
       version_ = 0;
-      localFingerprint_ = com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.getDefaultInstance();
-      remoteFingerprint_ = com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.getDefaultInstance();
+      localFingerprint_ = com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.getDefaultInstance();
+      remoteFingerprint_ = com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -703,53 +635,53 @@ public final class FingerprintProtos {
       return super.writeReplace();
     }
 
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint parseFrom(
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint parseFrom(
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint parseFrom(byte[] data)
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint parseFrom(
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint parseFrom(java.io.InputStream input)
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint parseFrom(
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint parseDelimitedFrom(java.io.InputStream input)
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint parseDelimitedFrom(
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint parseFrom(
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint parseFrom(
+    public static com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -758,7 +690,7 @@ public final class FingerprintProtos {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint prototype) {
+    public static Builder newBuilder(com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -772,20 +704,20 @@ public final class FingerprintProtos {
     
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprintOrBuilder {
+       implements com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprintsOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_CombinedFingerprint_descriptor;
+        return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_CombinedFingerprints_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_CombinedFingerprint_fieldAccessorTable
+        return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_CombinedFingerprints_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint.class, com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint.Builder.class);
+                com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints.class, com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints.Builder.class);
       }
 
-      // Construct using com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint.newBuilder()
+      // Construct using com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -810,13 +742,13 @@ public final class FingerprintProtos {
         version_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
         if (localFingerprintBuilder_ == null) {
-          localFingerprint_ = com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.getDefaultInstance();
+          localFingerprint_ = com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.getDefaultInstance();
         } else {
           localFingerprintBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
         if (remoteFingerprintBuilder_ == null) {
-          remoteFingerprint_ = com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.getDefaultInstance();
+          remoteFingerprint_ = com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.getDefaultInstance();
         } else {
           remoteFingerprintBuilder_.clear();
         }
@@ -830,23 +762,23 @@ public final class FingerprintProtos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_CombinedFingerprint_descriptor;
+        return com.openchat.protocal.fingerprint.FingerprintProtos.internal_static_secureim_CombinedFingerprints_descriptor;
       }
 
-      public com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint getDefaultInstanceForType() {
-        return com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint.getDefaultInstance();
+      public com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints getDefaultInstanceForType() {
+        return com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints.getDefaultInstance();
       }
 
-      public com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint build() {
-        com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint result = buildPartial();
+      public com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints build() {
+        com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint buildPartial() {
-        com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint result = new com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint(this);
+      public com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints buildPartial() {
+        com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints result = new com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -875,16 +807,16 @@ public final class FingerprintProtos {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint) {
-          return mergeFrom((com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint)other);
+        if (other instanceof com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints) {
+          return mergeFrom((com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint other) {
-        if (other == com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints other) {
+        if (other == com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints.getDefaultInstance()) return this;
         if (other.hasVersion()) {
           setVersion(other.getVersion());
         }
@@ -906,11 +838,11 @@ public final class FingerprintProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint parsedMessage = null;
+        com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprint) e.getUnfinishedMessage();
+          parsedMessage = (com.openchat.protocal.fingerprint.FingerprintProtos.CombinedFingerprints) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -946,16 +878,16 @@ public final class FingerprintProtos {
         return this;
       }
 
-      // optional .secureim.FingerprintData localFingerprint = 2;
-      private com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData localFingerprint_ = com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.getDefaultInstance();
+      // optional .secureim.LogicalFingerprint localFingerprint = 2;
+      private com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint localFingerprint_ = com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData, com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.Builder, com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintDataOrBuilder> localFingerprintBuilder_;
+          com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint, com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.Builder, com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprintOrBuilder> localFingerprintBuilder_;
       
       public boolean hasLocalFingerprint() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       
-      public com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData getLocalFingerprint() {
+      public com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint getLocalFingerprint() {
         if (localFingerprintBuilder_ == null) {
           return localFingerprint_;
         } else {
@@ -963,7 +895,7 @@ public final class FingerprintProtos {
         }
       }
       
-      public Builder setLocalFingerprint(com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData value) {
+      public Builder setLocalFingerprint(com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint value) {
         if (localFingerprintBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -978,7 +910,7 @@ public final class FingerprintProtos {
       }
       
       public Builder setLocalFingerprint(
-          com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.Builder builderForValue) {
+          com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.Builder builderForValue) {
         if (localFingerprintBuilder_ == null) {
           localFingerprint_ = builderForValue.build();
           onChanged();
@@ -989,12 +921,12 @@ public final class FingerprintProtos {
         return this;
       }
       
-      public Builder mergeLocalFingerprint(com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData value) {
+      public Builder mergeLocalFingerprint(com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint value) {
         if (localFingerprintBuilder_ == null) {
           if (((bitField0_ & 0x00000002) == 0x00000002) &&
-              localFingerprint_ != com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.getDefaultInstance()) {
+              localFingerprint_ != com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.getDefaultInstance()) {
             localFingerprint_ =
-              com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.newBuilder(localFingerprint_).mergeFrom(value).buildPartial();
+              com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.newBuilder(localFingerprint_).mergeFrom(value).buildPartial();
           } else {
             localFingerprint_ = value;
           }
@@ -1008,7 +940,7 @@ public final class FingerprintProtos {
       
       public Builder clearLocalFingerprint() {
         if (localFingerprintBuilder_ == null) {
-          localFingerprint_ = com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.getDefaultInstance();
+          localFingerprint_ = com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.getDefaultInstance();
           onChanged();
         } else {
           localFingerprintBuilder_.clear();
@@ -1017,13 +949,13 @@ public final class FingerprintProtos {
         return this;
       }
       
-      public com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.Builder getLocalFingerprintBuilder() {
+      public com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.Builder getLocalFingerprintBuilder() {
         bitField0_ |= 0x00000002;
         onChanged();
         return getLocalFingerprintFieldBuilder().getBuilder();
       }
       
-      public com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintDataOrBuilder getLocalFingerprintOrBuilder() {
+      public com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprintOrBuilder getLocalFingerprintOrBuilder() {
         if (localFingerprintBuilder_ != null) {
           return localFingerprintBuilder_.getMessageOrBuilder();
         } else {
@@ -1032,11 +964,11 @@ public final class FingerprintProtos {
       }
       
       private com.google.protobuf.SingleFieldBuilder<
-          com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData, com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.Builder, com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintDataOrBuilder> 
+          com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint, com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.Builder, com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprintOrBuilder> 
           getLocalFingerprintFieldBuilder() {
         if (localFingerprintBuilder_ == null) {
           localFingerprintBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData, com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.Builder, com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintDataOrBuilder>(
+              com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint, com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.Builder, com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprintOrBuilder>(
                   localFingerprint_,
                   getParentForChildren(),
                   isClean());
@@ -1045,16 +977,16 @@ public final class FingerprintProtos {
         return localFingerprintBuilder_;
       }
 
-      // optional .secureim.FingerprintData remoteFingerprint = 3;
-      private com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData remoteFingerprint_ = com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.getDefaultInstance();
+      // optional .secureim.LogicalFingerprint remoteFingerprint = 3;
+      private com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint remoteFingerprint_ = com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData, com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.Builder, com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintDataOrBuilder> remoteFingerprintBuilder_;
+          com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint, com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.Builder, com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprintOrBuilder> remoteFingerprintBuilder_;
       
       public boolean hasRemoteFingerprint() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       
-      public com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData getRemoteFingerprint() {
+      public com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint getRemoteFingerprint() {
         if (remoteFingerprintBuilder_ == null) {
           return remoteFingerprint_;
         } else {
@@ -1062,7 +994,7 @@ public final class FingerprintProtos {
         }
       }
       
-      public Builder setRemoteFingerprint(com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData value) {
+      public Builder setRemoteFingerprint(com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint value) {
         if (remoteFingerprintBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1077,7 +1009,7 @@ public final class FingerprintProtos {
       }
       
       public Builder setRemoteFingerprint(
-          com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.Builder builderForValue) {
+          com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.Builder builderForValue) {
         if (remoteFingerprintBuilder_ == null) {
           remoteFingerprint_ = builderForValue.build();
           onChanged();
@@ -1088,12 +1020,12 @@ public final class FingerprintProtos {
         return this;
       }
       
-      public Builder mergeRemoteFingerprint(com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData value) {
+      public Builder mergeRemoteFingerprint(com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint value) {
         if (remoteFingerprintBuilder_ == null) {
           if (((bitField0_ & 0x00000004) == 0x00000004) &&
-              remoteFingerprint_ != com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.getDefaultInstance()) {
+              remoteFingerprint_ != com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.getDefaultInstance()) {
             remoteFingerprint_ =
-              com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.newBuilder(remoteFingerprint_).mergeFrom(value).buildPartial();
+              com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.newBuilder(remoteFingerprint_).mergeFrom(value).buildPartial();
           } else {
             remoteFingerprint_ = value;
           }
@@ -1107,7 +1039,7 @@ public final class FingerprintProtos {
       
       public Builder clearRemoteFingerprint() {
         if (remoteFingerprintBuilder_ == null) {
-          remoteFingerprint_ = com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.getDefaultInstance();
+          remoteFingerprint_ = com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.getDefaultInstance();
           onChanged();
         } else {
           remoteFingerprintBuilder_.clear();
@@ -1116,13 +1048,13 @@ public final class FingerprintProtos {
         return this;
       }
       
-      public com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.Builder getRemoteFingerprintBuilder() {
+      public com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.Builder getRemoteFingerprintBuilder() {
         bitField0_ |= 0x00000004;
         onChanged();
         return getRemoteFingerprintFieldBuilder().getBuilder();
       }
       
-      public com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintDataOrBuilder getRemoteFingerprintOrBuilder() {
+      public com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprintOrBuilder getRemoteFingerprintOrBuilder() {
         if (remoteFingerprintBuilder_ != null) {
           return remoteFingerprintBuilder_.getMessageOrBuilder();
         } else {
@@ -1131,11 +1063,11 @@ public final class FingerprintProtos {
       }
       
       private com.google.protobuf.SingleFieldBuilder<
-          com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData, com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.Builder, com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintDataOrBuilder> 
+          com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint, com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.Builder, com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprintOrBuilder> 
           getRemoteFingerprintFieldBuilder() {
         if (remoteFingerprintBuilder_ == null) {
           remoteFingerprintBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData, com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintData.Builder, com.openchat.protocal.fingerprint.FingerprintProtos.FingerprintDataOrBuilder>(
+              com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint, com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprint.Builder, com.openchat.protocal.fingerprint.FingerprintProtos.LogicalFingerprintOrBuilder>(
                   remoteFingerprint_,
                   getParentForChildren(),
                   isClean());
@@ -1144,27 +1076,27 @@ public final class FingerprintProtos {
         return remoteFingerprintBuilder_;
       }
 
-      // @@protoc_insertion_point(builder_scope:secureim.CombinedFingerprint)
+      // @@protoc_insertion_point(builder_scope:secureim.CombinedFingerprints)
     }
 
     static {
-      defaultInstance = new CombinedFingerprint(true);
+      defaultInstance = new CombinedFingerprints(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:secureim.CombinedFingerprint)
+    // @@protoc_insertion_point(class_scope:secureim.CombinedFingerprints)
   }
 
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_secureim_FingerprintData_descriptor;
+    internal_static_secureim_LogicalFingerprint_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_secureim_FingerprintData_fieldAccessorTable;
+      internal_static_secureim_LogicalFingerprint_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_secureim_CombinedFingerprint_descriptor;
+    internal_static_secureim_CombinedFingerprints_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_secureim_CombinedFingerprint_fieldAccessorTable;
+      internal_static_secureim_CombinedFingerprints_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1179,17 +1111,17 @@ public final class FingerprintProtos {
         public com.google.protobuf.ExtensionRegistry assignDescriptors(
             com.google.protobuf.Descriptors.FileDescriptor root) {
           descriptor = root;
-          internal_static_secureim_FingerprintData_descriptor =
+          internal_static_secureim_LogicalFingerprint_descriptor =
             getDescriptor().getMessageTypes().get(0);
-          internal_static_secureim_FingerprintData_fieldAccessorTable = new
+          internal_static_secureim_LogicalFingerprint_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_secureim_FingerprintData_descriptor,
-              new java.lang.String[] { "PublicKey", "Identifier", });
-          internal_static_secureim_CombinedFingerprint_descriptor =
+              internal_static_secureim_LogicalFingerprint_descriptor,
+              new java.lang.String[] { "Content", });
+          internal_static_secureim_CombinedFingerprints_descriptor =
             getDescriptor().getMessageTypes().get(1);
-          internal_static_secureim_CombinedFingerprint_fieldAccessorTable = new
+          internal_static_secureim_CombinedFingerprints_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_secureim_CombinedFingerprint_descriptor,
+              internal_static_secureim_CombinedFingerprints_descriptor,
               new java.lang.String[] { "Version", "LocalFingerprint", "RemoteFingerprint", });
           return null;
         }
