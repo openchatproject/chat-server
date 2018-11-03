@@ -58,12 +58,6 @@ public class KeyHelper {
   }
 
   
-  public static PreKeyRecord generateLastResortPreKey() {
-    ECKeyPair keyPair = Curve.generateKeyPair();
-    return new PreKeyRecord(Medium.MAX_VALUE, keyPair);
-  }
-
-  
   public static SignedPreKeyRecord generateSignedPreKey(IdentityKeyPair identityKeyPair, int signedPreKeyId)
       throws InvalidKeyException
   {
