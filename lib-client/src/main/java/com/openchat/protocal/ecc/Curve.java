@@ -2,7 +2,7 @@ package com.openchat.protocal.ecc;
 
 import com.openchat.curve25519.Curve25519;
 import com.openchat.curve25519.Curve25519KeyPair;
-import com.openchat.curve25519.NoSuchProviderException;
+import com.openchat.curve25519.VrfSignatureVerificationFailedException;
 import com.openchat.protocal.InvalidKeyException;
 
 import static com.openchat.curve25519.Curve25519.BEST;
@@ -79,23 +79,23 @@ public class Curve {
     }
   }
 
-  public static byte[] calculateUniqueSignature(ECPrivateKey signingKey, byte[] message)
+  public static byte[] calculateVrfSignature(ECPrivateKey signingKey, byte[] message)
       throws InvalidKeyException
   {
     if (signingKey.getType() == DJB_TYPE) {
       return Curve25519.getInstance(BEST)
-          .calculateUniqueSignature(((DjbECPrivateKey)signingKey).getPrivateKey(), message);
+                       .calculateVrfSignature(((DjbECPrivateKey)signingKey).getPrivateKey(), message);
     } else {
       throw new InvalidKeyException("Unknown type: " + signingKey.getType());
     }
   }
 
-  public static boolean verifyUniqueSignature(ECPublicKey signingKey, byte[] message, byte[] signature)
-      throws InvalidKeyException
+  public static byte[] verifyVrfSignature(ECPublicKey signingKey, byte[] message, byte[] signature)
+      throws InvalidKeyException, VrfSignatureVerificationFailedException
   {
     if (signingKey.getType() == DJB_TYPE) {
       return Curve25519.getInstance(BEST)
-                       .verifyUniqueSignature(((DjbECPublicKey) signingKey).getPublicKey(), message, signature);
+                       .verifyVrfSignature(((DjbECPublicKey) signingKey).getPublicKey(), message, signature);
     } else {
       throw new InvalidKeyException("Unknown type: " + signingKey.getType());
     }
