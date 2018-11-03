@@ -41,6 +41,7 @@ public class SessionCipher {
   public static final Object SESSION_LOCK = new Object();
 
   private final SessionStore          sessionStore;
+  private final IdentityKeyStore      identityKeyStore;
   private final SessionBuilder        sessionBuilder;
   private final PreKeyStore           preKeyStore;
   private final OpenchatProtocolAddress remoteAddress;
@@ -50,11 +51,12 @@ public class SessionCipher {
                        SignedPreKeyStore signedPreKeyStore, IdentityKeyStore identityKeyStore,
                        OpenchatProtocolAddress remoteAddress)
   {
-    this.sessionStore   = sessionStore;
-    this.preKeyStore    = preKeyStore;
-    this.remoteAddress  = remoteAddress;
-    this.sessionBuilder = new SessionBuilder(sessionStore, preKeyStore, signedPreKeyStore,
-                                             identityKeyStore, remoteAddress);
+    this.sessionStore     = sessionStore;
+    this.preKeyStore      = preKeyStore;
+    this.identityKeyStore = identityKeyStore;
+    this.remoteAddress    = remoteAddress;
+    this.sessionBuilder   = new SessionBuilder(sessionStore, preKeyStore, signedPreKeyStore,
+                                               identityKeyStore, remoteAddress);
   }
 
   public SessionCipher(OpenchatProtocolStore store, OpenchatProtocolAddress remoteAddress) {
@@ -62,7 +64,7 @@ public class SessionCipher {
   }
 
   
-  public CiphertextMessage encrypt(byte[] paddedMessage) {
+  public CiphertextMessage encrypt(byte[] paddedMessage) throws UntrustedIdentityException {
     synchronized (SESSION_LOCK) {
       SessionRecord sessionRecord   = sessionStore.loadSession(remoteAddress);
       SessionState  sessionState    = sessionRecord.getSessionState();
@@ -90,6 +92,15 @@ public class SessionCipher {
       }
 
       sessionState.setSenderChainKey(chainKey.getNextChainKey());
+
+      if (!identityKeyStore.isTrustedIdentity(remoteAddress, sessionState.getRemoteIdentityKey(), IdentityKeyStore.Direction.SENDING)) {
+        throw new UntrustedIdentityException(remoteAddress.getName(), sessionState.getRemoteIdentityKey());
+      }
+
+      if (identityKeyStore.saveIdentity(remoteAddress, sessionState.getRemoteIdentityKey())) {
+        sessionRecord.removePreviousSessionStates();
+      }
+
       sessionStore.storeSession(remoteAddress, sessionRecord);
       return ciphertextMessage;
     }
@@ -128,7 +139,7 @@ public class SessionCipher {
   
   public byte[] decrypt(OpenchatMessage ciphertext)
       throws InvalidMessageException, DuplicateMessageException, LegacyMessageException,
-      NoSessionException
+      NoSessionException, UntrustedIdentityException
   {
     return decrypt(ciphertext, new NullDecryptionCallback());
   }
@@ -136,7 +147,7 @@ public class SessionCipher {
   
   public byte[] decrypt(OpenchatMessage ciphertext, DecryptionCallback callback)
       throws InvalidMessageException, DuplicateMessageException, LegacyMessageException,
-             NoSessionException
+             NoSessionException, UntrustedIdentityException
   {
     synchronized (SESSION_LOCK) {
 
@@ -146,6 +157,14 @@ public class SessionCipher {
 
       SessionRecord sessionRecord = sessionStore.loadSession(remoteAddress);
       byte[]        plaintext     = decrypt(sessionRecord, ciphertext);
+
+      if (!identityKeyStore.isTrustedIdentity(remoteAddress, sessionRecord.getSessionState().getRemoteIdentityKey(), IdentityKeyStore.Direction.RECEIVING)) {
+        throw new UntrustedIdentityException(remoteAddress.getName(), sessionRecord.getSessionState().getRemoteIdentityKey());
+      }
+
+      if (identityKeyStore.saveIdentity(remoteAddress, sessionRecord.getSessionState().getRemoteIdentityKey())) {
+        sessionRecord.removePreviousSessionStates();
+      }
 
       callback.handlePlaintext(plaintext);
 
