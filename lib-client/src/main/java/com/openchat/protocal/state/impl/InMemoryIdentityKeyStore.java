@@ -31,12 +31,19 @@ public class InMemoryIdentityKeyStore implements IdentityKeyStore {
   }
 
   @Override
-  public void saveIdentity(OpenchatProtocolAddress address, IdentityKey identityKey) {
-    trustedKeys.put(address, identityKey);
+  public boolean saveIdentity(OpenchatProtocolAddress address, IdentityKey identityKey) {
+    IdentityKey existing = trustedKeys.get(address);
+
+    if (!identityKey.equals(existing)) {
+      trustedKeys.put(address, identityKey);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @Override
-  public boolean isTrustedIdentity(OpenchatProtocolAddress address, IdentityKey identityKey) {
+  public boolean isTrustedIdentity(OpenchatProtocolAddress address, IdentityKey identityKey, Direction direction) {
     IdentityKey trusted = trustedKeys.get(address);
     return (trusted == null || trusted.equals(identityKey));
   }

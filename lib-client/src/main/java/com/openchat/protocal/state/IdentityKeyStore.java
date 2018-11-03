@@ -7,6 +7,10 @@ import com.openchat.protocal.OpenchatProtocolAddress;
 
 public interface IdentityKeyStore {
 
+  public enum Direction {
+    SENDING, RECEIVING
+  }
+
   
   public IdentityKeyPair getIdentityKeyPair();
 
@@ -14,10 +18,10 @@ public interface IdentityKeyStore {
   public int             getLocalRegistrationId();
 
   
-  public void            saveIdentity(OpenchatProtocolAddress address, IdentityKey identityKey);
+  public boolean         saveIdentity(OpenchatProtocolAddress address, IdentityKey identityKey);
 
 
   
-  public boolean         isTrustedIdentity(OpenchatProtocolAddress address, IdentityKey identityKey);
+  public boolean         isTrustedIdentity(OpenchatProtocolAddress address, IdentityKey identityKey, Direction direction);
 
 }

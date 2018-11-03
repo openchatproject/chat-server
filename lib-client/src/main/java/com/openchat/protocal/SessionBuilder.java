@@ -56,13 +56,16 @@ public class SessionBuilder {
   {
     IdentityKey theirIdentityKey = message.getIdentityKey();
 
-    if (!identityKeyStore.isTrustedIdentity(remoteAddress, theirIdentityKey)) {
+    if (!identityKeyStore.isTrustedIdentity(remoteAddress, theirIdentityKey, IdentityKeyStore.Direction.RECEIVING)) {
       throw new UntrustedIdentityException(remoteAddress.getName(), theirIdentityKey);
     }
 
     Optional<Integer> unsignedPreKeyId = processV3(sessionRecord, message);
 
-    identityKeyStore.saveIdentity(remoteAddress, theirIdentityKey);
+    if (identityKeyStore.saveIdentity(remoteAddress, theirIdentityKey)) {
+      sessionRecord.removePreviousSessionStates();
+    }
+
     return unsignedPreKeyId;
   }
 
@@ -109,7 +112,7 @@ public class SessionBuilder {
   
   public void process(PreKeyBundle preKey) throws InvalidKeyException, UntrustedIdentityException {
     synchronized (SessionCipher.SESSION_LOCK) {
-      if (!identityKeyStore.isTrustedIdentity(remoteAddress, preKey.getIdentityKey())) {
+      if (!identityKeyStore.isTrustedIdentity(remoteAddress, preKey.getIdentityKey(), IdentityKeyStore.Direction.SENDING)) {
         throw new UntrustedIdentityException(remoteAddress.getName(), preKey.getIdentityKey());
       }
 
@@ -150,8 +153,11 @@ public class SessionBuilder {
       sessionRecord.getSessionState().setRemoteRegistrationId(preKey.getRegistrationId());
       sessionRecord.getSessionState().setAliceBaseKey(ourBaseKey.getPublicKey().serialize());
 
+      if (identityKeyStore.saveIdentity(remoteAddress, preKey.getIdentityKey())) {
+        sessionRecord.removePreviousSessionStates();
+      }
+
       sessionStore.storeSession(remoteAddress, sessionRecord);
-      identityKeyStore.saveIdentity(remoteAddress, preKey.getIdentityKey());
     }
   }
 
