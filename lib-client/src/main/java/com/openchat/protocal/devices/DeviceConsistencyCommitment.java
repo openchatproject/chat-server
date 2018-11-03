@@ -1,15 +1,13 @@
 package com.openchat.protocal.devices;
 
 import com.openchat.protocal.IdentityKey;
-import com.openchat.protocal.protocol.DeviceConsistencyMessage;
-import com.openchat.protocal.util.ByteArrayComparator;
 import com.openchat.protocal.util.ByteUtil;
+import com.openchat.protocal.util.IdentityKeyComparator;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class DeviceConsistencyCommitment {
@@ -45,14 +43,6 @@ public class DeviceConsistencyCommitment {
 
   public int getGeneration() {
     return generation;
-  }
-
-  private static class IdentityKeyComparator extends ByteArrayComparator implements Comparator<IdentityKey> {
-
-    @Override
-    public int compare(IdentityKey first, IdentityKey second) {
-      return compare(first.getPublicKey().serialize(), second.getPublicKey().serialize());
-    }
   }
 
 
