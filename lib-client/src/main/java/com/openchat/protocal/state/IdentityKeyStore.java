@@ -18,7 +18,7 @@ public interface IdentityKeyStore {
   public int             getLocalRegistrationId();
 
   
-  public boolean         saveIdentity(OpenchatProtocolAddress address, IdentityKey identityKey);
+  public void         saveIdentity(OpenchatProtocolAddress address, IdentityKey identityKey);
 
 
   

@@ -34,8 +34,8 @@ public class InMemoryOpenchatProtocolStore implements OpenchatProtocolStore {
   }
 
   @Override
-  public boolean saveIdentity(OpenchatProtocolAddress address, IdentityKey identityKey) {
-    return identityKeyStore.saveIdentity(address, identityKey);
+  public void saveIdentity(OpenchatProtocolAddress address, IdentityKey identityKey) {
+    identityKeyStore.saveIdentity(address, identityKey);
   }
 
   @Override
