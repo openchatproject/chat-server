@@ -36,7 +36,7 @@ public class OpenchatMessage implements CiphertextMessage {
       byte[]   message      = messageParts[1];
       byte[]   mac          = messageParts[2];
 
-      if (ByteUtil.highBitsToInt(version) <= CiphertextMessage.UNSUPPORTED_VERSION) {
+      if (ByteUtil.highBitsToInt(version) < CURRENT_VERSION) {
         throw new LegacyMessageException("Legacy message: " + ByteUtil.highBitsToInt(version));
       }
 
@@ -77,8 +77,7 @@ public class OpenchatMessage implements CiphertextMessage {
                                                .setCiphertext(ByteString.copyFrom(ciphertext))
                                                .build().toByteArray();
 
-    byte[] mac     = getMac(messageVersion, senderIdentityKey, receiverIdentityKey, macKey,
-                            ByteUtil.combine(version, message));
+    byte[] mac     = getMac(senderIdentityKey, receiverIdentityKey, macKey, ByteUtil.combine(version, message));
 
     this.serialized       = ByteUtil.combine(version, message, mac);
     this.senderRatchetKey = senderRatchetKey;
@@ -104,12 +103,11 @@ public class OpenchatMessage implements CiphertextMessage {
     return ciphertext;
   }
 
-  public void verifyMac(int messageVersion, IdentityKey senderIdentityKey,
-                        IdentityKey receiverIdentityKey, SecretKeySpec macKey)
+  public void verifyMac(IdentityKey senderIdentityKey, IdentityKey receiverIdentityKey, SecretKeySpec macKey)
       throws InvalidMessageException
   {
     byte[][] parts    = ByteUtil.split(serialized, serialized.length - MAC_LENGTH, MAC_LENGTH);
-    byte[]   ourMac   = getMac(messageVersion, senderIdentityKey, receiverIdentityKey, macKey, parts[0]);
+    byte[]   ourMac   = getMac(senderIdentityKey, receiverIdentityKey, macKey, parts[0]);
     byte[]   theirMac = parts[1];
 
     if (!MessageDigest.isEqual(ourMac, theirMac)) {
@@ -117,8 +115,7 @@ public class OpenchatMessage implements CiphertextMessage {
     }
   }
 
-  private byte[] getMac(int messageVersion,
-                        IdentityKey senderIdentityKey,
+  private byte[] getMac(IdentityKey senderIdentityKey,
                         IdentityKey receiverIdentityKey,
                         SecretKeySpec macKey, byte[] serialized)
   {
@@ -126,10 +123,8 @@ public class OpenchatMessage implements CiphertextMessage {
       Mac mac = Mac.getInstance("HmacSHA256");
       mac.init(macKey);
 
-      if (messageVersion >= 3) {
-        mac.update(senderIdentityKey.getPublicKey().serialize());
-        mac.update(receiverIdentityKey.getPublicKey().serialize());
-      }
+      mac.update(senderIdentityKey.getPublicKey().serialize());
+      mac.update(receiverIdentityKey.getPublicKey().serialize());
 
       byte[] fullMac = mac.doFinal(serialized);
       return ByteUtil.trim(fullMac, MAC_LENGTH);
@@ -150,7 +145,7 @@ public class OpenchatMessage implements CiphertextMessage {
 
   public static boolean isLegacy(byte[] message) {
     return message != null && message.length >= 1 &&
-        ByteUtil.highBitsToInt(message[0]) <= CiphertextMessage.UNSUPPORTED_VERSION;
+        ByteUtil.highBitsToInt(message[0]) != CiphertextMessage.CURRENT_VERSION;
   }
 
 }
