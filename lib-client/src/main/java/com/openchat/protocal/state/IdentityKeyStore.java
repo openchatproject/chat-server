@@ -24,4 +24,8 @@ public interface IdentityKeyStore {
   
   public boolean         isTrustedIdentity(OpenchatProtocolAddress address, IdentityKey identityKey, Direction direction);
 
+
+  
+  public IdentityKey getIdentity(OpenchatProtocolAddress address);
+
 }

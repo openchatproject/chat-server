@@ -47,4 +47,9 @@ public class InMemoryIdentityKeyStore implements IdentityKeyStore {
     IdentityKey trusted = trustedKeys.get(address);
     return (trusted == null || trusted.equals(identityKey));
   }
+
+  @Override
+  public IdentityKey getIdentity(OpenchatProtocolAddress address) {
+    return trustedKeys.get(address);
+  }
 }

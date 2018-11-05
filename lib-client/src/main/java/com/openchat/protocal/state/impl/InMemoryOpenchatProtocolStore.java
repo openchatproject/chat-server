@@ -44,6 +44,11 @@ public class InMemoryOpenchatProtocolStore implements OpenchatProtocolStore {
   }
 
   @Override
+  public IdentityKey getIdentity(OpenchatProtocolAddress address) {
+    return identityKeyStore.getIdentity(address);
+  }
+
+  @Override
   public PreKeyRecord loadPreKey(int preKeyId) throws InvalidKeyIdException {
     return preKeyStore.loadPreKey(preKeyId);
   }
