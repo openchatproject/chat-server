@@ -1,0 +1,45 @@
+package com.openchat.curve25519.java;
+
+public class sign_modified {
+
+static int crypto_sign_modified (
+  Sha512 sha512provider,
+  byte[] sm,
+  byte[] m, long mlen,
+  byte[] sk, byte[] pk,
+  byte[] random
+)
+{
+  byte[] nonce = new byte[64];
+  byte[] hram = new byte[64];
+  ge_p3 R = new ge_p3();
+  int count=0;
+
+  System.arraycopy(m, 0, sm, 64, (int)mlen); 
+  System.arraycopy(sk, 0, sm, 32, 32); 
+
+  
+  sm[0] = (byte)0xFE;
+  for (count = 1; count < 32; count++)
+    sm[count] = (byte)0xFF;
+
+  
+  System.arraycopy(random, 0, sm, (int)(mlen + 64), 64);
+
+  sha512provider.calculateDigest(nonce,sm,mlen + 128);
+  System.arraycopy(pk, 0, sm, 32, 32);
+
+  sc_reduce.sc_reduce(nonce);
+  ge_scalarmult_base.ge_scalarmult_base(R,nonce);
+  ge_p3_tobytes.ge_p3_tobytes(sm,R);
+
+  sha512provider.calculateDigest(hram,sm,mlen + 64);
+  sc_reduce.sc_reduce(hram);
+  byte[] S = new byte[32];
+  sc_muladd.sc_muladd(S,hram,sk,nonce); 
+  System.arraycopy(S, 0, sm, 32, 32);
+
+  return 0;
+}
+
+}
