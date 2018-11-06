@@ -3,6 +3,7 @@ package com.openchat.imservice.api;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
+import com.openchat.protocal.OpenchatAddress;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.SessionBuilder;
 import com.openchat.protocal.logging.Log;
@@ -56,12 +57,12 @@ public class OpenchatServiceMessageSender {
   
   public OpenchatServiceMessageSender(String url, TrustStore trustStore,
                                  String user, String password,
-                                 long userId, OpenchatStore store,
+                                 OpenchatStore store,
                                  Optional<EventListener> eventListener)
   {
     this.socket        = new PushServiceSocket(url, trustStore, new StaticCredentialsProvider(user, password, null));
     this.store         = store;
-    this.syncAddress   = new OpenchatServiceAddress(userId, user, null);
+    this.syncAddress   = new OpenchatServiceAddress(user);
     this.eventListener = eventListener;
   }
 
@@ -84,10 +85,10 @@ public class OpenchatServiceMessageSender {
     }
 
     if (message.isEndSession()) {
-      store.deleteAllSessions(recipient.getRecipientId());
+      store.deleteAllSessions(recipient.getNumber());
 
       if (eventListener.isPresent()) {
-        eventListener.get().onSecurityEvent(recipient.getRecipientId());
+        eventListener.get().onSecurityEvent(recipient);
       }
     }
   }
@@ -255,24 +256,27 @@ public class OpenchatServiceMessageSender {
       messages.add(new OutgoingPushMessage(recipient, OpenchatServiceAddress.DEFAULT_DEVICE_ID, masterBody));
     }
 
-    for (int deviceId : store.getSubDeviceSessions(recipient.getRecipientId())) {
+    for (int deviceId : store.getSubDeviceSessions(recipient.getNumber())) {
       PushBody body = getEncryptedMessage(socket, recipient, deviceId, plaintext);
       messages.add(new OutgoingPushMessage(recipient, deviceId, body));
     }
 
-    return new OutgoingPushMessageList(recipient.getNumber(), timestamp, recipient.getRelay(), messages);
+    return new OutgoingPushMessageList(recipient.getNumber(), timestamp, recipient.getRelay().orNull(), messages);
   }
 
   private PushBody getEncryptedMessage(PushServiceSocket socket, OpenchatServiceAddress recipient, int deviceId, byte[] plaintext)
       throws IOException, UntrustedIdentityException
   {
-    if (!store.containsSession(recipient.getRecipientId(), deviceId)) {
+    OpenchatAddress axolotlAddress = new OpenchatAddress(recipient.getNumber(), deviceId);
+
+    if (!store.containsSession(axolotlAddress)) {
       try {
         List<PreKeyBundle> preKeys = socket.getPreKeys(recipient, deviceId);
 
         for (PreKeyBundle preKey : preKeys) {
           try {
-            SessionBuilder sessionBuilder = new SessionBuilder(store, recipient.getRecipientId(), deviceId);
+            OpenchatAddress preKeyAddress  = new OpenchatAddress(recipient.getNumber(), preKey.getDeviceId());
+            SessionBuilder sessionBuilder = new SessionBuilder(store, preKeyAddress);
             sessionBuilder.process(preKey);
           } catch (com.openchat.protocal.UntrustedIdentityException e) {
             throw new UntrustedIdentityException("Untrusted identity key!", recipient.getNumber(), preKey.getIdentityKey());
@@ -280,14 +284,14 @@ public class OpenchatServiceMessageSender {
         }
 
         if (eventListener.isPresent()) {
-          eventListener.get().onSecurityEvent(recipient.getRecipientId());
+          eventListener.get().onSecurityEvent(recipient);
         }
       } catch (InvalidKeyException e) {
         throw new IOException(e);
       }
     }
 
-    OpenchatServiceCipher  cipher               = new OpenchatServiceCipher(store, recipient.getRecipientId(), deviceId);
+    OpenchatServiceCipher  cipher               = new OpenchatServiceCipher(store, axolotlAddress);
     CiphertextMessage message              = cipher.encrypt(plaintext);
     int               remoteRegistrationId = cipher.getRemoteRegistrationId();
 
@@ -306,14 +310,14 @@ public class OpenchatServiceMessageSender {
   {
     try {
       for (int extraDeviceId : mismatchedDevices.getExtraDevices()) {
-        store.deleteSession(recipient.getRecipientId(), extraDeviceId);
+        store.deleteSession(new OpenchatAddress(recipient.getNumber(), extraDeviceId));
       }
 
       for (int missingDeviceId : mismatchedDevices.getMissingDevices()) {
         PreKeyBundle preKey = socket.getPreKey(recipient, missingDeviceId);
 
         try {
-          SessionBuilder sessionBuilder = new SessionBuilder(store, recipient.getRecipientId(), missingDeviceId);
+          SessionBuilder sessionBuilder = new SessionBuilder(store, new OpenchatAddress(recipient.getNumber(), missingDeviceId));
           sessionBuilder.process(preKey);
         } catch (com.openchat.protocal.UntrustedIdentityException e) {
           throw new UntrustedIdentityException("Untrusted identity key!", recipient.getNumber(), preKey.getIdentityKey());
@@ -325,15 +329,13 @@ public class OpenchatServiceMessageSender {
   }
 
   private void handleStaleDevices(OpenchatServiceAddress recipient, StaleDevices staleDevices) {
-    long recipientId = recipient.getRecipientId();
-
     for (int staleDeviceId : staleDevices.getStaleDevices()) {
-      store.deleteSession(recipientId, staleDeviceId);
+      store.deleteSession(new OpenchatAddress(recipient.getNumber(), staleDeviceId));
     }
   }
 
   public static interface EventListener {
-    public void onSecurityEvent(long recipientId);
+    public void onSecurityEvent(OpenchatServiceAddress address);
   }
 
 }

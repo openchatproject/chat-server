@@ -2,6 +2,7 @@ package com.openchat.imservice.api.crypto;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
+import com.openchat.protocal.OpenchatAddress;
 import com.openchat.protocal.DuplicateMessageException;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.InvalidKeyIdException;
@@ -32,8 +33,8 @@ public class OpenchatServiceCipher {
 
   private final SessionCipher sessionCipher;
 
-  public OpenchatServiceCipher(OpenchatStore axolotlStore, long recipientId, int deviceId) {
-    this.sessionCipher = new SessionCipher(axolotlStore, recipientId, deviceId);
+  public OpenchatServiceCipher(OpenchatStore axolotlStore, OpenchatAddress destination) {
+    this.sessionCipher = new SessionCipher(axolotlStore, destination);
   }
 
   public CiphertextMessage encrypt(byte[] unpaddedMessage) {
