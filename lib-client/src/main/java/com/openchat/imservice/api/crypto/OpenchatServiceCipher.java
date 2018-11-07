@@ -21,25 +21,42 @@ import com.openchat.imservice.api.messages.OpenchatServiceAttachmentPointer;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
+import com.openchat.imservice.internal.push.OutgoingPushMessage;
+import com.openchat.imservice.internal.push.PushMessageProtos;
 import com.openchat.imservice.internal.push.PushTransportDetails;
+import com.openchat.imservice.internal.util.Base64;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.openchat.imservice.internal.push.PushMessageProtos.IncomingPushMessageOpenchat.Type;
 import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent;
 import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.GroupContext.Type.DELIVER;
 
 public class OpenchatServiceCipher {
 
-  private final SessionCipher sessionCipher;
+  private final OpenchatStore axolotlStore;
 
-  public OpenchatServiceCipher(OpenchatStore axolotlStore, OpenchatAddress destination) {
-    this.sessionCipher = new SessionCipher(axolotlStore, destination);
+  public OpenchatServiceCipher(OpenchatStore axolotlStore) {
+    this.axolotlStore = axolotlStore;
   }
 
-  public CiphertextMessage encrypt(byte[] unpaddedMessage) {
-    PushTransportDetails transportDetails = new PushTransportDetails(sessionCipher.getSessionVersion());
-    return sessionCipher.encrypt(transportDetails.getPaddedMessageBody(unpaddedMessage));
+  public OutgoingPushMessage encrypt(OpenchatAddress destination, byte[] unpaddedMessage) {
+    SessionCipher        sessionCipher        = new SessionCipher(axolotlStore, destination);
+    PushTransportDetails transportDetails     = new PushTransportDetails(sessionCipher.getSessionVersion());
+    CiphertextMessage    message              = sessionCipher.encrypt(transportDetails.getPaddedMessageBody(unpaddedMessage));
+    int                  remoteRegistrationId = sessionCipher.getRemoteRegistrationId();
+    String               body                 = Base64.encodeBytes(message.serialize());
+
+    int type;
+
+    switch (message.getType()) {
+      case CiphertextMessage.PREKEY_TYPE:  type = Type.PREKEY_BUNDLE_VALUE; break;
+      case CiphertextMessage.OPENCHAT_TYPE: type = Type.CIPHERTEXT_VALUE;    break;
+      default: throw new AssertionError("Bad type: " + message.getType());
+    }
+
+    return new OutgoingPushMessage(type, destination.getDeviceId(), remoteRegistrationId, body);
   }
 
   
@@ -49,6 +66,9 @@ public class OpenchatServiceCipher {
              LegacyMessageException, NoSessionException
   {
     try {
+      OpenchatAddress sourceAddress = new OpenchatAddress(envelope.getSource(), envelope.getSourceDevice());
+      SessionCipher  sessionCipher = new SessionCipher(axolotlStore, sourceAddress);
+
       byte[] paddedMessage;
 
       if (envelope.isPreKeyOpenchatMessage()) {
@@ -68,10 +88,6 @@ public class OpenchatServiceCipher {
     } catch (InvalidProtocolBufferException e) {
       throw new InvalidMessageException(e);
     }
-  }
-
-  public int getRemoteRegistrationId() {
-    return sessionCipher.getRemoteRegistrationId();
   }
 
   private OpenchatServiceMessage createOpenchatServiceMessage(OpenchatServiceEnvelope envelope, PushMessageContent content) {

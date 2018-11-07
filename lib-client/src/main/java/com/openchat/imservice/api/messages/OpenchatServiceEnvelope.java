@@ -4,6 +4,8 @@ import com.google.protobuf.ByteString;
 
 import com.openchat.protocal.InvalidVersionException;
 import com.openchat.protocal.logging.Log;
+import com.openchat.protocal.util.guava.Optional;
+import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.internal.push.PushMessageProtos.IncomingPushMessageOpenchat;
 import com.openchat.imservice.internal.util.Base64;
 import com.openchat.imservice.internal.util.Hex;
@@ -82,6 +84,13 @@ public class OpenchatServiceEnvelope {
   
   public int getSourceDevice() {
     return openchat.getSourceDevice();
+  }
+
+  
+  public OpenchatServiceAddress getSourceAddress() {
+    return new OpenchatServiceAddress(openchat.getSource(),
+                                 openchat.hasRelay() ? Optional.fromNullable(openchat.getRelay()) :
+                                                     Optional.<String>absent());
   }
 
   

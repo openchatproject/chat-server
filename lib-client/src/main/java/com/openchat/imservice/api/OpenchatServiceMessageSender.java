@@ -7,7 +7,6 @@ import com.openchat.protocal.OpenchatAddress;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.SessionBuilder;
 import com.openchat.protocal.logging.Log;
-import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.protocal.state.OpenchatStore;
 import com.openchat.protocal.state.PreKeyBundle;
 import com.openchat.protocal.util.guava.Optional;
@@ -19,18 +18,17 @@ import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.api.push.TrustStore;
+import com.openchat.imservice.api.push.exceptions.EncapsulatedExceptions;
 import com.openchat.imservice.api.push.exceptions.NetworkFailureException;
 import com.openchat.imservice.api.push.exceptions.PushNetworkException;
+import com.openchat.imservice.api.push.exceptions.UnregisteredUserException;
 import com.openchat.imservice.internal.push.MismatchedDevices;
 import com.openchat.imservice.internal.push.OutgoingPushMessage;
 import com.openchat.imservice.internal.push.OutgoingPushMessageList;
 import com.openchat.imservice.internal.push.PushAttachmentData;
-import com.openchat.imservice.internal.push.PushBody;
 import com.openchat.imservice.internal.push.PushServiceSocket;
 import com.openchat.imservice.internal.push.SendMessageResponse;
 import com.openchat.imservice.internal.push.StaleDevices;
-import com.openchat.imservice.api.push.exceptions.UnregisteredUserException;
-import com.openchat.imservice.api.push.exceptions.EncapsulatedExceptions;
 import com.openchat.imservice.internal.push.exceptions.MismatchedDevicesException;
 import com.openchat.imservice.internal.push.exceptions.StaleDevicesException;
 import com.openchat.imservice.internal.util.StaticCredentialsProvider;
@@ -40,7 +38,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.openchat.imservice.internal.push.PushMessageProtos.IncomingPushMessageOpenchat.Type;
 import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent;
 import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.AttachmentPointer;
 import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.GroupContext;
@@ -252,22 +249,21 @@ public class OpenchatServiceMessageSender {
     List<OutgoingPushMessage> messages = new LinkedList<>();
 
     if (!recipient.equals(syncAddress)) {
-      PushBody masterBody = getEncryptedMessage(socket, recipient, OpenchatServiceAddress.DEFAULT_DEVICE_ID, plaintext);
-      messages.add(new OutgoingPushMessage(recipient, OpenchatServiceAddress.DEFAULT_DEVICE_ID, masterBody));
+      messages.add(getEncryptedMessage(socket, recipient, OpenchatServiceAddress.DEFAULT_DEVICE_ID, plaintext));
     }
 
     for (int deviceId : store.getSubDeviceSessions(recipient.getNumber())) {
-      PushBody body = getEncryptedMessage(socket, recipient, deviceId, plaintext);
-      messages.add(new OutgoingPushMessage(recipient, deviceId, body));
+      messages.add(getEncryptedMessage(socket, recipient, deviceId, plaintext));
     }
 
     return new OutgoingPushMessageList(recipient.getNumber(), timestamp, recipient.getRelay().orNull(), messages);
   }
 
-  private PushBody getEncryptedMessage(PushServiceSocket socket, OpenchatServiceAddress recipient, int deviceId, byte[] plaintext)
+  private OutgoingPushMessage getEncryptedMessage(PushServiceSocket socket, OpenchatServiceAddress recipient, int deviceId, byte[] plaintext)
       throws IOException, UntrustedIdentityException
   {
-    OpenchatAddress axolotlAddress = new OpenchatAddress(recipient.getNumber(), deviceId);
+    OpenchatAddress   axolotlAddress = new OpenchatAddress(recipient.getNumber(), deviceId);
+    OpenchatServiceCipher cipher         = new OpenchatServiceCipher(store);
 
     if (!store.containsSession(axolotlAddress)) {
       try {
@@ -291,17 +287,7 @@ public class OpenchatServiceMessageSender {
       }
     }
 
-    OpenchatServiceCipher  cipher               = new OpenchatServiceCipher(store, axolotlAddress);
-    CiphertextMessage message              = cipher.encrypt(plaintext);
-    int               remoteRegistrationId = cipher.getRemoteRegistrationId();
-
-    if (message.getType() == CiphertextMessage.PREKEY_TYPE) {
-      return new PushBody(Type.PREKEY_BUNDLE_VALUE, remoteRegistrationId, message.serialize());
-    } else if (message.getType() == CiphertextMessage.OPENCHAT_TYPE) {
-      return new PushBody(Type.CIPHERTEXT_VALUE, remoteRegistrationId, message.serialize());
-    } else {
-      throw new AssertionError("Unknown ciphertext type: " + message.getType());
-    }
+    return cipher.encrypt(axolotlAddress, plaintext);
   }
 
   private void handleMismatchedDevices(PushServiceSocket socket, OpenchatServiceAddress recipient,

@@ -48,6 +48,10 @@ public class OpenchatServiceMessage {
     }
   }
 
+  public static Builder newBuilder() {
+    return new Builder();
+  }
+
   
   public long getTimestamp() {
     return timestamp;
@@ -78,5 +82,56 @@ public class OpenchatServiceMessage {
 
   public boolean isGroupUpdate() {
     return group.isPresent() && group.get().getType() != OpenchatServiceGroup.Type.DELIVER;
+  }
+
+  public static class Builder {
+
+    private List<OpenchatServiceAttachment> attachments = new LinkedList<>();
+    private long                       timestamp;
+    private OpenchatServiceGroup            group;
+    private String                     body;
+    private boolean                    endSession;
+
+    private Builder() {}
+
+    public Builder withTimestamp(long timestamp) {
+      this.timestamp = timestamp;
+      return this;
+    }
+
+    public Builder asGroupMessage(OpenchatServiceGroup group) {
+      this.group = group;
+      return this;
+    }
+
+    public Builder withAttachment(OpenchatServiceAttachment attachment) {
+      this.attachments.add(attachment);
+      return this;
+    }
+
+    public Builder withAttachments(List<OpenchatServiceAttachment> attachments) {
+      this.attachments.addAll(attachments);
+      return this;
+    }
+
+    public Builder withBody(String body) {
+      this.body = body;
+      return this;
+    }
+
+    public Builder asEndSessionMessage() {
+      this.endSession = true;
+      return this;
+    }
+
+    public Builder asEndSessionMessage(boolean endSession) {
+      this.endSession = endSession;
+      return this;
+    }
+
+    public OpenchatServiceMessage build() {
+      if (timestamp == 0) timestamp = System.currentTimeMillis();
+      return new OpenchatServiceMessage(timestamp, group, attachments, body, true, endSession);
+    }
   }
 }
