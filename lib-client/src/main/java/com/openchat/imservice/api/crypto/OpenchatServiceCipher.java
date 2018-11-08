@@ -78,8 +78,6 @@ public class OpenchatServiceCipher {
         paddedMessage = sessionCipher.decrypt(new PreKeyOpenchatMessage(envelope.getMessage()));
       } else if (envelope.isOpenchatMessage()) {
         paddedMessage = sessionCipher.decrypt(new OpenchatMessage(envelope.getMessage()));
-      } else if (envelope.isPlaintext()) {
-        paddedMessage = envelope.getMessage();
       } else {
         throw new InvalidMessageException("Unknown type: " + envelope.getType());
       }
@@ -98,7 +96,6 @@ public class OpenchatServiceCipher {
     OpenchatServiceSyncContext      syncContext = createSyncContext(envelope, content);
     List<OpenchatServiceAttachment> attachments = new LinkedList<>();
     boolean                    endSession  = ((content.getFlags() & PushMessageContent.Flags.END_SESSION_VALUE) != 0);
-    boolean                    secure      = envelope.isOpenchatMessage() || envelope.isPreKeyOpenchatMessage();
 
     for (PushMessageContent.AttachmentPointer pointer : content.getAttachmentsList()) {
       attachments.add(new OpenchatServiceAttachmentPointer(pointer.getId(),
@@ -108,7 +105,7 @@ public class OpenchatServiceCipher {
     }
 
     return new OpenchatServiceMessage(envelope.getTimestamp(), groupInfo, attachments,
-                                 content.getBody(), syncContext, secure, endSession);
+                                 content.getBody(), syncContext, endSession);
   }
 
   private OpenchatServiceSyncContext createSyncContext(OpenchatServiceEnvelope envelope, PushMessageContent content) {

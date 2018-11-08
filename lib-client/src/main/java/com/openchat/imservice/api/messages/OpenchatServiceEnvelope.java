@@ -124,11 +124,6 @@ public class OpenchatServiceEnvelope {
   }
 
   
-  public boolean isPlaintext() {
-    return openchat.getType().getNumber() == IncomingPushMessageOpenchat.Type.PLAINTEXT_VALUE;
-  }
-
-  
   public boolean isReceipt() {
     return openchat.getType().getNumber() == IncomingPushMessageOpenchat.Type.RECEIPT_VALUE;
   }

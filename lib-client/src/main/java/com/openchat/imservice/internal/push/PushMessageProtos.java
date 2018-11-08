@@ -179,11 +179,7 @@ public final class PushMessageProtos {
       
       PREKEY_BUNDLE(3, 3),
       
-      PLAINTEXT(4, 4),
-      
-      RECEIPT(5, 5),
-      
-      COPY(6, 6),
+      RECEIPT(4, 5),
       ;
 
       
@@ -195,11 +191,7 @@ public final class PushMessageProtos {
       
       public static final int PREKEY_BUNDLE_VALUE = 3;
       
-      public static final int PLAINTEXT_VALUE = 4;
-      
       public static final int RECEIPT_VALUE = 5;
-      
-      public static final int COPY_VALUE = 6;
 
       public final int getNumber() { return value; }
 
@@ -209,9 +201,7 @@ public final class PushMessageProtos {
           case 1: return CIPHERTEXT;
           case 2: return KEY_EXCHANGE;
           case 3: return PREKEY_BUNDLE;
-          case 4: return PLAINTEXT;
           case 5: return RECEIPT;
-          case 6: return COPY;
           default: return null;
         }
       }

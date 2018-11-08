@@ -12,7 +12,6 @@ public class OpenchatServiceMessage {
   private final Optional<String>                     body;
   private final Optional<OpenchatServiceGroup>            group;
   private final Optional<OpenchatServiceSyncContext>      syncContext;
-  private final boolean                              secure;
   private final boolean                              endSession;
 
   
@@ -31,16 +30,15 @@ public class OpenchatServiceMessage {
 
   
   public OpenchatServiceMessage(long timestamp, OpenchatServiceGroup group, List<OpenchatServiceAttachment> attachments, String body) {
-    this(timestamp, group, attachments, body, null, true, false);
+    this(timestamp, group, attachments, body, null, false);
   }
 
   
-  public OpenchatServiceMessage(long timestamp, OpenchatServiceGroup group, List<OpenchatServiceAttachment> attachments, String body, OpenchatServiceSyncContext syncContext, boolean secure, boolean endSession) {
+  public OpenchatServiceMessage(long timestamp, OpenchatServiceGroup group, List<OpenchatServiceAttachment> attachments, String body, OpenchatServiceSyncContext syncContext, boolean endSession) {
     this.timestamp   = timestamp;
     this.body        = Optional.fromNullable(body);
     this.group       = Optional.fromNullable(group);
     this.syncContext = Optional.fromNullable(syncContext);
-    this.secure      = secure;
     this.endSession  = endSession;
 
     if (attachments != null && !attachments.isEmpty()) {
@@ -76,10 +74,6 @@ public class OpenchatServiceMessage {
 
   public Optional<OpenchatServiceSyncContext> getSyncContext() {
     return syncContext;
-  }
-
-  public boolean isSecure() {
-    return secure;
   }
 
   public boolean isEndSession() {
@@ -137,7 +131,7 @@ public class OpenchatServiceMessage {
 
     public OpenchatServiceMessage build() {
       if (timestamp == 0) timestamp = System.currentTimeMillis();
-      return new OpenchatServiceMessage(timestamp, group, attachments, body, null, true, endSession);
+      return new OpenchatServiceMessage(timestamp, group, attachments, body, null, endSession);
     }
   }
 }
