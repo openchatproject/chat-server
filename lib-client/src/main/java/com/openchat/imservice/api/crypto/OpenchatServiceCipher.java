@@ -22,8 +22,8 @@ import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
 import com.openchat.imservice.api.messages.OpenchatServiceSyncContext;
+import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.internal.push.OutgoingPushMessage;
-import com.openchat.imservice.internal.push.PushMessageProtos;
 import com.openchat.imservice.internal.push.PushTransportDetails;
 import com.openchat.imservice.internal.util.Base64;
 
@@ -36,10 +36,12 @@ import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessage
 
 public class OpenchatServiceCipher {
 
-  private final OpenchatStore axolotlStore;
+  private final OpenchatStore      axolotlStore;
+  private final OpenchatServiceAddress localAddress;
 
-  public OpenchatServiceCipher(OpenchatStore axolotlStore) {
+  public OpenchatServiceCipher(OpenchatServiceAddress localAddress, OpenchatStore axolotlStore) {
     this.axolotlStore = axolotlStore;
+    this.localAddress = localAddress;
   }
 
   public OutgoingPushMessage encrypt(OpenchatAddress destination, byte[] unpaddedMessage) {
@@ -93,7 +95,7 @@ public class OpenchatServiceCipher {
 
   private OpenchatServiceMessage createOpenchatServiceMessage(OpenchatServiceEnvelope envelope, PushMessageContent content) {
     OpenchatServiceGroup            groupInfo   = createGroupInfo(envelope, content);
-    OpenchatServiceSyncContext      syncContext = createSyncContext(content);
+    OpenchatServiceSyncContext      syncContext = createSyncContext(envelope, content);
     List<OpenchatServiceAttachment> attachments = new LinkedList<>();
     boolean                    endSession  = ((content.getFlags() & PushMessageContent.Flags.END_SESSION_VALUE) != 0);
     boolean                    secure      = envelope.isOpenchatMessage() || envelope.isPreKeyOpenchatMessage();
@@ -109,8 +111,9 @@ public class OpenchatServiceCipher {
                                  content.getBody(), syncContext, secure, endSession);
   }
 
-  private OpenchatServiceSyncContext createSyncContext(PushMessageContent content) {
-    if (!content.hasSync()) return null;
+  private OpenchatServiceSyncContext createSyncContext(OpenchatServiceEnvelope envelope, PushMessageContent content) {
+    if (!content.hasSync())                                     return null;
+    if (!envelope.getSource().equals(localAddress.getNumber())) return null;
 
     return new OpenchatServiceSyncContext(content.getSync().getDestination(),
                                      content.getSync().getTimestamp());

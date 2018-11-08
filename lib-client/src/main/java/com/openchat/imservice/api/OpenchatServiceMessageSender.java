@@ -49,7 +49,7 @@ public class OpenchatServiceMessageSender {
 
   private final PushServiceSocket       socket;
   private final OpenchatStore            store;
-  private final OpenchatServiceAddress       syncAddress;
+  private final OpenchatServiceAddress       localAddress;
   private final Optional<EventListener> eventListener;
 
   
@@ -60,7 +60,7 @@ public class OpenchatServiceMessageSender {
   {
     this.socket        = new PushServiceSocket(url, trustStore, new StaticCredentialsProvider(user, password, null));
     this.store         = store;
-    this.syncAddress   = new OpenchatServiceAddress(user);
+    this.localAddress  = new OpenchatServiceAddress(user);
     this.eventListener = eventListener;
   }
 
@@ -79,7 +79,7 @@ public class OpenchatServiceMessageSender {
 
     if (response != null && response.getNeedsSync()) {
       byte[] syncMessage = createSyncMessageContent(content, Optional.of(recipient), timestamp);
-      sendMessage(syncAddress, timestamp, syncMessage);
+      sendMessage(localAddress, timestamp, syncMessage);
     }
 
     if (message.isEndSession()) {
@@ -102,7 +102,7 @@ public class OpenchatServiceMessageSender {
     try {
       if (response != null && response.getNeedsSync()) {
         byte[] syncMessage = createSyncMessageContent(content, Optional.<OpenchatServiceAddress>absent(), timestamp);
-        sendMessage(syncAddress, timestamp, syncMessage);
+        sendMessage(localAddress, timestamp, syncMessage);
       }
     } catch (UntrustedIdentityException e) {
       throw new EncapsulatedExceptions(e);
@@ -267,7 +267,7 @@ public class OpenchatServiceMessageSender {
   {
     List<OutgoingPushMessage> messages = new LinkedList<>();
 
-    if (!recipient.equals(syncAddress)) {
+    if (!recipient.equals(localAddress)) {
       messages.add(getEncryptedMessage(socket, recipient, OpenchatServiceAddress.DEFAULT_DEVICE_ID, plaintext));
     }
 
@@ -282,7 +282,7 @@ public class OpenchatServiceMessageSender {
       throws IOException, UntrustedIdentityException
   {
     OpenchatAddress   axolotlAddress = new OpenchatAddress(recipient.getNumber(), deviceId);
-    OpenchatServiceCipher cipher         = new OpenchatServiceCipher(store);
+    OpenchatServiceCipher cipher         = new OpenchatServiceCipher(localAddress, store);
 
     if (!store.containsSession(axolotlAddress)) {
       try {
