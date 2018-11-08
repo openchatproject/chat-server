@@ -23,6 +23,7 @@ import com.openchat.imservice.api.messages.OpenchatServiceContent;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
+import com.openchat.imservice.api.messages.multidevice.RequestMessage;
 import com.openchat.imservice.api.messages.multidevice.SentTranscriptMessage;
 import com.openchat.imservice.api.messages.multidevice.OpenchatServiceSyncMessage;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
@@ -141,8 +142,12 @@ public class OpenchatServiceCipher {
     if (content.hasSent()) {
       SyncMessage.Sent sentContent = content.getSent();
       return new OpenchatServiceSyncMessage(new SentTranscriptMessage(sentContent.getDestination(),
-                                                                        sentContent.getTimestamp(),
-                                                                        createOpenchatServiceMessage(envelope, sentContent.getMessage())));
+                                                                 sentContent.getTimestamp(),
+                                                                 createOpenchatServiceMessage(envelope, sentContent.getMessage())));
+    }
+
+    if (content.hasRequest()) {
+      return new OpenchatServiceSyncMessage(new RequestMessage(content.getRequest()));
     }
 
     return new OpenchatServiceSyncMessage();

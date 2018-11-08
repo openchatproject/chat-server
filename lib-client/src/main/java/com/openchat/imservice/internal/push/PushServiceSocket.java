@@ -11,6 +11,7 @@ import com.openchat.protocal.state.PreKeyRecord;
 import com.openchat.protocal.state.SignedPreKeyRecord;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.crypto.AttachmentCipherOutputStream;
+import com.openchat.imservice.api.messages.multidevice.DeviceInfo;
 import com.openchat.imservice.api.push.ContactTokenDetails;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.api.push.SignedPreKeyEntity;
@@ -64,6 +65,7 @@ public class PushServiceSocket {
 
   private static final String PROVISIONING_CODE_PATH    = "/v1/devices/provisioning/code";
   private static final String PROVISIONING_MESSAGE_PATH = "/v1/provisioning/%s";
+  private static final String DEVICE_PATH               = "/v1/devices/%s";
 
   private static final String DIRECTORY_TOKENS_PATH     = "/v1/directory/tokens";
   private static final String DIRECTORY_VERIFY_PATH     = "/v1/directory/%s";
@@ -102,6 +104,15 @@ public class PushServiceSocket {
   public String getNewDeviceVerificationCode() throws IOException {
     String responseText = makeRequest(PROVISIONING_CODE_PATH, "GET", null);
     return JsonUtil.fromJson(responseText, DeviceCode.class).getVerificationCode();
+  }
+
+  public List<DeviceInfo> getDevices() throws IOException {
+    String responseText = makeRequest(String.format(DEVICE_PATH, ""), "GET", null);
+    return JsonUtil.fromJson(responseText, DeviceInfoList.class).getDevices();
+  }
+
+  public void removeDevice(long deviceId) throws IOException {
+    makeRequest(String.format(DEVICE_PATH, String.valueOf(deviceId)), "DELETE", null);
   }
 
   public void sendProvisioningMessage(String destination, byte[] body) throws IOException {
@@ -461,6 +472,13 @@ public class PushServiceSocket {
           throw new PushNetworkException(e);
         }
         throw new StaleDevicesException(JsonUtil.fromJson(response, StaleDevices.class));
+      case 411:
+        try {
+          response = Util.readFully(connection.getErrorStream());
+        } catch (IOException e) {
+          throw new PushNetworkException(e);
+        }
+        throw new DeviceLimitExceededException(JsonUtil.fromJson(response, DeviceLimit.class));
       case 417:
         throw new ExpectationFailedException();
     }
