@@ -26,6 +26,7 @@ import com.openchat.imservice.internal.push.MismatchedDevices;
 import com.openchat.imservice.internal.push.OutgoingPushMessage;
 import com.openchat.imservice.internal.push.OutgoingPushMessageList;
 import com.openchat.imservice.internal.push.PushAttachmentData;
+import com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.SyncMessageContext;
 import com.openchat.imservice.internal.push.PushServiceSocket;
 import com.openchat.imservice.internal.push.SendMessageResponse;
 import com.openchat.imservice.internal.push.StaleDevices;
@@ -77,7 +78,7 @@ public class OpenchatServiceMessageSender {
     SendMessageResponse response  = sendMessage(recipient, timestamp, content);
 
     if (response != null && response.getNeedsSync()) {
-      byte[] syncMessage = createSyncMessageContent(content, recipient, timestamp);
+      byte[] syncMessage = createSyncMessageContent(content, Optional.of(recipient), timestamp);
       sendMessage(syncAddress, timestamp, syncMessage);
     }
 
@@ -94,8 +95,18 @@ public class OpenchatServiceMessageSender {
   public void sendMessage(List<OpenchatServiceAddress> recipients, OpenchatServiceMessage message)
       throws IOException, EncapsulatedExceptions
   {
-    byte[] content = createMessageContent(message);
-    sendMessage(recipients, message.getTimestamp(), content);
+    byte[]              content   = createMessageContent(message);
+    long                timestamp = message.getTimestamp();
+    SendMessageResponse response  = sendMessage(recipients, timestamp, content);
+
+    try {
+      if (response != null && response.getNeedsSync()) {
+        byte[] syncMessage = createSyncMessageContent(content, Optional.<OpenchatServiceAddress>absent(), timestamp);
+        sendMessage(syncAddress, timestamp, syncMessage);
+      }
+    } catch (UntrustedIdentityException e) {
+      throw new EncapsulatedExceptions(e);
+    }
   }
 
   private byte[] createMessageContent(OpenchatServiceMessage message) throws IOException {
@@ -121,13 +132,17 @@ public class OpenchatServiceMessageSender {
     return builder.build().toByteArray();
   }
 
-  private byte[] createSyncMessageContent(byte[] content, OpenchatServiceAddress recipient, long timestamp) {
+  private byte[] createSyncMessageContent(byte[] content, Optional<OpenchatServiceAddress> recipient, long timestamp) {
     try {
+      SyncMessageContext.Builder syncMessageContext = SyncMessageContext.newBuilder();
+      syncMessageContext.setTimestamp(timestamp);
+
+      if (recipient.isPresent()) {
+        syncMessageContext.setDestination(recipient.get().getNumber());
+      }
+
       PushMessageContent.Builder builder = PushMessageContent.parseFrom(content).toBuilder();
-      builder.setSync(PushMessageContent.SyncMessageContext.newBuilder()
-                                                           .setDestination(recipient.getNumber())
-                                                           .setTimestamp(timestamp)
-                                                           .build());
+      builder.setSync(syncMessageContext.build());
 
       return builder.build().toByteArray();
     } catch (InvalidProtocolBufferException e) {
@@ -158,16 +173,18 @@ public class OpenchatServiceMessageSender {
     return builder.build();
   }
 
-  private void sendMessage(List<OpenchatServiceAddress> recipients, long timestamp, byte[] content)
+  private SendMessageResponse sendMessage(List<OpenchatServiceAddress> recipients, long timestamp, byte[] content)
       throws IOException, EncapsulatedExceptions
   {
     List<UntrustedIdentityException> untrustedIdentities = new LinkedList<>();
     List<UnregisteredUserException>  unregisteredUsers   = new LinkedList<>();
     List<NetworkFailureException>    networkExceptions   = new LinkedList<>();
 
+    SendMessageResponse response = null;
+
     for (OpenchatServiceAddress recipient : recipients) {
       try {
-        sendMessage(recipient, timestamp, content);
+        response = sendMessage(recipient, timestamp, content);
       } catch (UntrustedIdentityException e) {
         Log.w(TAG, e);
         untrustedIdentities.add(e);
@@ -183,6 +200,8 @@ public class OpenchatServiceMessageSender {
     if (!untrustedIdentities.isEmpty() || !unregisteredUsers.isEmpty() || !networkExceptions.isEmpty()) {
       throw new EncapsulatedExceptions(untrustedIdentities, unregisteredUsers, networkExceptions);
     }
+
+    return response;
   }
 
   private SendMessageResponse sendMessage(OpenchatServiceAddress recipient, long timestamp, byte[] content)

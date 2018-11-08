@@ -21,6 +21,7 @@ import com.openchat.imservice.api.messages.OpenchatServiceAttachmentPointer;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
+import com.openchat.imservice.api.messages.OpenchatServiceSyncContext;
 import com.openchat.imservice.internal.push.OutgoingPushMessage;
 import com.openchat.imservice.internal.push.PushMessageProtos;
 import com.openchat.imservice.internal.push.PushTransportDetails;
@@ -92,6 +93,7 @@ public class OpenchatServiceCipher {
 
   private OpenchatServiceMessage createOpenchatServiceMessage(OpenchatServiceEnvelope envelope, PushMessageContent content) {
     OpenchatServiceGroup            groupInfo   = createGroupInfo(envelope, content);
+    OpenchatServiceSyncContext      syncContext = createSyncContext(content);
     List<OpenchatServiceAttachment> attachments = new LinkedList<>();
     boolean                    endSession  = ((content.getFlags() & PushMessageContent.Flags.END_SESSION_VALUE) != 0);
     boolean                    secure      = envelope.isOpenchatMessage() || envelope.isPreKeyOpenchatMessage();
@@ -104,7 +106,14 @@ public class OpenchatServiceCipher {
     }
 
     return new OpenchatServiceMessage(envelope.getTimestamp(), groupInfo, attachments,
-                                 content.getBody(), secure, endSession);
+                                 content.getBody(), syncContext, secure, endSession);
+  }
+
+  private OpenchatServiceSyncContext createSyncContext(PushMessageContent content) {
+    if (!content.hasSync()) return null;
+
+    return new OpenchatServiceSyncContext(content.getSync().getDestination(),
+                                     content.getSync().getTimestamp());
   }
 
   private OpenchatServiceGroup createGroupInfo(OpenchatServiceEnvelope envelope, PushMessageContent content) {

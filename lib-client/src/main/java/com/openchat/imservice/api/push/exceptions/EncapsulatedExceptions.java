@@ -2,6 +2,7 @@ package com.openchat.imservice.api.push.exceptions;
 
 import com.openchat.imservice.api.crypto.UntrustedIdentityException;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class EncapsulatedExceptions extends Throwable {
@@ -17,6 +18,14 @@ public class EncapsulatedExceptions extends Throwable {
     this.untrustedIdentityExceptions = untrustedIdentities;
     this.unregisteredUserExceptions  = unregisteredUsers;
     this.networkExceptions           = networkExceptions;
+  }
+
+  public EncapsulatedExceptions(UntrustedIdentityException e) {
+    this.untrustedIdentityExceptions = new LinkedList<>();
+    this.unregisteredUserExceptions  = new LinkedList<>();
+    this.networkExceptions           = new LinkedList<>();
+
+    this.untrustedIdentityExceptions.add(e);
   }
 
   public List<UntrustedIdentityException> getUntrustedIdentityExceptions() {
