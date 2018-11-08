@@ -6,7 +6,7 @@ import com.openchat.protocal.InvalidVersionException;
 import com.openchat.protocal.logging.Log;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
-import com.openchat.imservice.internal.push.PushMessageProtos.IncomingPushMessageOpenchat;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos.Envelope;
 import com.openchat.imservice.internal.util.Base64;
 import com.openchat.imservice.internal.util.Hex;
 
@@ -39,7 +39,7 @@ public class OpenchatServiceEnvelope {
   private static final int IV_LENGTH         = 16;
   private static final int CIPHERTEXT_OFFSET = IV_OFFSET + IV_LENGTH;
 
-  private final IncomingPushMessageOpenchat openchat;
+  private final Envelope envelope;
 
   
   public OpenchatServiceEnvelope(String message, String openchatingKey)
@@ -60,72 +60,91 @@ public class OpenchatServiceEnvelope {
 
     verifyMac(ciphertext, macKey);
 
-    this.openchat = IncomingPushMessageOpenchat.parseFrom(getPlaintext(ciphertext, cipherKey));
+    this.envelope = Envelope.parseFrom(getPlaintext(ciphertext, cipherKey));
   }
 
   public OpenchatServiceEnvelope(int type, String source, int sourceDevice,
-                            String relay, long timestamp, byte[] message)
+                            String relay, long timestamp,
+                            byte[] legacyMessage, byte[] content)
   {
-    this.openchat = IncomingPushMessageOpenchat.newBuilder()
-                                           .setType(IncomingPushMessageOpenchat.Type.valueOf(type))
-                                           .setSource(source)
-                                           .setSourceDevice(sourceDevice)
-                                           .setRelay(relay)
-                                           .setTimestamp(timestamp)
-                                           .setMessage(ByteString.copyFrom(message))
-                                           .build();
+    Envelope.Builder builder = Envelope.newBuilder()
+                                       .setType(Envelope.Type.valueOf(type))
+                                       .setSource(source)
+                                       .setSourceDevice(sourceDevice)
+                                       .setRelay(relay)
+                                       .setTimestamp(timestamp);
+
+    if (legacyMessage != null) builder.setLegacyMessage(ByteString.copyFrom(legacyMessage));
+    if (content != null)       builder.setContent(ByteString.copyFrom(content));
+
+    this.envelope = builder.build();
   }
 
   
   public String getSource() {
-    return openchat.getSource();
+    return envelope.getSource();
   }
 
   
   public int getSourceDevice() {
-    return openchat.getSourceDevice();
+    return envelope.getSourceDevice();
   }
 
   
   public OpenchatServiceAddress getSourceAddress() {
-    return new OpenchatServiceAddress(openchat.getSource(),
-                                 openchat.hasRelay() ? Optional.fromNullable(openchat.getRelay()) :
+    return new OpenchatServiceAddress(envelope.getSource(),
+                                 envelope.hasRelay() ? Optional.fromNullable(envelope.getRelay()) :
                                                      Optional.<String>absent());
   }
 
   
   public int getType() {
-    return openchat.getType().getNumber();
+    return envelope.getType().getNumber();
   }
 
   
   public String getRelay() {
-    return openchat.getRelay();
+    return envelope.getRelay();
   }
 
   
   public long getTimestamp() {
-    return openchat.getTimestamp();
+    return envelope.getTimestamp();
   }
 
   
-  public byte[] getMessage() {
-    return openchat.getMessage().toByteArray();
+  public boolean hasLegacyMessage() {
+    return envelope.hasLegacyMessage();
+  }
+
+  
+  public byte[] getLegacyMessage() {
+    return envelope.getLegacyMessage().toByteArray();
+  }
+
+  
+  public boolean hasContent() {
+    return envelope.hasContent();
+  }
+
+  
+  public byte[] getContent() {
+    return envelope.getContent().toByteArray();
   }
 
   
   public boolean isOpenchatMessage() {
-    return openchat.getType().getNumber() == IncomingPushMessageOpenchat.Type.CIPHERTEXT_VALUE;
+    return envelope.getType().getNumber() == Envelope.Type.CIPHERTEXT_VALUE;
   }
 
   
   public boolean isPreKeyOpenchatMessage() {
-    return openchat.getType().getNumber() == IncomingPushMessageOpenchat.Type.PREKEY_BUNDLE_VALUE;
+    return envelope.getType().getNumber() == Envelope.Type.PREKEY_BUNDLE_VALUE;
   }
 
   
   public boolean isReceipt() {
-    return openchat.getType().getNumber() == IncomingPushMessageOpenchat.Type.RECEIPT_VALUE;
+    return envelope.getType().getNumber() == Envelope.Type.RECEIPT_VALUE;
   }
 
   private byte[] getPlaintext(byte[] ciphertext, SecretKeySpec cipherKey) throws IOException {

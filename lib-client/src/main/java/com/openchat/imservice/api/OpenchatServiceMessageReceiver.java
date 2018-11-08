@@ -3,6 +3,7 @@ package com.openchat.imservice.api;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.imservice.api.crypto.AttachmentCipherInputStream;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentPointer;
+import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.push.TrustStore;
 import com.openchat.imservice.api.util.CredentialsProvider;
@@ -66,7 +67,8 @@ public class OpenchatServiceMessageReceiver {
     for (OpenchatServiceEnvelopeEntity entity : entities) {
       OpenchatServiceEnvelope envelope =  new OpenchatServiceEnvelope(entity.getType(), entity.getSource(),
                                                             entity.getSourceDevice(), entity.getRelay(),
-                                                            entity.getTimestamp(), entity.getMessage());
+                                                            entity.getTimestamp(), entity.getMessage(),
+                                                            entity.getContent());
 
       callback.onMessage(envelope);
       results.add(envelope);

@@ -5,40 +5,38 @@ import com.openchat.protocal.util.guava.Optional;
 import java.util.LinkedList;
 import java.util.List;
 
-public class OpenchatServiceMessage {
+public class OpenchatServiceDataMessage {
 
   private final long                                 timestamp;
   private final Optional<List<OpenchatServiceAttachment>> attachments;
   private final Optional<String>                     body;
   private final Optional<OpenchatServiceGroup>            group;
-  private final Optional<OpenchatServiceSyncContext>      syncContext;
   private final boolean                              endSession;
 
   
-  public OpenchatServiceMessage(long timestamp, String body) {
+  public OpenchatServiceDataMessage(long timestamp, String body) {
     this(timestamp, (List<OpenchatServiceAttachment>)null, body);
   }
 
-  public OpenchatServiceMessage(final long timestamp, final OpenchatServiceAttachment attachment, final String body) {
+  public OpenchatServiceDataMessage(final long timestamp, final OpenchatServiceAttachment attachment, final String body) {
     this(timestamp, new LinkedList<OpenchatServiceAttachment>() {{add(attachment);}}, body);
   }
 
   
-  public OpenchatServiceMessage(long timestamp, List<OpenchatServiceAttachment> attachments, String body) {
+  public OpenchatServiceDataMessage(long timestamp, List<OpenchatServiceAttachment> attachments, String body) {
     this(timestamp, null, attachments, body);
   }
 
   
-  public OpenchatServiceMessage(long timestamp, OpenchatServiceGroup group, List<OpenchatServiceAttachment> attachments, String body) {
-    this(timestamp, group, attachments, body, null, false);
+  public OpenchatServiceDataMessage(long timestamp, OpenchatServiceGroup group, List<OpenchatServiceAttachment> attachments, String body) {
+    this(timestamp, group, attachments, body, false);
   }
 
   
-  public OpenchatServiceMessage(long timestamp, OpenchatServiceGroup group, List<OpenchatServiceAttachment> attachments, String body, OpenchatServiceSyncContext syncContext, boolean endSession) {
+  public OpenchatServiceDataMessage(long timestamp, OpenchatServiceGroup group, List<OpenchatServiceAttachment> attachments, String body, boolean endSession) {
     this.timestamp   = timestamp;
     this.body        = Optional.fromNullable(body);
     this.group       = Optional.fromNullable(group);
-    this.syncContext = Optional.fromNullable(syncContext);
     this.endSession  = endSession;
 
     if (attachments != null && !attachments.isEmpty()) {
@@ -70,10 +68,6 @@ public class OpenchatServiceMessage {
   
   public Optional<OpenchatServiceGroup> getGroupInfo() {
     return group;
-  }
-
-  public Optional<OpenchatServiceSyncContext> getSyncContext() {
-    return syncContext;
   }
 
   public boolean isEndSession() {
@@ -129,9 +123,9 @@ public class OpenchatServiceMessage {
       return this;
     }
 
-    public OpenchatServiceMessage build() {
+    public OpenchatServiceDataMessage build() {
       if (timestamp == 0) timestamp = System.currentTimeMillis();
-      return new OpenchatServiceMessage(timestamp, group, attachments, body, null, endSession);
+      return new OpenchatServiceDataMessage(timestamp, group, attachments, body, endSession);
     }
   }
 }

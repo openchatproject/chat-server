@@ -12,29 +12,37 @@ import com.openchat.protocal.LegacyMessageException;
 import com.openchat.protocal.NoSessionException;
 import com.openchat.protocal.SessionCipher;
 import com.openchat.protocal.UntrustedIdentityException;
+import com.openchat.protocal.logging.Log;
 import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
 import com.openchat.protocal.protocol.OpenchatMessage;
 import com.openchat.protocal.state.OpenchatStore;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentPointer;
+import com.openchat.imservice.api.messages.OpenchatServiceContent;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
-import com.openchat.imservice.api.messages.OpenchatServiceMessage;
-import com.openchat.imservice.api.messages.OpenchatServiceSyncContext;
+import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
+import com.openchat.imservice.api.messages.multidevice.SentTranscriptMessage;
+import com.openchat.imservice.api.messages.multidevice.OpenchatServiceSyncMessage;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.internal.push.OutgoingPushMessage;
 import com.openchat.imservice.internal.push.PushTransportDetails;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos.Content;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos.Envelope.Type;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage;
 import com.openchat.imservice.internal.util.Base64;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.openchat.imservice.internal.push.PushMessageProtos.IncomingPushMessageOpenchat.Type;
-import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent;
-import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.GroupContext.Type.DELIVER;
+import static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext.Type.DELIVER;
 
 public class OpenchatServiceCipher {
+
+  private static final String TAG = OpenchatServiceCipher.class.getSimpleName();
 
   private final OpenchatStore      axolotlStore;
   private final OpenchatServiceAddress localAddress;
@@ -44,7 +52,7 @@ public class OpenchatServiceCipher {
     this.localAddress = localAddress;
   }
 
-  public OutgoingPushMessage encrypt(OpenchatAddress destination, byte[] unpaddedMessage) {
+  public OutgoingPushMessage encrypt(OpenchatAddress destination, byte[] unpaddedMessage, boolean legacy) {
     SessionCipher        sessionCipher        = new SessionCipher(axolotlStore, destination);
     PushTransportDetails transportDetails     = new PushTransportDetails(sessionCipher.getSessionVersion());
     CiphertextMessage    message              = sessionCipher.encrypt(transportDetails.getPaddedMessageBody(unpaddedMessage));
@@ -59,64 +67,88 @@ public class OpenchatServiceCipher {
       default: throw new AssertionError("Bad type: " + message.getType());
     }
 
-    return new OutgoingPushMessage(type, destination.getDeviceId(), remoteRegistrationId, body);
+    return new OutgoingPushMessage(type, destination.getDeviceId(), remoteRegistrationId,
+                                   legacy ? body : null, legacy ? null : body);
   }
 
   
-  public OpenchatServiceMessage decrypt(OpenchatServiceEnvelope envelope)
+  public OpenchatServiceContent decrypt(OpenchatServiceEnvelope envelope)
       throws InvalidVersionException, InvalidMessageException, InvalidKeyException,
              DuplicateMessageException, InvalidKeyIdException, UntrustedIdentityException,
              LegacyMessageException, NoSessionException
   {
     try {
-      OpenchatAddress sourceAddress = new OpenchatAddress(envelope.getSource(), envelope.getSourceDevice());
-      SessionCipher  sessionCipher = new SessionCipher(axolotlStore, sourceAddress);
+      OpenchatServiceContent content = new OpenchatServiceContent();
 
-      byte[] paddedMessage;
+      if (envelope.hasLegacyMessage()) {
+        DataMessage message = DataMessage.parseFrom(decrypt(envelope, envelope.getLegacyMessage()));
+        content = new OpenchatServiceContent(createOpenchatServiceMessage(envelope, message));
+      } else if (envelope.hasContent()) {
+        Content message = Content.parseFrom(decrypt(envelope, envelope.getContent()));
 
-      if (envelope.isPreKeyOpenchatMessage()) {
-        paddedMessage = sessionCipher.decrypt(new PreKeyOpenchatMessage(envelope.getMessage()));
-      } else if (envelope.isOpenchatMessage()) {
-        paddedMessage = sessionCipher.decrypt(new OpenchatMessage(envelope.getMessage()));
-      } else {
-        throw new InvalidMessageException("Unknown type: " + envelope.getType());
+        if (message.hasDataMessage()) {
+          content = new OpenchatServiceContent(createOpenchatServiceMessage(envelope, message.getDataMessage()));
+        } else if (message.hasSyncMessage() && localAddress.getNumber().equals(envelope.getSource())) {
+          content = new OpenchatServiceContent(createSynchronizeMessage(envelope, message.getSyncMessage()));
+        }
       }
 
-      PushTransportDetails transportDetails = new PushTransportDetails(sessionCipher.getSessionVersion());
-      PushMessageContent   content          = PushMessageContent.parseFrom(transportDetails.getStrippedPaddingMessageBody(paddedMessage));
-
-      return createOpenchatServiceMessage(envelope, content);
+      return content;
     } catch (InvalidProtocolBufferException e) {
       throw new InvalidMessageException(e);
     }
   }
 
-  private OpenchatServiceMessage createOpenchatServiceMessage(OpenchatServiceEnvelope envelope, PushMessageContent content) {
-    OpenchatServiceGroup            groupInfo   = createGroupInfo(envelope, content);
-    OpenchatServiceSyncContext      syncContext = createSyncContext(envelope, content);
-    List<OpenchatServiceAttachment> attachments = new LinkedList<>();
-    boolean                    endSession  = ((content.getFlags() & PushMessageContent.Flags.END_SESSION_VALUE) != 0);
+  private byte[] decrypt(OpenchatServiceEnvelope envelope, byte[] ciphertext)
+      throws InvalidVersionException, InvalidMessageException, InvalidKeyException,
+             DuplicateMessageException, InvalidKeyIdException, UntrustedIdentityException,
+             LegacyMessageException, NoSessionException
+  {
+    OpenchatAddress sourceAddress = new OpenchatAddress(envelope.getSource(), envelope.getSourceDevice());
+    SessionCipher  sessionCipher = new SessionCipher(axolotlStore, sourceAddress);
 
-    for (PushMessageContent.AttachmentPointer pointer : content.getAttachmentsList()) {
+    byte[] paddedMessage;
+
+    if (envelope.isPreKeyOpenchatMessage()) {
+      paddedMessage = sessionCipher.decrypt(new PreKeyOpenchatMessage(ciphertext));
+    } else if (envelope.isOpenchatMessage()) {
+      paddedMessage = sessionCipher.decrypt(new OpenchatMessage(ciphertext));
+    } else {
+      throw new InvalidMessageException("Unknown type: " + envelope.getType());
+    }
+
+    PushTransportDetails transportDetails = new PushTransportDetails(sessionCipher.getSessionVersion());
+    return transportDetails.getStrippedPaddingMessageBody(paddedMessage);
+  }
+
+  private OpenchatServiceDataMessage createOpenchatServiceMessage(OpenchatServiceEnvelope envelope, DataMessage content) {
+    OpenchatServiceGroup            groupInfo   = createGroupInfo(envelope, content);
+    List<OpenchatServiceAttachment> attachments = new LinkedList<>();
+    boolean                    endSession  = ((content.getFlags() & DataMessage.Flags.END_SESSION_VALUE) != 0);
+
+    for (AttachmentPointer pointer : content.getAttachmentsList()) {
       attachments.add(new OpenchatServiceAttachmentPointer(pointer.getId(),
                                                       pointer.getContentType(),
                                                       pointer.getKey().toByteArray(),
                                                       envelope.getRelay()));
     }
 
-    return new OpenchatServiceMessage(envelope.getTimestamp(), groupInfo, attachments,
-                                 content.getBody(), syncContext, endSession);
+    return new OpenchatServiceDataMessage(envelope.getTimestamp(), groupInfo, attachments,
+                                     content.getBody(), endSession);
   }
 
-  private OpenchatServiceSyncContext createSyncContext(OpenchatServiceEnvelope envelope, PushMessageContent content) {
-    if (!content.hasSync())                                     return null;
-    if (!envelope.getSource().equals(localAddress.getNumber())) return null;
+  private OpenchatServiceSyncMessage createSynchronizeMessage(OpenchatServiceEnvelope envelope, SyncMessage content) {
+    if (content.hasSent()) {
+      SyncMessage.Sent sentContent = content.getSent();
+      return new OpenchatServiceSyncMessage(new SentTranscriptMessage(sentContent.getDestination(),
+                                                                        sentContent.getTimestamp(),
+                                                                        createOpenchatServiceMessage(envelope, sentContent.getMessage())));
+    }
 
-    return new OpenchatServiceSyncContext(content.getSync().getDestination(),
-                                     content.getSync().getTimestamp());
+    return new OpenchatServiceSyncMessage();
   }
 
-  private OpenchatServiceGroup createGroupInfo(OpenchatServiceEnvelope envelope, PushMessageContent content) {
+  private OpenchatServiceGroup createGroupInfo(OpenchatServiceEnvelope envelope, DataMessage content) {
     if (!content.hasGroup()) return null;
 
     OpenchatServiceGroup.Type type;

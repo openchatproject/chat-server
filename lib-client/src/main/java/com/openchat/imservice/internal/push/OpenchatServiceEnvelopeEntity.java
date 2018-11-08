@@ -22,6 +22,9 @@ public class OpenchatServiceEnvelopeEntity {
   @JsonProperty
   private byte[] message;
 
+  @JsonProperty
+  private byte[] content;
+
   public OpenchatServiceEnvelopeEntity() {}
 
   public int getType() {
@@ -46,5 +49,9 @@ public class OpenchatServiceEnvelopeEntity {
 
   public byte[] getMessage() {
     return message;
+  }
+
+  public byte[] getContent() {
+    return content;
   }
 }

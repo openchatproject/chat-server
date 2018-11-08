@@ -14,8 +14,8 @@ import com.openchat.imservice.api.crypto.OpenchatServiceCipher;
 import com.openchat.imservice.api.crypto.UntrustedIdentityException;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentStream;
+import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
-import com.openchat.imservice.api.messages.OpenchatServiceMessage;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.api.push.TrustStore;
 import com.openchat.imservice.api.push.exceptions.EncapsulatedExceptions;
@@ -26,10 +26,14 @@ import com.openchat.imservice.internal.push.MismatchedDevices;
 import com.openchat.imservice.internal.push.OutgoingPushMessage;
 import com.openchat.imservice.internal.push.OutgoingPushMessageList;
 import com.openchat.imservice.internal.push.PushAttachmentData;
-import com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.SyncMessageContext;
 import com.openchat.imservice.internal.push.PushServiceSocket;
 import com.openchat.imservice.internal.push.SendMessageResponse;
 import com.openchat.imservice.internal.push.StaleDevices;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos.Content;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage;
 import com.openchat.imservice.internal.push.exceptions.MismatchedDevicesException;
 import com.openchat.imservice.internal.push.exceptions.StaleDevicesException;
 import com.openchat.imservice.internal.util.StaticCredentialsProvider;
@@ -38,10 +42,6 @@ import com.openchat.imservice.internal.util.Util;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-
-import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent;
-import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.AttachmentPointer;
-import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.GroupContext;
 
 public class OpenchatServiceMessageSender {
 
@@ -70,16 +70,16 @@ public class OpenchatServiceMessageSender {
   }
 
   
-  public void sendMessage(OpenchatServiceAddress recipient, OpenchatServiceMessage message)
+  public void sendMessage(OpenchatServiceAddress recipient, OpenchatServiceDataMessage message)
       throws UntrustedIdentityException, IOException
   {
     byte[]              content   = createMessageContent(message);
     long                timestamp = message.getTimestamp();
-    SendMessageResponse response  = sendMessage(recipient, timestamp, content);
+    SendMessageResponse response  = sendMessage(recipient, timestamp, content, true);
 
     if (response != null && response.getNeedsSync()) {
-      byte[] syncMessage = createSyncMessageContent(content, Optional.of(recipient), timestamp);
-      sendMessage(localAddress, timestamp, syncMessage);
+      byte[] syncMessage = createSentTranscriptMessage(content, Optional.of(recipient), timestamp);
+      sendMessage(localAddress, timestamp, syncMessage, false);
     }
 
     if (message.isEndSession()) {
@@ -92,26 +92,33 @@ public class OpenchatServiceMessageSender {
   }
 
   
-  public void sendMessage(List<OpenchatServiceAddress> recipients, OpenchatServiceMessage message)
+  public void sendMessage(List<OpenchatServiceAddress> recipients, OpenchatServiceDataMessage message)
       throws IOException, EncapsulatedExceptions
   {
     byte[]              content   = createMessageContent(message);
     long                timestamp = message.getTimestamp();
-    SendMessageResponse response  = sendMessage(recipients, timestamp, content);
+    SendMessageResponse response  = sendMessage(recipients, timestamp, content, true);
 
     try {
       if (response != null && response.getNeedsSync()) {
-        byte[] syncMessage = createSyncMessageContent(content, Optional.<OpenchatServiceAddress>absent(), timestamp);
-        sendMessage(localAddress, timestamp, syncMessage);
+        byte[] syncMessage = createSentTranscriptMessage(content, Optional.<OpenchatServiceAddress>absent(), timestamp);
+        sendMessage(localAddress, timestamp, syncMessage, false);
       }
     } catch (UntrustedIdentityException e) {
       throw new EncapsulatedExceptions(e);
     }
   }
 
-  private byte[] createMessageContent(OpenchatServiceMessage message) throws IOException {
-    PushMessageContent.Builder builder  = PushMessageContent.newBuilder();
-    List<AttachmentPointer>    pointers = createAttachmentPointers(message.getAttachments());
+  public void sendMultiDeviceContactsUpdate(OpenchatServiceAttachmentStream contacts)
+      throws IOException, UntrustedIdentityException
+  {
+    byte[] content = createMultiDeviceContactsContent(contacts);
+    sendMessage(localAddress, System.currentTimeMillis(), content, false);
+  }
+
+  private byte[] createMessageContent(OpenchatServiceDataMessage message) throws IOException {
+    DataMessage.Builder     builder  = DataMessage.newBuilder();
+    List<AttachmentPointer> pointers = createAttachmentPointers(message.getAttachments());
 
     if (!pointers.isEmpty()) {
       builder.addAllAttachments(pointers);
@@ -126,25 +133,34 @@ public class OpenchatServiceMessageSender {
     }
 
     if (message.isEndSession()) {
-      builder.setFlags(PushMessageContent.Flags.END_SESSION_VALUE);
+      builder.setFlags(DataMessage.Flags.END_SESSION_VALUE);
     }
 
     return builder.build().toByteArray();
   }
 
-  private byte[] createSyncMessageContent(byte[] content, Optional<OpenchatServiceAddress> recipient, long timestamp) {
+  private byte[] createMultiDeviceContactsContent(OpenchatServiceAttachmentStream contacts) throws IOException {
+    SyncMessage.Builder builder = SyncMessage.newBuilder();
+    builder.setContacts(SyncMessage.Contacts.newBuilder()
+                                            .setBlob(createAttachmentPointer(contacts)));
+
+    return builder.build().toByteArray();
+  }
+
+  private byte[] createSentTranscriptMessage(byte[] content, Optional<OpenchatServiceAddress> recipient, long timestamp) {
     try {
-      SyncMessageContext.Builder syncMessageContext = SyncMessageContext.newBuilder();
-      syncMessageContext.setTimestamp(timestamp);
+      Content.Builder          container   = Content.newBuilder();
+      SyncMessage.Builder      syncMessage = SyncMessage.newBuilder();
+      SyncMessage.Sent.Builder sentMessage = SyncMessage.Sent.newBuilder();
+
+      sentMessage.setTimestamp(timestamp);
+      sentMessage.setMessage(DataMessage.parseFrom(content));
 
       if (recipient.isPresent()) {
-        syncMessageContext.setDestination(recipient.get().getNumber());
+        sentMessage.setDestination(recipient.get().getNumber());
       }
 
-      PushMessageContent.Builder builder = PushMessageContent.parseFrom(content).toBuilder();
-      builder.setSync(syncMessageContext.build());
-
-      return builder.build().toByteArray();
+      return container.setSyncMessage(syncMessage.setSent(sentMessage)).build().toByteArray();
     } catch (InvalidProtocolBufferException e) {
       throw new AssertionError(e);
     }
@@ -173,7 +189,7 @@ public class OpenchatServiceMessageSender {
     return builder.build();
   }
 
-  private SendMessageResponse sendMessage(List<OpenchatServiceAddress> recipients, long timestamp, byte[] content)
+  private SendMessageResponse sendMessage(List<OpenchatServiceAddress> recipients, long timestamp, byte[] content, boolean legacy)
       throws IOException, EncapsulatedExceptions
   {
     List<UntrustedIdentityException> untrustedIdentities = new LinkedList<>();
@@ -184,7 +200,7 @@ public class OpenchatServiceMessageSender {
 
     for (OpenchatServiceAddress recipient : recipients) {
       try {
-        response = sendMessage(recipient, timestamp, content);
+        response = sendMessage(recipient, timestamp, content, legacy);
       } catch (UntrustedIdentityException e) {
         Log.w(TAG, e);
         untrustedIdentities.add(e);
@@ -204,12 +220,12 @@ public class OpenchatServiceMessageSender {
     return response;
   }
 
-  private SendMessageResponse sendMessage(OpenchatServiceAddress recipient, long timestamp, byte[] content)
+  private SendMessageResponse sendMessage(OpenchatServiceAddress recipient, long timestamp, byte[] content, boolean legacy)
       throws UntrustedIdentityException, IOException
   {
     for (int i=0;i<3;i++) {
       try {
-        OutgoingPushMessageList messages = getEncryptedMessages(socket, recipient, timestamp, content);
+        OutgoingPushMessageList messages = getEncryptedMessages(socket, recipient, timestamp, content, legacy);
         return socket.sendMessage(messages);
       } catch (MismatchedDevicesException mde) {
         Log.w(TAG, mde);
@@ -262,23 +278,24 @@ public class OpenchatServiceMessageSender {
   private OutgoingPushMessageList getEncryptedMessages(PushServiceSocket socket,
                                                        OpenchatServiceAddress recipient,
                                                        long timestamp,
-                                                       byte[] plaintext)
+                                                       byte[] plaintext,
+                                                       boolean legacy)
       throws IOException, UntrustedIdentityException
   {
     List<OutgoingPushMessage> messages = new LinkedList<>();
 
     if (!recipient.equals(localAddress)) {
-      messages.add(getEncryptedMessage(socket, recipient, OpenchatServiceAddress.DEFAULT_DEVICE_ID, plaintext));
+      messages.add(getEncryptedMessage(socket, recipient, OpenchatServiceAddress.DEFAULT_DEVICE_ID, plaintext, legacy));
     }
 
     for (int deviceId : store.getSubDeviceSessions(recipient.getNumber())) {
-      messages.add(getEncryptedMessage(socket, recipient, deviceId, plaintext));
+      messages.add(getEncryptedMessage(socket, recipient, deviceId, plaintext, legacy));
     }
 
     return new OutgoingPushMessageList(recipient.getNumber(), timestamp, recipient.getRelay().orNull(), messages);
   }
 
-  private OutgoingPushMessage getEncryptedMessage(PushServiceSocket socket, OpenchatServiceAddress recipient, int deviceId, byte[] plaintext)
+  private OutgoingPushMessage getEncryptedMessage(PushServiceSocket socket, OpenchatServiceAddress recipient, int deviceId, byte[] plaintext, boolean legacy)
       throws IOException, UntrustedIdentityException
   {
     OpenchatAddress   axolotlAddress = new OpenchatAddress(recipient.getNumber(), deviceId);
@@ -306,7 +323,7 @@ public class OpenchatServiceMessageSender {
       }
     }
 
-    return cipher.encrypt(axolotlAddress, plaintext);
+    return cipher.encrypt(axolotlAddress, plaintext, legacy);
   }
 
   private void handleMismatchedDevices(PushServiceSocket socket, OpenchatServiceAddress recipient,
