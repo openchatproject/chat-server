@@ -129,6 +129,10 @@ public class OpenchatServiceAccountManager {
     return activeTokens;
   }
 
+  public String getAccountVerificationToken() throws IOException {
+    return this.pushServiceSocket.getAccountVerificationToken();
+  }
+
   public String getNewDeviceVerificationCode() throws IOException {
     return this.pushServiceSocket.getNewDeviceVerificationCode();
   }
