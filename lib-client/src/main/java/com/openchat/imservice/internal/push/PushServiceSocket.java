@@ -61,6 +61,7 @@ public class PushServiceSocket {
   private static final String VERIFY_ACCOUNT_TOKEN_PATH = "/v1/accounts/token/%s";
   private static final String REGISTER_GCM_PATH         = "/v1/accounts/gcm/";
   private static final String REQUEST_TOKEN_PATH        = "/v1/accounts/token";
+  private static final String SET_ACCOUNT_ATTRIBUTES    = "/v1/acccounts/attributes";
 
   private static final String PREKEY_METADATA_PATH      = "/v2/keys/";
   private static final String PREKEY_PATH               = "/v2/keys/%s";
@@ -98,20 +99,25 @@ public class PushServiceSocket {
     makeRequest(String.format(path, credentialsProvider.getUser()), "GET", null);
   }
 
-  public void verifyAccountCode(String verificationCode, String openchatingKey, int registrationId)
+  public void verifyAccountCode(String verificationCode, String openchatingKey, int registrationId, boolean voice)
       throws IOException
   {
-    AccountAttributes openchatingKeyEntity = new AccountAttributes(openchatingKey, registrationId);
+    AccountAttributes openchatingKeyEntity = new AccountAttributes(openchatingKey, registrationId, voice);
     makeRequest(String.format(VERIFY_ACCOUNT_CODE_PATH, verificationCode),
                 "PUT", JsonUtil.toJson(openchatingKeyEntity));
   }
 
-  public void verifyAccountToken(String verificationToken, String openchatingKey, int registrationId)
+  public void verifyAccountToken(String verificationToken, String openchatingKey, int registrationId, boolean voice)
       throws IOException
   {
-    AccountAttributes openchatingKeyEntity = new AccountAttributes(openchatingKey, registrationId);
+    AccountAttributes openchatingKeyEntity = new AccountAttributes(openchatingKey, registrationId, voice);
     makeRequest(String.format(VERIFY_ACCOUNT_TOKEN_PATH, verificationToken),
                 "PUT", JsonUtil.toJson(openchatingKeyEntity));
+  }
+
+  public void setAccountAttributes(String openchatingKey, int registrationId, boolean voice) throws IOException {
+    AccountAttributes accountAttributes = new AccountAttributes(openchatingKey, registrationId, voice);
+    makeRequest(SET_ACCOUNT_ATTRIBUTES, "PUT", JsonUtil.toJson(accountAttributes));
   }
 
   public String getAccountVerificationToken() throws IOException {

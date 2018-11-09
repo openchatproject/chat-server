@@ -66,18 +66,25 @@ public class OpenchatServiceAccountManager {
   }
 
   
-  public void verifyAccountWithCode(String verificationCode, String openchatingKey, int axolotlRegistrationId)
+  public void verifyAccountWithCode(String verificationCode, String openchatingKey, int axolotlRegistrationId, boolean voice)
       throws IOException
   {
     this.pushServiceSocket.verifyAccountCode(verificationCode, openchatingKey,
-                                             axolotlRegistrationId);
+                                             axolotlRegistrationId, voice);
   }
 
   
-  public void verifyAccountWithToken(String verificationToken, String openchatingKey, int axolotlRegistrationId)
+  public void verifyAccountWithToken(String verificationToken, String openchatingKey, int axolotlRegistrationId, boolean voice)
       throws IOException
   {
-    this.pushServiceSocket.verifyAccountToken(verificationToken, openchatingKey, axolotlRegistrationId);
+    this.pushServiceSocket.verifyAccountToken(verificationToken, openchatingKey, axolotlRegistrationId, voice);
+  }
+
+  
+  public void setAccountAttributes(String openchatingKey, int axolotlRegistrationId, boolean voice)
+      throws IOException
+  {
+    this.pushServiceSocket.setAccountAttributes(openchatingKey, axolotlRegistrationId, voice);
   }
 
   

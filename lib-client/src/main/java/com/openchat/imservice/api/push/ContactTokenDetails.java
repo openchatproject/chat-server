@@ -1,11 +1,20 @@
 package com.openchat.imservice.api.push;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ContactTokenDetails {
 
+  @JsonProperty
   private String  token;
+
+  @JsonProperty
   private String  relay;
+
+  @JsonProperty
   private String  number;
-  private boolean supportsSms;
+
+  @JsonProperty
+  private boolean voice;
 
   public ContactTokenDetails() {}
 
@@ -20,8 +29,8 @@ public class ContactTokenDetails {
   }
 
   
-  public boolean isSupportsSms() {
-    return supportsSms;
+  public boolean isVoice() {
+    return voice;
   }
 
   public void setNumber(String number) {

@@ -10,9 +10,13 @@ public class AccountAttributes {
   @JsonProperty
   private int     registrationId;
 
-  public AccountAttributes(String openchatingKey, int registrationId) {
+  @JsonProperty
+  private boolean voice;
+
+  public AccountAttributes(String openchatingKey, int registrationId, boolean voice) {
     this.openchatingKey   = openchatingKey;
     this.registrationId = registrationId;
+    this.voice          = voice;
   }
 
   public AccountAttributes() {}
@@ -25,4 +29,7 @@ public class AccountAttributes {
     return registrationId;
   }
 
+  public boolean isVoice() {
+    return voice;
+  }
 }
