@@ -26,20 +26,25 @@ public class OpenchatServiceMessageReceiver {
   private final TrustStore          trustStore;
   private final String              url;
   private final CredentialsProvider credentialsProvider;
+  private final String              userAgent;
 
   
   public OpenchatServiceMessageReceiver(String url, TrustStore trustStore,
-                                   String user, String password, String openchatingKey)
+                                   String user, String password,
+                                   String openchatingKey, String userAgent)
   {
-    this(url, trustStore, new StaticCredentialsProvider(user, password, openchatingKey));
+    this(url, trustStore, new StaticCredentialsProvider(user, password, openchatingKey), userAgent);
   }
 
   
-  public OpenchatServiceMessageReceiver(String url, TrustStore trustStore, CredentialsProvider credentials) {
+  public OpenchatServiceMessageReceiver(String url, TrustStore trustStore,
+                                   CredentialsProvider credentials, String userAgent)
+  {
     this.url                 = url;
     this.trustStore          = trustStore;
     this.credentialsProvider = credentials;
-    this.socket              = new PushServiceSocket(url, trustStore, credentials);
+    this.socket              = new PushServiceSocket(url, trustStore, credentials, userAgent);
+    this.userAgent           = userAgent;
   }
 
   
@@ -59,7 +64,7 @@ public class OpenchatServiceMessageReceiver {
 
   
   public OpenchatServiceMessagePipe createMessagePipe() {
-    WebSocketConnection webSocket = new WebSocketConnection(url, trustStore, credentialsProvider);
+    WebSocketConnection webSocket = new WebSocketConnection(url, trustStore, credentialsProvider, userAgent);
     return new OpenchatServiceMessagePipe(webSocket, credentialsProvider);
   }
 

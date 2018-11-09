@@ -57,7 +57,8 @@ public class PushServiceSocket {
 
   private static final String CREATE_ACCOUNT_SMS_PATH   = "/v1/accounts/sms/code/%s";
   private static final String CREATE_ACCOUNT_VOICE_PATH = "/v1/accounts/voice/code/%s";
-  private static final String VERIFY_ACCOUNT_PATH       = "/v1/accounts/code/%s";
+  private static final String VERIFY_ACCOUNT_CODE_PATH  = "/v1/accounts/code/%s";
+  private static final String VERIFY_ACCOUNT_TOKEN_PATH = "/v1/accounts/token/%s";
   private static final String REGISTER_GCM_PATH         = "/v1/accounts/gcm/";
 
   private static final String PREKEY_METADATA_PATH      = "/v2/keys/";
@@ -81,12 +82,14 @@ public class PushServiceSocket {
   private final String              serviceUrl;
   private final TrustManager[]      trustManagers;
   private final CredentialsProvider credentialsProvider;
+  private final String              userAgent;
 
-  public PushServiceSocket(String serviceUrl, TrustStore trustStore, CredentialsProvider credentialsProvider)
+  public PushServiceSocket(String serviceUrl, TrustStore trustStore, CredentialsProvider credentialsProvider, String userAgent)
   {
     this.serviceUrl          = serviceUrl;
     this.credentialsProvider = credentialsProvider;
     this.trustManagers       = BlacklistingTrustManager.createFor(trustStore);
+    this.userAgent           = userAgent;
   }
 
   public void createAccount(boolean voice) throws IOException {
@@ -94,12 +97,19 @@ public class PushServiceSocket {
     makeRequest(String.format(path, credentialsProvider.getUser()), "GET", null);
   }
 
-  public void verifyAccount(String verificationCode, String openchatingKey,
-                            boolean supportsSms, int registrationId)
+  public void verifyAccountCode(String verificationCode, String openchatingKey, int registrationId)
       throws IOException
   {
-    AccountAttributes openchatingKeyEntity = new AccountAttributes(openchatingKey, supportsSms, registrationId);
-    makeRequest(String.format(VERIFY_ACCOUNT_PATH, verificationCode),
+    AccountAttributes openchatingKeyEntity = new AccountAttributes(openchatingKey, registrationId);
+    makeRequest(String.format(VERIFY_ACCOUNT_CODE_PATH, verificationCode),
+                "PUT", JsonUtil.toJson(openchatingKeyEntity));
+  }
+
+  public void verifyAccountToken(String verificationToken, String openchatingKey, int registrationId)
+      throws IOException
+  {
+    AccountAttributes openchatingKeyEntity = new AccountAttributes(openchatingKey, registrationId);
+    makeRequest(String.format(VERIFY_ACCOUNT_TOKEN_PATH, verificationToken),
                 "PUT", JsonUtil.toJson(openchatingKeyEntity));
   }
 
@@ -555,6 +565,10 @@ public class PushServiceSocket {
 
       if (credentialsProvider.getPassword() != null) {
         connection.setRequestProperty("Authorization", getAuthorizationHeader());
+      }
+
+      if (userAgent != null) {
+        connection.setRequestProperty("X-Openchat-Agent", userAgent);
       }
 
       if (body != null) {

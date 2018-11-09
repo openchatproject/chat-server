@@ -57,9 +57,10 @@ public class OpenchatServiceMessageSender {
   public OpenchatServiceMessageSender(String url, TrustStore trustStore,
                                  String user, String password,
                                  OpenchatStore store,
+                                 String userAgent,
                                  Optional<EventListener> eventListener)
   {
-    this.socket        = new PushServiceSocket(url, trustStore, new StaticCredentialsProvider(user, password, null));
+    this.socket        = new PushServiceSocket(url, trustStore, new StaticCredentialsProvider(user, password, null), userAgent);
     this.store         = store;
     this.localAddress  = new OpenchatServiceAddress(user);
     this.eventListener = eventListener;

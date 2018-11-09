@@ -8,14 +8,10 @@ public class AccountAttributes {
   private String  openchatingKey;
 
   @JsonProperty
-  private boolean supportsSms;
-
-  @JsonProperty
   private int     registrationId;
 
-  public AccountAttributes(String openchatingKey, boolean supportsSms, int registrationId) {
+  public AccountAttributes(String openchatingKey, int registrationId) {
     this.openchatingKey   = openchatingKey;
-    this.supportsSms    = supportsSms;
     this.registrationId = registrationId;
   }
 
@@ -25,11 +21,8 @@ public class AccountAttributes {
     return openchatingKey;
   }
 
-  public boolean isSupportsSms() {
-    return supportsSms;
-  }
-
   public int getRegistrationId() {
     return registrationId;
   }
+
 }
