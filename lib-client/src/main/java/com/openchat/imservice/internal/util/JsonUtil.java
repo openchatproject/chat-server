@@ -1,6 +1,7 @@
 package com.openchat.imservice.internal.util;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -35,21 +36,12 @@ public class JsonUtil {
     }
   }
 
-  public static <T> T fromJson(String json, Class<T> clazz) {
-    try {
-      return objectMapper.readValue(json, clazz);
-    } catch (IOException e) {
-      Log.w(TAG, e);
-      throw new JsonParseException(e);
-    }
+  public static <T> T fromJson(String json, Class<T> clazz)
+      throws IOException
+  {
+    return objectMapper.readValue(json, clazz);
   }
-
-  public static class JsonParseException extends RuntimeException {
-    public JsonParseException(Exception e) {
-      super(e);
-    }
-  }
-
+  
   public static class IdentityKeySerializer extends JsonSerializer<IdentityKey> {
     @Override
     public void serialize(IdentityKey value, JsonGenerator gen, SerializerProvider serializers)
