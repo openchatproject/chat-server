@@ -12,7 +12,6 @@ import com.openchat.protocal.LegacyMessageException;
 import com.openchat.protocal.NoSessionException;
 import com.openchat.protocal.SessionCipher;
 import com.openchat.protocal.UntrustedIdentityException;
-import com.openchat.protocal.logging.Log;
 import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
 import com.openchat.protocal.protocol.OpenchatMessage;
@@ -20,9 +19,9 @@ import com.openchat.protocal.state.OpenchatStore;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentPointer;
 import com.openchat.imservice.api.messages.OpenchatServiceContent;
+import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
-import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
 import com.openchat.imservice.api.messages.multidevice.RequestMessage;
 import com.openchat.imservice.api.messages.multidevice.SentTranscriptMessage;
 import com.openchat.imservice.api.messages.multidevice.OpenchatServiceSyncMessage;
@@ -141,16 +140,16 @@ public class OpenchatServiceCipher {
   private OpenchatServiceSyncMessage createSynchronizeMessage(OpenchatServiceEnvelope envelope, SyncMessage content) {
     if (content.hasSent()) {
       SyncMessage.Sent sentContent = content.getSent();
-      return new OpenchatServiceSyncMessage(new SentTranscriptMessage(sentContent.getDestination(),
-                                                                 sentContent.getTimestamp(),
-                                                                 createOpenchatServiceMessage(envelope, sentContent.getMessage())));
+      return OpenchatServiceSyncMessage.forSentTranscript(new SentTranscriptMessage(sentContent.getDestination(),
+                                                                               sentContent.getTimestamp(),
+                                                                               createOpenchatServiceMessage(envelope, sentContent.getMessage())));
     }
 
     if (content.hasRequest()) {
-      return new OpenchatServiceSyncMessage(new RequestMessage(content.getRequest()));
+      return OpenchatServiceSyncMessage.forRequest(new RequestMessage(content.getRequest()));
     }
 
-    return new OpenchatServiceSyncMessage();
+    return OpenchatServiceSyncMessage.empty();
   }
 
   private OpenchatServiceGroup createGroupInfo(OpenchatServiceEnvelope envelope, DataMessage content) {

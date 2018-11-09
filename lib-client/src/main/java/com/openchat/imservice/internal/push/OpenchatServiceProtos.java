@@ -2648,11 +2648,11 @@ public final class OpenchatServiceProtos {
     com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.ContactsOrBuilder getContactsOrBuilder();
 
     
-    boolean hasGroup();
+    boolean hasGroups();
     
-    com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group getGroup();
+    com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups getGroups();
     
-    com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.GroupOrBuilder getGroupOrBuilder();
+    com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.GroupsOrBuilder getGroupsOrBuilder();
 
     
     boolean hasRequest();
@@ -2736,14 +2736,14 @@ public final class OpenchatServiceProtos {
               break;
             }
             case 26: {
-              com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group.Builder subBuilder = null;
+              com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.Builder subBuilder = null;
               if (((bitField0_ & 0x00000004) == 0x00000004)) {
-                subBuilder = group_.toBuilder();
+                subBuilder = groups_.toBuilder();
               }
-              group_ = input.readMessage(com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group.PARSER, extensionRegistry);
+              groups_ = input.readMessage(com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.PARSER, extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom(group_);
-                group_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom(groups_);
+                groups_ = subBuilder.buildPartial();
               }
               bitField0_ |= 0x00000004;
               break;
@@ -3923,32 +3923,32 @@ public final class OpenchatServiceProtos {
 
     }
 
-    public interface GroupOrBuilder
+    public interface GroupsOrBuilder
         extends com.google.protobuf.MessageOrBuilder {
 
       
-      boolean hasGroup();
+      boolean hasBlob();
       
-      com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext getGroup();
+      com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer getBlob();
       
-      com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContextOrBuilder getGroupOrBuilder();
+      com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder getBlobOrBuilder();
     }
     
-    public static final class Group extends
+    public static final class Groups extends
         com.google.protobuf.GeneratedMessage
-        implements GroupOrBuilder {
-      private Group(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+        implements GroupsOrBuilder {
+      private Groups(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
         super(builder);
         this.unknownFields = builder.getUnknownFields();
       }
-      private Group(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+      private Groups(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-      private static final Group defaultInstance;
-      public static Group getDefaultInstance() {
+      private static final Groups defaultInstance;
+      public static Groups getDefaultInstance() {
         return defaultInstance;
       }
 
-      public Group getDefaultInstanceForType() {
+      public Groups getDefaultInstanceForType() {
         return defaultInstance;
       }
 
@@ -3958,7 +3958,7 @@ public final class OpenchatServiceProtos {
           getUnknownFields() {
         return this.unknownFields;
       }
-      private Group(
+      private Groups(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
@@ -3982,14 +3982,14 @@ public final class OpenchatServiceProtos {
                 break;
               }
               case 10: {
-                com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext.Builder subBuilder = null;
+                com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder subBuilder = null;
                 if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                  subBuilder = group_.toBuilder();
+                  subBuilder = blob_.toBuilder();
                 }
-                group_ = input.readMessage(com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext.PARSER, extensionRegistry);
+                blob_ = input.readMessage(com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.PARSER, extensionRegistry);
                 if (subBuilder != null) {
-                  subBuilder.mergeFrom(group_);
-                  group_ = subBuilder.buildPartial();
+                  subBuilder.mergeFrom(blob_);
+                  blob_ = subBuilder.buildPartial();
                 }
                 bitField0_ |= 0x00000001;
                 break;
@@ -4008,49 +4008,49 @@ public final class OpenchatServiceProtos {
       }
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_SyncMessage_Group_descriptor;
+        return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_SyncMessage_Groups_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_SyncMessage_Group_fieldAccessorTable
+        return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_SyncMessage_Groups_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group.class, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group.Builder.class);
+                com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.class, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.Builder.class);
       }
 
-      public static com.google.protobuf.Parser<Group> PARSER =
-          new com.google.protobuf.AbstractParser<Group>() {
-        public Group parsePartialFrom(
+      public static com.google.protobuf.Parser<Groups> PARSER =
+          new com.google.protobuf.AbstractParser<Groups>() {
+        public Groups parsePartialFrom(
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws com.google.protobuf.InvalidProtocolBufferException {
-          return new Group(input, extensionRegistry);
+          return new Groups(input, extensionRegistry);
         }
       };
 
       @java.lang.Override
-      public com.google.protobuf.Parser<Group> getParserForType() {
+      public com.google.protobuf.Parser<Groups> getParserForType() {
         return PARSER;
       }
 
       private int bitField0_;
-      public static final int GROUP_FIELD_NUMBER = 1;
-      private com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext group_;
+      public static final int BLOB_FIELD_NUMBER = 1;
+      private com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer blob_;
       
-      public boolean hasGroup() {
+      public boolean hasBlob() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       
-      public com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext getGroup() {
-        return group_;
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer getBlob() {
+        return blob_;
       }
       
-      public com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContextOrBuilder getGroupOrBuilder() {
-        return group_;
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder getBlobOrBuilder() {
+        return blob_;
       }
 
       private void initFields() {
-        group_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext.getDefaultInstance();
+        blob_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance();
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -4065,7 +4065,7 @@ public final class OpenchatServiceProtos {
                           throws java.io.IOException {
         getSerializedSize();
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          output.writeMessage(1, group_);
+          output.writeMessage(1, blob_);
         }
         getUnknownFields().writeTo(output);
       }
@@ -4078,7 +4078,7 @@ public final class OpenchatServiceProtos {
         size = 0;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(1, group_);
+            .computeMessageSize(1, blob_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSerializedSize = size;
@@ -4092,53 +4092,53 @@ public final class OpenchatServiceProtos {
         return super.writeReplace();
       }
 
-      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group parseFrom(
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups parseFrom(
           com.google.protobuf.ByteString data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group parseFrom(
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups parseFrom(
           com.google.protobuf.ByteString data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group parseFrom(byte[] data)
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups parseFrom(byte[] data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group parseFrom(
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups parseFrom(
           byte[] data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group parseFrom(java.io.InputStream input)
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return PARSER.parseFrom(input);
       }
-      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group parseFrom(
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups parseFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return PARSER.parseFrom(input, extensionRegistry);
       }
-      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group parseDelimitedFrom(java.io.InputStream input)
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return PARSER.parseDelimitedFrom(input);
       }
-      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group parseDelimitedFrom(
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups parseDelimitedFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return PARSER.parseDelimitedFrom(input, extensionRegistry);
       }
-      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group parseFrom(
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups parseFrom(
           com.google.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return PARSER.parseFrom(input);
       }
-      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group parseFrom(
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups parseFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -4147,7 +4147,7 @@ public final class OpenchatServiceProtos {
 
       public static Builder newBuilder() { return Builder.create(); }
       public Builder newBuilderForType() { return newBuilder(); }
-      public static Builder newBuilder(com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group prototype) {
+      public static Builder newBuilder(com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups prototype) {
         return newBuilder().mergeFrom(prototype);
       }
       public Builder toBuilder() { return newBuilder(this); }
@@ -4161,17 +4161,17 @@ public final class OpenchatServiceProtos {
       
       public static final class Builder extends
           com.google.protobuf.GeneratedMessage.Builder<Builder>
-         implements com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.GroupOrBuilder {
+         implements com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.GroupsOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor
             getDescriptor() {
-          return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_SyncMessage_Group_descriptor;
+          return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_SyncMessage_Groups_descriptor;
         }
 
         protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
             internalGetFieldAccessorTable() {
-          return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_SyncMessage_Group_fieldAccessorTable
+          return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_SyncMessage_Groups_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
-                  com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group.class, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group.Builder.class);
+                  com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.class, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.Builder.class);
         }
 
         private Builder() {
@@ -4185,7 +4185,7 @@ public final class OpenchatServiceProtos {
         }
         private void maybeForceBuilderInitialization() {
           if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-            getGroupFieldBuilder();
+            getBlobFieldBuilder();
           }
         }
         private static Builder create() {
@@ -4194,10 +4194,10 @@ public final class OpenchatServiceProtos {
 
         public Builder clear() {
           super.clear();
-          if (groupBuilder_ == null) {
-            group_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext.getDefaultInstance();
+          if (blobBuilder_ == null) {
+            blob_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance();
           } else {
-            groupBuilder_.clear();
+            blobBuilder_.clear();
           }
           bitField0_ = (bitField0_ & ~0x00000001);
           return this;
@@ -4209,32 +4209,32 @@ public final class OpenchatServiceProtos {
 
         public com.google.protobuf.Descriptors.Descriptor
             getDescriptorForType() {
-          return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_SyncMessage_Group_descriptor;
+          return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_SyncMessage_Groups_descriptor;
         }
 
-        public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group getDefaultInstanceForType() {
-          return com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group.getDefaultInstance();
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups getDefaultInstanceForType() {
+          return com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.getDefaultInstance();
         }
 
-        public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group build() {
-          com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group result = buildPartial();
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups build() {
+          com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups result = buildPartial();
           if (!result.isInitialized()) {
             throw newUninitializedMessageException(result);
           }
           return result;
         }
 
-        public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group buildPartial() {
-          com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group result = new com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group(this);
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups buildPartial() {
+          com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups result = new com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups(this);
           int from_bitField0_ = bitField0_;
           int to_bitField0_ = 0;
           if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
             to_bitField0_ |= 0x00000001;
           }
-          if (groupBuilder_ == null) {
-            result.group_ = group_;
+          if (blobBuilder_ == null) {
+            result.blob_ = blob_;
           } else {
-            result.group_ = groupBuilder_.build();
+            result.blob_ = blobBuilder_.build();
           }
           result.bitField0_ = to_bitField0_;
           onBuilt();
@@ -4242,18 +4242,18 @@ public final class OpenchatServiceProtos {
         }
 
         public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group) {
-            return mergeFrom((com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group)other);
+          if (other instanceof com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups) {
+            return mergeFrom((com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups)other);
           } else {
             super.mergeFrom(other);
             return this;
           }
         }
 
-        public Builder mergeFrom(com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group other) {
-          if (other == com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group.getDefaultInstance()) return this;
-          if (other.hasGroup()) {
-            mergeGroup(other.getGroup());
+        public Builder mergeFrom(com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups other) {
+          if (other == com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.getDefaultInstance()) return this;
+          if (other.hasBlob()) {
+            mergeBlob(other.getBlob());
           }
           this.mergeUnknownFields(other.getUnknownFields());
           return this;
@@ -4267,11 +4267,11 @@ public final class OpenchatServiceProtos {
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-          com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group parsedMessage = null;
+          com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups parsedMessage = null;
           try {
             parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
           } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            parsedMessage = (com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group) e.getUnfinishedMessage();
+            parsedMessage = (com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups) e.getUnfinishedMessage();
             throw e;
           } finally {
             if (parsedMessage != null) {
@@ -4282,108 +4282,108 @@ public final class OpenchatServiceProtos {
         }
         private int bitField0_;
 
-        private com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext group_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext.getDefaultInstance();
+        private com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer blob_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance();
         private com.google.protobuf.SingleFieldBuilder<
-            com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext, com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContextOrBuilder> groupBuilder_;
+            com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder> blobBuilder_;
         
-        public boolean hasGroup() {
+        public boolean hasBlob() {
           return ((bitField0_ & 0x00000001) == 0x00000001);
         }
         
-        public com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext getGroup() {
-          if (groupBuilder_ == null) {
-            return group_;
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer getBlob() {
+          if (blobBuilder_ == null) {
+            return blob_;
           } else {
-            return groupBuilder_.getMessage();
+            return blobBuilder_.getMessage();
           }
         }
         
-        public Builder setGroup(com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext value) {
-          if (groupBuilder_ == null) {
+        public Builder setBlob(com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer value) {
+          if (blobBuilder_ == null) {
             if (value == null) {
               throw new NullPointerException();
             }
-            group_ = value;
+            blob_ = value;
             onChanged();
           } else {
-            groupBuilder_.setMessage(value);
+            blobBuilder_.setMessage(value);
           }
           bitField0_ |= 0x00000001;
           return this;
         }
         
-        public Builder setGroup(
-            com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext.Builder builderForValue) {
-          if (groupBuilder_ == null) {
-            group_ = builderForValue.build();
+        public Builder setBlob(
+            com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder builderForValue) {
+          if (blobBuilder_ == null) {
+            blob_ = builderForValue.build();
             onChanged();
           } else {
-            groupBuilder_.setMessage(builderForValue.build());
+            blobBuilder_.setMessage(builderForValue.build());
           }
           bitField0_ |= 0x00000001;
           return this;
         }
         
-        public Builder mergeGroup(com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext value) {
-          if (groupBuilder_ == null) {
+        public Builder mergeBlob(com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer value) {
+          if (blobBuilder_ == null) {
             if (((bitField0_ & 0x00000001) == 0x00000001) &&
-                group_ != com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext.getDefaultInstance()) {
-              group_ =
-                com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext.newBuilder(group_).mergeFrom(value).buildPartial();
+                blob_ != com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance()) {
+              blob_ =
+                com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.newBuilder(blob_).mergeFrom(value).buildPartial();
             } else {
-              group_ = value;
+              blob_ = value;
             }
             onChanged();
           } else {
-            groupBuilder_.mergeFrom(value);
+            blobBuilder_.mergeFrom(value);
           }
           bitField0_ |= 0x00000001;
           return this;
         }
         
-        public Builder clearGroup() {
-          if (groupBuilder_ == null) {
-            group_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext.getDefaultInstance();
+        public Builder clearBlob() {
+          if (blobBuilder_ == null) {
+            blob_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance();
             onChanged();
           } else {
-            groupBuilder_.clear();
+            blobBuilder_.clear();
           }
           bitField0_ = (bitField0_ & ~0x00000001);
           return this;
         }
         
-        public com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext.Builder getGroupBuilder() {
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder getBlobBuilder() {
           bitField0_ |= 0x00000001;
           onChanged();
-          return getGroupFieldBuilder().getBuilder();
+          return getBlobFieldBuilder().getBuilder();
         }
         
-        public com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContextOrBuilder getGroupOrBuilder() {
-          if (groupBuilder_ != null) {
-            return groupBuilder_.getMessageOrBuilder();
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder getBlobOrBuilder() {
+          if (blobBuilder_ != null) {
+            return blobBuilder_.getMessageOrBuilder();
           } else {
-            return group_;
+            return blob_;
           }
         }
         
         private com.google.protobuf.SingleFieldBuilder<
-            com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext, com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContextOrBuilder> 
-            getGroupFieldBuilder() {
-          if (groupBuilder_ == null) {
-            groupBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-                com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext, com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContextOrBuilder>(
-                    group_,
+            com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder> 
+            getBlobFieldBuilder() {
+          if (blobBuilder_ == null) {
+            blobBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+                com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder>(
+                    blob_,
                     getParentForChildren(),
                     isClean());
-            group_ = null;
+            blob_ = null;
           }
-          return groupBuilder_;
+          return blobBuilder_;
         }
 
       }
 
       static {
-        defaultInstance = new Group(true);
+        defaultInstance = new Groups(true);
         defaultInstance.initFields();
       }
 
@@ -4502,12 +4502,16 @@ public final class OpenchatServiceProtos {
         UNKNOWN(0, 0),
         
         CONTACTS(1, 1),
+        
+        GROUPS(2, 2),
         ;
 
         
         public static final int UNKNOWN_VALUE = 0;
         
         public static final int CONTACTS_VALUE = 1;
+        
+        public static final int GROUPS_VALUE = 2;
 
         public final int getNumber() { return value; }
 
@@ -4515,6 +4519,7 @@ public final class OpenchatServiceProtos {
           switch (value) {
             case 0: return UNKNOWN;
             case 1: return CONTACTS;
+            case 2: return GROUPS;
             default: return null;
           }
         }
@@ -4868,19 +4873,19 @@ public final class OpenchatServiceProtos {
       return contacts_;
     }
 
-    public static final int GROUP_FIELD_NUMBER = 3;
-    private com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group group_;
+    public static final int GROUPS_FIELD_NUMBER = 3;
+    private com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups groups_;
     
-    public boolean hasGroup() {
+    public boolean hasGroups() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     
-    public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group getGroup() {
-      return group_;
+    public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups getGroups() {
+      return groups_;
     }
     
-    public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.GroupOrBuilder getGroupOrBuilder() {
-      return group_;
+    public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.GroupsOrBuilder getGroupsOrBuilder() {
+      return groups_;
     }
 
     public static final int REQUEST_FIELD_NUMBER = 4;
@@ -4901,7 +4906,7 @@ public final class OpenchatServiceProtos {
     private void initFields() {
       sent_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Sent.getDefaultInstance();
       contacts_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Contacts.getDefaultInstance();
-      group_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group.getDefaultInstance();
+      groups_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.getDefaultInstance();
       request_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Request.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
@@ -4923,7 +4928,7 @@ public final class OpenchatServiceProtos {
         output.writeMessage(2, contacts_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeMessage(3, group_);
+        output.writeMessage(3, groups_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeMessage(4, request_);
@@ -4947,7 +4952,7 @@ public final class OpenchatServiceProtos {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, group_);
+          .computeMessageSize(3, groups_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
@@ -5060,7 +5065,7 @@ public final class OpenchatServiceProtos {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getSentFieldBuilder();
           getContactsFieldBuilder();
-          getGroupFieldBuilder();
+          getGroupsFieldBuilder();
           getRequestFieldBuilder();
         }
       }
@@ -5082,10 +5087,10 @@ public final class OpenchatServiceProtos {
           contactsBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
-        if (groupBuilder_ == null) {
-          group_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group.getDefaultInstance();
+        if (groupsBuilder_ == null) {
+          groups_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.getDefaultInstance();
         } else {
-          groupBuilder_.clear();
+          groupsBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000004);
         if (requestBuilder_ == null) {
@@ -5141,10 +5146,10 @@ public final class OpenchatServiceProtos {
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        if (groupBuilder_ == null) {
-          result.group_ = group_;
+        if (groupsBuilder_ == null) {
+          result.groups_ = groups_;
         } else {
-          result.group_ = groupBuilder_.build();
+          result.groups_ = groupsBuilder_.build();
         }
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
@@ -5176,8 +5181,8 @@ public final class OpenchatServiceProtos {
         if (other.hasContacts()) {
           mergeContacts(other.getContacts());
         }
-        if (other.hasGroup()) {
-          mergeGroup(other.getGroup());
+        if (other.hasGroups()) {
+          mergeGroups(other.getGroups());
         }
         if (other.hasRequest()) {
           mergeRequest(other.getRequest());
@@ -5405,102 +5410,102 @@ public final class OpenchatServiceProtos {
         return contactsBuilder_;
       }
 
-      private com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group group_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group.getDefaultInstance();
+      private com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups groups_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.GroupOrBuilder> groupBuilder_;
+          com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.GroupsOrBuilder> groupsBuilder_;
       
-      public boolean hasGroup() {
+      public boolean hasGroups() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       
-      public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group getGroup() {
-        if (groupBuilder_ == null) {
-          return group_;
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups getGroups() {
+        if (groupsBuilder_ == null) {
+          return groups_;
         } else {
-          return groupBuilder_.getMessage();
+          return groupsBuilder_.getMessage();
         }
       }
       
-      public Builder setGroup(com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group value) {
-        if (groupBuilder_ == null) {
+      public Builder setGroups(com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups value) {
+        if (groupsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          group_ = value;
+          groups_ = value;
           onChanged();
         } else {
-          groupBuilder_.setMessage(value);
+          groupsBuilder_.setMessage(value);
         }
         bitField0_ |= 0x00000004;
         return this;
       }
       
-      public Builder setGroup(
-          com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group.Builder builderForValue) {
-        if (groupBuilder_ == null) {
-          group_ = builderForValue.build();
+      public Builder setGroups(
+          com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.Builder builderForValue) {
+        if (groupsBuilder_ == null) {
+          groups_ = builderForValue.build();
           onChanged();
         } else {
-          groupBuilder_.setMessage(builderForValue.build());
+          groupsBuilder_.setMessage(builderForValue.build());
         }
         bitField0_ |= 0x00000004;
         return this;
       }
       
-      public Builder mergeGroup(com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group value) {
-        if (groupBuilder_ == null) {
+      public Builder mergeGroups(com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups value) {
+        if (groupsBuilder_ == null) {
           if (((bitField0_ & 0x00000004) == 0x00000004) &&
-              group_ != com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group.getDefaultInstance()) {
-            group_ =
-              com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group.newBuilder(group_).mergeFrom(value).buildPartial();
+              groups_ != com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.getDefaultInstance()) {
+            groups_ =
+              com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.newBuilder(groups_).mergeFrom(value).buildPartial();
           } else {
-            group_ = value;
+            groups_ = value;
           }
           onChanged();
         } else {
-          groupBuilder_.mergeFrom(value);
+          groupsBuilder_.mergeFrom(value);
         }
         bitField0_ |= 0x00000004;
         return this;
       }
       
-      public Builder clearGroup() {
-        if (groupBuilder_ == null) {
-          group_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group.getDefaultInstance();
+      public Builder clearGroups() {
+        if (groupsBuilder_ == null) {
+          groups_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.getDefaultInstance();
           onChanged();
         } else {
-          groupBuilder_.clear();
+          groupsBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
       
-      public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group.Builder getGroupBuilder() {
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.Builder getGroupsBuilder() {
         bitField0_ |= 0x00000004;
         onChanged();
-        return getGroupFieldBuilder().getBuilder();
+        return getGroupsFieldBuilder().getBuilder();
       }
       
-      public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.GroupOrBuilder getGroupOrBuilder() {
-        if (groupBuilder_ != null) {
-          return groupBuilder_.getMessageOrBuilder();
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.GroupsOrBuilder getGroupsOrBuilder() {
+        if (groupsBuilder_ != null) {
+          return groupsBuilder_.getMessageOrBuilder();
         } else {
-          return group_;
+          return groups_;
         }
       }
       
       private com.google.protobuf.SingleFieldBuilder<
-          com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.GroupOrBuilder> 
-          getGroupFieldBuilder() {
-        if (groupBuilder_ == null) {
-          groupBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Group.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.GroupOrBuilder>(
-                  group_,
+          com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.GroupsOrBuilder> 
+          getGroupsFieldBuilder() {
+        if (groupsBuilder_ == null) {
+          groupsBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.GroupsOrBuilder>(
+                  groups_,
                   getParentForChildren(),
                   isClean());
-          group_ = null;
+          groups_ = null;
         }
-        return groupBuilder_;
+        return groupsBuilder_;
       }
 
       private com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Request request_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Request.getDefaultInstance();
@@ -7282,7 +7287,7 @@ public final class OpenchatServiceProtos {
       
       boolean hasLength();
       
-      long getLength();
+      int getLength();
     }
     
     public static final class Avatar extends
@@ -7339,7 +7344,7 @@ public final class OpenchatServiceProtos {
               }
               case 16: {
                 bitField0_ |= 0x00000002;
-                length_ = input.readUInt64();
+                length_ = input.readUInt32();
                 break;
               }
             }
@@ -7419,19 +7424,19 @@ public final class OpenchatServiceProtos {
       }
 
       public static final int LENGTH_FIELD_NUMBER = 2;
-      private long length_;
+      private int length_;
       
       public boolean hasLength() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       
-      public long getLength() {
+      public int getLength() {
         return length_;
       }
 
       private void initFields() {
         contentType_ = "";
-        length_ = 0L;
+        length_ = 0;
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -7449,7 +7454,7 @@ public final class OpenchatServiceProtos {
           output.writeBytes(1, getContentTypeBytes());
         }
         if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          output.writeUInt64(2, length_);
+          output.writeUInt32(2, length_);
         }
         getUnknownFields().writeTo(output);
       }
@@ -7466,7 +7471,7 @@ public final class OpenchatServiceProtos {
         }
         if (((bitField0_ & 0x00000002) == 0x00000002)) {
           size += com.google.protobuf.CodedOutputStream
-            .computeUInt64Size(2, length_);
+            .computeUInt32Size(2, length_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSerializedSize = size;
@@ -7583,7 +7588,7 @@ public final class OpenchatServiceProtos {
           super.clear();
           contentType_ = "";
           bitField0_ = (bitField0_ & ~0x00000001);
-          length_ = 0L;
+          length_ = 0;
           bitField0_ = (bitField0_ & ~0x00000002);
           return this;
         }
@@ -7733,17 +7738,17 @@ public final class OpenchatServiceProtos {
           return this;
         }
 
-        private long length_ ;
+        private int length_ ;
         
         public boolean hasLength() {
           return ((bitField0_ & 0x00000002) == 0x00000002);
         }
         
-        public long getLength() {
+        public int getLength() {
           return length_;
         }
         
-        public Builder setLength(long value) {
+        public Builder setLength(int value) {
           bitField0_ |= 0x00000002;
           length_ = value;
           onChanged();
@@ -7752,7 +7757,7 @@ public final class OpenchatServiceProtos {
         
         public Builder clearLength() {
           bitField0_ = (bitField0_ & ~0x00000002);
-          length_ = 0L;
+          length_ = 0;
           onChanged();
           return this;
         }
@@ -8354,6 +8359,1312 @@ public final class OpenchatServiceProtos {
 
   }
 
+  public interface GroupDetailsOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    
+    boolean hasId();
+    
+    com.google.protobuf.ByteString getId();
+
+    
+    boolean hasName();
+    
+    java.lang.String getName();
+    
+    com.google.protobuf.ByteString
+        getNameBytes();
+
+    
+    java.util.List<java.lang.String>
+    getMembersList();
+    
+    int getMembersCount();
+    
+    java.lang.String getMembers(int index);
+    
+    com.google.protobuf.ByteString
+        getMembersBytes(int index);
+
+    
+    boolean hasAvatar();
+    
+    com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar getAvatar();
+    
+    com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.AvatarOrBuilder getAvatarOrBuilder();
+  }
+  
+  public static final class GroupDetails extends
+      com.google.protobuf.GeneratedMessage
+      implements GroupDetailsOrBuilder {
+    private GroupDetails(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private GroupDetails(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final GroupDetails defaultInstance;
+    public static GroupDetails getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public GroupDetails getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private GroupDetails(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              id_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              name_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                members_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              members_.add(input.readBytes());
+              break;
+            }
+            case 34: {
+              com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                subBuilder = avatar_.toBuilder();
+              }
+              avatar_ = input.readMessage(com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(avatar_);
+                avatar_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000004;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          members_ = new com.google.protobuf.UnmodifiableLazyStringList(members_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_GroupDetails_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_GroupDetails_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.class, com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<GroupDetails> PARSER =
+        new com.google.protobuf.AbstractParser<GroupDetails>() {
+      public GroupDetails parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new GroupDetails(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<GroupDetails> getParserForType() {
+      return PARSER;
+    }
+
+    public interface AvatarOrBuilder
+        extends com.google.protobuf.MessageOrBuilder {
+
+      
+      boolean hasContentType();
+      
+      java.lang.String getContentType();
+      
+      com.google.protobuf.ByteString
+          getContentTypeBytes();
+
+      
+      boolean hasLength();
+      
+      int getLength();
+    }
+    
+    public static final class Avatar extends
+        com.google.protobuf.GeneratedMessage
+        implements AvatarOrBuilder {
+      private Avatar(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+        super(builder);
+        this.unknownFields = builder.getUnknownFields();
+      }
+      private Avatar(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+      private static final Avatar defaultInstance;
+      public static Avatar getDefaultInstance() {
+        return defaultInstance;
+      }
+
+      public Avatar getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+
+      private final com.google.protobuf.UnknownFieldSet unknownFields;
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+          getUnknownFields() {
+        return this.unknownFields;
+      }
+      private Avatar(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        initFields();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFields,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 10: {
+                bitField0_ |= 0x00000001;
+                contentType_ = input.readBytes();
+                break;
+              }
+              case 16: {
+                bitField0_ |= 0x00000002;
+                length_ = input.readUInt32();
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e.getMessage()).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_GroupDetails_Avatar_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_GroupDetails_Avatar_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.class, com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.Builder.class);
+      }
+
+      public static com.google.protobuf.Parser<Avatar> PARSER =
+          new com.google.protobuf.AbstractParser<Avatar>() {
+        public Avatar parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new Avatar(input, extensionRegistry);
+        }
+      };
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<Avatar> getParserForType() {
+        return PARSER;
+      }
+
+      private int bitField0_;
+      public static final int CONTENTTYPE_FIELD_NUMBER = 1;
+      private java.lang.Object contentType_;
+      
+      public boolean hasContentType() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      
+      public java.lang.String getContentType() {
+        java.lang.Object ref = contentType_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            contentType_ = s;
+          }
+          return s;
+        }
+      }
+      
+      public com.google.protobuf.ByteString
+          getContentTypeBytes() {
+        java.lang.Object ref = contentType_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          contentType_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      public static final int LENGTH_FIELD_NUMBER = 2;
+      private int length_;
+      
+      public boolean hasLength() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      
+      public int getLength() {
+        return length_;
+      }
+
+      private void initFields() {
+        contentType_ = "";
+        length_ = 0;
+      }
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized != -1) return isInitialized == 1;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        getSerializedSize();
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeBytes(1, getContentTypeBytes());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          output.writeUInt32(2, length_);
+        }
+        getUnknownFields().writeTo(output);
+      }
+
+      private int memoizedSerializedSize = -1;
+      public int getSerializedSize() {
+        int size = memoizedSerializedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(1, getContentTypeBytes());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeUInt32Size(2, length_);
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSerializedSize = size;
+        return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
+      }
+
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input);
+      }
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
+      }
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder(com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar prototype) {
+        return newBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() { return newBuilder(this); }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessage.Builder<Builder>
+         implements com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.AvatarOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_GroupDetails_Avatar_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_GroupDetails_Avatar_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.class, com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.Builder.class);
+        }
+
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          }
+        }
+        private static Builder create() {
+          return new Builder();
+        }
+
+        public Builder clear() {
+          super.clear();
+          contentType_ = "";
+          bitField0_ = (bitField0_ & ~0x00000001);
+          length_ = 0;
+          bitField0_ = (bitField0_ & ~0x00000002);
+          return this;
+        }
+
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_GroupDetails_Avatar_descriptor;
+        }
+
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar getDefaultInstanceForType() {
+          return com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.getDefaultInstance();
+        }
+
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar build() {
+          com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar buildPartial() {
+          com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar result = new com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.contentType_ = contentType_;
+          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+            to_bitField0_ |= 0x00000002;
+          }
+          result.length_ = length_;
+          result.bitField0_ = to_bitField0_;
+          onBuilt();
+          return result;
+        }
+
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar) {
+            return mergeFrom((com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar other) {
+          if (other == com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.getDefaultInstance()) return this;
+          if (other.hasContentType()) {
+            bitField0_ |= 0x00000001;
+            contentType_ = other.contentType_;
+            onChanged();
+          }
+          if (other.hasLength()) {
+            setLength(other.getLength());
+          }
+          this.mergeUnknownFields(other.getUnknownFields());
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        private java.lang.Object contentType_ = "";
+        
+        public boolean hasContentType() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        
+        public java.lang.String getContentType() {
+          java.lang.Object ref = contentType_;
+          if (!(ref instanceof java.lang.String)) {
+            java.lang.String s = ((com.google.protobuf.ByteString) ref)
+                .toStringUtf8();
+            contentType_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        
+        public com.google.protobuf.ByteString
+            getContentTypeBytes() {
+          java.lang.Object ref = contentType_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            contentType_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        
+        public Builder setContentType(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          contentType_ = value;
+          onChanged();
+          return this;
+        }
+        
+        public Builder clearContentType() {
+          bitField0_ = (bitField0_ & ~0x00000001);
+          contentType_ = getDefaultInstance().getContentType();
+          onChanged();
+          return this;
+        }
+        
+        public Builder setContentTypeBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          contentType_ = value;
+          onChanged();
+          return this;
+        }
+
+        private int length_ ;
+        
+        public boolean hasLength() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        
+        public int getLength() {
+          return length_;
+        }
+        
+        public Builder setLength(int value) {
+          bitField0_ |= 0x00000002;
+          length_ = value;
+          onChanged();
+          return this;
+        }
+        
+        public Builder clearLength() {
+          bitField0_ = (bitField0_ & ~0x00000002);
+          length_ = 0;
+          onChanged();
+          return this;
+        }
+
+      }
+
+      static {
+        defaultInstance = new Avatar(true);
+        defaultInstance.initFields();
+      }
+
+    }
+
+    private int bitField0_;
+    public static final int ID_FIELD_NUMBER = 1;
+    private com.google.protobuf.ByteString id_;
+    
+    public boolean hasId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    
+    public com.google.protobuf.ByteString getId() {
+      return id_;
+    }
+
+    public static final int NAME_FIELD_NUMBER = 2;
+    private java.lang.Object name_;
+    
+    public boolean hasName() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    
+    public java.lang.String getName() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          name_ = s;
+        }
+        return s;
+      }
+    }
+    
+    public com.google.protobuf.ByteString
+        getNameBytes() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        name_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int MEMBERS_FIELD_NUMBER = 3;
+    private com.google.protobuf.LazyStringList members_;
+    
+    public java.util.List<java.lang.String>
+        getMembersList() {
+      return members_;
+    }
+    
+    public int getMembersCount() {
+      return members_.size();
+    }
+    
+    public java.lang.String getMembers(int index) {
+      return members_.get(index);
+    }
+    
+    public com.google.protobuf.ByteString
+        getMembersBytes(int index) {
+      return members_.getByteString(index);
+    }
+
+    public static final int AVATAR_FIELD_NUMBER = 4;
+    private com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar avatar_;
+    
+    public boolean hasAvatar() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    
+    public com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar getAvatar() {
+      return avatar_;
+    }
+    
+    public com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.AvatarOrBuilder getAvatarOrBuilder() {
+      return avatar_;
+    }
+
+    private void initFields() {
+      id_ = com.google.protobuf.ByteString.EMPTY;
+      name_ = "";
+      members_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      avatar_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.getDefaultInstance();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, id_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getNameBytes());
+      }
+      for (int i = 0; i < members_.size(); i++) {
+        output.writeBytes(3, members_.getByteString(i));
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeMessage(4, avatar_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, id_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getNameBytes());
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < members_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(members_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getMembersList().size();
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, avatar_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetailsOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_GroupDetails_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_GroupDetails_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.class, com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Builder.class);
+      }
+
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getAvatarFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        id_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        name_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        members_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        if (avatarBuilder_ == null) {
+          avatar_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.getDefaultInstance();
+        } else {
+          avatarBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000008);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_GroupDetails_descriptor;
+      }
+
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails getDefaultInstanceForType() {
+        return com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.getDefaultInstance();
+      }
+
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails build() {
+        com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails buildPartial() {
+        com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails result = new com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.id_ = id_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.name_ = name_;
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          members_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              members_);
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.members_ = members_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        if (avatarBuilder_ == null) {
+          result.avatar_ = avatar_;
+        } else {
+          result.avatar_ = avatarBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails) {
+          return mergeFrom((com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails other) {
+        if (other == com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.getDefaultInstance()) return this;
+        if (other.hasId()) {
+          setId(other.getId());
+        }
+        if (other.hasName()) {
+          bitField0_ |= 0x00000002;
+          name_ = other.name_;
+          onChanged();
+        }
+        if (!other.members_.isEmpty()) {
+          if (members_.isEmpty()) {
+            members_ = other.members_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureMembersIsMutable();
+            members_.addAll(other.members_);
+          }
+          onChanged();
+        }
+        if (other.hasAvatar()) {
+          mergeAvatar(other.getAvatar());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private com.google.protobuf.ByteString id_ = com.google.protobuf.ByteString.EMPTY;
+      
+      public boolean hasId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      
+      public com.google.protobuf.ByteString getId() {
+        return id_;
+      }
+      
+      public Builder setId(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        id_ = getDefaultInstance().getId();
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object name_ = "";
+      
+      public boolean hasName() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      
+      public java.lang.String getName() {
+        java.lang.Object ref = name_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          name_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      
+      public com.google.protobuf.ByteString
+          getNameBytes() {
+        java.lang.Object ref = name_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          name_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      
+      public Builder setName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        name_ = value;
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearName() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        name_ = getDefaultInstance().getName();
+        onChanged();
+        return this;
+      }
+      
+      public Builder setNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        name_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.LazyStringList members_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureMembersIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          members_ = new com.google.protobuf.LazyStringArrayList(members_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+      
+      public java.util.List<java.lang.String>
+          getMembersList() {
+        return java.util.Collections.unmodifiableList(members_);
+      }
+      
+      public int getMembersCount() {
+        return members_.size();
+      }
+      
+      public java.lang.String getMembers(int index) {
+        return members_.get(index);
+      }
+      
+      public com.google.protobuf.ByteString
+          getMembersBytes(int index) {
+        return members_.getByteString(index);
+      }
+      
+      public Builder setMembers(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureMembersIsMutable();
+        members_.set(index, value);
+        onChanged();
+        return this;
+      }
+      
+      public Builder addMembers(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureMembersIsMutable();
+        members_.add(value);
+        onChanged();
+        return this;
+      }
+      
+      public Builder addAllMembers(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureMembersIsMutable();
+        super.addAll(values, members_);
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearMembers() {
+        members_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+        return this;
+      }
+      
+      public Builder addMembersBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureMembersIsMutable();
+        members_.add(value);
+        onChanged();
+        return this;
+      }
+
+      private com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar avatar_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar, com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.AvatarOrBuilder> avatarBuilder_;
+      
+      public boolean hasAvatar() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar getAvatar() {
+        if (avatarBuilder_ == null) {
+          return avatar_;
+        } else {
+          return avatarBuilder_.getMessage();
+        }
+      }
+      
+      public Builder setAvatar(com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar value) {
+        if (avatarBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          avatar_ = value;
+          onChanged();
+        } else {
+          avatarBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000008;
+        return this;
+      }
+      
+      public Builder setAvatar(
+          com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.Builder builderForValue) {
+        if (avatarBuilder_ == null) {
+          avatar_ = builderForValue.build();
+          onChanged();
+        } else {
+          avatarBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000008;
+        return this;
+      }
+      
+      public Builder mergeAvatar(com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar value) {
+        if (avatarBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) == 0x00000008) &&
+              avatar_ != com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.getDefaultInstance()) {
+            avatar_ =
+              com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.newBuilder(avatar_).mergeFrom(value).buildPartial();
+          } else {
+            avatar_ = value;
+          }
+          onChanged();
+        } else {
+          avatarBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000008;
+        return this;
+      }
+      
+      public Builder clearAvatar() {
+        if (avatarBuilder_ == null) {
+          avatar_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.getDefaultInstance();
+          onChanged();
+        } else {
+          avatarBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000008);
+        return this;
+      }
+      
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.Builder getAvatarBuilder() {
+        bitField0_ |= 0x00000008;
+        onChanged();
+        return getAvatarFieldBuilder().getBuilder();
+      }
+      
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.AvatarOrBuilder getAvatarOrBuilder() {
+        if (avatarBuilder_ != null) {
+          return avatarBuilder_.getMessageOrBuilder();
+        } else {
+          return avatar_;
+        }
+      }
+      
+      private com.google.protobuf.SingleFieldBuilder<
+          com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar, com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.AvatarOrBuilder> 
+          getAvatarFieldBuilder() {
+        if (avatarBuilder_ == null) {
+          avatarBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar, com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.AvatarOrBuilder>(
+                  avatar_,
+                  getParentForChildren(),
+                  isClean());
+          avatar_ = null;
+        }
+        return avatarBuilder_;
+      }
+
+    }
+
+    static {
+      defaultInstance = new GroupDetails(true);
+      defaultInstance.initFields();
+    }
+
+  }
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_openchatservice_Envelope_descriptor;
   private static
@@ -8385,10 +9696,10 @@ public final class OpenchatServiceProtos {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_openchatservice_SyncMessage_Contacts_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_openchatservice_SyncMessage_Group_descriptor;
+    internal_static_openchatservice_SyncMessage_Groups_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_openchatservice_SyncMessage_Group_fieldAccessorTable;
+      internal_static_openchatservice_SyncMessage_Groups_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_openchatservice_SyncMessage_Request_descriptor;
   private static
@@ -8414,6 +9725,16 @@ public final class OpenchatServiceProtos {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_openchatservice_ContactDetails_Avatar_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_openchatservice_GroupDetails_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_openchatservice_GroupDetails_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_openchatservice_GroupDetails_Avatar_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_openchatservice_GroupDetails_Avatar_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -8451,7 +9772,7 @@ public final class OpenchatServiceProtos {
           internal_static_openchatservice_SyncMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_openchatservice_SyncMessage_descriptor,
-              new java.lang.String[] { "Sent", "Contacts", "Group", "Request", });
+              new java.lang.String[] { "Sent", "Contacts", "Groups", "Request", });
           internal_static_openchatservice_SyncMessage_Sent_descriptor =
             internal_static_openchatservice_SyncMessage_descriptor.getNestedTypes().get(0);
           internal_static_openchatservice_SyncMessage_Sent_fieldAccessorTable = new
@@ -8464,12 +9785,12 @@ public final class OpenchatServiceProtos {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_openchatservice_SyncMessage_Contacts_descriptor,
               new java.lang.String[] { "Blob", });
-          internal_static_openchatservice_SyncMessage_Group_descriptor =
+          internal_static_openchatservice_SyncMessage_Groups_descriptor =
             internal_static_openchatservice_SyncMessage_descriptor.getNestedTypes().get(2);
-          internal_static_openchatservice_SyncMessage_Group_fieldAccessorTable = new
+          internal_static_openchatservice_SyncMessage_Groups_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_openchatservice_SyncMessage_Group_descriptor,
-              new java.lang.String[] { "Group", });
+              internal_static_openchatservice_SyncMessage_Groups_descriptor,
+              new java.lang.String[] { "Blob", });
           internal_static_openchatservice_SyncMessage_Request_descriptor =
             internal_static_openchatservice_SyncMessage_descriptor.getNestedTypes().get(3);
           internal_static_openchatservice_SyncMessage_Request_fieldAccessorTable = new
@@ -8499,6 +9820,18 @@ public final class OpenchatServiceProtos {
           internal_static_openchatservice_ContactDetails_Avatar_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_openchatservice_ContactDetails_Avatar_descriptor,
+              new java.lang.String[] { "ContentType", "Length", });
+          internal_static_openchatservice_GroupDetails_descriptor =
+            getDescriptor().getMessageTypes().get(7);
+          internal_static_openchatservice_GroupDetails_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_openchatservice_GroupDetails_descriptor,
+              new java.lang.String[] { "Id", "Name", "Members", "Avatar", });
+          internal_static_openchatservice_GroupDetails_Avatar_descriptor =
+            internal_static_openchatservice_GroupDetails_descriptor.getNestedTypes().get(0);
+          internal_static_openchatservice_GroupDetails_Avatar_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_openchatservice_GroupDetails_Avatar_descriptor,
               new java.lang.String[] { "ContentType", "Length", });
           return null;
         }

@@ -16,6 +16,7 @@ import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentStream;
 import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
+import com.openchat.imservice.api.messages.multidevice.OpenchatServiceSyncMessage;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.api.push.TrustStore;
 import com.openchat.imservice.api.push.exceptions.EncapsulatedExceptions;
@@ -78,7 +79,7 @@ public class OpenchatServiceMessageSender {
     SendMessageResponse response  = sendMessage(recipient, timestamp, content, true);
 
     if (response != null && response.getNeedsSync()) {
-      byte[] syncMessage = createSentTranscriptMessage(content, Optional.of(recipient), timestamp);
+      byte[] syncMessage = createMultiDeviceSentTranscriptContent(content, Optional.of(recipient), timestamp);
       sendMessage(localAddress, timestamp, syncMessage, false);
     }
 
@@ -101,7 +102,7 @@ public class OpenchatServiceMessageSender {
 
     try {
       if (response != null && response.getNeedsSync()) {
-        byte[] syncMessage = createSentTranscriptMessage(content, Optional.<OpenchatServiceAddress>absent(), timestamp);
+        byte[] syncMessage = createMultiDeviceSentTranscriptContent(content, Optional.<OpenchatServiceAddress>absent(), timestamp);
         sendMessage(localAddress, timestamp, syncMessage, false);
       }
     } catch (UntrustedIdentityException e) {
@@ -109,10 +110,19 @@ public class OpenchatServiceMessageSender {
     }
   }
 
-  public void sendMultiDeviceContactsUpdate(OpenchatServiceAttachmentStream contacts)
+  public void sendMessage(OpenchatServiceSyncMessage message)
       throws IOException, UntrustedIdentityException
   {
-    byte[] content = createMultiDeviceContactsContent(contacts);
+    byte[] content;
+
+    if (message.getContacts().isPresent()) {
+      content = createMultiDeviceContactsContent(message.getContacts().get().asStream());
+    } else if (message.getGroups().isPresent()) {
+      content = createMultiDeviceGroupsContent(message.getGroups().get().asStream());
+    } else {
+      throw new IOException("Unsupported sync message!");
+    }
+
     sendMessage(localAddress, System.currentTimeMillis(), content, false);
   }
 
@@ -148,7 +158,16 @@ public class OpenchatServiceMessageSender {
     return container.setSyncMessage(builder).build().toByteArray();
   }
 
-  private byte[] createSentTranscriptMessage(byte[] content, Optional<OpenchatServiceAddress> recipient, long timestamp) {
+  private byte[] createMultiDeviceGroupsContent(OpenchatServiceAttachmentStream groups) throws IOException {
+    Content.Builder     container = Content.newBuilder();
+    SyncMessage.Builder builder   = SyncMessage.newBuilder();
+    builder.setGroups(SyncMessage.Groups.newBuilder()
+                                        .setBlob(createAttachmentPointer(groups)));
+
+    return container.setSyncMessage(builder).build().toByteArray();
+  }
+
+  private byte[] createMultiDeviceSentTranscriptContent(byte[] content, Optional<OpenchatServiceAddress> recipient, long timestamp) {
     try {
       Content.Builder          container   = Content.newBuilder();
       SyncMessage.Builder      syncMessage = SyncMessage.newBuilder();

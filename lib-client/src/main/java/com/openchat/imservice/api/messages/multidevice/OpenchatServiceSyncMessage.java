@@ -8,50 +8,61 @@ public class OpenchatServiceSyncMessage {
 
   private final Optional<SentTranscriptMessage> sent;
   private final Optional<OpenchatServiceAttachment>  contacts;
-  private final Optional<OpenchatServiceGroup>       group;
+  private final Optional<OpenchatServiceAttachment>  groups;
   private final Optional<RequestMessage>        request;
 
-  public OpenchatServiceSyncMessage() {
-    this.sent     = Optional.absent();
-    this.contacts = Optional.absent();
-    this.group    = Optional.absent();
-    this.request  = Optional.absent();
+  private OpenchatServiceSyncMessage(Optional<SentTranscriptMessage> sent,
+                                Optional<OpenchatServiceAttachment>  contacts,
+                                Optional<OpenchatServiceAttachment>  groups,
+                                Optional<RequestMessage>        request)
+  {
+    this.sent     = sent;
+    this.contacts = contacts;
+    this.groups   = groups;
+    this.request  = request;
   }
 
-  public OpenchatServiceSyncMessage(SentTranscriptMessage sent) {
-    this.sent     = Optional.of(sent);
-    this.contacts = Optional.absent();
-    this.group    = Optional.absent();
-    this.request  = Optional.absent();
+  public static OpenchatServiceSyncMessage forSentTranscript(SentTranscriptMessage sent) {
+    return new OpenchatServiceSyncMessage(Optional.of(sent),
+                                     Optional.<OpenchatServiceAttachment>absent(),
+                                     Optional.<OpenchatServiceAttachment>absent(),
+                                     Optional.<RequestMessage>absent());
   }
 
-  public OpenchatServiceSyncMessage(OpenchatServiceAttachment contacts) {
-    this.contacts = Optional.of(contacts);
-    this.sent     = Optional.absent();
-    this.group    = Optional.absent();
-    this.request  = Optional.absent();
+  public static OpenchatServiceSyncMessage forContacts(OpenchatServiceAttachment contacts) {
+    return new OpenchatServiceSyncMessage(Optional.<SentTranscriptMessage>absent(),
+                                     Optional.of(contacts),
+                                     Optional.<OpenchatServiceAttachment>absent(),
+                                     Optional.<RequestMessage>absent());
   }
 
-  public OpenchatServiceSyncMessage(OpenchatServiceGroup group) {
-    this.group    = Optional.of(group);
-    this.sent     = Optional.absent();
-    this.contacts = Optional.absent();
-    this.request  = Optional.absent();
+  public static OpenchatServiceSyncMessage forGroups(OpenchatServiceAttachment groups) {
+    return new OpenchatServiceSyncMessage(Optional.<SentTranscriptMessage>absent(),
+                                     Optional.<OpenchatServiceAttachment>absent(),
+                                     Optional.of(groups),
+                                     Optional.<RequestMessage>absent());
   }
 
-  public OpenchatServiceSyncMessage(RequestMessage contactsRequest) {
-    this.request  = Optional.of(contactsRequest);
-    this.sent     = Optional.absent();
-    this.contacts = Optional.absent();
-    this.group    = Optional.absent();
+  public static OpenchatServiceSyncMessage forRequest(RequestMessage request) {
+    return new OpenchatServiceSyncMessage(Optional.<SentTranscriptMessage>absent(),
+                                     Optional.<OpenchatServiceAttachment>absent(),
+                                     Optional.<OpenchatServiceAttachment>absent(),
+                                     Optional.of(request));
+  }
+
+  public static OpenchatServiceSyncMessage empty() {
+    return new OpenchatServiceSyncMessage(Optional.<SentTranscriptMessage>absent(),
+                                     Optional.<OpenchatServiceAttachment>absent(),
+                                     Optional.<OpenchatServiceAttachment>absent(),
+                                     Optional.<RequestMessage>absent());
   }
 
   public Optional<SentTranscriptMessage> getSent() {
     return sent;
   }
 
-  public Optional<OpenchatServiceGroup> getGroup() {
-    return group;
+  public Optional<OpenchatServiceAttachment> getGroups() {
+    return groups;
   }
 
   public Optional<OpenchatServiceAttachment> getContacts() {
