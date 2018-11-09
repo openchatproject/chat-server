@@ -5635,6 +5635,16 @@ public final class OpenchatServiceProtos {
     boolean hasKey();
     
     com.google.protobuf.ByteString getKey();
+
+    
+    boolean hasSize();
+    
+    int getSize();
+
+    
+    boolean hasThumbnail();
+    
+    com.google.protobuf.ByteString getThumbnail();
   }
   
   public static final class AttachmentPointer extends
@@ -5697,6 +5707,16 @@ public final class OpenchatServiceProtos {
             case 26: {
               bitField0_ |= 0x00000004;
               key_ = input.readBytes();
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
+              size_ = input.readUInt32();
+              break;
+            }
+            case 42: {
+              bitField0_ |= 0x00000010;
+              thumbnail_ = input.readBytes();
               break;
             }
           }
@@ -5797,10 +5817,34 @@ public final class OpenchatServiceProtos {
       return key_;
     }
 
+    public static final int SIZE_FIELD_NUMBER = 4;
+    private int size_;
+    
+    public boolean hasSize() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    
+    public int getSize() {
+      return size_;
+    }
+
+    public static final int THUMBNAIL_FIELD_NUMBER = 5;
+    private com.google.protobuf.ByteString thumbnail_;
+    
+    public boolean hasThumbnail() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    
+    public com.google.protobuf.ByteString getThumbnail() {
+      return thumbnail_;
+    }
+
     private void initFields() {
       id_ = 0L;
       contentType_ = "";
       key_ = com.google.protobuf.ByteString.EMPTY;
+      size_ = 0;
+      thumbnail_ = com.google.protobuf.ByteString.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -5823,6 +5867,12 @@ public final class OpenchatServiceProtos {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeBytes(3, key_);
       }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeUInt32(4, size_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeBytes(5, thumbnail_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -5843,6 +5893,14 @@ public final class OpenchatServiceProtos {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, key_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(4, size_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(5, thumbnail_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -5963,6 +6021,10 @@ public final class OpenchatServiceProtos {
         bitField0_ = (bitField0_ & ~0x00000002);
         key_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000004);
+        size_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        thumbnail_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -6003,6 +6065,14 @@ public final class OpenchatServiceProtos {
           to_bitField0_ |= 0x00000004;
         }
         result.key_ = key_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.size_ = size_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.thumbnail_ = thumbnail_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -6029,6 +6099,12 @@ public final class OpenchatServiceProtos {
         }
         if (other.hasKey()) {
           setKey(other.getKey());
+        }
+        if (other.hasSize()) {
+          setSize(other.getSize());
+        }
+        if (other.hasThumbnail()) {
+          setThumbnail(other.getThumbnail());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -6165,6 +6241,57 @@ public final class OpenchatServiceProtos {
       public Builder clearKey() {
         bitField0_ = (bitField0_ & ~0x00000004);
         key_ = getDefaultInstance().getKey();
+        onChanged();
+        return this;
+      }
+
+      private int size_ ;
+      
+      public boolean hasSize() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      
+      public int getSize() {
+        return size_;
+      }
+      
+      public Builder setSize(int value) {
+        bitField0_ |= 0x00000008;
+        size_ = value;
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearSize() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        size_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString thumbnail_ = com.google.protobuf.ByteString.EMPTY;
+      
+      public boolean hasThumbnail() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      
+      public com.google.protobuf.ByteString getThumbnail() {
+        return thumbnail_;
+      }
+      
+      public Builder setThumbnail(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        thumbnail_ = value;
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearThumbnail() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        thumbnail_ = getDefaultInstance().getThumbnail();
         onChanged();
         return this;
       }
@@ -9802,7 +9929,7 @@ public final class OpenchatServiceProtos {
           internal_static_openchatservice_AttachmentPointer_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_openchatservice_AttachmentPointer_descriptor,
-              new java.lang.String[] { "Id", "ContentType", "Key", });
+              new java.lang.String[] { "Id", "ContentType", "Key", "Size", "Thumbnail", });
           internal_static_openchatservice_GroupContext_descriptor =
             getDescriptor().getMessageTypes().get(5);
           internal_static_openchatservice_GroupContext_fieldAccessorTable = new

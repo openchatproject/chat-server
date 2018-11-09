@@ -16,6 +16,7 @@ import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
 import com.openchat.protocal.protocol.OpenchatMessage;
 import com.openchat.protocal.state.OpenchatStore;
+import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentPointer;
 import com.openchat.imservice.api.messages.OpenchatServiceContent;
@@ -130,7 +131,9 @@ public class OpenchatServiceCipher {
       attachments.add(new OpenchatServiceAttachmentPointer(pointer.getId(),
                                                       pointer.getContentType(),
                                                       pointer.getKey().toByteArray(),
-                                                      envelope.getRelay()));
+                                                      envelope.getRelay(),
+                                                      pointer.hasSize() ? Optional.of(pointer.getSize()) : Optional.<Integer>absent(),
+                                                      pointer.hasThumbnail() ? Optional.of(pointer.getThumbnail().toByteArray()): Optional.<byte[]>absent()));
     }
 
     return new OpenchatServiceDataMessage(envelope.getTimestamp(), groupInfo, attachments,
