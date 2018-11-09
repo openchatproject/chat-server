@@ -2,6 +2,8 @@ package com.openchat.imservice.api;
 
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.imservice.api.crypto.AttachmentCipherInputStream;
+import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
+import com.openchat.imservice.api.messages.OpenchatServiceAttachment.ProgressListener;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentPointer;
 import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
@@ -41,10 +43,10 @@ public class OpenchatServiceMessageReceiver {
   }
 
   
-  public InputStream retrieveAttachment(OpenchatServiceAttachmentPointer pointer, File destination)
+  public InputStream retrieveAttachment(OpenchatServiceAttachmentPointer pointer, File destination, ProgressListener listener)
       throws IOException, InvalidMessageException
   {
-    socket.retrieveAttachment(pointer.getRelay().orNull(), pointer.getId(), destination);
+    socket.retrieveAttachment(pointer.getRelay().orNull(), pointer.getId(), destination, listener);
     return new AttachmentCipherInputStream(destination, pointer.getKey());
   }
 
