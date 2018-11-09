@@ -67,7 +67,9 @@ public abstract class OpenchatServiceAttachment {
     }
   }
 
+  
   public interface ProgressListener {
+    
     public void onAttachmentProgress(long total, long progress);
   }
 }

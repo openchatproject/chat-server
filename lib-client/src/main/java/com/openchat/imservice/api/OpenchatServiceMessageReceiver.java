@@ -43,6 +43,13 @@ public class OpenchatServiceMessageReceiver {
   }
 
   
+  public InputStream retrieveAttachment(OpenchatServiceAttachmentPointer pointer, File destination)
+      throws IOException, InvalidMessageException
+  {
+    return retrieveAttachment(pointer, destination, null);
+  }
+
+  
   public InputStream retrieveAttachment(OpenchatServiceAttachmentPointer pointer, File destination, ProgressListener listener)
       throws IOException, InvalidMessageException
   {
