@@ -16,6 +16,7 @@ import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentStream;
 import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
+import com.openchat.imservice.api.messages.multidevice.ReadMessage;
 import com.openchat.imservice.api.messages.multidevice.OpenchatServiceSyncMessage;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.api.push.TrustStore;
@@ -120,6 +121,8 @@ public class OpenchatServiceMessageSender {
       content = createMultiDeviceContactsContent(message.getContacts().get().asStream());
     } else if (message.getGroups().isPresent()) {
       content = createMultiDeviceGroupsContent(message.getGroups().get().asStream());
+    } else if (message.getRead().isPresent()) {
+      content = createMultiDeviceReadContent(message.getRead().get());
     } else {
       throw new IOException("Unsupported sync message!");
     }
@@ -185,6 +188,15 @@ public class OpenchatServiceMessageSender {
     } catch (InvalidProtocolBufferException e) {
       throw new AssertionError(e);
     }
+  }
+
+  private byte[] createMultiDeviceReadContent(ReadMessage readMessage) {
+    Content.Builder     container = Content.newBuilder();
+    SyncMessage.Builder builder   = SyncMessage.newBuilder();
+
+    builder.setRead(SyncMessage.Read.newBuilder().addAllTimestamps(readMessage.getTimestamps()));
+
+    return container.setSyncMessage(builder).build().toByteArray();
   }
 
   private GroupContext createGroupContent(OpenchatServiceGroup group) throws IOException {
