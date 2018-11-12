@@ -8519,6 +8519,11 @@ public final class OpenchatServiceProtos {
     com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar getAvatar();
     
     com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.AvatarOrBuilder getAvatarOrBuilder();
+
+    
+    boolean hasActive();
+    
+    boolean getActive();
   }
   
   public static final class GroupDetails extends
@@ -8597,6 +8602,11 @@ public final class OpenchatServiceProtos {
                 avatar_ = subBuilder.buildPartial();
               }
               bitField0_ |= 0x00000004;
+              break;
+            }
+            case 40: {
+              bitField0_ |= 0x00000008;
+              active_ = input.readBool();
               break;
             }
           }
@@ -9223,11 +9233,23 @@ public final class OpenchatServiceProtos {
       return avatar_;
     }
 
+    public static final int ACTIVE_FIELD_NUMBER = 5;
+    private boolean active_;
+    
+    public boolean hasActive() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    
+    public boolean getActive() {
+      return active_;
+    }
+
     private void initFields() {
       id_ = com.google.protobuf.ByteString.EMPTY;
       name_ = "";
       members_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       avatar_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.getDefaultInstance();
+      active_ = true;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -9252,6 +9274,9 @@ public final class OpenchatServiceProtos {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeMessage(4, avatar_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeBool(5, active_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -9282,6 +9307,10 @@ public final class OpenchatServiceProtos {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, avatar_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(5, active_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -9409,6 +9438,8 @@ public final class OpenchatServiceProtos {
           avatarBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000008);
+        active_ = true;
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -9459,6 +9490,10 @@ public final class OpenchatServiceProtos {
         } else {
           result.avatar_ = avatarBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.active_ = active_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -9495,6 +9530,9 @@ public final class OpenchatServiceProtos {
         }
         if (other.hasAvatar()) {
           mergeAvatar(other.getAvatar());
+        }
+        if (other.hasActive()) {
+          setActive(other.getActive());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -9783,6 +9821,30 @@ public final class OpenchatServiceProtos {
         return avatarBuilder_;
       }
 
+      private boolean active_ = true;
+      
+      public boolean hasActive() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      
+      public boolean getActive() {
+        return active_;
+      }
+      
+      public Builder setActive(boolean value) {
+        bitField0_ |= 0x00000010;
+        active_ = value;
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearActive() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        active_ = true;
+        onChanged();
+        return this;
+      }
+
     }
 
     static {
@@ -9953,7 +10015,7 @@ public final class OpenchatServiceProtos {
           internal_static_openchatservice_GroupDetails_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_openchatservice_GroupDetails_descriptor,
-              new java.lang.String[] { "Id", "Name", "Members", "Avatar", });
+              new java.lang.String[] { "Id", "Name", "Members", "Avatar", "Active", });
           internal_static_openchatservice_GroupDetails_Avatar_descriptor =
             internal_static_openchatservice_GroupDetails_descriptor.getNestedTypes().get(0);
           internal_static_openchatservice_GroupDetails_Avatar_fieldAccessorTable = new
