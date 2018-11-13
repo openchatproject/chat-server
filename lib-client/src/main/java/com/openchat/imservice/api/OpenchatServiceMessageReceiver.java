@@ -2,7 +2,6 @@ package com.openchat.imservice.api;
 
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.imservice.api.crypto.AttachmentCipherInputStream;
-import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment.ProgressListener;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentPointer;
 import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
@@ -30,15 +29,15 @@ public class OpenchatServiceMessageReceiver {
 
   
   public OpenchatServiceMessageReceiver(String url, TrustStore trustStore,
-                                   String user, String password,
-                                   String openchatingKey, String userAgent)
+                                      String user, String password,
+                                      String openchatingKey, String userAgent)
   {
     this(url, trustStore, new StaticCredentialsProvider(user, password, openchatingKey), userAgent);
   }
 
   
   public OpenchatServiceMessageReceiver(String url, TrustStore trustStore,
-                                   CredentialsProvider credentials, String userAgent)
+                                      CredentialsProvider credentials, String userAgent)
   {
     this.url                 = url;
     this.trustStore          = trustStore;
@@ -80,9 +79,9 @@ public class OpenchatServiceMessageReceiver {
 
     for (OpenchatServiceEnvelopeEntity entity : entities) {
       OpenchatServiceEnvelope envelope =  new OpenchatServiceEnvelope(entity.getType(), entity.getSource(),
-                                                            entity.getSourceDevice(), entity.getRelay(),
-                                                            entity.getTimestamp(), entity.getMessage(),
-                                                            entity.getContent());
+                                                                  entity.getSourceDevice(), entity.getRelay(),
+                                                                  entity.getTimestamp(), entity.getMessage(),
+                                                                  entity.getContent());
 
       callback.onMessage(envelope);
       results.add(envelope);

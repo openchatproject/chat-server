@@ -38,8 +38,8 @@ public class OpenchatServiceAccountManager {
 
   
   public OpenchatServiceAccountManager(String url, TrustStore trustStore,
-                                  String user, String password,
-                                  String userAgent)
+                                     String user, String password,
+                                     String userAgent)
   {
     this.pushServiceSocket = new PushServiceSocket(url, trustStore, new StaticCredentialsProvider(user, password, null), userAgent);
     this.user              = user;
@@ -66,11 +66,11 @@ public class OpenchatServiceAccountManager {
   }
 
   
-  public void verifyAccountWithCode(String verificationCode, String openchatingKey, int axolotlRegistrationId, boolean voice)
+  public void verifyAccountWithCode(String verificationCode, String openchatingKey, int openchatProtocolRegistrationId, boolean voice)
       throws IOException
   {
     this.pushServiceSocket.verifyAccountCode(verificationCode, openchatingKey,
-                                             axolotlRegistrationId, voice);
+                                             openchatProtocolRegistrationId, voice);
   }
 
   
@@ -81,10 +81,10 @@ public class OpenchatServiceAccountManager {
   }
 
   
-  public void setAccountAttributes(String openchatingKey, int axolotlRegistrationId, boolean voice)
+  public void setAccountAttributes(String openchatingKey, int openchatProtocolRegistrationId, boolean voice)
       throws IOException
   {
-    this.pushServiceSocket.setAccountAttributes(openchatingKey, axolotlRegistrationId, voice);
+    this.pushServiceSocket.setAccountAttributes(openchatingKey, openchatProtocolRegistrationId, voice);
   }
 
   

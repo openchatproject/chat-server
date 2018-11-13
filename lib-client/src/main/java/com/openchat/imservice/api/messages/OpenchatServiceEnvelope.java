@@ -64,8 +64,8 @@ public class OpenchatServiceEnvelope {
   }
 
   public OpenchatServiceEnvelope(int type, String source, int sourceDevice,
-                            String relay, long timestamp,
-                            byte[] legacyMessage, byte[] content)
+                               String relay, long timestamp,
+                               byte[] legacyMessage, byte[] content)
   {
     Envelope.Builder builder = Envelope.newBuilder()
                                        .setType(Envelope.Type.valueOf(type))
@@ -93,7 +93,7 @@ public class OpenchatServiceEnvelope {
   
   public OpenchatServiceAddress getSourceAddress() {
     return new OpenchatServiceAddress(envelope.getSource(),
-                                 envelope.hasRelay() ? Optional.fromNullable(envelope.getRelay()) :
+                                    envelope.hasRelay() ? Optional.fromNullable(envelope.getRelay()) :
                                                      Optional.<String>absent());
   }
 

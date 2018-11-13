@@ -51,15 +51,15 @@ public class OpenchatServiceMessageSender {
 
   private final PushServiceSocket       socket;
   private final OpenchatProtocolStore     store;
-  private final OpenchatServiceAddress       localAddress;
+  private final OpenchatServiceAddress localAddress;
   private final Optional<EventListener> eventListener;
 
   
   public OpenchatServiceMessageSender(String url, TrustStore trustStore,
-                                 String user, String password,
-                                 OpenchatProtocolStore store,
-                                 String userAgent,
-                                 Optional<EventListener> eventListener)
+                                    String user, String password,
+                                    OpenchatProtocolStore store,
+                                    String userAgent,
+                                    Optional<EventListener> eventListener)
   {
     this.socket        = new PushServiceSocket(url, trustStore, new StaticCredentialsProvider(user, password, null), userAgent);
     this.store         = store;
@@ -343,7 +343,7 @@ public class OpenchatServiceMessageSender {
       throws IOException, UntrustedIdentityException
   {
     OpenchatProtocolAddress openchatProtocolAddress = new OpenchatProtocolAddress(recipient.getNumber(), deviceId);
-    OpenchatServiceCipher      cipher                = new OpenchatServiceCipher(localAddress, store);
+    OpenchatServiceCipher cipher                = new OpenchatServiceCipher(localAddress, store);
 
     if (!store.containsSession(openchatProtocolAddress)) {
       try {

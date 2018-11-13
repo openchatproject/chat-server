@@ -42,7 +42,7 @@ public class OpenchatServiceMessagePipe {
       try {
         if (isOpenchatServiceEnvelope(request)) {
           OpenchatServiceEnvelope envelope = new OpenchatServiceEnvelope(request.getBody().toByteArray(),
-                                                               credentialsProvider.getOpenchatingKey());
+                                                                     credentialsProvider.getOpenchatingKey());
 
           callback.onMessage(envelope);
           return envelope;

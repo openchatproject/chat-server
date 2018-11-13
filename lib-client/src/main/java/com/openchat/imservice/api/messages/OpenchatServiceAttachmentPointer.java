@@ -1,6 +1,7 @@
 package com.openchat.imservice.api.messages;
 
 import com.openchat.protocal.util.guava.Optional;
+import com.openchat.imservice.api.OpenchatServiceMessageReceiver;
 
 public class OpenchatServiceAttachmentPointer extends OpenchatServiceAttachment {
 
@@ -15,7 +16,7 @@ public class OpenchatServiceAttachmentPointer extends OpenchatServiceAttachment 
   }
 
   public OpenchatServiceAttachmentPointer(long id, String contentType, byte[] key, String relay,
-                                     Optional<Integer> size, Optional<byte[]> preview)
+                                        Optional<Integer> size, Optional<byte[]> preview)
   {
     super(contentType);
     this.id      = id;

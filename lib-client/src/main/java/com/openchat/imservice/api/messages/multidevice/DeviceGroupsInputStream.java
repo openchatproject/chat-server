@@ -26,11 +26,11 @@ public class DeviceGroupsInputStream extends ChunkedInputStream{
       throw new IOException("ID missing on group record!");
     }
 
-    byte[]                               id      = details.getId().toByteArray();
-    Optional<String>                     name    = Optional.fromNullable(details.getName());
-    List<String>                         members = details.getMembersList();
+    byte[]                                  id      = details.getId().toByteArray();
+    Optional<String>                        name    = Optional.fromNullable(details.getName());
+    List<String>                            members = details.getMembersList();
     Optional<OpenchatServiceAttachmentStream> avatar  = Optional.absent();
-    boolean                              active  = details.getActive();
+    boolean                                 active  = details.getActive();
 
     if (details.hasAvatar()) {
       long        avatarLength      = details.getAvatar().getLength();

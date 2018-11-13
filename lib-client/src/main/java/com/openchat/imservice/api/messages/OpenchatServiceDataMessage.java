@@ -7,11 +7,11 @@ import java.util.List;
 
 public class OpenchatServiceDataMessage {
 
-  private final long                                 timestamp;
+  private final long                                    timestamp;
   private final Optional<List<OpenchatServiceAttachment>> attachments;
-  private final Optional<String>                     body;
+  private final Optional<String>                        body;
   private final Optional<OpenchatServiceGroup>            group;
-  private final boolean                              endSession;
+  private final boolean                                 endSession;
 
   
   public OpenchatServiceDataMessage(long timestamp, String body) {
@@ -82,7 +82,7 @@ public class OpenchatServiceDataMessage {
 
     private List<OpenchatServiceAttachment> attachments = new LinkedList<>();
     private long                       timestamp;
-    private OpenchatServiceGroup            group;
+    private OpenchatServiceGroup group;
     private String                     body;
     private boolean                    endSession;
 

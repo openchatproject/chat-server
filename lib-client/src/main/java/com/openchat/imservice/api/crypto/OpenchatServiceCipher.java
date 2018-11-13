@@ -124,29 +124,29 @@ public class OpenchatServiceCipher {
   }
 
   private OpenchatServiceDataMessage createOpenchatServiceMessage(OpenchatServiceEnvelope envelope, DataMessage content) {
-    OpenchatServiceGroup            groupInfo   = createGroupInfo(envelope, content);
+    OpenchatServiceGroup groupInfo   = createGroupInfo(envelope, content);
     List<OpenchatServiceAttachment> attachments = new LinkedList<>();
     boolean                    endSession  = ((content.getFlags() & DataMessage.Flags.END_SESSION_VALUE) != 0);
 
     for (AttachmentPointer pointer : content.getAttachmentsList()) {
       attachments.add(new OpenchatServiceAttachmentPointer(pointer.getId(),
-                                                      pointer.getContentType(),
-                                                      pointer.getKey().toByteArray(),
-                                                      envelope.getRelay(),
-                                                      pointer.hasSize() ? Optional.of(pointer.getSize()) : Optional.<Integer>absent(),
-                                                      pointer.hasThumbnail() ? Optional.of(pointer.getThumbnail().toByteArray()): Optional.<byte[]>absent()));
+                                                         pointer.getContentType(),
+                                                         pointer.getKey().toByteArray(),
+                                                         envelope.getRelay(),
+                                                         pointer.hasSize() ? Optional.of(pointer.getSize()) : Optional.<Integer>absent(),
+                                                         pointer.hasThumbnail() ? Optional.of(pointer.getThumbnail().toByteArray()): Optional.<byte[]>absent()));
     }
 
     return new OpenchatServiceDataMessage(envelope.getTimestamp(), groupInfo, attachments,
-                                     content.getBody(), endSession);
+                                        content.getBody(), endSession);
   }
 
   private OpenchatServiceSyncMessage createSynchronizeMessage(OpenchatServiceEnvelope envelope, SyncMessage content) {
     if (content.hasSent()) {
       SyncMessage.Sent sentContent = content.getSent();
       return OpenchatServiceSyncMessage.forSentTranscript(new SentTranscriptMessage(sentContent.getDestination(),
-                                                                               sentContent.getTimestamp(),
-                                                                               createOpenchatServiceMessage(envelope, sentContent.getMessage())));
+                                                                                  sentContent.getTimestamp(),
+                                                                                  createOpenchatServiceMessage(envelope, sentContent.getMessage())));
     }
 
     if (content.hasRequest()) {
@@ -193,9 +193,9 @@ public class OpenchatServiceCipher {
 
       if (content.getGroup().hasAvatar()) {
         avatar = new OpenchatServiceAttachmentPointer(content.getGroup().getAvatar().getId(),
-                                                 content.getGroup().getAvatar().getContentType(),
-                                                 content.getGroup().getAvatar().getKey().toByteArray(),
-                                                 envelope.getRelay());
+                                                    content.getGroup().getAvatar().getContentType(),
+                                                    content.getGroup().getAvatar().getKey().toByteArray(),
+                                                    envelope.getRelay());
       }
 
       return new OpenchatServiceGroup(type, content.getGroup().getId().toByteArray(), name, members, avatar);

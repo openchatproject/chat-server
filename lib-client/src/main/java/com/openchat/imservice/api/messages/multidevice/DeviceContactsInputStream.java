@@ -20,8 +20,8 @@ public class DeviceContactsInputStream extends ChunkedInputStream {
     Util.readFully(in, detailsSerialized);
 
     OpenchatServiceProtos.ContactDetails      details = OpenchatServiceProtos.ContactDetails.parseFrom(detailsSerialized);
-    String                               number  = details.getNumber();
-    Optional<String>                     name    = Optional.fromNullable(details.getName());
+    String                                  number  = details.getNumber();
+    Optional<String>                        name    = Optional.fromNullable(details.getName());
     Optional<OpenchatServiceAttachmentStream> avatar  = Optional.absent();
 
     if (details.hasAvatar()) {

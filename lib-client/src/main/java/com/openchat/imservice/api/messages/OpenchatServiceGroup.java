@@ -26,8 +26,8 @@ public class OpenchatServiceGroup {
 
   
   public OpenchatServiceGroup(Type type, byte[] groupId, String name,
-                         List<String> members,
-                         OpenchatServiceAttachment avatar)
+                            List<String> members,
+                            OpenchatServiceAttachment avatar)
   {
     this.type    = type;
     this.groupId = groupId;
