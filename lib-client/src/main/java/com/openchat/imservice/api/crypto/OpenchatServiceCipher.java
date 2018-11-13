@@ -2,7 +2,7 @@ package com.openchat.imservice.api.crypto;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import com.openchat.protocal.OpenchatAddress;
+import com.openchat.protocal.OpenchatProtocolAddress;
 import com.openchat.protocal.DuplicateMessageException;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.InvalidKeyIdException;
@@ -15,7 +15,7 @@ import com.openchat.protocal.UntrustedIdentityException;
 import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
 import com.openchat.protocal.protocol.OpenchatMessage;
-import com.openchat.protocal.state.OpenchatStore;
+import com.openchat.protocal.state.OpenchatProtocolStore;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentPointer;
@@ -46,16 +46,16 @@ public class OpenchatServiceCipher {
 
   private static final String TAG = OpenchatServiceCipher.class.getSimpleName();
 
-  private final OpenchatStore      axolotlStore;
+  private final OpenchatProtocolStore      openchatProtocolStore;
   private final OpenchatServiceAddress localAddress;
 
-  public OpenchatServiceCipher(OpenchatServiceAddress localAddress, OpenchatStore axolotlStore) {
-    this.axolotlStore = axolotlStore;
+  public OpenchatServiceCipher(OpenchatServiceAddress localAddress, OpenchatProtocolStore openchatProtocolStore) {
+    this.openchatProtocolStore = openchatProtocolStore;
     this.localAddress = localAddress;
   }
 
-  public OutgoingPushMessage encrypt(OpenchatAddress destination, byte[] unpaddedMessage, boolean legacy) {
-    SessionCipher        sessionCipher        = new SessionCipher(axolotlStore, destination);
+  public OutgoingPushMessage encrypt(OpenchatProtocolAddress destination, byte[] unpaddedMessage, boolean legacy) {
+    SessionCipher        sessionCipher        = new SessionCipher(openchatProtocolStore, destination);
     PushTransportDetails transportDetails     = new PushTransportDetails(sessionCipher.getSessionVersion());
     CiphertextMessage    message              = sessionCipher.encrypt(transportDetails.getPaddedMessageBody(unpaddedMessage));
     int                  remoteRegistrationId = sessionCipher.getRemoteRegistrationId();
@@ -106,8 +106,8 @@ public class OpenchatServiceCipher {
              DuplicateMessageException, InvalidKeyIdException, UntrustedIdentityException,
              LegacyMessageException, NoSessionException
   {
-    OpenchatAddress sourceAddress = new OpenchatAddress(envelope.getSource(), envelope.getSourceDevice());
-    SessionCipher  sessionCipher = new SessionCipher(axolotlStore, sourceAddress);
+    OpenchatProtocolAddress sourceAddress = new OpenchatProtocolAddress(envelope.getSource(), envelope.getSourceDevice());
+    SessionCipher         sessionCipher = new SessionCipher(openchatProtocolStore, sourceAddress);
 
     byte[] paddedMessage;
 

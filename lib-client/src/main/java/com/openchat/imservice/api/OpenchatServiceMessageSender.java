@@ -3,11 +3,11 @@ package com.openchat.imservice.api;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import com.openchat.protocal.OpenchatAddress;
+import com.openchat.protocal.OpenchatProtocolAddress;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.SessionBuilder;
 import com.openchat.protocal.logging.Log;
-import com.openchat.protocal.state.OpenchatStore;
+import com.openchat.protocal.state.OpenchatProtocolStore;
 import com.openchat.protocal.state.PreKeyBundle;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.crypto.OpenchatServiceCipher;
@@ -50,14 +50,14 @@ public class OpenchatServiceMessageSender {
   private static final String TAG = OpenchatServiceMessageSender.class.getSimpleName();
 
   private final PushServiceSocket       socket;
-  private final OpenchatStore            store;
+  private final OpenchatProtocolStore     store;
   private final OpenchatServiceAddress       localAddress;
   private final Optional<EventListener> eventListener;
 
   
   public OpenchatServiceMessageSender(String url, TrustStore trustStore,
                                  String user, String password,
-                                 OpenchatStore store,
+                                 OpenchatProtocolStore store,
                                  String userAgent,
                                  Optional<EventListener> eventListener)
   {
@@ -342,17 +342,17 @@ public class OpenchatServiceMessageSender {
   private OutgoingPushMessage getEncryptedMessage(PushServiceSocket socket, OpenchatServiceAddress recipient, int deviceId, byte[] plaintext, boolean legacy)
       throws IOException, UntrustedIdentityException
   {
-    OpenchatAddress   axolotlAddress = new OpenchatAddress(recipient.getNumber(), deviceId);
-    OpenchatServiceCipher cipher         = new OpenchatServiceCipher(localAddress, store);
+    OpenchatProtocolAddress openchatProtocolAddress = new OpenchatProtocolAddress(recipient.getNumber(), deviceId);
+    OpenchatServiceCipher      cipher                = new OpenchatServiceCipher(localAddress, store);
 
-    if (!store.containsSession(axolotlAddress)) {
+    if (!store.containsSession(openchatProtocolAddress)) {
       try {
         List<PreKeyBundle> preKeys = socket.getPreKeys(recipient, deviceId);
 
         for (PreKeyBundle preKey : preKeys) {
           try {
-            OpenchatAddress preKeyAddress  = new OpenchatAddress(recipient.getNumber(), preKey.getDeviceId());
-            SessionBuilder sessionBuilder = new SessionBuilder(store, preKeyAddress);
+            OpenchatProtocolAddress preKeyAddress  = new OpenchatProtocolAddress(recipient.getNumber(), preKey.getDeviceId());
+            SessionBuilder        sessionBuilder = new SessionBuilder(store, preKeyAddress);
             sessionBuilder.process(preKey);
           } catch (com.openchat.protocal.UntrustedIdentityException e) {
             throw new UntrustedIdentityException("Untrusted identity key!", recipient.getNumber(), preKey.getIdentityKey());
@@ -367,7 +367,7 @@ public class OpenchatServiceMessageSender {
       }
     }
 
-    return cipher.encrypt(axolotlAddress, plaintext, legacy);
+    return cipher.encrypt(openchatProtocolAddress, plaintext, legacy);
   }
 
   private void handleMismatchedDevices(PushServiceSocket socket, OpenchatServiceAddress recipient,
@@ -376,14 +376,14 @@ public class OpenchatServiceMessageSender {
   {
     try {
       for (int extraDeviceId : mismatchedDevices.getExtraDevices()) {
-        store.deleteSession(new OpenchatAddress(recipient.getNumber(), extraDeviceId));
+        store.deleteSession(new OpenchatProtocolAddress(recipient.getNumber(), extraDeviceId));
       }
 
       for (int missingDeviceId : mismatchedDevices.getMissingDevices()) {
         PreKeyBundle preKey = socket.getPreKey(recipient, missingDeviceId);
 
         try {
-          SessionBuilder sessionBuilder = new SessionBuilder(store, new OpenchatAddress(recipient.getNumber(), missingDeviceId));
+          SessionBuilder sessionBuilder = new SessionBuilder(store, new OpenchatProtocolAddress(recipient.getNumber(), missingDeviceId));
           sessionBuilder.process(preKey);
         } catch (com.openchat.protocal.UntrustedIdentityException e) {
           throw new UntrustedIdentityException("Untrusted identity key!", recipient.getNumber(), preKey.getIdentityKey());
@@ -396,7 +396,7 @@ public class OpenchatServiceMessageSender {
 
   private void handleStaleDevices(OpenchatServiceAddress recipient, StaleDevices staleDevices) {
     for (int staleDeviceId : staleDevices.getStaleDevices()) {
-      store.deleteSession(new OpenchatAddress(recipient.getNumber(), staleDeviceId));
+      store.deleteSession(new OpenchatProtocolAddress(recipient.getNumber(), staleDeviceId));
     }
   }
 
