@@ -4,25 +4,28 @@ import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class OpenchatServiceSyncMessage {
 
   private final Optional<SentTranscriptMessage> sent;
   private final Optional<OpenchatServiceAttachment>  contacts;
   private final Optional<OpenchatServiceAttachment>  groups;
   private final Optional<RequestMessage>        request;
-  private final Optional<ReadMessage>           read;
+  private final Optional<List<ReadMessage>>     reads;
 
   private OpenchatServiceSyncMessage(Optional<SentTranscriptMessage> sent,
                                 Optional<OpenchatServiceAttachment>  contacts,
                                 Optional<OpenchatServiceAttachment>  groups,
                                 Optional<RequestMessage>        request,
-                                Optional<ReadMessage>           read)
+                                Optional<List<ReadMessage>>     reads)
   {
     this.sent     = sent;
     this.contacts = contacts;
     this.groups   = groups;
     this.request  = request;
-    this.read     = read;
+    this.reads    = reads;
   }
 
   public static OpenchatServiceSyncMessage forSentTranscript(SentTranscriptMessage sent) {
@@ -30,7 +33,7 @@ public class OpenchatServiceSyncMessage {
                                      Optional.<OpenchatServiceAttachment>absent(),
                                      Optional.<OpenchatServiceAttachment>absent(),
                                      Optional.<RequestMessage>absent(),
-                                     Optional.<ReadMessage>absent());
+                                     Optional.<List<ReadMessage>>absent());
   }
 
   public static OpenchatServiceSyncMessage forContacts(OpenchatServiceAttachment contacts) {
@@ -38,7 +41,7 @@ public class OpenchatServiceSyncMessage {
                                      Optional.of(contacts),
                                      Optional.<OpenchatServiceAttachment>absent(),
                                      Optional.<RequestMessage>absent(),
-                                     Optional.<ReadMessage>absent());
+                                     Optional.<List<ReadMessage>>absent());
   }
 
   public static OpenchatServiceSyncMessage forGroups(OpenchatServiceAttachment groups) {
@@ -46,7 +49,7 @@ public class OpenchatServiceSyncMessage {
                                      Optional.<OpenchatServiceAttachment>absent(),
                                      Optional.of(groups),
                                      Optional.<RequestMessage>absent(),
-                                     Optional.<ReadMessage>absent());
+                                     Optional.<List<ReadMessage>>absent());
   }
 
   public static OpenchatServiceSyncMessage forRequest(RequestMessage request) {
@@ -54,15 +57,26 @@ public class OpenchatServiceSyncMessage {
                                      Optional.<OpenchatServiceAttachment>absent(),
                                      Optional.<OpenchatServiceAttachment>absent(),
                                      Optional.of(request),
-                                     Optional.<ReadMessage>absent());
+                                     Optional.<List<ReadMessage>>absent());
   }
 
-  public static OpenchatServiceSyncMessage forRead(ReadMessage read) {
+  public static OpenchatServiceSyncMessage forRead(List<ReadMessage> reads) {
     return new OpenchatServiceSyncMessage(Optional.<SentTranscriptMessage>absent(),
                                      Optional.<OpenchatServiceAttachment>absent(),
                                      Optional.<OpenchatServiceAttachment>absent(),
                                      Optional.<RequestMessage>absent(),
-                                     Optional.of(read));
+                                     Optional.of(reads));
+  }
+
+  public static OpenchatServiceSyncMessage forRead(ReadMessage read) {
+    List<ReadMessage> reads = new LinkedList<>();
+    reads.add(read);
+
+    return new OpenchatServiceSyncMessage(Optional.<SentTranscriptMessage>absent(),
+                                     Optional.<OpenchatServiceAttachment>absent(),
+                                     Optional.<OpenchatServiceAttachment>absent(),
+                                     Optional.<RequestMessage>absent(),
+                                     Optional.of(reads));
   }
 
   public static OpenchatServiceSyncMessage empty() {
@@ -70,7 +84,7 @@ public class OpenchatServiceSyncMessage {
                                      Optional.<OpenchatServiceAttachment>absent(),
                                      Optional.<OpenchatServiceAttachment>absent(),
                                      Optional.<RequestMessage>absent(),
-                                     Optional.<ReadMessage>absent());
+                                     Optional.<List<ReadMessage>>absent());
   }
 
   public Optional<SentTranscriptMessage> getSent() {
@@ -89,8 +103,8 @@ public class OpenchatServiceSyncMessage {
     return request;
   }
 
-  public Optional<ReadMessage> getRead() {
-    return read;
+  public Optional<List<ReadMessage>> getRead() {
+    return reads;
   }
 
 }

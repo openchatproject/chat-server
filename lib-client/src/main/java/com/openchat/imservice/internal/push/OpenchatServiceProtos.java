@@ -2662,11 +2662,18 @@ public final class OpenchatServiceProtos {
     com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.RequestOrBuilder getRequestOrBuilder();
 
     
-    boolean hasRead();
+    java.util.List<com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read> 
+        getReadList();
     
-    com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read getRead();
+    com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read getRead(int index);
     
-    com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.ReadOrBuilder getReadOrBuilder();
+    int getReadCount();
+    
+    java.util.List<? extends com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.ReadOrBuilder> 
+        getReadOrBuilderList();
+    
+    com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.ReadOrBuilder getReadOrBuilder(
+        int index);
   }
   
   public static final class SyncMessage extends
@@ -2769,16 +2776,11 @@ public final class OpenchatServiceProtos {
               break;
             }
             case 42: {
-              com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000010) == 0x00000010)) {
-                subBuilder = read_.toBuilder();
+              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+                read_ = new java.util.ArrayList<com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read>();
+                mutable_bitField0_ |= 0x00000010;
               }
-              read_ = input.readMessage(com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.PARSER, extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(read_);
-                read_ = subBuilder.buildPartial();
-              }
-              bitField0_ |= 0x00000010;
+              read_.add(input.readMessage(com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.PARSER, extensionRegistry));
               break;
             }
           }
@@ -2789,6 +2791,9 @@ public final class OpenchatServiceProtos {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+          read_ = java.util.Collections.unmodifiableList(read_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -4866,11 +4871,17 @@ public final class OpenchatServiceProtos {
         extends com.google.protobuf.MessageOrBuilder {
 
       
-      java.util.List<java.lang.Long> getTimestampsList();
+      boolean hasSender();
       
-      int getTimestampsCount();
+      java.lang.String getSender();
       
-      long getTimestamps(int index);
+      com.google.protobuf.ByteString
+          getSenderBytes();
+
+      
+      boolean hasTimestamp();
+      
+      long getTimestamp();
     }
     
     public static final class Read extends
@@ -4920,25 +4931,14 @@ public final class OpenchatServiceProtos {
                 }
                 break;
               }
-              case 8: {
-                if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                  timestamps_ = new java.util.ArrayList<java.lang.Long>();
-                  mutable_bitField0_ |= 0x00000001;
-                }
-                timestamps_.add(input.readUInt64());
+              case 10: {
+                bitField0_ |= 0x00000001;
+                sender_ = input.readBytes();
                 break;
               }
-              case 10: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                if (!((mutable_bitField0_ & 0x00000001) == 0x00000001) && input.getBytesUntilLimit() > 0) {
-                  timestamps_ = new java.util.ArrayList<java.lang.Long>();
-                  mutable_bitField0_ |= 0x00000001;
-                }
-                while (input.getBytesUntilLimit() > 0) {
-                  timestamps_.add(input.readUInt64());
-                }
-                input.popLimit(limit);
+              case 16: {
+                bitField0_ |= 0x00000002;
+                timestamp_ = input.readUInt64();
                 break;
               }
             }
@@ -4949,9 +4949,6 @@ public final class OpenchatServiceProtos {
           throw new com.google.protobuf.InvalidProtocolBufferException(
               e.getMessage()).setUnfinishedMessage(this);
         } finally {
-          if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-            timestamps_ = java.util.Collections.unmodifiableList(timestamps_);
-          }
           this.unknownFields = unknownFields.build();
           makeExtensionsImmutable();
         }
@@ -4983,24 +4980,57 @@ public final class OpenchatServiceProtos {
         return PARSER;
       }
 
-      public static final int TIMESTAMPS_FIELD_NUMBER = 1;
-      private java.util.List<java.lang.Long> timestamps_;
+      private int bitField0_;
+      public static final int SENDER_FIELD_NUMBER = 1;
+      private java.lang.Object sender_;
       
-      public java.util.List<java.lang.Long>
-          getTimestampsList() {
-        return timestamps_;
+      public boolean hasSender() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       
-      public int getTimestampsCount() {
-        return timestamps_.size();
+      public java.lang.String getSender() {
+        java.lang.Object ref = sender_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            sender_ = s;
+          }
+          return s;
+        }
       }
       
-      public long getTimestamps(int index) {
-        return timestamps_.get(index);
+      public com.google.protobuf.ByteString
+          getSenderBytes() {
+        java.lang.Object ref = sender_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          sender_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      public static final int TIMESTAMP_FIELD_NUMBER = 2;
+      private long timestamp_;
+      
+      public boolean hasTimestamp() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      
+      public long getTimestamp() {
+        return timestamp_;
       }
 
       private void initFields() {
-        timestamps_ = java.util.Collections.emptyList();
+        sender_ = "";
+        timestamp_ = 0L;
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -5014,8 +5044,11 @@ public final class OpenchatServiceProtos {
       public void writeTo(com.google.protobuf.CodedOutputStream output)
                           throws java.io.IOException {
         getSerializedSize();
-        for (int i = 0; i < timestamps_.size(); i++) {
-          output.writeUInt64(1, timestamps_.get(i));
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeBytes(1, getSenderBytes());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          output.writeUInt64(2, timestamp_);
         }
         getUnknownFields().writeTo(output);
       }
@@ -5026,14 +5059,13 @@ public final class OpenchatServiceProtos {
         if (size != -1) return size;
 
         size = 0;
-        {
-          int dataSize = 0;
-          for (int i = 0; i < timestamps_.size(); i++) {
-            dataSize += com.google.protobuf.CodedOutputStream
-              .computeUInt64SizeNoTag(timestamps_.get(i));
-          }
-          size += dataSize;
-          size += 1 * getTimestampsList().size();
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(1, getSenderBytes());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeUInt64Size(2, timestamp_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSerializedSize = size;
@@ -5148,8 +5180,10 @@ public final class OpenchatServiceProtos {
 
         public Builder clear() {
           super.clear();
-          timestamps_ = java.util.Collections.emptyList();
+          sender_ = "";
           bitField0_ = (bitField0_ & ~0x00000001);
+          timestamp_ = 0L;
+          bitField0_ = (bitField0_ & ~0x00000002);
           return this;
         }
 
@@ -5177,11 +5211,16 @@ public final class OpenchatServiceProtos {
         public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read buildPartial() {
           com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read result = new com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read(this);
           int from_bitField0_ = bitField0_;
-          if (((bitField0_ & 0x00000001) == 0x00000001)) {
-            timestamps_ = java.util.Collections.unmodifiableList(timestamps_);
-            bitField0_ = (bitField0_ & ~0x00000001);
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
           }
-          result.timestamps_ = timestamps_;
+          result.sender_ = sender_;
+          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+            to_bitField0_ |= 0x00000002;
+          }
+          result.timestamp_ = timestamp_;
+          result.bitField0_ = to_bitField0_;
           onBuilt();
           return result;
         }
@@ -5197,15 +5236,13 @@ public final class OpenchatServiceProtos {
 
         public Builder mergeFrom(com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read other) {
           if (other == com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.getDefaultInstance()) return this;
-          if (!other.timestamps_.isEmpty()) {
-            if (timestamps_.isEmpty()) {
-              timestamps_ = other.timestamps_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureTimestampsIsMutable();
-              timestamps_.addAll(other.timestamps_);
-            }
+          if (other.hasSender()) {
+            bitField0_ |= 0x00000001;
+            sender_ = other.sender_;
             onChanged();
+          }
+          if (other.hasTimestamp()) {
+            setTimestamp(other.getTimestamp());
           }
           this.mergeUnknownFields(other.getUnknownFields());
           return this;
@@ -5234,53 +5271,87 @@ public final class OpenchatServiceProtos {
         }
         private int bitField0_;
 
-        private java.util.List<java.lang.Long> timestamps_ = java.util.Collections.emptyList();
-        private void ensureTimestampsIsMutable() {
-          if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-            timestamps_ = new java.util.ArrayList<java.lang.Long>(timestamps_);
-            bitField0_ |= 0x00000001;
-           }
+        private java.lang.Object sender_ = "";
+        
+        public boolean hasSender() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
         }
         
-        public java.util.List<java.lang.Long>
-            getTimestampsList() {
-          return java.util.Collections.unmodifiableList(timestamps_);
+        public java.lang.String getSender() {
+          java.lang.Object ref = sender_;
+          if (!(ref instanceof java.lang.String)) {
+            java.lang.String s = ((com.google.protobuf.ByteString) ref)
+                .toStringUtf8();
+            sender_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
         }
         
-        public int getTimestampsCount() {
-          return timestamps_.size();
+        public com.google.protobuf.ByteString
+            getSenderBytes() {
+          java.lang.Object ref = sender_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            sender_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
         }
         
-        public long getTimestamps(int index) {
-          return timestamps_.get(index);
-        }
-        
-        public Builder setTimestamps(
-            int index, long value) {
-          ensureTimestampsIsMutable();
-          timestamps_.set(index, value);
+        public Builder setSender(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          sender_ = value;
           onChanged();
           return this;
         }
         
-        public Builder addTimestamps(long value) {
-          ensureTimestampsIsMutable();
-          timestamps_.add(value);
-          onChanged();
-          return this;
-        }
-        
-        public Builder addAllTimestamps(
-            java.lang.Iterable<? extends java.lang.Long> values) {
-          ensureTimestampsIsMutable();
-          super.addAll(values, timestamps_);
-          onChanged();
-          return this;
-        }
-        
-        public Builder clearTimestamps() {
-          timestamps_ = java.util.Collections.emptyList();
+        public Builder clearSender() {
           bitField0_ = (bitField0_ & ~0x00000001);
+          sender_ = getDefaultInstance().getSender();
+          onChanged();
+          return this;
+        }
+        
+        public Builder setSenderBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          sender_ = value;
+          onChanged();
+          return this;
+        }
+
+        private long timestamp_ ;
+        
+        public boolean hasTimestamp() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        
+        public long getTimestamp() {
+          return timestamp_;
+        }
+        
+        public Builder setTimestamp(long value) {
+          bitField0_ |= 0x00000002;
+          timestamp_ = value;
+          onChanged();
+          return this;
+        }
+        
+        public Builder clearTimestamp() {
+          bitField0_ = (bitField0_ & ~0x00000002);
+          timestamp_ = 0L;
           onChanged();
           return this;
         }
@@ -5356,18 +5427,28 @@ public final class OpenchatServiceProtos {
     }
 
     public static final int READ_FIELD_NUMBER = 5;
-    private com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read read_;
+    private java.util.List<com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read> read_;
     
-    public boolean hasRead() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
-    }
-    
-    public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read getRead() {
+    public java.util.List<com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read> getReadList() {
       return read_;
     }
     
-    public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.ReadOrBuilder getReadOrBuilder() {
+    public java.util.List<? extends com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.ReadOrBuilder> 
+        getReadOrBuilderList() {
       return read_;
+    }
+    
+    public int getReadCount() {
+      return read_.size();
+    }
+    
+    public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read getRead(int index) {
+      return read_.get(index);
+    }
+    
+    public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.ReadOrBuilder getReadOrBuilder(
+        int index) {
+      return read_.get(index);
     }
 
     private void initFields() {
@@ -5375,7 +5456,7 @@ public final class OpenchatServiceProtos {
       contacts_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Contacts.getDefaultInstance();
       groups_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Groups.getDefaultInstance();
       request_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Request.getDefaultInstance();
-      read_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.getDefaultInstance();
+      read_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -5401,8 +5482,8 @@ public final class OpenchatServiceProtos {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeMessage(4, request_);
       }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeMessage(5, read_);
+      for (int i = 0; i < read_.size(); i++) {
+        output.writeMessage(5, read_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -5429,9 +5510,9 @@ public final class OpenchatServiceProtos {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, request_);
       }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+      for (int i = 0; i < read_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, read_);
+          .computeMessageSize(5, read_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -5576,11 +5657,11 @@ public final class OpenchatServiceProtos {
         }
         bitField0_ = (bitField0_ & ~0x00000008);
         if (readBuilder_ == null) {
-          read_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.getDefaultInstance();
+          read_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
         } else {
           readBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -5641,10 +5722,11 @@ public final class OpenchatServiceProtos {
         } else {
           result.request_ = requestBuilder_.build();
         }
-        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
-          to_bitField0_ |= 0x00000010;
-        }
         if (readBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) == 0x00000010)) {
+            read_ = java.util.Collections.unmodifiableList(read_);
+            bitField0_ = (bitField0_ & ~0x00000010);
+          }
           result.read_ = read_;
         } else {
           result.read_ = readBuilder_.build();
@@ -5677,8 +5759,31 @@ public final class OpenchatServiceProtos {
         if (other.hasRequest()) {
           mergeRequest(other.getRequest());
         }
-        if (other.hasRead()) {
-          mergeRead(other.getRead());
+        if (readBuilder_ == null) {
+          if (!other.read_.isEmpty()) {
+            if (read_.isEmpty()) {
+              read_ = other.read_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+            } else {
+              ensureReadIsMutable();
+              read_.addAll(other.read_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.read_.isEmpty()) {
+            if (readBuilder_.isEmpty()) {
+              readBuilder_.dispose();
+              readBuilder_ = null;
+              read_ = other.read_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+              readBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getReadFieldBuilder() : null;
+            } else {
+              readBuilder_.addAllMessages(other.read_);
+            }
+          }
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -6099,97 +6204,202 @@ public final class OpenchatServiceProtos {
         return requestBuilder_;
       }
 
-      private com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read read_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.getDefaultInstance();
-      private com.google.protobuf.SingleFieldBuilder<
-          com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.ReadOrBuilder> readBuilder_;
-      
-      public boolean hasRead() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
+      private java.util.List<com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read> read_ =
+        java.util.Collections.emptyList();
+      private void ensureReadIsMutable() {
+        if (!((bitField0_ & 0x00000010) == 0x00000010)) {
+          read_ = new java.util.ArrayList<com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read>(read_);
+          bitField0_ |= 0x00000010;
+         }
       }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.ReadOrBuilder> readBuilder_;
+
       
-      public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read getRead() {
+      public java.util.List<com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read> getReadList() {
         if (readBuilder_ == null) {
-          return read_;
+          return java.util.Collections.unmodifiableList(read_);
         } else {
-          return readBuilder_.getMessage();
+          return readBuilder_.getMessageList();
         }
       }
       
-      public Builder setRead(com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read value) {
+      public int getReadCount() {
+        if (readBuilder_ == null) {
+          return read_.size();
+        } else {
+          return readBuilder_.getCount();
+        }
+      }
+      
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read getRead(int index) {
+        if (readBuilder_ == null) {
+          return read_.get(index);
+        } else {
+          return readBuilder_.getMessage(index);
+        }
+      }
+      
+      public Builder setRead(
+          int index, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read value) {
         if (readBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          read_ = value;
+          ensureReadIsMutable();
+          read_.set(index, value);
           onChanged();
         } else {
-          readBuilder_.setMessage(value);
+          readBuilder_.setMessage(index, value);
         }
-        bitField0_ |= 0x00000010;
         return this;
       }
       
       public Builder setRead(
-          com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.Builder builderForValue) {
+          int index, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.Builder builderForValue) {
         if (readBuilder_ == null) {
-          read_ = builderForValue.build();
+          ensureReadIsMutable();
+          read_.set(index, builderForValue.build());
           onChanged();
         } else {
-          readBuilder_.setMessage(builderForValue.build());
+          readBuilder_.setMessage(index, builderForValue.build());
         }
-        bitField0_ |= 0x00000010;
         return this;
       }
       
-      public Builder mergeRead(com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read value) {
+      public Builder addRead(com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read value) {
         if (readBuilder_ == null) {
-          if (((bitField0_ & 0x00000010) == 0x00000010) &&
-              read_ != com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.getDefaultInstance()) {
-            read_ =
-              com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.newBuilder(read_).mergeFrom(value).buildPartial();
-          } else {
-            read_ = value;
+          if (value == null) {
+            throw new NullPointerException();
           }
+          ensureReadIsMutable();
+          read_.add(value);
           onChanged();
         } else {
-          readBuilder_.mergeFrom(value);
+          readBuilder_.addMessage(value);
         }
-        bitField0_ |= 0x00000010;
+        return this;
+      }
+      
+      public Builder addRead(
+          int index, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read value) {
+        if (readBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureReadIsMutable();
+          read_.add(index, value);
+          onChanged();
+        } else {
+          readBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      
+      public Builder addRead(
+          com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.Builder builderForValue) {
+        if (readBuilder_ == null) {
+          ensureReadIsMutable();
+          read_.add(builderForValue.build());
+          onChanged();
+        } else {
+          readBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      
+      public Builder addRead(
+          int index, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.Builder builderForValue) {
+        if (readBuilder_ == null) {
+          ensureReadIsMutable();
+          read_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          readBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      
+      public Builder addAllRead(
+          java.lang.Iterable<? extends com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read> values) {
+        if (readBuilder_ == null) {
+          ensureReadIsMutable();
+          super.addAll(values, read_);
+          onChanged();
+        } else {
+          readBuilder_.addAllMessages(values);
+        }
         return this;
       }
       
       public Builder clearRead() {
         if (readBuilder_ == null) {
-          read_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.getDefaultInstance();
+          read_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
           onChanged();
         } else {
           readBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
       
-      public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.Builder getReadBuilder() {
-        bitField0_ |= 0x00000010;
-        onChanged();
-        return getReadFieldBuilder().getBuilder();
+      public Builder removeRead(int index) {
+        if (readBuilder_ == null) {
+          ensureReadIsMutable();
+          read_.remove(index);
+          onChanged();
+        } else {
+          readBuilder_.remove(index);
+        }
+        return this;
       }
       
-      public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.ReadOrBuilder getReadOrBuilder() {
-        if (readBuilder_ != null) {
-          return readBuilder_.getMessageOrBuilder();
-        } else {
-          return read_;
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.Builder getReadBuilder(
+          int index) {
+        return getReadFieldBuilder().getBuilder(index);
+      }
+      
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.ReadOrBuilder getReadOrBuilder(
+          int index) {
+        if (readBuilder_ == null) {
+          return read_.get(index);  } else {
+          return readBuilder_.getMessageOrBuilder(index);
         }
       }
       
-      private com.google.protobuf.SingleFieldBuilder<
+      public java.util.List<? extends com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.ReadOrBuilder> 
+           getReadOrBuilderList() {
+        if (readBuilder_ != null) {
+          return readBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(read_);
+        }
+      }
+      
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.Builder addReadBuilder() {
+        return getReadFieldBuilder().addBuilder(
+            com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.getDefaultInstance());
+      }
+      
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.Builder addReadBuilder(
+          int index) {
+        return getReadFieldBuilder().addBuilder(
+            index, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.getDefaultInstance());
+      }
+      
+      public java.util.List<com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.Builder> 
+           getReadBuilderList() {
+        return getReadFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
           com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.ReadOrBuilder> 
           getReadFieldBuilder() {
         if (readBuilder_ == null) {
-          readBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+          readBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.Read.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage.ReadOrBuilder>(
                   read_,
+                  ((bitField0_ & 0x00000010) == 0x00000010),
                   getParentForChildren(),
                   isClean());
           read_ = null;
@@ -10587,7 +10797,7 @@ public final class OpenchatServiceProtos {
           internal_static_openchatservice_SyncMessage_Read_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_openchatservice_SyncMessage_Read_descriptor,
-              new java.lang.String[] { "Timestamps", });
+              new java.lang.String[] { "Sender", "Timestamp", });
           internal_static_openchatservice_AttachmentPointer_descriptor =
             getDescriptor().getMessageTypes().get(4);
           internal_static_openchatservice_AttachmentPointer_fieldAccessorTable = new

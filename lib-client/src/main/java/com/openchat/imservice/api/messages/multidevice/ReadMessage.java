@@ -5,19 +5,20 @@ import java.util.List;
 
 public class ReadMessage {
 
-  private final List<Long> timestamps;
+  private final String sender;
+  private final long   timestamp;
 
-  public ReadMessage(long timestamp) {
-    this.timestamps = new LinkedList<>();
-    this.timestamps.add(timestamp);
+  public ReadMessage(String sender, long timestamp) {
+    this.sender    = sender;
+    this.timestamp = timestamp;
   }
 
-  public ReadMessage(List<Long> timestamps) {
-    this.timestamps = timestamps;
+  public long getTimestamp() {
+    return timestamp;
   }
 
-  public List<Long> getTimestamps() {
-    return timestamps;
+  public String getSender() {
+    return sender;
   }
 
 }

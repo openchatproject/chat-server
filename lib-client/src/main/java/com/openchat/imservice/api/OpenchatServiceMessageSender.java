@@ -190,11 +190,15 @@ public class OpenchatServiceMessageSender {
     }
   }
 
-  private byte[] createMultiDeviceReadContent(ReadMessage readMessage) {
+  private byte[] createMultiDeviceReadContent(List<ReadMessage> readMessages) {
     Content.Builder     container = Content.newBuilder();
     SyncMessage.Builder builder   = SyncMessage.newBuilder();
 
-    builder.setRead(SyncMessage.Read.newBuilder().addAllTimestamps(readMessage.getTimestamps()));
+    for (ReadMessage readMessage : readMessages) {
+      builder.addRead(SyncMessage.Read.newBuilder()
+                                      .setTimestamp(readMessage.getTimestamp())
+                                      .setSender(readMessage.getSender()));
+    }
 
     return container.setSyncMessage(builder).build().toByteArray();
   }

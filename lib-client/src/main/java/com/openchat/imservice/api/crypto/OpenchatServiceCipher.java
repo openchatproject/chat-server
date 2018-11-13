@@ -153,8 +153,14 @@ public class OpenchatServiceCipher {
       return OpenchatServiceSyncMessage.forRequest(new RequestMessage(content.getRequest()));
     }
 
-    if (content.hasRead()) {
-      return OpenchatServiceSyncMessage.forRead(new ReadMessage(content.getRead().getTimestampsList()));
+    if (content.getReadList().size() > 0) {
+      List<ReadMessage> readMessages = new LinkedList<>();
+
+      for (SyncMessage.Read read : content.getReadList()) {
+        readMessages.add(new ReadMessage(read.getSender(), read.getTimestamp()));
+      }
+
+      return OpenchatServiceSyncMessage.forRead(readMessages);
     }
 
     return OpenchatServiceSyncMessage.empty();
