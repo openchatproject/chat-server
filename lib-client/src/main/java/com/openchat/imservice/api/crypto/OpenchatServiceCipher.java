@@ -2,7 +2,6 @@ package com.openchat.imservice.api.crypto;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import com.openchat.protocal.OpenchatProtocolAddress;
 import com.openchat.protocal.DuplicateMessageException;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.InvalidKeyIdException;
@@ -11,6 +10,7 @@ import com.openchat.protocal.InvalidVersionException;
 import com.openchat.protocal.LegacyMessageException;
 import com.openchat.protocal.NoSessionException;
 import com.openchat.protocal.SessionCipher;
+import com.openchat.protocal.OpenchatProtocolAddress;
 import com.openchat.protocal.UntrustedIdentityException;
 import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
@@ -124,9 +124,10 @@ public class OpenchatServiceCipher {
   }
 
   private OpenchatServiceDataMessage createOpenchatServiceMessage(OpenchatServiceEnvelope envelope, DataMessage content) {
-    OpenchatServiceGroup groupInfo   = createGroupInfo(envelope, content);
-    List<OpenchatServiceAttachment> attachments = new LinkedList<>();
-    boolean                    endSession  = ((content.getFlags() & DataMessage.Flags.END_SESSION_VALUE) != 0);
+    OpenchatServiceGroup            groupInfo        = createGroupInfo(envelope, content);
+    List<OpenchatServiceAttachment> attachments      = new LinkedList<>();
+    boolean                       endSession       = ((content.getFlags() & DataMessage.Flags.END_SESSION_VALUE) != 0);
+    boolean                       expirationUpdate = ((content.getFlags() & DataMessage.Flags.EXPIRATION_TIMER_UPDATE_VALUE) != 0);
 
     for (AttachmentPointer pointer : content.getAttachmentsList()) {
       attachments.add(new OpenchatServiceAttachmentPointer(pointer.getId(),
@@ -138,7 +139,8 @@ public class OpenchatServiceCipher {
     }
 
     return new OpenchatServiceDataMessage(envelope.getTimestamp(), groupInfo, attachments,
-                                        content.getBody(), endSession);
+                                        content.getBody(), endSession, content.getExpireTimer(),
+                                        expirationUpdate);
   }
 
   private OpenchatServiceSyncMessage createSynchronizeMessage(OpenchatServiceEnvelope envelope, SyncMessage content) {
@@ -146,7 +148,8 @@ public class OpenchatServiceCipher {
       SyncMessage.Sent sentContent = content.getSent();
       return OpenchatServiceSyncMessage.forSentTranscript(new SentTranscriptMessage(sentContent.getDestination(),
                                                                                   sentContent.getTimestamp(),
-                                                                                  createOpenchatServiceMessage(envelope, sentContent.getMessage())));
+                                                                                  createOpenchatServiceMessage(envelope, sentContent.getMessage()),
+                                                                                  sentContent.getExpirationStartTimestamp()));
     }
 
     if (content.hasRequest()) {

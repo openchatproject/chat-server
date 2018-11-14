@@ -12,10 +12,17 @@ public class OpenchatServiceDataMessage {
   private final Optional<String>                        body;
   private final Optional<OpenchatServiceGroup>            group;
   private final boolean                                 endSession;
+  private final boolean                                 expirationUpdate;
+  private final int                                     expiresInSeconds;
 
   
   public OpenchatServiceDataMessage(long timestamp, String body) {
-    this(timestamp, (List<OpenchatServiceAttachment>)null, body);
+    this(timestamp, body, 0);
+  }
+
+  
+  public OpenchatServiceDataMessage(long timestamp, String body, int expiresInSeconds) {
+    this(timestamp, (List<OpenchatServiceAttachment>)null, body, expiresInSeconds);
   }
 
   public OpenchatServiceDataMessage(final long timestamp, final OpenchatServiceAttachment attachment, final String body) {
@@ -24,20 +31,36 @@ public class OpenchatServiceDataMessage {
 
   
   public OpenchatServiceDataMessage(long timestamp, List<OpenchatServiceAttachment> attachments, String body) {
-    this(timestamp, null, attachments, body);
+    this(timestamp, attachments, body, 0);
+  }
+
+  
+  public OpenchatServiceDataMessage(long timestamp, List<OpenchatServiceAttachment> attachments, String body, int expiresInSeconds) {
+    this(timestamp, null, attachments, body, expiresInSeconds);
   }
 
   
   public OpenchatServiceDataMessage(long timestamp, OpenchatServiceGroup group, List<OpenchatServiceAttachment> attachments, String body) {
-    this(timestamp, group, attachments, body, false);
+    this(timestamp, group, attachments, body, 0);
   }
 
   
-  public OpenchatServiceDataMessage(long timestamp, OpenchatServiceGroup group, List<OpenchatServiceAttachment> attachments, String body, boolean endSession) {
-    this.timestamp   = timestamp;
-    this.body        = Optional.fromNullable(body);
-    this.group       = Optional.fromNullable(group);
-    this.endSession  = endSession;
+  public OpenchatServiceDataMessage(long timestamp, OpenchatServiceGroup group, List<OpenchatServiceAttachment> attachments, String body, int expiresInSeconds) {
+    this(timestamp, group, attachments, body, false, expiresInSeconds, false);
+  }
+
+  
+  public OpenchatServiceDataMessage(long timestamp, OpenchatServiceGroup group,
+                                  List<OpenchatServiceAttachment> attachments,
+                                  String body, boolean endSession, int expiresInSeconds,
+                                  boolean expirationUpdate)
+  {
+    this.timestamp        = timestamp;
+    this.body             = Optional.fromNullable(body);
+    this.group            = Optional.fromNullable(group);
+    this.endSession       = endSession;
+    this.expiresInSeconds = expiresInSeconds;
+    this.expirationUpdate = expirationUpdate;
 
     if (attachments != null && !attachments.isEmpty()) {
       this.attachments = Optional.of(attachments);
@@ -74,17 +97,27 @@ public class OpenchatServiceDataMessage {
     return endSession;
   }
 
+  public boolean isExpirationUpdate() {
+    return expirationUpdate;
+  }
+
   public boolean isGroupUpdate() {
     return group.isPresent() && group.get().getType() != OpenchatServiceGroup.Type.DELIVER;
+  }
+
+  public int getExpiresInSeconds() {
+    return expiresInSeconds;
   }
 
   public static class Builder {
 
     private List<OpenchatServiceAttachment> attachments = new LinkedList<>();
-    private long                       timestamp;
+    private long               timestamp;
     private OpenchatServiceGroup group;
-    private String                     body;
-    private boolean                    endSession;
+    private String             body;
+    private boolean            endSession;
+    private int                expiresInSeconds;
+    private boolean            expirationUpdate;
 
     private Builder() {}
 
@@ -114,8 +147,7 @@ public class OpenchatServiceDataMessage {
     }
 
     public Builder asEndSessionMessage() {
-      this.endSession = true;
-      return this;
+      return asEndSessionMessage(true);
     }
 
     public Builder asEndSessionMessage(boolean endSession) {
@@ -123,9 +155,24 @@ public class OpenchatServiceDataMessage {
       return this;
     }
 
+    public Builder asExpirationUpdate() {
+      return asExpirationUpdate(true);
+    }
+
+    public Builder asExpirationUpdate(boolean expirationUpdate) {
+      this.expirationUpdate = expirationUpdate;
+      return this;
+    }
+
+    public Builder withExpiration(int expiresInSeconds) {
+      this.expiresInSeconds = expiresInSeconds;
+      return this;
+    }
+
     public OpenchatServiceDataMessage build() {
       if (timestamp == 0) timestamp = System.currentTimeMillis();
-      return new OpenchatServiceDataMessage(timestamp, group, attachments, body, endSession);
+      return new OpenchatServiceDataMessage(timestamp, group, attachments, body, endSession,
+                                          expiresInSeconds, expirationUpdate);
     }
   }
 }

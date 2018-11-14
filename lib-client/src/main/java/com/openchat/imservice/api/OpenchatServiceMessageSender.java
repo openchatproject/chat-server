@@ -3,12 +3,12 @@ package com.openchat.imservice.api;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import com.openchat.protocal.OpenchatProtocolAddress;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.SessionBuilder;
+import com.openchat.protocal.OpenchatProtocolAddress;
 import com.openchat.protocal.logging.Log;
-import com.openchat.protocal.state.OpenchatProtocolStore;
 import com.openchat.protocal.state.PreKeyBundle;
+import com.openchat.protocal.state.OpenchatProtocolStore;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.crypto.OpenchatServiceCipher;
 import com.openchat.imservice.api.crypto.UntrustedIdentityException;
@@ -30,12 +30,12 @@ import com.openchat.imservice.internal.push.OutgoingPushMessageList;
 import com.openchat.imservice.internal.push.PushAttachmentData;
 import com.openchat.imservice.internal.push.PushServiceSocket;
 import com.openchat.imservice.internal.push.SendMessageResponse;
-import com.openchat.imservice.internal.push.StaleDevices;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.Content;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage;
+import com.openchat.imservice.internal.push.StaleDevices;
 import com.openchat.imservice.internal.push.exceptions.MismatchedDevicesException;
 import com.openchat.imservice.internal.push.exceptions.StaleDevicesException;
 import com.openchat.imservice.internal.util.StaticCredentialsProvider;
@@ -150,6 +150,14 @@ public class OpenchatServiceMessageSender {
       builder.setFlags(DataMessage.Flags.END_SESSION_VALUE);
     }
 
+    if (message.isExpirationUpdate()) {
+      builder.setFlags(DataMessage.Flags.EXPIRATION_TIMER_UPDATE_VALUE);
+    }
+
+    if (message.getExpiresInSeconds() > 0) {
+      builder.setExpireTimer(message.getExpiresInSeconds());
+    }
+
     return builder.build().toByteArray();
   }
 
@@ -171,17 +179,23 @@ public class OpenchatServiceMessageSender {
     return container.setSyncMessage(builder).build().toByteArray();
   }
 
-  private byte[] createMultiDeviceSentTranscriptContent(byte[] content, Optional<OpenchatServiceAddress> recipient, long timestamp) {
+  private byte[] createMultiDeviceSentTranscriptContent(byte[] content, Optional<OpenchatServiceAddress> recipient, long timestamp)
+  {
     try {
       Content.Builder          container   = Content.newBuilder();
       SyncMessage.Builder      syncMessage = SyncMessage.newBuilder();
       SyncMessage.Sent.Builder sentMessage = SyncMessage.Sent.newBuilder();
+      DataMessage              dataMessage = DataMessage.parseFrom(content);
 
       sentMessage.setTimestamp(timestamp);
-      sentMessage.setMessage(DataMessage.parseFrom(content));
+      sentMessage.setMessage(dataMessage);
 
       if (recipient.isPresent()) {
         sentMessage.setDestination(recipient.get().getNumber());
+      }
+
+      if (dataMessage.getExpireTimer() > 0) {
+        sentMessage.setExpirationStartTimestamp(System.currentTimeMillis());
       }
 
       return container.setSyncMessage(syncMessage.setSent(sentMessage)).build().toByteArray();

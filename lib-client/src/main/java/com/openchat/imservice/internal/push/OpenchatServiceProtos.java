@@ -1641,6 +1641,11 @@ public final class OpenchatServiceProtos {
     boolean hasFlags();
     
     int getFlags();
+
+    
+    boolean hasExpireTimer();
+    
+    int getExpireTimer();
   }
   
   public static final class DataMessage extends
@@ -1721,6 +1726,11 @@ public final class OpenchatServiceProtos {
               flags_ = input.readUInt32();
               break;
             }
+            case 40: {
+              bitField0_ |= 0x00000008;
+              expireTimer_ = input.readUInt32();
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -1768,16 +1778,21 @@ public final class OpenchatServiceProtos {
         implements com.google.protobuf.ProtocolMessageEnum {
       
       END_SESSION(0, 1),
+      
+      EXPIRATION_TIMER_UPDATE(1, 2),
       ;
 
       
       public static final int END_SESSION_VALUE = 1;
+      
+      public static final int EXPIRATION_TIMER_UPDATE_VALUE = 2;
 
       public final int getNumber() { return value; }
 
       public static Flags valueOf(int value) {
         switch (value) {
           case 1: return END_SESSION;
+          case 2: return EXPIRATION_TIMER_UPDATE;
           default: return null;
         }
       }
@@ -1916,11 +1931,23 @@ public final class OpenchatServiceProtos {
       return flags_;
     }
 
+    public static final int EXPIRETIMER_FIELD_NUMBER = 5;
+    private int expireTimer_;
+    
+    public boolean hasExpireTimer() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    
+    public int getExpireTimer() {
+      return expireTimer_;
+    }
+
     private void initFields() {
       body_ = "";
       attachments_ = java.util.Collections.emptyList();
       group_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext.getDefaultInstance();
       flags_ = 0;
+      expireTimer_ = 0;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -1946,6 +1973,9 @@ public final class OpenchatServiceProtos {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeUInt32(4, flags_);
       }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeUInt32(5, expireTimer_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -1970,6 +2000,10 @@ public final class OpenchatServiceProtos {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt32Size(4, flags_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(5, expireTimer_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2102,6 +2136,8 @@ public final class OpenchatServiceProtos {
         bitField0_ = (bitField0_ & ~0x00000004);
         flags_ = 0;
         bitField0_ = (bitField0_ & ~0x00000008);
+        expireTimer_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -2155,6 +2191,10 @@ public final class OpenchatServiceProtos {
           to_bitField0_ |= 0x00000004;
         }
         result.flags_ = flags_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.expireTimer_ = expireTimer_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -2207,6 +2247,9 @@ public final class OpenchatServiceProtos {
         }
         if (other.hasFlags()) {
           setFlags(other.getFlags());
+        }
+        if (other.hasExpireTimer()) {
+          setExpireTimer(other.getExpireTimer());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -2621,6 +2664,30 @@ public final class OpenchatServiceProtos {
         return this;
       }
 
+      private int expireTimer_ ;
+      
+      public boolean hasExpireTimer() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      
+      public int getExpireTimer() {
+        return expireTimer_;
+      }
+      
+      public Builder setExpireTimer(int value) {
+        bitField0_ |= 0x00000010;
+        expireTimer_ = value;
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearExpireTimer() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        expireTimer_ = 0;
+        onChanged();
+        return this;
+      }
+
     }
 
     static {
@@ -2847,6 +2914,11 @@ public final class OpenchatServiceProtos {
       com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage getMessage();
       
       com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessageOrBuilder getMessageOrBuilder();
+
+      
+      boolean hasExpirationStartTimestamp();
+      
+      long getExpirationStartTimestamp();
     }
     
     public static final class Sent extends
@@ -2917,6 +2989,11 @@ public final class OpenchatServiceProtos {
                   message_ = subBuilder.buildPartial();
                 }
                 bitField0_ |= 0x00000004;
+                break;
+              }
+              case 32: {
+                bitField0_ |= 0x00000008;
+                expirationStartTimestamp_ = input.readUInt64();
                 break;
               }
             }
@@ -3021,10 +3098,22 @@ public final class OpenchatServiceProtos {
         return message_;
       }
 
+      public static final int EXPIRATIONSTARTTIMESTAMP_FIELD_NUMBER = 4;
+      private long expirationStartTimestamp_;
+      
+      public boolean hasExpirationStartTimestamp() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      
+      public long getExpirationStartTimestamp() {
+        return expirationStartTimestamp_;
+      }
+
       private void initFields() {
         destination_ = "";
         timestamp_ = 0L;
         message_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.getDefaultInstance();
+        expirationStartTimestamp_ = 0L;
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -3047,6 +3136,9 @@ public final class OpenchatServiceProtos {
         if (((bitField0_ & 0x00000004) == 0x00000004)) {
           output.writeMessage(3, message_);
         }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          output.writeUInt64(4, expirationStartTimestamp_);
+        }
         getUnknownFields().writeTo(output);
       }
 
@@ -3067,6 +3159,10 @@ public final class OpenchatServiceProtos {
         if (((bitField0_ & 0x00000004) == 0x00000004)) {
           size += com.google.protobuf.CodedOutputStream
             .computeMessageSize(3, message_);
+        }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeUInt64Size(4, expirationStartTimestamp_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSerializedSize = size;
@@ -3192,6 +3288,8 @@ public final class OpenchatServiceProtos {
             messageBuilder_.clear();
           }
           bitField0_ = (bitField0_ & ~0x00000004);
+          expirationStartTimestamp_ = 0L;
+          bitField0_ = (bitField0_ & ~0x00000008);
           return this;
         }
 
@@ -3236,6 +3334,10 @@ public final class OpenchatServiceProtos {
           } else {
             result.message_ = messageBuilder_.build();
           }
+          if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+            to_bitField0_ |= 0x00000008;
+          }
+          result.expirationStartTimestamp_ = expirationStartTimestamp_;
           result.bitField0_ = to_bitField0_;
           onBuilt();
           return result;
@@ -3262,6 +3364,9 @@ public final class OpenchatServiceProtos {
           }
           if (other.hasMessage()) {
             mergeMessage(other.getMessage());
+          }
+          if (other.hasExpirationStartTimestamp()) {
+            setExpirationStartTimestamp(other.getExpirationStartTimestamp());
           }
           this.mergeUnknownFields(other.getUnknownFields());
           return this;
@@ -3471,6 +3576,30 @@ public final class OpenchatServiceProtos {
             message_ = null;
           }
           return messageBuilder_;
+        }
+
+        private long expirationStartTimestamp_ ;
+        
+        public boolean hasExpirationStartTimestamp() {
+          return ((bitField0_ & 0x00000008) == 0x00000008);
+        }
+        
+        public long getExpirationStartTimestamp() {
+          return expirationStartTimestamp_;
+        }
+        
+        public Builder setExpirationStartTimestamp(long value) {
+          bitField0_ |= 0x00000008;
+          expirationStartTimestamp_ = value;
+          onChanged();
+          return this;
+        }
+        
+        public Builder clearExpirationStartTimestamp() {
+          bitField0_ = (bitField0_ & ~0x00000008);
+          expirationStartTimestamp_ = 0L;
+          onChanged();
+          return this;
         }
 
       }
@@ -10761,7 +10890,7 @@ public final class OpenchatServiceProtos {
           internal_static_openchatservice_DataMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_openchatservice_DataMessage_descriptor,
-              new java.lang.String[] { "Body", "Attachments", "Group", "Flags", });
+              new java.lang.String[] { "Body", "Attachments", "Group", "Flags", "ExpireTimer", });
           internal_static_openchatservice_SyncMessage_descriptor =
             getDescriptor().getMessageTypes().get(3);
           internal_static_openchatservice_SyncMessage_fieldAccessorTable = new
@@ -10773,7 +10902,7 @@ public final class OpenchatServiceProtos {
           internal_static_openchatservice_SyncMessage_Sent_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_openchatservice_SyncMessage_Sent_descriptor,
-              new java.lang.String[] { "Destination", "Timestamp", "Message", });
+              new java.lang.String[] { "Destination", "Timestamp", "Message", "ExpirationStartTimestamp", });
           internal_static_openchatservice_SyncMessage_Contacts_descriptor =
             internal_static_openchatservice_SyncMessage_descriptor.getNestedTypes().get(1);
           internal_static_openchatservice_SyncMessage_Contacts_fieldAccessorTable = new

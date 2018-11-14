@@ -5,20 +5,23 @@ import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
 
 public class SentTranscriptMessage {
 
-  private final Optional<String>      destination;
-  private final long                  timestamp;
+  private final Optional<String>         destination;
+  private final long                     timestamp;
+  private final long                     expirationStartTimestamp;
   private final OpenchatServiceDataMessage message;
 
-  public SentTranscriptMessage(String destination, long timestamp, OpenchatServiceDataMessage message) {
-    this.destination = Optional.of(destination);
-    this.timestamp   = timestamp;
-    this.message     = message;
+  public SentTranscriptMessage(String destination, long timestamp, OpenchatServiceDataMessage message, long expirationStartTimestamp) {
+    this.destination              = Optional.of(destination);
+    this.timestamp                = timestamp;
+    this.message                  = message;
+    this.expirationStartTimestamp = expirationStartTimestamp;
   }
 
   public SentTranscriptMessage(long timestamp, OpenchatServiceDataMessage message) {
-    this.destination = Optional.absent();
-    this.timestamp   = timestamp;
-    this.message     = message;
+    this.destination              = Optional.absent();
+    this.timestamp                = timestamp;
+    this.message                  = message;
+    this.expirationStartTimestamp = 0;
   }
 
   public Optional<String> getDestination() {
@@ -27,6 +30,10 @@ public class SentTranscriptMessage {
 
   public long getTimestamp() {
     return timestamp;
+  }
+
+  public long getExpirationStartTimestamp() {
+    return expirationStartTimestamp;
   }
 
   public OpenchatServiceDataMessage getMessage() {
