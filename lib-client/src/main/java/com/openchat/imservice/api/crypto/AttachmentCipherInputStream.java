@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
@@ -162,7 +163,7 @@ public class AttachmentCipherInputStream extends FileInputStream {
   private void verifyMac(File file, Mac mac) throws FileNotFoundException, InvalidMacException {
     try {
       FileInputStream fin           = new FileInputStream(file);
-      int             remainingData = (int) file.length() - mac.getMacLength();
+      int             remainingData = Util.toIntExact(file.length()) - mac.getMacLength();
       byte[]          buffer        = new byte[4096];
 
       while (remainingData > 0) {
@@ -175,10 +176,10 @@ public class AttachmentCipherInputStream extends FileInputStream {
       byte[] theirMac = new byte[mac.getMacLength()];
       Util.readFully(fin, theirMac);
 
-      if (!Arrays.equals(ourMac, theirMac)) {
+      if (!MessageDigest.isEqual(ourMac, theirMac)) {
         throw new InvalidMacException("MAC doesn't match!");
       }
-    } catch (IOException e1) {
+    } catch (IOException | ArithmeticException e1) {
       throw new InvalidMacException(e1);
     }
   }
