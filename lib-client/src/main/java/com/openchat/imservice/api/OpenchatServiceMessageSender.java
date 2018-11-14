@@ -16,6 +16,7 @@ import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentStream;
 import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
+import com.openchat.imservice.api.messages.multidevice.BlockedListMessage;
 import com.openchat.imservice.api.messages.multidevice.ReadMessage;
 import com.openchat.imservice.api.messages.multidevice.OpenchatServiceSyncMessage;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
@@ -123,6 +124,8 @@ public class OpenchatServiceMessageSender {
       content = createMultiDeviceGroupsContent(message.getGroups().get().asStream());
     } else if (message.getRead().isPresent()) {
       content = createMultiDeviceReadContent(message.getRead().get());
+    } else if (message.getBlockedList().isPresent()) {
+      content = createMultiDeviceBlockedContent(message.getBlockedList().get());
     } else {
       throw new IOException("Unsupported sync message!");
     }
@@ -215,6 +218,16 @@ public class OpenchatServiceMessageSender {
     }
 
     return container.setSyncMessage(builder).build().toByteArray();
+  }
+
+  private byte[] createMultiDeviceBlockedContent(BlockedListMessage blocked) {
+    Content.Builder             container      = Content.newBuilder();
+    SyncMessage.Builder         syncMessage    = SyncMessage.newBuilder();
+    SyncMessage.Blocked.Builder blockedMessage = SyncMessage.Blocked.newBuilder();
+
+    blockedMessage.addAllNumbers(blocked.getNumbers());
+
+    return container.setSyncMessage(syncMessage.setBlocked(blockedMessage)).build().toByteArray();
   }
 
   private GroupContext createGroupContent(OpenchatServiceGroup group) throws IOException {

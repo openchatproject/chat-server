@@ -41,6 +41,10 @@ public class DeviceContactsOutputStream extends ChunkedOutputStream {
       contactDetails.setAvatar(avatarBuilder);
     }
 
+    if (contact.getColor().isPresent()) {
+      contactDetails.setColor(contact.getColor().get());
+    }
+
     byte[] serializedContactDetails = contactDetails.build().toByteArray();
 
     writeVarint32(serializedContactDetails.length);

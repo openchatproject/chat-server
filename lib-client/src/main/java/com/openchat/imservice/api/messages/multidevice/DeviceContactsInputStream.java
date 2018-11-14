@@ -23,6 +23,7 @@ public class DeviceContactsInputStream extends ChunkedInputStream {
     String                                  number  = details.getNumber();
     Optional<String>                        name    = Optional.fromNullable(details.getName());
     Optional<OpenchatServiceAttachmentStream> avatar  = Optional.absent();
+    Optional<String>                        color   = details.hasColor() ? Optional.of(details.getColor()) : Optional.<String>absent();
 
     if (details.hasAvatar()) {
       long        avatarLength      = details.getAvatar().getLength();
@@ -32,7 +33,7 @@ public class DeviceContactsInputStream extends ChunkedInputStream {
       avatar = Optional.of(new OpenchatServiceAttachmentStream(avatarStream, avatarContentType, avatarLength, null));
     }
 
-    return new DeviceContact(number, name, avatar);
+    return new DeviceContact(number, name, avatar, color);
   }
 
 }
