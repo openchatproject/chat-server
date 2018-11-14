@@ -23,12 +23,6 @@ import com.openchat.imservice.api.messages.OpenchatServiceContent;
 import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
-import com.openchat.imservice.api.messages.calls.AnswerMessage;
-import com.openchat.imservice.api.messages.calls.BusyMessage;
-import com.openchat.imservice.api.messages.calls.HangupMessage;
-import com.openchat.imservice.api.messages.calls.IceUpdateMessage;
-import com.openchat.imservice.api.messages.calls.OfferMessage;
-import com.openchat.imservice.api.messages.calls.OpenchatServiceCallMessage;
 import com.openchat.imservice.api.messages.multidevice.ReadMessage;
 import com.openchat.imservice.api.messages.multidevice.RequestMessage;
 import com.openchat.imservice.api.messages.multidevice.SentTranscriptMessage;
@@ -46,7 +40,6 @@ import com.openchat.imservice.internal.util.Base64;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.openchat.imservice.internal.push.OpenchatServiceProtos.CallMessage;
 import static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext.Type.DELIVER;
 
 public class OpenchatServiceCipher {
@@ -99,8 +92,6 @@ public class OpenchatServiceCipher {
           content = new OpenchatServiceContent(createOpenchatServiceMessage(envelope, message.getDataMessage()));
         } else if (message.hasSyncMessage() && localAddress.getNumber().equals(envelope.getSource())) {
           content = new OpenchatServiceContent(createSynchronizeMessage(envelope, message.getSyncMessage()));
-        } else if (message.hasCallMessage()) {
-          content = new OpenchatServiceContent(createCallMessage(message.getCallMessage()));
         }
       }
 
@@ -176,30 +167,6 @@ public class OpenchatServiceCipher {
     }
 
     return OpenchatServiceSyncMessage.empty();
-  }
-
-  private OpenchatServiceCallMessage createCallMessage(CallMessage content) {
-    if (content.hasOffer()) {
-      CallMessage.Offer offerContent = content.getOffer();
-      return OpenchatServiceCallMessage.forOffer(new OfferMessage(offerContent.getId(), offerContent.getDescription()));
-    } else if (content.hasAnswer()) {
-      CallMessage.Answer answerContent = content.getAnswer();
-      return OpenchatServiceCallMessage.forAnswer(new AnswerMessage(answerContent.getId(), answerContent.getDescription()));
-    } else if (content.hasIceUpdate()) {
-      CallMessage.IceUpdate iceUpdate = content.getIceUpdate();
-      return OpenchatServiceCallMessage.forIceUpdate(new IceUpdateMessage(iceUpdate.getId(),
-                                                                        iceUpdate.getSdpMid(),
-                                                                        iceUpdate.getSdpMLineIndex(),
-                                                                        iceUpdate.getSdp()));
-    } else if (content.hasHangup()) {
-      CallMessage.Hangup hangup = content.getHangup();
-      return OpenchatServiceCallMessage.forHangup(new HangupMessage(hangup.getId()));
-    } else if (content.hasBusy()) {
-      CallMessage.Busy busy = content.getBusy();
-      return OpenchatServiceCallMessage.forBusy(new BusyMessage(busy.getId()));
-    }
-
-    return OpenchatServiceCallMessage.empty();
   }
 
   private OpenchatServiceGroup createGroupInfo(OpenchatServiceEnvelope envelope, DataMessage content) {
