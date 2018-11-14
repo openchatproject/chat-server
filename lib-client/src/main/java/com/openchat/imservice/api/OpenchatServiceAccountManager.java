@@ -9,6 +9,7 @@ import com.openchat.protocal.ecc.ECPublicKey;
 import com.openchat.protocal.state.PreKeyRecord;
 import com.openchat.protocal.state.SignedPreKeyRecord;
 import com.openchat.protocal.util.guava.Optional;
+import com.openchat.imservice.api.messages.calls.TurnServerInfo;
 import com.openchat.imservice.api.messages.multidevice.DeviceInfo;
 import com.openchat.imservice.api.push.ContactTokenDetails;
 import com.openchat.imservice.api.push.SignedPreKeyEntity;
@@ -168,6 +169,18 @@ public class OpenchatServiceAccountManager {
 
   public void removeDevice(long deviceId) throws IOException {
     this.pushServiceSocket.removeDevice(deviceId);
+  }
+
+  public TurnServerInfo getTurnServerInfo() throws IOException {
+    return this.pushServiceSocket.getTurnServerInfo();
+  }
+
+  public void setSoTimeoutMillis(long soTimeoutMillis) {
+    this.pushServiceSocket.setSoTimeoutMillis(soTimeoutMillis);
+  }
+
+  public void cancelInFlightRequests() {
+    this.pushServiceSocket.cancelInFlightRequests();
   }
 
   private String createDirectoryServerToken(String e164number, boolean urlSafe) {
