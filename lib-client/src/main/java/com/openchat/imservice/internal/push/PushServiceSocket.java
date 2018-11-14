@@ -2,7 +2,6 @@ package com.openchat.imservice.internal.push;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.squareup.okhttp.Call;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -19,7 +18,6 @@ import com.openchat.protocal.state.SignedPreKeyRecord;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.crypto.AttachmentCipherOutputStream;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment.ProgressListener;
-import com.openchat.imservice.api.messages.calls.TurnServerInfo;
 import com.openchat.imservice.api.messages.multidevice.DeviceInfo;
 import com.openchat.imservice.api.push.ContactTokenDetails;
 import com.openchat.imservice.api.push.SignedPreKeyEntity;
@@ -50,11 +48,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -70,7 +66,6 @@ public class PushServiceSocket {
   private static final String VERIFY_ACCOUNT_TOKEN_PATH = "/v1/accounts/token/%s";
   private static final String REGISTER_GCM_PATH         = "/v1/accounts/gcm/";
   private static final String REQUEST_TOKEN_PATH        = "/v1/accounts/token";
-  private static final String TURN_SERVER_INFO          = "/v1/accounts/turn";
   private static final String SET_ACCOUNT_ATTRIBUTES    = "/v1/accounts/attributes/";
 
   private static final String PREKEY_METADATA_PATH      = "/v2/keys/";
@@ -88,9 +83,6 @@ public class PushServiceSocket {
   private static final String ACKNOWLEDGE_MESSAGE_PATH  = "/v1/messages/%s/%d";
   private static final String RECEIPT_PATH              = "/v1/receipt/%s/%d";
   private static final String ATTACHMENT_PATH           = "/v1/attachments/%s";
-
-  private       long      soTimeoutMillis = TimeUnit.SECONDS.toMillis(30);
-  private final Set<Call> connections     = new HashSet<>();
 
   private final String              serviceUrl;
   private final TrustManager[]      trustManagers;
@@ -388,25 +380,6 @@ public class PushServiceSocket {
     }
   }
 
-  public TurnServerInfo getTurnServerInfo() throws IOException {
-    String response = makeRequest(TURN_SERVER_INFO, "GET", null);
-    return JsonUtil.fromJson(response, TurnServerInfo.class);
-  }
-
-  public void setSoTimeoutMillis(long soTimeoutMillis) {
-    this.soTimeoutMillis = soTimeoutMillis;
-  }
-
-  public void cancelInFlightRequests() {
-    synchronized (connections) {
-      Log.w(TAG, "Canceling: " + connections.size());
-      for (Call connection : connections) {
-        Log.w(TAG, "Canceling: " + connection);
-        connection.cancel();
-      }
-    }
-  }
-
   private void downloadExternalFile(String url, File localDestination, ProgressListener listener)
       throws IOException
   {
@@ -576,8 +549,6 @@ public class PushServiceSocket {
       context.init(null, trustManagers, null);
 
       OkHttpClient okHttpClient = new OkHttpClient();
-      okHttpClient.setConnectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS);
-      okHttpClient.setReadTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS);
       okHttpClient.setSslSocketFactory(context.getSocketFactory());
       okHttpClient.setHostnameVerifier(new StrictHostnameVerifier());
 
@@ -598,19 +569,7 @@ public class PushServiceSocket {
         request.addHeader("X-Openchat-Agent", userAgent);
       }
 
-      Call call = okHttpClient.newCall(request.build());
-
-      synchronized (connections) {
-        connections.add(call);
-      }
-
-      Response response = call.execute();
-
-      synchronized (connections) {
-        connections.remove(call);
-      }
-
-      return response;
+      return okHttpClient.newCall(request.build()).execute();
     } catch (IOException e) {
       throw new PushNetworkException(e);
     } catch (NoSuchAlgorithmException | KeyManagementException e) {
