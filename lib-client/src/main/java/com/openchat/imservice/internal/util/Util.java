@@ -6,6 +6,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class Util {
 
@@ -113,6 +116,10 @@ public class Util {
       throw new ArithmeticException("integer overflow");
     }
     return (int)value;
+  }
+
+  public static <T> List<T> immutableList(T... elements) {
+    return Collections.unmodifiableList(Arrays.asList(elements.clone()));
   }
 
 }
