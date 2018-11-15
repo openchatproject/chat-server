@@ -21,9 +21,8 @@ import com.openchat.imservice.api.crypto.AttachmentCipherOutputStream;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment.ProgressListener;
 import com.openchat.imservice.api.messages.multidevice.DeviceInfo;
 import com.openchat.imservice.api.push.ContactTokenDetails;
-import com.openchat.imservice.api.push.SignedPreKeyEntity;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
-import com.openchat.imservice.api.push.TrustStore;
+import com.openchat.imservice.api.push.SignedPreKeyEntity;
 import com.openchat.imservice.api.push.exceptions.AuthorizationFailedException;
 import com.openchat.imservice.api.push.exceptions.ExpectationFailedException;
 import com.openchat.imservice.api.push.exceptions.NonSuccessfulResponseCodeException;
@@ -49,6 +48,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -85,17 +85,24 @@ public class PushServiceSocket {
   private static final String RECEIPT_PATH              = "/v1/receipt/%s/%d";
   private static final String ATTACHMENT_PATH           = "/v1/attachments/%s";
 
-  private final OpenchatServiceUrl    serviceUrl;
-  private final TrustManager[]      trustManagers;
-  private final CredentialsProvider credentialsProvider;
-  private final String              userAgent;
+  private final OpenchatConnectionInformation[] openchatConnectionInformation;
+  private final CredentialsProvider           credentialsProvider;
+  private final String                        userAgent;
+  private final SecureRandom                  random;
 
-  public PushServiceSocket(OpenchatServiceUrl serviceUrl, TrustStore trustStore, CredentialsProvider credentialsProvider, String userAgent)
-  {
-    this.serviceUrl          = serviceUrl;
-    this.credentialsProvider = credentialsProvider;
-    this.trustManagers       = BlacklistingTrustManager.createFor(trustStore);
-    this.userAgent           = userAgent;
+  public PushServiceSocket(OpenchatServiceUrl[] serviceUrls, CredentialsProvider credentialsProvider, String userAgent) {
+    try {
+      this.credentialsProvider         = credentialsProvider;
+      this.userAgent                   = userAgent;
+      this.openchatConnectionInformation = new OpenchatConnectionInformation[serviceUrls.length];
+      this.random                      = SecureRandom.getInstance("SHA1PRNG");
+
+      for (int i = 0; i < serviceUrls.length; i++) {
+        openchatConnectionInformation[i] = new OpenchatConnectionInformation(serviceUrls[i]);
+      }
+    } catch (NoSuchAlgorithmException e) {
+      throw new AssertionError(e);
+    }
   }
 
   public void createAccount(boolean voice) throws IOException {
@@ -543,8 +550,13 @@ public class PushServiceSocket {
       throws PushNetworkException
   {
     try {
-      Log.w(TAG, "Push service URL: " + serviceUrl.getUrl());
-      Log.w(TAG, "Opening URL: " + String.format("%s%s", serviceUrl.getUrl(), urlFragment));
+      OpenchatConnectionInformation connectionInformation = getRandom(openchatConnectionInformation, random);
+      String                      url                   = connectionInformation.getUrl();
+      Optional<String>            hostHeader            = connectionInformation.getHostHeader();
+      TrustManager[]              trustManagers         = connectionInformation.getTrustManagers();
+
+      Log.w(TAG, "Push service URL: " + url);
+      Log.w(TAG, "Opening URL: " + String.format("%s%s", url, urlFragment));
 
       SSLContext context = SSLContext.getInstance("TLS");
       context.init(null, trustManagers, null);
@@ -554,7 +566,7 @@ public class PushServiceSocket {
       okHttpClient.setHostnameVerifier(new StrictHostnameVerifier());
 
       Request.Builder request = new Request.Builder();
-      request.url(String.format("%s%s", serviceUrl.getUrl(), urlFragment));
+      request.url(String.format("%s%s", url, urlFragment));
 
       if (body != null) {
         request.method(method, RequestBody.create(MediaType.parse("application/json"), body));
@@ -570,8 +582,8 @@ public class PushServiceSocket {
         request.addHeader("X-Openchat-Agent", userAgent);
       }
 
-      if (serviceUrl.getHostHeader().isPresent()) {
-        okHttpClient.networkInterceptors().add(new HostInterceptor(serviceUrl.getHostHeader().get()));
+      if (hostHeader.isPresent()) {
+        okHttpClient.networkInterceptors().add(new HostInterceptor(hostHeader.get()));
       }
 
       return okHttpClient.newCall(request.build()).execute();
@@ -588,6 +600,12 @@ public class PushServiceSocket {
     } catch (UnsupportedEncodingException e) {
       throw new AssertionError(e);
     }
+  }
+
+  private OpenchatConnectionInformation getRandom(OpenchatConnectionInformation[] connections,
+                                                SecureRandom random)
+  {
+    return connections[random.nextInt(connections.length)];
   }
 
   private static class GcmRegistrationId {
@@ -634,6 +652,31 @@ public class PushServiceSocket {
     public Response intercept(Chain chain) throws IOException {
       Request request = chain.request();
       return chain.proceed(request.newBuilder().header("Host", host).build());
+    }
+  }
+
+  private static class OpenchatConnectionInformation {
+
+    private final String           url;
+    private final Optional<String> hostHeader;
+    private final TrustManager[]   trustManagers;
+
+    private OpenchatConnectionInformation(OpenchatServiceUrl openchatServiceUrl) {
+      this.url           = openchatServiceUrl.getUrl();
+      this.hostHeader    = openchatServiceUrl.getHostHeader();
+      this.trustManagers = BlacklistingTrustManager.createFor(openchatServiceUrl.getTrustStore());
+    }
+
+    String getUrl() {
+      return url;
+    }
+
+    Optional<String> getHostHeader() {
+      return hostHeader;
+    }
+
+    TrustManager[] getTrustManagers() {
+      return trustManagers;
     }
   }
 }

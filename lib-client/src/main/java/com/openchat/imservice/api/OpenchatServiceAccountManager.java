@@ -38,11 +38,11 @@ public class OpenchatServiceAccountManager {
   private final String            userAgent;
 
   
-  public OpenchatServiceAccountManager(OpenchatServiceUrl url, TrustStore trustStore,
+  public OpenchatServiceAccountManager(OpenchatServiceUrl[] urls,
                                      String user, String password,
                                      String userAgent)
   {
-    this.pushServiceSocket = new PushServiceSocket(url, trustStore, new StaticCredentialsProvider(user, password, null), userAgent);
+    this.pushServiceSocket = new PushServiceSocket(urls, new StaticCredentialsProvider(user, password, null), userAgent);
     this.user              = user;
     this.userAgent         = userAgent;
   }

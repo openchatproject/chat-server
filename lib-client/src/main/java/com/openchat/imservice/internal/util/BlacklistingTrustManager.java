@@ -1,5 +1,6 @@
 package com.openchat.imservice.internal.util;
 
+import com.openchat.protocal.util.Pair;
 import com.openchat.imservice.api.push.TrustStore;
 
 import java.io.IOException;
@@ -19,8 +20,8 @@ import javax.net.ssl.X509TrustManager;
 
 public class BlacklistingTrustManager implements X509TrustManager {
 
-  private static final List<BigInteger> BLACKLIST = new LinkedList<BigInteger>() {{
-    add(new BigInteger("4098"));
+  private static final List<Pair<String, BigInteger>> BLACKLIST = new LinkedList<Pair<String, BigInteger>>() {{
+    add(new Pair<>("Open Openchat Systems", new BigInteger("4098")));
   }};
 
   public static TrustManager[] createFor(TrustManager[] trustManagers) {
@@ -72,8 +73,10 @@ public class BlacklistingTrustManager implements X509TrustManager {
     trustManager.checkServerTrusted(chain, authType);
 
     for (X509Certificate certificate : chain) {
-      for (BigInteger blacklistedSerial : BLACKLIST) {
-        if (certificate.getSerialNumber().equals(blacklistedSerial)) {
+      for (Pair<String, BigInteger> blacklistedSerial : BLACKLIST) {
+        if (certificate.getIssuerDN().getName().equals(blacklistedSerial.first()) &&
+            certificate.getSerialNumber().equals(blacklistedSerial.second()))
+        {
           throw new CertificateException("Blacklisted Serial: " + certificate.getSerialNumber());
         }
       }
