@@ -75,10 +75,10 @@ public class OpenchatServiceAccountManager {
   }
 
   
-  public void verifyAccountWithToken(String verificationToken, String openchatingKey, int axolotlRegistrationId, boolean voice)
+  public void verifyAccountWithToken(String verificationToken, String openchatingKey, int openchatProtocolRegistrationId, boolean voice)
       throws IOException
   {
-    this.pushServiceSocket.verifyAccountToken(verificationToken, openchatingKey, axolotlRegistrationId, voice);
+    this.pushServiceSocket.verifyAccountToken(verificationToken, openchatingKey, openchatProtocolRegistrationId, voice);
   }
 
   
