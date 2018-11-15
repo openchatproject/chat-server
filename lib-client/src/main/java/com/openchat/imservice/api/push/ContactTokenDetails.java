@@ -16,6 +16,9 @@ public class ContactTokenDetails {
   @JsonProperty
   private boolean voice;
 
+  @JsonProperty
+  private boolean video;
+
   public ContactTokenDetails() {}
 
   
@@ -33,6 +36,10 @@ public class ContactTokenDetails {
     return voice;
   }
 
+  public boolean isVideo() {
+    return video;
+  }
+
   public void setNumber(String number) {
     this.number = number;
   }
@@ -41,4 +48,5 @@ public class ContactTokenDetails {
   public String getNumber() {
     return number;
   }
+
 }

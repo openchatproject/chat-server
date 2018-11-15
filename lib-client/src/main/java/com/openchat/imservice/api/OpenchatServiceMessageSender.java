@@ -16,6 +16,10 @@ import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentStream;
 import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
+import com.openchat.imservice.api.messages.calls.AnswerMessage;
+import com.openchat.imservice.api.messages.calls.IceUpdateMessage;
+import com.openchat.imservice.api.messages.calls.OfferMessage;
+import com.openchat.imservice.api.messages.calls.OpenchatServiceCallMessage;
 import com.openchat.imservice.api.messages.multidevice.BlockedListMessage;
 import com.openchat.imservice.api.messages.multidevice.ReadMessage;
 import com.openchat.imservice.api.messages.multidevice.OpenchatServiceSyncMessage;
@@ -31,6 +35,7 @@ import com.openchat.imservice.internal.push.PushAttachmentData;
 import com.openchat.imservice.internal.push.PushServiceSocket;
 import com.openchat.imservice.internal.push.SendMessageResponse;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos.CallMessage;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.Content;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext;
@@ -74,6 +79,13 @@ public class OpenchatServiceMessageSender {
   
   public void sendDeliveryReceipt(OpenchatServiceAddress recipient, long messageId) throws IOException {
     this.socket.sendReceipt(recipient.getNumber(), messageId, recipient.getRelay());
+  }
+
+  public void sendCallMessage(OpenchatServiceAddress recipient, OpenchatServiceCallMessage message)
+      throws IOException, UntrustedIdentityException
+  {
+    byte[] content = createCallContent(message);
+    sendMessage(recipient, System.currentTimeMillis(), content, false, true);
   }
 
   
@@ -137,6 +149,14 @@ public class OpenchatServiceMessageSender {
     sendMessage(localAddress, System.currentTimeMillis(), content, false, false);
   }
 
+  public void setSoTimeoutMillis(long soTimeoutMillis) {
+    socket.setSoTimeoutMillis(soTimeoutMillis);
+  }
+
+  public void cancelInFlightRequests() {
+    socket.cancelInFlightRequests();
+  }
+
   private byte[] createMessageContent(OpenchatServiceDataMessage message) throws IOException {
     DataMessage.Builder     builder  = DataMessage.newBuilder();
     List<AttachmentPointer> pointers = createAttachmentPointers(message.getAttachments());
@@ -166,6 +186,40 @@ public class OpenchatServiceMessageSender {
     }
 
     return builder.build().toByteArray();
+  }
+
+  private byte[] createCallContent(OpenchatServiceCallMessage callMessage) {
+    Content.Builder     container = Content.newBuilder();
+    CallMessage.Builder builder   = CallMessage.newBuilder();
+
+    if (callMessage.getOfferMessage().isPresent()) {
+      OfferMessage offer = callMessage.getOfferMessage().get();
+      builder.setOffer(CallMessage.Offer.newBuilder()
+                                        .setId(offer.getId())
+                                        .setDescription(offer.getDescription()));
+    } else if (callMessage.getAnswerMessage().isPresent()) {
+      AnswerMessage answer = callMessage.getAnswerMessage().get();
+      builder.setAnswer(CallMessage.Answer.newBuilder()
+                                          .setId(answer.getId())
+                                          .setDescription(answer.getDescription()));
+    } else if (callMessage.getIceUpdateMessages().isPresent()) {
+      List<IceUpdateMessage> updates = callMessage.getIceUpdateMessages().get();
+
+      for (IceUpdateMessage update : updates) {
+        builder.addIceUpdate(CallMessage.IceUpdate.newBuilder()
+                                                  .setId(update.getId())
+                                                  .setSdp(update.getSdp())
+                                                  .setSdpMid(update.getSdpMid())
+                                                  .setSdpMLineIndex(update.getSdpMLineIndex()));
+      }
+    } else if (callMessage.getHangupMessage().isPresent()) {
+      builder.setHangup(CallMessage.Hangup.newBuilder().setId(callMessage.getHangupMessage().get().getId()));
+    } else if (callMessage.getBusyMessage().isPresent()) {
+      builder.setBusy(CallMessage.Busy.newBuilder().setId(callMessage.getBusyMessage().get().getId()));
+    }
+
+    container.setCallMessage(builder);
+    return container.build().toByteArray();
   }
 
   private byte[] createMultiDeviceContactsContent(OpenchatServiceAttachmentStream contacts) throws IOException {
