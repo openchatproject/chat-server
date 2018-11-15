@@ -68,26 +68,26 @@ public class OpenchatServiceAccountManager {
   }
 
   
-  public void verifyAccountWithCode(String verificationCode, String openchatingKey, int openchatProtocolRegistrationId, boolean voice, boolean video)
+  public void verifyAccountWithCode(String verificationCode, String openchatingKey, int openchatProtocolRegistrationId, boolean voice, boolean video, boolean fetchesMessages)
       throws IOException
   {
     this.pushServiceSocket.verifyAccountCode(verificationCode, openchatingKey,
                                              openchatProtocolRegistrationId,
-                                             voice, video);
+                                             voice, video, fetchesMessages);
   }
 
   
-  public void verifyAccountWithToken(String verificationToken, String openchatingKey, int openchatProtocolRegistrationId, boolean voice, boolean video)
+  public void verifyAccountWithToken(String verificationToken, String openchatingKey, int openchatProtocolRegistrationId, boolean voice, boolean video, boolean fetchesMessages)
       throws IOException
   {
-    this.pushServiceSocket.verifyAccountToken(verificationToken, openchatingKey, openchatProtocolRegistrationId, voice, video);
+    this.pushServiceSocket.verifyAccountToken(verificationToken, openchatingKey, openchatProtocolRegistrationId, voice, video, fetchesMessages);
   }
 
   
-  public void setAccountAttributes(String openchatingKey, int openchatProtocolRegistrationId, boolean voice, boolean video)
+  public void setAccountAttributes(String openchatingKey, int openchatProtocolRegistrationId, boolean voice, boolean video, boolean fetchesMessages)
       throws IOException
   {
-    this.pushServiceSocket.setAccountAttributes(openchatingKey, openchatProtocolRegistrationId, voice, video);
+    this.pushServiceSocket.setAccountAttributes(openchatingKey, openchatProtocolRegistrationId, voice, video, fetchesMessages);
   }
 
   

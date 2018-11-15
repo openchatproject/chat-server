@@ -121,24 +121,24 @@ public class PushServiceSocket {
     makeRequest(String.format(path, credentialsProvider.getUser()), "GET", null);
   }
 
-  public void verifyAccountCode(String verificationCode, String openchatingKey, int registrationId, boolean voice, boolean video)
+  public void verifyAccountCode(String verificationCode, String openchatingKey, int registrationId, boolean voice, boolean video, boolean fetchesMessages)
       throws IOException
   {
-    AccountAttributes openchatingKeyEntity = new AccountAttributes(openchatingKey, registrationId, voice, video);
+    AccountAttributes openchatingKeyEntity = new AccountAttributes(openchatingKey, registrationId, voice, video, fetchesMessages);
     makeRequest(String.format(VERIFY_ACCOUNT_CODE_PATH, verificationCode),
                 "PUT", JsonUtil.toJson(openchatingKeyEntity));
   }
 
-  public void verifyAccountToken(String verificationToken, String openchatingKey, int registrationId, boolean voice, boolean video)
+  public void verifyAccountToken(String verificationToken, String openchatingKey, int registrationId, boolean voice, boolean video, boolean fetchesMessages)
       throws IOException
   {
-    AccountAttributes openchatingKeyEntity = new AccountAttributes(openchatingKey, registrationId, voice, video);
+    AccountAttributes openchatingKeyEntity = new AccountAttributes(openchatingKey, registrationId, voice, video, fetchesMessages);
     makeRequest(String.format(VERIFY_ACCOUNT_TOKEN_PATH, verificationToken),
                 "PUT", JsonUtil.toJson(openchatingKeyEntity));
   }
 
-  public void setAccountAttributes(String openchatingKey, int registrationId, boolean voice, boolean video) throws IOException {
-    AccountAttributes accountAttributes = new AccountAttributes(openchatingKey, registrationId, voice, video);
+  public void setAccountAttributes(String openchatingKey, int registrationId, boolean voice, boolean video, boolean fetchesMessages) throws IOException {
+    AccountAttributes accountAttributes = new AccountAttributes(openchatingKey, registrationId, voice, video, fetchesMessages);
     makeRequest(SET_ACCOUNT_ATTRIBUTES, "PUT", JsonUtil.toJson(accountAttributes));
   }
 
