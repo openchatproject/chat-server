@@ -15,6 +15,7 @@ import com.openchat.imservice.api.push.SignedPreKeyEntity;
 import com.openchat.imservice.api.push.TrustStore;
 import com.openchat.imservice.internal.crypto.ProvisioningCipher;
 import com.openchat.imservice.internal.push.PushServiceSocket;
+import com.openchat.imservice.internal.push.OpenchatServiceUrl;
 import com.openchat.imservice.internal.util.Base64;
 import com.openchat.imservice.internal.util.StaticCredentialsProvider;
 import com.openchat.imservice.internal.util.Util;
@@ -37,7 +38,7 @@ public class OpenchatServiceAccountManager {
   private final String            userAgent;
 
   
-  public OpenchatServiceAccountManager(String url, TrustStore trustStore,
+  public OpenchatServiceAccountManager(OpenchatServiceUrl url, TrustStore trustStore,
                                      String user, String password,
                                      String userAgent)
   {

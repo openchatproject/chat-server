@@ -10,6 +10,7 @@ import com.openchat.imservice.api.push.TrustStore;
 import com.openchat.imservice.api.util.CredentialsProvider;
 import com.openchat.imservice.internal.push.PushServiceSocket;
 import com.openchat.imservice.internal.push.OpenchatServiceEnvelopeEntity;
+import com.openchat.imservice.internal.push.OpenchatServiceUrl;
 import com.openchat.imservice.internal.util.StaticCredentialsProvider;
 import com.openchat.imservice.internal.websocket.WebSocketConnection;
 
@@ -23,12 +24,12 @@ public class OpenchatServiceMessageReceiver {
 
   private final PushServiceSocket   socket;
   private final TrustStore          trustStore;
-  private final String              url;
+  private final OpenchatServiceUrl    url;
   private final CredentialsProvider credentialsProvider;
   private final String              userAgent;
 
   
-  public OpenchatServiceMessageReceiver(String url, TrustStore trustStore,
+  public OpenchatServiceMessageReceiver(OpenchatServiceUrl url, TrustStore trustStore,
                                       String user, String password,
                                       String openchatingKey, String userAgent)
   {
@@ -36,7 +37,7 @@ public class OpenchatServiceMessageReceiver {
   }
 
   
-  public OpenchatServiceMessageReceiver(String url, TrustStore trustStore,
+  public OpenchatServiceMessageReceiver(OpenchatServiceUrl url, TrustStore trustStore,
                                       CredentialsProvider credentials, String userAgent)
   {
     this.url                 = url;
@@ -63,7 +64,7 @@ public class OpenchatServiceMessageReceiver {
 
   
   public OpenchatServiceMessagePipe createMessagePipe() {
-    WebSocketConnection webSocket = new WebSocketConnection(url, trustStore, credentialsProvider, userAgent);
+    WebSocketConnection webSocket = new WebSocketConnection(url.getUrl(), trustStore, credentialsProvider, userAgent);
     return new OpenchatServiceMessagePipe(webSocket, credentialsProvider);
   }
 

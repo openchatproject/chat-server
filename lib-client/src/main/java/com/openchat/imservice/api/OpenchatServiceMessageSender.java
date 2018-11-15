@@ -36,6 +36,7 @@ import com.openchat.imservice.internal.push.OpenchatServiceProtos.Content;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage;
+import com.openchat.imservice.internal.push.OpenchatServiceUrl;
 import com.openchat.imservice.internal.push.StaleDevices;
 import com.openchat.imservice.internal.push.exceptions.MismatchedDevicesException;
 import com.openchat.imservice.internal.push.exceptions.StaleDevicesException;
@@ -56,7 +57,7 @@ public class OpenchatServiceMessageSender {
   private final Optional<EventListener> eventListener;
 
   
-  public OpenchatServiceMessageSender(String url, TrustStore trustStore,
+  public OpenchatServiceMessageSender(OpenchatServiceUrl url, TrustStore trustStore,
                                     String user, String password,
                                     OpenchatProtocolStore store,
                                     String userAgent,

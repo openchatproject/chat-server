@@ -2,6 +2,7 @@ package com.openchat.imservice.internal.push;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -84,12 +85,12 @@ public class PushServiceSocket {
   private static final String RECEIPT_PATH              = "/v1/receipt/%s/%d";
   private static final String ATTACHMENT_PATH           = "/v1/attachments/%s";
 
-  private final String              serviceUrl;
+  private final OpenchatServiceUrl    serviceUrl;
   private final TrustManager[]      trustManagers;
   private final CredentialsProvider credentialsProvider;
   private final String              userAgent;
 
-  public PushServiceSocket(String serviceUrl, TrustStore trustStore, CredentialsProvider credentialsProvider, String userAgent)
+  public PushServiceSocket(OpenchatServiceUrl serviceUrl, TrustStore trustStore, CredentialsProvider credentialsProvider, String userAgent)
   {
     this.serviceUrl          = serviceUrl;
     this.credentialsProvider = credentialsProvider;
@@ -542,8 +543,8 @@ public class PushServiceSocket {
       throws PushNetworkException
   {
     try {
-      Log.w(TAG, "Push service URL: " + serviceUrl);
-      Log.w(TAG, "Opening URL: " + String.format("%s%s", serviceUrl, urlFragment));
+      Log.w(TAG, "Push service URL: " + serviceUrl.getUrl());
+      Log.w(TAG, "Opening URL: " + String.format("%s%s", serviceUrl.getUrl(), urlFragment));
 
       SSLContext context = SSLContext.getInstance("TLS");
       context.init(null, trustManagers, null);
@@ -553,7 +554,7 @@ public class PushServiceSocket {
       okHttpClient.setHostnameVerifier(new StrictHostnameVerifier());
 
       Request.Builder request = new Request.Builder();
-      request.url(String.format("%s%s", serviceUrl, urlFragment));
+      request.url(String.format("%s%s", serviceUrl.getUrl(), urlFragment));
 
       if (body != null) {
         request.method(method, RequestBody.create(MediaType.parse("application/json"), body));
@@ -567,6 +568,10 @@ public class PushServiceSocket {
 
       if (userAgent != null) {
         request.addHeader("X-Openchat-Agent", userAgent);
+      }
+
+      if (serviceUrl.getHostHeader().isPresent()) {
+        okHttpClient.networkInterceptors().add(new HostInterceptor(serviceUrl.getHostHeader().get()));
       }
 
       return okHttpClient.newCall(request.build()).execute();
@@ -614,6 +619,21 @@ public class PushServiceSocket {
 
     public String getLocation() {
       return location;
+    }
+  }
+
+  private static class HostInterceptor implements Interceptor {
+
+    private final String host;
+
+    HostInterceptor(String host) {
+      this.host = host;
+    }
+
+    @Override
+    public Response intercept(Chain chain) throws IOException {
+      Request request = chain.request();
+      return chain.proceed(request.newBuilder().header("Host", host).build());
     }
   }
 }
