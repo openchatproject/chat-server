@@ -1,11 +1,21 @@
 package com.openchat.imservice.api;
 
+import com.google.protobuf.ByteString;
+
 import com.openchat.protocal.InvalidVersionException;
+import com.openchat.protocal.util.Pair;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.util.CredentialsProvider;
+import com.openchat.imservice.internal.push.OutgoingPushMessageList;
+import com.openchat.imservice.internal.push.SendMessageResponse;
+import com.openchat.imservice.internal.util.JsonUtil;
+import com.openchat.imservice.internal.util.Util;
 import com.openchat.imservice.internal.websocket.WebSocketConnection;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -13,6 +23,8 @@ import static com.openchat.imservice.internal.websocket.WebSocketProtos.WebSocke
 import static com.openchat.imservice.internal.websocket.WebSocketProtos.WebSocketResponseMessage;
 
 public class OpenchatServiceMessagePipe {
+
+  private static final String TAG = OpenchatServiceMessagePipe.class.getName();
 
   private final WebSocketConnection websocket;
   private final CredentialsProvider credentialsProvider;
@@ -50,6 +62,31 @@ public class OpenchatServiceMessagePipe {
       } finally {
         websocket.sendResponse(response);
       }
+    }
+  }
+
+  public SendMessageResponse send(OutgoingPushMessageList list) throws IOException {
+    try {
+      WebSocketRequestMessage requestMessage = WebSocketRequestMessage.newBuilder()
+                                                                      .setId(SecureRandom.getInstance("SHA1PRNG").nextLong())
+                                                                      .setVerb("PUT")
+                                                                      .setPath(String.format("/v1/messages/%s", list.getDestination()))
+                                                                      .addHeaders("content-type:application/json")
+                                                                      .setBody(ByteString.copyFrom(JsonUtil.toJson(list).getBytes()))
+                                                                      .build();
+
+      Pair<Integer, String> response = websocket.sendRequest(requestMessage).get(10, TimeUnit.SECONDS);
+
+      if (response.first() < 200 || response.first() >= 300) {
+        throw new IOException("Non-successful response: " + response.first());
+      }
+
+      if (Util.isEmpty(response.second())) return new SendMessageResponse(false);
+      else                                 return JsonUtil.fromJson(response.second(), SendMessageResponse.class);
+    } catch (NoSuchAlgorithmException e) {
+      throw new AssertionError(e);
+    } catch (InterruptedException | ExecutionException | TimeoutException e) {
+      throw new IOException(e);
     }
   }
 

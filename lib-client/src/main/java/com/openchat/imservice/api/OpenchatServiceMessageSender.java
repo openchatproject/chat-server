@@ -20,7 +20,6 @@ import com.openchat.imservice.api.messages.multidevice.BlockedListMessage;
 import com.openchat.imservice.api.messages.multidevice.ReadMessage;
 import com.openchat.imservice.api.messages.multidevice.OpenchatServiceSyncMessage;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
-import com.openchat.imservice.api.push.TrustStore;
 import com.openchat.imservice.api.push.exceptions.EncapsulatedExceptions;
 import com.openchat.imservice.api.push.exceptions.NetworkFailureException;
 import com.openchat.imservice.api.push.exceptions.PushNetworkException;
@@ -51,21 +50,24 @@ public class OpenchatServiceMessageSender {
 
   private static final String TAG = OpenchatServiceMessageSender.class.getSimpleName();
 
-  private final PushServiceSocket       socket;
-  private final OpenchatProtocolStore     store;
-  private final OpenchatServiceAddress localAddress;
-  private final Optional<EventListener> eventListener;
+  private final PushServiceSocket                  socket;
+  private final OpenchatProtocolStore                store;
+  private final OpenchatServiceAddress               localAddress;
+  private final Optional<OpenchatServiceMessagePipe> pipe;
+  private final Optional<EventListener>            eventListener;
 
   
   public OpenchatServiceMessageSender(OpenchatServiceUrl[] urls,
                                     String user, String password,
                                     OpenchatProtocolStore store,
                                     String userAgent,
+                                    Optional<OpenchatServiceMessagePipe> pipe,
                                     Optional<EventListener> eventListener)
   {
     this.socket        = new PushServiceSocket(urls, new StaticCredentialsProvider(user, password, null), userAgent);
     this.store         = store;
     this.localAddress  = new OpenchatServiceAddress(user);
+    this.pipe          = pipe;
     this.eventListener = eventListener;
   }
 
@@ -293,6 +295,18 @@ public class OpenchatServiceMessageSender {
     for (int i=0;i<3;i++) {
       try {
         OutgoingPushMessageList messages = getEncryptedMessages(socket, recipient, timestamp, content, legacy, silent);
+
+        if (pipe.isPresent()) {
+          try {
+            Log.w(TAG, "Transmitting over pipe...");
+            return pipe.get().send(messages);
+          } catch (IOException e) {
+            Log.w(TAG, e);
+            Log.w(TAG, "Falling back to new connection...");
+          }
+        }
+
+        Log.w(TAG, "Not transmitting over pipe...");
         return socket.sendMessage(messages);
       } catch (MismatchedDevicesException mde) {
         Log.w(TAG, mde);
