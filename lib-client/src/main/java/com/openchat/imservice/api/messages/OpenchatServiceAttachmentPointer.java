@@ -12,23 +12,26 @@ public class OpenchatServiceAttachmentPointer extends OpenchatServiceAttachment 
   private final Optional<byte[]>  preview;
   private final Optional<byte[]>  digest;
   private final Optional<String>  fileName;
+  private final boolean           voiceNote;
 
-  public OpenchatServiceAttachmentPointer(long id, String contentType, byte[] key, String relay, Optional<byte[]> digest, Optional<String> fileName) {
-    this(id, contentType, key, relay, Optional.<Integer>absent(), Optional.<byte[]>absent(), digest, fileName);
+  public OpenchatServiceAttachmentPointer(long id, String contentType, byte[] key, String relay, Optional<byte[]> digest, Optional<String> fileName, boolean voiceNote) {
+    this(id, contentType, key, relay, Optional.<Integer>absent(), Optional.<byte[]>absent(), digest, fileName, voiceNote);
   }
 
   public OpenchatServiceAttachmentPointer(long id, String contentType, byte[] key, String relay,
                                         Optional<Integer> size, Optional<byte[]> preview,
-                                        Optional<byte[]> digest, Optional<String> fileName)
+                                        Optional<byte[]> digest, Optional<String> fileName,
+                                        boolean voiceNote)
   {
     super(contentType);
-    this.id       = id;
-    this.key      = key;
-    this.relay    = Optional.fromNullable(relay);
-    this.size     = size;
-    this.preview  = preview;
-    this.digest   = digest;
-    this.fileName = fileName;
+    this.id        = id;
+    this.key       = key;
+    this.relay     = Optional.fromNullable(relay);
+    this.size      = size;
+    this.preview   = preview;
+    this.digest    = digest;
+    this.fileName  = fileName;
+    this.voiceNote = voiceNote;
   }
 
   public long getId() {
@@ -67,5 +70,9 @@ public class OpenchatServiceAttachmentPointer extends OpenchatServiceAttachment 
 
   public Optional<byte[]> getDigest() {
     return digest;
+  }
+
+  public boolean getVoiceNote() {
+    return voiceNote;
   }
 }

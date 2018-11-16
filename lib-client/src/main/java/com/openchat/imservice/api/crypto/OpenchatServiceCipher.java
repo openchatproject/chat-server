@@ -53,7 +53,7 @@ public class OpenchatServiceCipher {
 
   private static final String TAG = OpenchatServiceCipher.class.getSimpleName();
 
-  private final OpenchatProtocolStore      openchatProtocolStore;
+  private final OpenchatProtocolStore  openchatProtocolStore;
   private final OpenchatServiceAddress localAddress;
 
   public OpenchatServiceCipher(OpenchatServiceAddress localAddress, OpenchatProtocolStore openchatProtocolStore) {
@@ -146,7 +146,8 @@ public class OpenchatServiceCipher {
                                                          pointer.hasSize() ? Optional.of(pointer.getSize()) : Optional.<Integer>absent(),
                                                          pointer.hasThumbnail() ? Optional.of(pointer.getThumbnail().toByteArray()): Optional.<byte[]>absent(),
                                                          pointer.hasDigest() ? Optional.of(pointer.getDigest().toByteArray()) : Optional.<byte[]>absent(),
-                                                         pointer.hasFileName() ? Optional.of(pointer.getFileName()) : Optional.<String>absent()));
+                                                         pointer.hasFileName() ? Optional.of(pointer.getFileName()) : Optional.<String>absent(),
+                                                         (pointer.getFlags() & AttachmentPointer.Flags.VOICE_MESSAGE_VALUE) != 0));
     }
 
     return new OpenchatServiceDataMessage(envelope.getTimestamp(), groupInfo, attachments,
@@ -240,7 +241,8 @@ public class OpenchatServiceCipher {
                                                     pointer.getKey().toByteArray(),
                                                     envelope.getRelay(),
                                                     pointer.hasDigest() ? Optional.of(pointer.getDigest().toByteArray()) : Optional.<byte[]>absent(),
-                                                    Optional.<String>absent());
+                                                    Optional.<String>absent(),
+                                                    false);
       }
 
       return new OpenchatServiceGroup(type, content.getGroup().getId().toByteArray(), name, members, avatar);
