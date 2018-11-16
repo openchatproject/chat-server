@@ -145,7 +145,8 @@ public class OpenchatServiceCipher {
                                                          envelope.getRelay(),
                                                          pointer.hasSize() ? Optional.of(pointer.getSize()) : Optional.<Integer>absent(),
                                                          pointer.hasThumbnail() ? Optional.of(pointer.getThumbnail().toByteArray()): Optional.<byte[]>absent(),
-                                                         pointer.hasDigest() ? Optional.of(pointer.getDigest().toByteArray()) : Optional.<byte[]>absent()));
+                                                         pointer.hasDigest() ? Optional.of(pointer.getDigest().toByteArray()) : Optional.<byte[]>absent(),
+                                                         pointer.hasFileName() ? Optional.of(pointer.getFileName()) : Optional.<String>absent()));
     }
 
     return new OpenchatServiceDataMessage(envelope.getTimestamp(), groupInfo, attachments,
@@ -238,7 +239,8 @@ public class OpenchatServiceCipher {
                                                     pointer.getContentType(),
                                                     pointer.getKey().toByteArray(),
                                                     envelope.getRelay(),
-                                                    pointer.hasDigest() ? Optional.of(pointer.getDigest().toByteArray()) : Optional.<byte[]>absent());
+                                                    pointer.hasDigest() ? Optional.of(pointer.getDigest().toByteArray()) : Optional.<byte[]>absent(),
+                                                    Optional.<String>absent());
       }
 
       return new OpenchatServiceGroup(type, content.getGroup().getId().toByteArray(), name, members, avatar);

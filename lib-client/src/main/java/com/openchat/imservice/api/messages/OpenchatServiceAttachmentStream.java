@@ -8,17 +8,19 @@ public class OpenchatServiceAttachmentStream extends OpenchatServiceAttachment {
 
   private final InputStream      inputStream;
   private final long             length;
+  private final Optional<String> fileName;
   private final ProgressListener listener;
   private final Optional<byte[]> preview;
 
-  public OpenchatServiceAttachmentStream(InputStream inputStream, String contentType, long length, ProgressListener listener) {
-    this(inputStream, contentType, length, Optional.<byte[]>absent(), listener);
+  public OpenchatServiceAttachmentStream(InputStream inputStream, String contentType, long length, Optional<String> fileName, ProgressListener listener) {
+    this(inputStream, contentType, length, fileName, Optional.<byte[]>absent(), listener);
   }
 
-  public OpenchatServiceAttachmentStream(InputStream inputStream, String contentType, long length, Optional<byte[]> preview, ProgressListener listener) {
+  public OpenchatServiceAttachmentStream(InputStream inputStream, String contentType, long length, Optional<String> fileName, Optional<byte[]> preview, ProgressListener listener) {
     super(contentType);
     this.inputStream = inputStream;
     this.length      = length;
+    this.fileName    = fileName;
     this.listener    = listener;
     this.preview     = preview;
   }
@@ -39,6 +41,10 @@ public class OpenchatServiceAttachmentStream extends OpenchatServiceAttachment {
 
   public long getLength() {
     return length;
+  }
+
+  public Optional<String> getFileName() {
+    return fileName;
   }
 
   public ProgressListener getListener() {

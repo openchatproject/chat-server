@@ -1,5 +1,7 @@
 package com.openchat.imservice.api.messages;
 
+import com.openchat.protocal.util.guava.Optional;
+
 import java.io.InputStream;
 
 public abstract class OpenchatServiceAttachment {
@@ -33,6 +35,7 @@ public abstract class OpenchatServiceAttachment {
 
     private InputStream      inputStream;
     private String           contentType;
+    private String           fileName;
     private long             length;
     private ProgressListener listener;
 
@@ -53,6 +56,11 @@ public abstract class OpenchatServiceAttachment {
       return this;
     }
 
+    public Builder withFileName(String fileName) {
+      this.fileName = fileName;
+      return this;
+    }
+
     public Builder withListener(ProgressListener listener) {
       this.listener = listener;
       return this;
@@ -63,7 +71,7 @@ public abstract class OpenchatServiceAttachment {
       if (contentType == null) throw new IllegalArgumentException("No content type specified!");
       if (length == 0)         throw new IllegalArgumentException("No length specified!");
 
-      return new OpenchatServiceAttachmentStream(inputStream, contentType, length, listener);
+      return new OpenchatServiceAttachmentStream(inputStream, contentType, length, Optional.fromNullable(fileName), listener);
     }
   }
 

@@ -11024,6 +11024,14 @@ public final class OpenchatServiceProtos {
     boolean hasDigest();
     
     com.google.protobuf.ByteString getDigest();
+
+    
+    boolean hasFileName();
+    
+    java.lang.String getFileName();
+    
+    com.google.protobuf.ByteString
+        getFileNameBytes();
   }
   
   public static final class AttachmentPointer extends
@@ -11101,6 +11109,11 @@ public final class OpenchatServiceProtos {
             case 50: {
               bitField0_ |= 0x00000020;
               digest_ = input.readBytes();
+              break;
+            }
+            case 58: {
+              bitField0_ |= 0x00000040;
+              fileName_ = input.readBytes();
               break;
             }
           }
@@ -11234,6 +11247,42 @@ public final class OpenchatServiceProtos {
       return digest_;
     }
 
+    public static final int FILENAME_FIELD_NUMBER = 7;
+    private java.lang.Object fileName_;
+    
+    public boolean hasFileName() {
+      return ((bitField0_ & 0x00000040) == 0x00000040);
+    }
+    
+    public java.lang.String getFileName() {
+      java.lang.Object ref = fileName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          fileName_ = s;
+        }
+        return s;
+      }
+    }
+    
+    public com.google.protobuf.ByteString
+        getFileNameBytes() {
+      java.lang.Object ref = fileName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        fileName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       id_ = 0L;
       contentType_ = "";
@@ -11241,6 +11290,7 @@ public final class OpenchatServiceProtos {
       size_ = 0;
       thumbnail_ = com.google.protobuf.ByteString.EMPTY;
       digest_ = com.google.protobuf.ByteString.EMPTY;
+      fileName_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -11271,6 +11321,9 @@ public final class OpenchatServiceProtos {
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         output.writeBytes(6, digest_);
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        output.writeBytes(7, getFileNameBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -11304,6 +11357,10 @@ public final class OpenchatServiceProtos {
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(6, digest_);
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(7, getFileNameBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -11430,6 +11487,8 @@ public final class OpenchatServiceProtos {
         bitField0_ = (bitField0_ & ~0x00000010);
         digest_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000020);
+        fileName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
 
@@ -11482,6 +11541,10 @@ public final class OpenchatServiceProtos {
           to_bitField0_ |= 0x00000020;
         }
         result.digest_ = digest_;
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+          to_bitField0_ |= 0x00000040;
+        }
+        result.fileName_ = fileName_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -11517,6 +11580,11 @@ public final class OpenchatServiceProtos {
         }
         if (other.hasDigest()) {
           setDigest(other.getDigest());
+        }
+        if (other.hasFileName()) {
+          bitField0_ |= 0x00000040;
+          fileName_ = other.fileName_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -11731,6 +11799,67 @@ public final class OpenchatServiceProtos {
       public Builder clearDigest() {
         bitField0_ = (bitField0_ & ~0x00000020);
         digest_ = getDefaultInstance().getDigest();
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object fileName_ = "";
+      
+      public boolean hasFileName() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      
+      public java.lang.String getFileName() {
+        java.lang.Object ref = fileName_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          fileName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      
+      public com.google.protobuf.ByteString
+          getFileNameBytes() {
+        java.lang.Object ref = fileName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          fileName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      
+      public Builder setFileName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        fileName_ = value;
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearFileName() {
+        bitField0_ = (bitField0_ & ~0x00000040);
+        fileName_ = getDefaultInstance().getFileName();
+        onChanged();
+        return this;
+      }
+      
+      public Builder setFileNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        fileName_ = value;
         onChanged();
         return this;
       }
@@ -15652,7 +15781,7 @@ public final class OpenchatServiceProtos {
           internal_static_openchatservice_AttachmentPointer_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_openchatservice_AttachmentPointer_descriptor,
-              new java.lang.String[] { "Id", "ContentType", "Key", "Size", "Thumbnail", "Digest", });
+              new java.lang.String[] { "Id", "ContentType", "Key", "Size", "Thumbnail", "Digest", "FileName", });
           internal_static_openchatservice_GroupContext_descriptor =
             getDescriptor().getMessageTypes().get(6);
           internal_static_openchatservice_GroupContext_fieldAccessorTable = new
