@@ -42,7 +42,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyManagementException;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Collections;
@@ -362,7 +361,7 @@ public class PushServiceSocket {
     return new Pair<>(attachmentKey.getId(), digest);
   }
 
-  public void retrieveAttachment(String relay, long attachmentId, File destination, ProgressListener listener) throws IOException {
+  public void retrieveAttachment(String relay, long attachmentId, File destination, int maxSizeBytes, ProgressListener listener) throws IOException {
     String path = String.format(ATTACHMENT_PATH, String.valueOf(attachmentId));
 
     if (!Util.isEmpty(relay)) {
@@ -374,7 +373,7 @@ public class PushServiceSocket {
 
     Log.w(TAG, "Attachment: " + attachmentId + " is at: " + descriptor.getLocation());
 
-    downloadExternalFile(descriptor.getLocation(), destination, listener);
+    downloadExternalFile(descriptor.getLocation(), destination, maxSizeBytes, listener);
   }
 
   public List<ContactTokenDetails> retrieveDirectory(Set<String> contactTokens)
@@ -420,7 +419,7 @@ public class PushServiceSocket {
     }
   }
 
-  private void downloadExternalFile(String url, File localDestination, ProgressListener listener)
+  private void downloadExternalFile(String url, File localDestination, int maxSizeBytes, ProgressListener listener)
       throws IOException
   {
     URL               downloadUrl = new URL(url);
@@ -440,9 +439,18 @@ public class PushServiceSocket {
       int          contentLength = connection.getContentLength();
       int         read,totalRead = 0;
 
+      if (contentLength > maxSizeBytes) {
+        throw new NonSuccessfulResponseCodeException("File exceeds maximum size.");
+      }
+
       while ((read = input.read(buffer)) != -1) {
         output.write(buffer, 0, read);
         totalRead += read;
+
+        if (totalRead > maxSizeBytes) {
+          localDestination.delete();
+          throw new NonSuccessfulResponseCodeException("File exceeds maximum size.");
+        }
 
         if (listener != null) {
           listener.onAttachmentProgress(contentLength, totalRead);
