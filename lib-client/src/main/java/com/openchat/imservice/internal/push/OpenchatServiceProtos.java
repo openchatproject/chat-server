@@ -11019,6 +11019,11 @@ public final class OpenchatServiceProtos {
     boolean hasThumbnail();
     
     com.google.protobuf.ByteString getThumbnail();
+
+    
+    boolean hasDigest();
+    
+    com.google.protobuf.ByteString getDigest();
   }
   
   public static final class AttachmentPointer extends
@@ -11091,6 +11096,11 @@ public final class OpenchatServiceProtos {
             case 42: {
               bitField0_ |= 0x00000010;
               thumbnail_ = input.readBytes();
+              break;
+            }
+            case 50: {
+              bitField0_ |= 0x00000020;
+              digest_ = input.readBytes();
               break;
             }
           }
@@ -11213,12 +11223,24 @@ public final class OpenchatServiceProtos {
       return thumbnail_;
     }
 
+    public static final int DIGEST_FIELD_NUMBER = 6;
+    private com.google.protobuf.ByteString digest_;
+    
+    public boolean hasDigest() {
+      return ((bitField0_ & 0x00000020) == 0x00000020);
+    }
+    
+    public com.google.protobuf.ByteString getDigest() {
+      return digest_;
+    }
+
     private void initFields() {
       id_ = 0L;
       contentType_ = "";
       key_ = com.google.protobuf.ByteString.EMPTY;
       size_ = 0;
       thumbnail_ = com.google.protobuf.ByteString.EMPTY;
+      digest_ = com.google.protobuf.ByteString.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -11246,6 +11268,9 @@ public final class OpenchatServiceProtos {
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeBytes(5, thumbnail_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeBytes(6, digest_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -11275,6 +11300,10 @@ public final class OpenchatServiceProtos {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(5, thumbnail_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(6, digest_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -11399,6 +11428,8 @@ public final class OpenchatServiceProtos {
         bitField0_ = (bitField0_ & ~0x00000008);
         thumbnail_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000010);
+        digest_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
@@ -11447,6 +11478,10 @@ public final class OpenchatServiceProtos {
           to_bitField0_ |= 0x00000010;
         }
         result.thumbnail_ = thumbnail_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.digest_ = digest_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -11479,6 +11514,9 @@ public final class OpenchatServiceProtos {
         }
         if (other.hasThumbnail()) {
           setThumbnail(other.getThumbnail());
+        }
+        if (other.hasDigest()) {
+          setDigest(other.getDigest());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -11666,6 +11704,33 @@ public final class OpenchatServiceProtos {
       public Builder clearThumbnail() {
         bitField0_ = (bitField0_ & ~0x00000010);
         thumbnail_ = getDefaultInstance().getThumbnail();
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString digest_ = com.google.protobuf.ByteString.EMPTY;
+      
+      public boolean hasDigest() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      
+      public com.google.protobuf.ByteString getDigest() {
+        return digest_;
+      }
+      
+      public Builder setDigest(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        digest_ = value;
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearDigest() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        digest_ = getDefaultInstance().getDigest();
         onChanged();
         return this;
       }
@@ -15587,7 +15652,7 @@ public final class OpenchatServiceProtos {
           internal_static_openchatservice_AttachmentPointer_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_openchatservice_AttachmentPointer_descriptor,
-              new java.lang.String[] { "Id", "ContentType", "Key", "Size", "Thumbnail", });
+              new java.lang.String[] { "Id", "ContentType", "Key", "Size", "Thumbnail", "Digest", });
           internal_static_openchatservice_GroupContext_descriptor =
             getDescriptor().getMessageTypes().get(6);
           internal_static_openchatservice_GroupContext_fieldAccessorTable = new

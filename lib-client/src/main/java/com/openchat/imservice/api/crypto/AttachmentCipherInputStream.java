@@ -2,6 +2,7 @@ package com.openchat.imservice.api.crypto;
 
 import com.openchat.protocal.InvalidMacException;
 import com.openchat.protocal.InvalidMessageException;
+import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.internal.util.Util;
 
 import java.io.File;
@@ -35,7 +36,7 @@ public class AttachmentCipherInputStream extends FileInputStream {
   private long    totalRead;
   private byte[]  overflowBuffer;
 
-  public AttachmentCipherInputStream(File file, byte[] combinedKeyMaterial)
+  public AttachmentCipherInputStream(File file, byte[] combinedKeyMaterial, Optional<byte[]> digest)
       throws IOException, InvalidMessageException
   {
     super(file);
@@ -50,7 +51,7 @@ public class AttachmentCipherInputStream extends FileInputStream {
         throw new InvalidMessageException("Message shorter than crypto overhead!");
       }
 
-      verifyMac(file, mac);
+      verifyMac(file, mac, digest);
 
       byte[] iv = new byte[BLOCK_SIZE];
       readFully(iv);
@@ -160,8 +161,11 @@ public class AttachmentCipherInputStream extends FileInputStream {
     }
   }
 
-  private void verifyMac(File file, Mac mac) throws FileNotFoundException, InvalidMacException {
+  private void verifyMac(File file, Mac mac, Optional<byte[]> theirDigest)
+      throws FileNotFoundException, InvalidMacException
+  {
     try {
+      MessageDigest   digest        = MessageDigest.getInstance("SHA256");
       FileInputStream fin           = new FileInputStream(file);
       int             remainingData = Util.toIntExact(file.length()) - mac.getMacLength();
       byte[]          buffer        = new byte[4096];
@@ -169,6 +173,7 @@ public class AttachmentCipherInputStream extends FileInputStream {
       while (remainingData > 0) {
         int read = fin.read(buffer, 0, Math.min(buffer.length, remainingData));
         mac.update(buffer, 0, read);
+        digest.update(buffer, 0, read);
         remainingData -= read;
       }
 
@@ -179,8 +184,17 @@ public class AttachmentCipherInputStream extends FileInputStream {
       if (!MessageDigest.isEqual(ourMac, theirMac)) {
         throw new InvalidMacException("MAC doesn't match!");
       }
+
+      byte[] ourDigest = digest.digest(theirMac);
+
+      if (theirDigest.isPresent() && !MessageDigest.isEqual(ourDigest, theirDigest.get())) {
+        throw new InvalidMacException("Digest doesn't match!");
+      }
+
     } catch (IOException | ArithmeticException e1) {
       throw new InvalidMacException(e1);
+    } catch (NoSuchAlgorithmException e) {
+      throw new AssertionError(e);
     }
   }
 

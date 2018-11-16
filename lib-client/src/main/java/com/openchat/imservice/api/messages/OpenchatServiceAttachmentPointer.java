@@ -10,13 +10,15 @@ public class OpenchatServiceAttachmentPointer extends OpenchatServiceAttachment 
   private final Optional<String>  relay;
   private final Optional<Integer> size;
   private final Optional<byte[]>  preview;
+  private final Optional<byte[]>  digest;
 
-  public OpenchatServiceAttachmentPointer(long id, String contentType, byte[] key, String relay) {
-    this(id, contentType, key, relay, Optional.<Integer>absent(), Optional.<byte[]>absent());
+  public OpenchatServiceAttachmentPointer(long id, String contentType, byte[] key, String relay, Optional<byte[]> digest) {
+    this(id, contentType, key, relay, Optional.<Integer>absent(), Optional.<byte[]>absent(), digest);
   }
 
   public OpenchatServiceAttachmentPointer(long id, String contentType, byte[] key, String relay,
-                                        Optional<Integer> size, Optional<byte[]> preview)
+                                        Optional<Integer> size, Optional<byte[]> preview,
+                                        Optional<byte[]> digest)
   {
     super(contentType);
     this.id      = id;
@@ -24,6 +26,7 @@ public class OpenchatServiceAttachmentPointer extends OpenchatServiceAttachment 
     this.relay   = Optional.fromNullable(relay);
     this.size    = size;
     this.preview = preview;
+    this.digest  = digest;
   }
 
   public long getId() {
@@ -54,5 +57,9 @@ public class OpenchatServiceAttachmentPointer extends OpenchatServiceAttachment 
 
   public Optional<byte[]> getPreview() {
     return preview;
+  }
+
+  public Optional<byte[]> getDigest() {
+    return digest;
   }
 }

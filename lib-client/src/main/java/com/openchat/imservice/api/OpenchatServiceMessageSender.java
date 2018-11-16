@@ -9,6 +9,7 @@ import com.openchat.protocal.OpenchatProtocolAddress;
 import com.openchat.protocal.logging.Log;
 import com.openchat.protocal.state.PreKeyBundle;
 import com.openchat.protocal.state.OpenchatProtocolStore;
+import com.openchat.protocal.util.Pair;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.crypto.OpenchatServiceCipher;
 import com.openchat.imservice.api.crypto.UntrustedIdentityException;
@@ -402,12 +403,13 @@ public class OpenchatServiceMessageSender {
                                                                attachment.getListener(),
                                                                attachmentKey);
 
-    long attachmentId = socket.sendAttachment(attachmentData);
+    Pair<Long, byte[]> attachmentIdAndDigest = socket.sendAttachment(attachmentData);
 
     AttachmentPointer.Builder builder = AttachmentPointer.newBuilder()
                                                          .setContentType(attachment.getContentType())
-                                                         .setId(attachmentId)
+                                                         .setId(attachmentIdAndDigest.first())
                                                          .setKey(ByteString.copyFrom(attachmentKey))
+                                                         .setDigest(ByteString.copyFrom(attachmentIdAndDigest.second()))
                                                          .setSize((int)attachment.getLength());
 
     if (attachment.getPreview().isPresent()) {
