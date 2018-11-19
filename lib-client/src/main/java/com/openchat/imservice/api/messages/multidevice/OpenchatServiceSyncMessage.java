@@ -14,13 +14,15 @@ public class OpenchatServiceSyncMessage {
   private final Optional<BlockedListMessage>      blockedList;
   private final Optional<RequestMessage>          request;
   private final Optional<List<ReadMessage>>       reads;
+  private final Optional<List<VerifiedMessage>>   verified;
 
   private OpenchatServiceSyncMessage(Optional<SentTranscriptMessage>   sent,
                                    Optional<ContactsMessage>         contacts,
                                    Optional<OpenchatServiceAttachment> groups,
                                    Optional<BlockedListMessage>      blockedList,
                                    Optional<RequestMessage>          request,
-                                   Optional<List<ReadMessage>>       reads)
+                                   Optional<List<ReadMessage>>       reads,
+                                   Optional<List<VerifiedMessage>>   verified)
   {
     this.sent        = sent;
     this.contacts    = contacts;
@@ -28,6 +30,7 @@ public class OpenchatServiceSyncMessage {
     this.blockedList = blockedList;
     this.request     = request;
     this.reads       = reads;
+    this.verified    = verified;
   }
 
   public static OpenchatServiceSyncMessage forSentTranscript(SentTranscriptMessage sent) {
@@ -36,7 +39,8 @@ public class OpenchatServiceSyncMessage {
                                         Optional.<OpenchatServiceAttachment>absent(),
                                         Optional.<BlockedListMessage>absent(),
                                         Optional.<RequestMessage>absent(),
-                                        Optional.<List<ReadMessage>>absent());
+                                        Optional.<List<ReadMessage>>absent(),
+                                        Optional.<List<VerifiedMessage>>absent());
   }
 
   public static OpenchatServiceSyncMessage forContacts(ContactsMessage contacts) {
@@ -45,7 +49,8 @@ public class OpenchatServiceSyncMessage {
                                         Optional.<OpenchatServiceAttachment>absent(),
                                         Optional.<BlockedListMessage>absent(),
                                         Optional.<RequestMessage>absent(),
-                                        Optional.<List<ReadMessage>>absent());
+                                        Optional.<List<ReadMessage>>absent(),
+                                        Optional.<List<VerifiedMessage>>absent());
   }
 
   public static OpenchatServiceSyncMessage forGroups(OpenchatServiceAttachment groups) {
@@ -54,7 +59,8 @@ public class OpenchatServiceSyncMessage {
                                         Optional.of(groups),
                                         Optional.<BlockedListMessage>absent(),
                                         Optional.<RequestMessage>absent(),
-                                        Optional.<List<ReadMessage>>absent());
+                                        Optional.<List<ReadMessage>>absent(),
+                                        Optional.<List<VerifiedMessage>>absent());
   }
 
   public static OpenchatServiceSyncMessage forRequest(RequestMessage request) {
@@ -63,7 +69,8 @@ public class OpenchatServiceSyncMessage {
                                         Optional.<OpenchatServiceAttachment>absent(),
                                         Optional.<BlockedListMessage>absent(),
                                         Optional.of(request),
-                                        Optional.<List<ReadMessage>>absent());
+                                        Optional.<List<ReadMessage>>absent(),
+                                        Optional.<List<VerifiedMessage>>absent());
   }
 
   public static OpenchatServiceSyncMessage forRead(List<ReadMessage> reads) {
@@ -72,7 +79,8 @@ public class OpenchatServiceSyncMessage {
                                         Optional.<OpenchatServiceAttachment>absent(),
                                         Optional.<BlockedListMessage>absent(),
                                         Optional.<RequestMessage>absent(),
-                                        Optional.of(reads));
+                                        Optional.of(reads),
+                                        Optional.<List<VerifiedMessage>>absent());
   }
 
   public static OpenchatServiceSyncMessage forRead(ReadMessage read) {
@@ -84,7 +92,31 @@ public class OpenchatServiceSyncMessage {
                                         Optional.<OpenchatServiceAttachment>absent(),
                                         Optional.<BlockedListMessage>absent(),
                                         Optional.<RequestMessage>absent(),
-                                        Optional.of(reads));
+                                        Optional.of(reads),
+                                        Optional.<List<VerifiedMessage>>absent());
+  }
+
+  public static OpenchatServiceSyncMessage forVerified(List<VerifiedMessage> verified) {
+    return new OpenchatServiceSyncMessage(Optional.<SentTranscriptMessage>absent(),
+                                        Optional.<ContactsMessage>absent(),
+                                        Optional.<OpenchatServiceAttachment>absent(),
+                                        Optional.<BlockedListMessage>absent(),
+                                        Optional.<RequestMessage>absent(),
+                                        Optional.<List<ReadMessage>>absent(),
+                                        Optional.of(verified));
+  }
+
+  public static OpenchatServiceSyncMessage forVerified(VerifiedMessage verifiedMessage) {
+    List<VerifiedMessage> verifiedMessages = new LinkedList<>();
+    verifiedMessages.add(verifiedMessage);
+
+    return new OpenchatServiceSyncMessage(Optional.<SentTranscriptMessage>absent(),
+                                        Optional.<ContactsMessage>absent(),
+                                        Optional.<OpenchatServiceAttachment>absent(),
+                                        Optional.<BlockedListMessage>absent(),
+                                        Optional.<RequestMessage>absent(),
+                                        Optional.<List<ReadMessage>>absent(),
+                                        Optional.of(verifiedMessages));
   }
 
   public static OpenchatServiceSyncMessage forBlocked(BlockedListMessage blocked) {
@@ -93,7 +125,8 @@ public class OpenchatServiceSyncMessage {
                                         Optional.<OpenchatServiceAttachment>absent(),
                                         Optional.of(blocked),
                                         Optional.<RequestMessage>absent(),
-                                        Optional.<List<ReadMessage>>absent());
+                                        Optional.<List<ReadMessage>>absent(),
+                                        Optional.<List<VerifiedMessage>>absent());
   }
 
   public static OpenchatServiceSyncMessage empty() {
@@ -102,7 +135,8 @@ public class OpenchatServiceSyncMessage {
                                         Optional.<OpenchatServiceAttachment>absent(),
                                         Optional.<BlockedListMessage>absent(),
                                         Optional.<RequestMessage>absent(),
-                                        Optional.<List<ReadMessage>>absent());
+                                        Optional.<List<ReadMessage>>absent(),
+                                        Optional.<List<VerifiedMessage>>absent());
   }
 
   public Optional<SentTranscriptMessage> getSent() {
@@ -127,6 +161,10 @@ public class OpenchatServiceSyncMessage {
 
   public Optional<BlockedListMessage> getBlockedList() {
     return blockedList;
+  }
+
+  public Optional<List<VerifiedMessage>> getVerified() {
+    return verified;
   }
 
 }

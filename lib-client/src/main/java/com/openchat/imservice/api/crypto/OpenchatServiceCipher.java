@@ -3,6 +3,7 @@ package com.openchat.imservice.api.crypto;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import com.openchat.protocal.DuplicateMessageException;
+import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.InvalidKeyIdException;
 import com.openchat.protocal.InvalidMessageException;
@@ -33,6 +34,8 @@ import com.openchat.imservice.api.messages.multidevice.ReadMessage;
 import com.openchat.imservice.api.messages.multidevice.RequestMessage;
 import com.openchat.imservice.api.messages.multidevice.SentTranscriptMessage;
 import com.openchat.imservice.api.messages.multidevice.OpenchatServiceSyncMessage;
+import com.openchat.imservice.api.messages.multidevice.VerifiedMessage;
+import com.openchat.imservice.api.messages.multidevice.VerifiedMessage.VerifiedState;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.internal.push.OutgoingPushMessage;
 import com.openchat.imservice.internal.push.PushTransportDetails;
@@ -157,7 +160,7 @@ public class OpenchatServiceCipher {
                                         expirationUpdate);
   }
 
-  private OpenchatServiceSyncMessage createSynchronizeMessage(OpenchatServiceEnvelope envelope, SyncMessage content) {
+  private OpenchatServiceSyncMessage createSynchronizeMessage(OpenchatServiceEnvelope envelope, SyncMessage content) throws InvalidMessageException {
     if (content.hasSent()) {
       SyncMessage.Sent sentContent = content.getSent();
       return OpenchatServiceSyncMessage.forSentTranscript(new SentTranscriptMessage(sentContent.getDestination(),
@@ -178,6 +181,35 @@ public class OpenchatServiceCipher {
       }
 
       return OpenchatServiceSyncMessage.forRead(readMessages);
+    }
+
+    if (content.getVerifiedList().size() > 0) {
+      try {
+        List<VerifiedMessage> verifiedMessages = new LinkedList<>();
+
+        for (SyncMessage.Verified verified : content.getVerifiedList()) {
+          String        destination = verified.getDestination();
+          IdentityKey   identityKey = new IdentityKey(verified.getIdentityKey().toByteArray(), 0);
+
+          VerifiedState verifiedState;
+
+          if (verified.getState() == SyncMessage.Verified.State.DEFAULT) {
+            verifiedState = VerifiedState.DEFAULT;
+          } else if (verified.getState() == SyncMessage.Verified.State.VERIFIED) {
+            verifiedState = VerifiedState.VERIFIED;
+          } else if (verified.getState() == SyncMessage.Verified.State.UNVERIFIED) {
+            verifiedState = VerifiedState.UNVERIFIED;
+          } else {
+            throw new InvalidMessageException("Unknown state: " + verified.getState().getNumber());
+          }
+
+          verifiedMessages.add(new VerifiedMessage(destination, identityKey, verifiedState));
+        }
+
+        return OpenchatServiceSyncMessage.forVerified(verifiedMessages);
+      } catch (InvalidKeyException e) {
+        throw new InvalidMessageException(e);
+      }
     }
 
     return OpenchatServiceSyncMessage.empty();
