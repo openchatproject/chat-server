@@ -39,11 +39,13 @@ import com.openchat.imservice.api.messages.multidevice.VerifiedMessage.VerifiedS
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.internal.push.OutgoingPushMessage;
 import com.openchat.imservice.internal.push.PushTransportDetails;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.Content;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.Envelope.Type;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos.Verified;
 import com.openchat.imservice.internal.util.Base64;
 
 import java.util.LinkedList;
@@ -182,30 +184,25 @@ public class OpenchatServiceCipher {
       return OpenchatServiceSyncMessage.forRead(readMessages);
     }
 
-    if (content.getVerifiedList().size() > 0) {
+    if (content.hasVerified()) {
       try {
-        List<VerifiedMessage> verifiedMessages = new LinkedList<>();
+        Verified    verified    = content.getVerified();
+        String      destination = verified.getDestination();
+        IdentityKey identityKey = new IdentityKey(verified.getIdentityKey().toByteArray(), 0);
 
-        for (SyncMessage.Verified verified : content.getVerifiedList()) {
-          String        destination = verified.getDestination();
-          IdentityKey   identityKey = new IdentityKey(verified.getIdentityKey().toByteArray(), 0);
+        VerifiedState verifiedState;
 
-          VerifiedState verifiedState;
-
-          if (verified.getState() == SyncMessage.Verified.State.DEFAULT) {
-            verifiedState = VerifiedState.DEFAULT;
-          } else if (verified.getState() == SyncMessage.Verified.State.VERIFIED) {
-            verifiedState = VerifiedState.VERIFIED;
-          } else if (verified.getState() == SyncMessage.Verified.State.UNVERIFIED) {
-            verifiedState = VerifiedState.UNVERIFIED;
-          } else {
-            throw new InvalidMessageException("Unknown state: " + verified.getState().getNumber());
-          }
-
-          verifiedMessages.add(new VerifiedMessage(destination, identityKey, verifiedState));
+        if (verified.getState() == Verified.State.DEFAULT) {
+          verifiedState = VerifiedState.DEFAULT;
+        } else if (verified.getState() == Verified.State.VERIFIED) {
+          verifiedState = VerifiedState.VERIFIED;
+        } else if (verified.getState() == Verified.State.UNVERIFIED) {
+          verifiedState = VerifiedState.UNVERIFIED;
+        } else {
+          throw new InvalidMessageException("Unknown state: " + verified.getState().getNumber());
         }
 
-        return OpenchatServiceSyncMessage.forVerified(verifiedMessages);
+        return OpenchatServiceSyncMessage.forVerified(new VerifiedMessage(destination, identityKey, verifiedState, System.currentTimeMillis()));
       } catch (InvalidKeyException e) {
         throw new InvalidMessageException(e);
       }

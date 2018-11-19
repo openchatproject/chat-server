@@ -1,5 +1,7 @@
 package com.openchat.imservice.api.messages.multidevice;
 
+import com.google.protobuf.ByteString;
+
 import com.openchat.imservice.internal.push.OpenchatServiceProtos;
 
 import java.io.IOException;
@@ -43,6 +45,21 @@ public class DeviceContactsOutputStream extends ChunkedOutputStream {
 
     if (contact.getColor().isPresent()) {
       contactDetails.setColor(contact.getColor().get());
+    }
+
+    if (contact.getVerified().isPresent()) {
+      OpenchatServiceProtos.Verified.State state;
+
+      switch (contact.getVerified().get().getVerified()) {
+        case VERIFIED:   state = OpenchatServiceProtos.Verified.State.VERIFIED;   break;
+        case UNVERIFIED: state = OpenchatServiceProtos.Verified.State.UNVERIFIED; break;
+        default:         state = OpenchatServiceProtos.Verified.State.DEFAULT;    break;
+      }
+
+      contactDetails.setVerified(OpenchatServiceProtos.Verified.newBuilder()
+                                                             .setDestination(contact.getVerified().get().getDestination())
+                                                             .setIdentityKey(ByteString.copyFrom(contact.getVerified().get().getIdentityKey().serialize()))
+                                                             .setState(state));
     }
 
     byte[] serializedContactDetails = contactDetails.build().toByteArray();
