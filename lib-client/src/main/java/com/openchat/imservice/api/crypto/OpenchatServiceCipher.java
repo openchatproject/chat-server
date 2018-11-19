@@ -64,7 +64,7 @@ public class OpenchatServiceCipher {
     this.localAddress = localAddress;
   }
 
-  public OutgoingPushMessage encrypt(OpenchatProtocolAddress destination, byte[] unpaddedMessage, boolean legacy, boolean silent)
+  public OutgoingPushMessage encrypt(OpenchatProtocolAddress destination, byte[] unpaddedMessage, boolean silent)
       throws UntrustedIdentityException
   {
     SessionCipher        sessionCipher        = new SessionCipher(openchatProtocolStore, destination);
@@ -81,8 +81,7 @@ public class OpenchatServiceCipher {
       default: throw new AssertionError("Bad type: " + message.getType());
     }
 
-    return new OutgoingPushMessage(type, destination.getDeviceId(), remoteRegistrationId,
-                                   legacy ? body : null, legacy ? null : body, silent);
+    return new OutgoingPushMessage(type, destination.getDeviceId(), remoteRegistrationId, body, silent);
   }
 
   
