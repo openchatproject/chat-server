@@ -287,7 +287,7 @@ public class OpenchatServiceMessageSender {
       Content.Builder          container   = Content.newBuilder();
       SyncMessage.Builder      syncMessage = createSyncMessageBuilder();
       SyncMessage.Sent.Builder sentMessage = SyncMessage.Sent.newBuilder();
-      DataMessage              dataMessage = DataMessage.parseFrom(content);
+      DataMessage              dataMessage = Content.parseFrom(content).getDataMessage();
 
       sentMessage.setTimestamp(timestamp);
       sentMessage.setMessage(dataMessage);
