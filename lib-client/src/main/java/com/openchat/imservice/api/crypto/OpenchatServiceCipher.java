@@ -61,7 +61,9 @@ public class OpenchatServiceCipher {
     this.localAddress = localAddress;
   }
 
-  public OutgoingPushMessage encrypt(OpenchatProtocolAddress destination, byte[] unpaddedMessage, boolean legacy, boolean silent) {
+  public OutgoingPushMessage encrypt(OpenchatProtocolAddress destination, byte[] unpaddedMessage, boolean legacy, boolean silent)
+      throws UntrustedIdentityException
+  {
     SessionCipher        sessionCipher        = new SessionCipher(openchatProtocolStore, destination);
     PushTransportDetails transportDetails     = new PushTransportDetails(sessionCipher.getSessionVersion());
     CiphertextMessage    message              = sessionCipher.encrypt(transportDetails.getPaddedMessageBody(unpaddedMessage));

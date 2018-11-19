@@ -476,7 +476,11 @@ public class OpenchatServiceMessageSender {
       }
     }
 
-    return cipher.encrypt(openchatProtocolAddress, plaintext, legacy, silent);
+    try {
+      return cipher.encrypt(openchatProtocolAddress, plaintext, legacy, silent);
+    } catch (com.openchat.protocal.UntrustedIdentityException e) {
+      throw new UntrustedIdentityException("Untrusted on send", recipient.getNumber(), e.getUntrustedIdentity());
+    }
   }
 
   private void handleMismatchedDevices(PushServiceSocket socket, OpenchatServiceAddress recipient,
