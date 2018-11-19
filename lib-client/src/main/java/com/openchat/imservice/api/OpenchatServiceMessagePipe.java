@@ -5,6 +5,8 @@ import com.google.protobuf.ByteString;
 import com.openchat.protocal.InvalidVersionException;
 import com.openchat.protocal.util.Pair;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
+import com.openchat.imservice.api.push.OpenchatServiceAddress;
+import com.openchat.imservice.api.push.OpenchatServiceProfile;
 import com.openchat.imservice.api.util.CredentialsProvider;
 import com.openchat.imservice.internal.push.OutgoingPushMessageList;
 import com.openchat.imservice.internal.push.SendMessageResponse;
@@ -85,6 +87,28 @@ public class OpenchatServiceMessagePipe {
       else                                 return JsonUtil.fromJson(response.second(), SendMessageResponse.class);
     } catch (NoSuchAlgorithmException e) {
       throw new AssertionError(e);
+    } catch (InterruptedException | ExecutionException | TimeoutException e) {
+      throw new IOException(e);
+    }
+  }
+
+  public OpenchatServiceProfile getProfile(OpenchatServiceAddress address) throws IOException {
+    try {
+      WebSocketRequestMessage requestMessage = WebSocketRequestMessage.newBuilder()
+                                                                      .setId(SecureRandom.getInstance("SHA1PRNG").nextLong())
+                                                                      .setVerb("GET")
+                                                                      .setPath(String.format("/v1/profile/%s", address.getNumber()))
+                                                                      .build();
+
+      Pair<Integer, String> response = websocket.sendRequest(requestMessage).get(10, TimeUnit.SECONDS);
+
+      if (response.first() < 200 || response.first() >= 300) {
+        throw new IOException("Non-successful response: " + response.first());
+      }
+
+      return JsonUtil.fromJson(response.second(), OpenchatServiceProfile.class);
+    } catch (NoSuchAlgorithmException nsae) {
+      throw new AssertionError(nsae);
     } catch (InterruptedException | ExecutionException | TimeoutException e) {
       throw new IOException(e);
     }

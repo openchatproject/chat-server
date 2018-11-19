@@ -13,6 +13,7 @@ import com.openchat.protocal.util.Pair;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.crypto.AttachmentCipherOutputStream;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment.ProgressListener;
+import com.openchat.imservice.api.push.OpenchatServiceProfile;
 import com.openchat.imservice.api.messages.calls.TurnServerInfo;
 import com.openchat.imservice.api.messages.multidevice.DeviceInfo;
 import com.openchat.imservice.api.push.ContactTokenDetails;
@@ -93,6 +94,8 @@ public class PushServiceSocket {
   private static final String ACKNOWLEDGE_MESSAGE_PATH  = "/v1/messages/%s/%d";
   private static final String RECEIPT_PATH              = "/v1/receipt/%s/%d";
   private static final String ATTACHMENT_PATH           = "/v1/attachments/%s";
+
+  private static final String PROFILE_PATH              = "/v1/profile/%s";
 
   private       long      soTimeoutMillis = TimeUnit.SECONDS.toMillis(30);
   private final Set<Call> connections     = new HashSet<>();
@@ -374,6 +377,18 @@ public class PushServiceSocket {
     Log.w(TAG, "Attachment: " + attachmentId + " is at: " + descriptor.getLocation());
 
     downloadExternalFile(descriptor.getLocation(), destination, maxSizeBytes, listener);
+  }
+
+  public OpenchatServiceProfile retrieveProfile(OpenchatServiceAddress target) throws
+      NonSuccessfulResponseCodeException, PushNetworkException
+  {
+    try {
+      String response = makeRequest(String.format(PROFILE_PATH, target.getNumber()), "GET", null);
+      return JsonUtil.fromJson(response, OpenchatServiceProfile.class);
+    } catch (IOException e) {
+      Log.w(TAG, e);
+      throw new NonSuccessfulResponseCodeException("Unable to parse entity");
+    }
   }
 
   public List<ContactTokenDetails> retrieveDirectory(Set<String> contactTokens)

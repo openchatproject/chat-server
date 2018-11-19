@@ -6,6 +6,8 @@ import com.openchat.imservice.api.messages.OpenchatServiceAttachment.ProgressLis
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentPointer;
 import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
+import com.openchat.imservice.api.push.OpenchatServiceAddress;
+import com.openchat.imservice.api.push.OpenchatServiceProfile;
 import com.openchat.imservice.api.util.CredentialsProvider;
 import com.openchat.imservice.internal.push.PushServiceSocket;
 import com.openchat.imservice.internal.push.OpenchatServiceEnvelopeEntity;
@@ -48,6 +50,12 @@ public class OpenchatServiceMessageReceiver {
       throws IOException, InvalidMessageException
   {
     return retrieveAttachment(pointer, destination, maxSizeBytes, null);
+  }
+
+  public OpenchatServiceProfile retrieveProfile(OpenchatServiceAddress address)
+    throws IOException
+  {
+    return socket.retrieveProfile(address);
   }
 
   
