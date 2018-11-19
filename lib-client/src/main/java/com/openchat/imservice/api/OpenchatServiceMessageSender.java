@@ -480,7 +480,9 @@ public class OpenchatServiceMessageSender {
     }
 
     for (int deviceId : store.getSubDeviceSessions(recipient.getNumber())) {
-      messages.add(getEncryptedMessage(socket, recipient, deviceId, plaintext, legacy, silent));
+      if (store.containsSession(new OpenchatProtocolAddress(recipient.getNumber(), deviceId))) {
+        messages.add(getEncryptedMessage(socket, recipient, deviceId, plaintext, legacy, silent));
+      }
     }
 
     return new OutgoingPushMessageList(recipient.getNumber(), timestamp, recipient.getRelay().orNull(), messages);
@@ -490,7 +492,7 @@ public class OpenchatServiceMessageSender {
       throws IOException, UntrustedIdentityException
   {
     OpenchatProtocolAddress openchatProtocolAddress = new OpenchatProtocolAddress(recipient.getNumber(), deviceId);
-    OpenchatServiceCipher cipher                = new OpenchatServiceCipher(localAddress, store);
+    OpenchatServiceCipher   cipher                = new OpenchatServiceCipher(localAddress, store);
 
     if (!store.containsSession(openchatProtocolAddress)) {
       try {
