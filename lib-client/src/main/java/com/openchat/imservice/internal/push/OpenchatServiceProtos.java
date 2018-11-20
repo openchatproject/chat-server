@@ -11120,6 +11120,8 @@ public final class OpenchatServiceProtos {
         GROUPS(2, 2),
         
         BLOCKED(3, 3),
+        
+        CONFIGURATION(4, 4),
         ;
 
         
@@ -11130,6 +11132,8 @@ public final class OpenchatServiceProtos {
         public static final int GROUPS_VALUE = 2;
         
         public static final int BLOCKED_VALUE = 3;
+        
+        public static final int CONFIGURATION_VALUE = 4;
 
         public final int getNumber() { return value; }
 
@@ -11139,6 +11143,7 @@ public final class OpenchatServiceProtos {
             case 1: return CONTACTS;
             case 2: return GROUPS;
             case 3: return BLOCKED;
+            case 4: return CONFIGURATION;
             default: return null;
           }
         }
