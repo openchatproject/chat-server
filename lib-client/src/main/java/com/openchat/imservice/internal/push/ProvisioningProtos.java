@@ -472,6 +472,14 @@ public final class ProvisioningProtos {
         getProvisioningCodeBytes();
 
     
+    boolean hasUserAgent();
+    
+    java.lang.String getUserAgent();
+    
+    com.google.protobuf.ByteString
+        getUserAgentBytes();
+
+    
     boolean hasProfileKey();
     
     com.google.protobuf.ByteString getProfileKey();
@@ -546,6 +554,11 @@ public final class ProvisioningProtos {
             }
             case 42: {
               bitField0_ |= 0x00000010;
+              userAgent_ = input.readBytes();
+              break;
+            }
+            case 50: {
+              bitField0_ |= 0x00000020;
               profileKey_ = input.readBytes();
               break;
             }
@@ -683,11 +696,47 @@ public final class ProvisioningProtos {
       }
     }
 
-    public static final int PROFILEKEY_FIELD_NUMBER = 5;
+    public static final int USERAGENT_FIELD_NUMBER = 5;
+    private java.lang.Object userAgent_;
+    
+    public boolean hasUserAgent() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    
+    public java.lang.String getUserAgent() {
+      java.lang.Object ref = userAgent_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          userAgent_ = s;
+        }
+        return s;
+      }
+    }
+    
+    public com.google.protobuf.ByteString
+        getUserAgentBytes() {
+      java.lang.Object ref = userAgent_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        userAgent_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PROFILEKEY_FIELD_NUMBER = 6;
     private com.google.protobuf.ByteString profileKey_;
     
     public boolean hasProfileKey() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
+      return ((bitField0_ & 0x00000020) == 0x00000020);
     }
     
     public com.google.protobuf.ByteString getProfileKey() {
@@ -699,6 +748,7 @@ public final class ProvisioningProtos {
       identityKeyPrivate_ = com.google.protobuf.ByteString.EMPTY;
       number_ = "";
       provisioningCode_ = "";
+      userAgent_ = "";
       profileKey_ = com.google.protobuf.ByteString.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
@@ -726,7 +776,10 @@ public final class ProvisioningProtos {
         output.writeBytes(4, getProvisioningCodeBytes());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeBytes(5, profileKey_);
+        output.writeBytes(5, getUserAgentBytes());
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeBytes(6, profileKey_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -755,7 +808,11 @@ public final class ProvisioningProtos {
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(5, profileKey_);
+          .computeBytesSize(5, getUserAgentBytes());
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(6, profileKey_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -878,8 +935,10 @@ public final class ProvisioningProtos {
         bitField0_ = (bitField0_ & ~0x00000004);
         provisioningCode_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
-        profileKey_ = com.google.protobuf.ByteString.EMPTY;
+        userAgent_ = "";
         bitField0_ = (bitField0_ & ~0x00000010);
+        profileKey_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
@@ -927,6 +986,10 @@ public final class ProvisioningProtos {
         if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
           to_bitField0_ |= 0x00000010;
         }
+        result.userAgent_ = userAgent_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000020;
+        }
         result.profileKey_ = profileKey_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -958,6 +1021,11 @@ public final class ProvisioningProtos {
         if (other.hasProvisioningCode()) {
           bitField0_ |= 0x00000008;
           provisioningCode_ = other.provisioningCode_;
+          onChanged();
+        }
+        if (other.hasUserAgent()) {
+          bitField0_ |= 0x00000010;
+          userAgent_ = other.userAgent_;
           onChanged();
         }
         if (other.hasProfileKey()) {
@@ -1166,10 +1234,71 @@ public final class ProvisioningProtos {
         return this;
       }
 
+      private java.lang.Object userAgent_ = "";
+      
+      public boolean hasUserAgent() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      
+      public java.lang.String getUserAgent() {
+        java.lang.Object ref = userAgent_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          userAgent_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      
+      public com.google.protobuf.ByteString
+          getUserAgentBytes() {
+        java.lang.Object ref = userAgent_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          userAgent_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      
+      public Builder setUserAgent(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        userAgent_ = value;
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearUserAgent() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        userAgent_ = getDefaultInstance().getUserAgent();
+        onChanged();
+        return this;
+      }
+      
+      public Builder setUserAgentBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        userAgent_ = value;
+        onChanged();
+        return this;
+      }
+
       private com.google.protobuf.ByteString profileKey_ = com.google.protobuf.ByteString.EMPTY;
       
       public boolean hasProfileKey() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
+        return ((bitField0_ & 0x00000020) == 0x00000020);
       }
       
       public com.google.protobuf.ByteString getProfileKey() {
@@ -1180,14 +1309,14 @@ public final class ProvisioningProtos {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000010;
+  bitField0_ |= 0x00000020;
         profileKey_ = value;
         onChanged();
         return this;
       }
       
       public Builder clearProfileKey() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000020);
         profileKey_ = getDefaultInstance().getProfileKey();
         onChanged();
         return this;
@@ -1237,7 +1366,7 @@ public final class ProvisioningProtos {
           internal_static_openchatservice_ProvisionMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_openchatservice_ProvisionMessage_descriptor,
-              new java.lang.String[] { "IdentityKeyPublic", "IdentityKeyPrivate", "Number", "ProvisioningCode", "ProfileKey", });
+              new java.lang.String[] { "IdentityKeyPublic", "IdentityKeyPrivate", "Number", "ProvisioningCode", "UserAgent", "ProfileKey", });
           return null;
         }
       };
