@@ -158,7 +158,7 @@ public class OpenchatServiceCipher {
 
     return new OpenchatServiceDataMessage(envelope.getTimestamp(), groupInfo, attachments,
                                         content.getBody(), endSession, content.getExpireTimer(),
-                                        expirationUpdate);
+                                        expirationUpdate, content.hasProfileKey() ? content.getProfileKey().toByteArray() : null);
   }
 
   private OpenchatServiceSyncMessage createSynchronizeMessage(OpenchatServiceEnvelope envelope, SyncMessage content) throws InvalidMessageException {

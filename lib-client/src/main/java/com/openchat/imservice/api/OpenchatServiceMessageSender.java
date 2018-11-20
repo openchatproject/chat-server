@@ -226,6 +226,10 @@ public class OpenchatServiceMessageSender {
       builder.setExpireTimer(message.getExpiresInSeconds());
     }
 
+    if (message.getProfileKey().isPresent()) {
+      builder.setProfileKey(ByteString.copyFrom(message.getProfileKey().get()));
+    }
+
     return container.setDataMessage(builder).build().toByteArray();
   }
 

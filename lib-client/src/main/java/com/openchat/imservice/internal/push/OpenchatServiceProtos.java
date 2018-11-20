@@ -5633,6 +5633,11 @@ public final class OpenchatServiceProtos {
     boolean hasExpireTimer();
     
     int getExpireTimer();
+
+    
+    boolean hasProfileKey();
+    
+    com.google.protobuf.ByteString getProfileKey();
   }
   
   public static final class DataMessage extends
@@ -5716,6 +5721,11 @@ public final class OpenchatServiceProtos {
             case 40: {
               bitField0_ |= 0x00000008;
               expireTimer_ = input.readUInt32();
+              break;
+            }
+            case 50: {
+              bitField0_ |= 0x00000010;
+              profileKey_ = input.readBytes();
               break;
             }
           }
@@ -5929,12 +5939,24 @@ public final class OpenchatServiceProtos {
       return expireTimer_;
     }
 
+    public static final int PROFILEKEY_FIELD_NUMBER = 6;
+    private com.google.protobuf.ByteString profileKey_;
+    
+    public boolean hasProfileKey() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    
+    public com.google.protobuf.ByteString getProfileKey() {
+      return profileKey_;
+    }
+
     private void initFields() {
       body_ = "";
       attachments_ = java.util.Collections.emptyList();
       group_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext.getDefaultInstance();
       flags_ = 0;
       expireTimer_ = 0;
+      profileKey_ = com.google.protobuf.ByteString.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -5962,6 +5984,9 @@ public final class OpenchatServiceProtos {
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeUInt32(5, expireTimer_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeBytes(6, profileKey_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -5991,6 +6016,10 @@ public final class OpenchatServiceProtos {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt32Size(5, expireTimer_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(6, profileKey_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -6125,6 +6154,8 @@ public final class OpenchatServiceProtos {
         bitField0_ = (bitField0_ & ~0x00000008);
         expireTimer_ = 0;
         bitField0_ = (bitField0_ & ~0x00000010);
+        profileKey_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
@@ -6182,6 +6213,10 @@ public final class OpenchatServiceProtos {
           to_bitField0_ |= 0x00000008;
         }
         result.expireTimer_ = expireTimer_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.profileKey_ = profileKey_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -6237,6 +6272,9 @@ public final class OpenchatServiceProtos {
         }
         if (other.hasExpireTimer()) {
           setExpireTimer(other.getExpireTimer());
+        }
+        if (other.hasProfileKey()) {
+          setProfileKey(other.getProfileKey());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -6671,6 +6709,33 @@ public final class OpenchatServiceProtos {
       public Builder clearExpireTimer() {
         bitField0_ = (bitField0_ & ~0x00000010);
         expireTimer_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString profileKey_ = com.google.protobuf.ByteString.EMPTY;
+      
+      public boolean hasProfileKey() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      
+      public com.google.protobuf.ByteString getProfileKey() {
+        return profileKey_;
+      }
+      
+      public Builder setProfileKey(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        profileKey_ = value;
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearProfileKey() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        profileKey_ = getDefaultInstance().getProfileKey();
         onChanged();
         return this;
       }
@@ -17558,7 +17623,7 @@ public final class OpenchatServiceProtos {
           internal_static_openchatservice_DataMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_openchatservice_DataMessage_descriptor,
-              new java.lang.String[] { "Body", "Attachments", "Group", "Flags", "ExpireTimer", });
+              new java.lang.String[] { "Body", "Attachments", "Group", "Flags", "ExpireTimer", "ProfileKey", });
           internal_static_openchatservice_NullMessage_descriptor =
             getDescriptor().getMessageTypes().get(4);
           internal_static_openchatservice_NullMessage_fieldAccessorTable = new

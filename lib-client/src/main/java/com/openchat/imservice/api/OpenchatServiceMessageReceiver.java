@@ -2,6 +2,7 @@ package com.openchat.imservice.api;
 
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.imservice.api.crypto.AttachmentCipherInputStream;
+import com.openchat.imservice.api.crypto.ProfileCipherInputStream;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment.ProgressListener;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentPointer;
 import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
@@ -17,6 +18,7 @@ import com.openchat.imservice.internal.util.StaticCredentialsProvider;
 import com.openchat.imservice.internal.websocket.WebSocketConnection;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
@@ -57,6 +59,13 @@ public class OpenchatServiceMessageReceiver {
     throws IOException
   {
     return socket.retrieveProfile(address);
+  }
+
+  public InputStream retrieveProfileAvatar(String path, File destination, byte[] profileKey, int maxSizeBytes)
+    throws IOException
+  {
+    socket.retrieveProfileAvatar(path, destination, maxSizeBytes);
+    return new ProfileCipherInputStream(new FileInputStream(destination), profileKey);
   }
 
   
