@@ -39,7 +39,6 @@ import com.openchat.imservice.api.messages.multidevice.VerifiedMessage.VerifiedS
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.internal.push.OutgoingPushMessage;
 import com.openchat.imservice.internal.push.PushTransportDetails;
-import com.openchat.imservice.internal.push.OpenchatServiceProtos;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.Content;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage;
@@ -143,6 +142,7 @@ public class OpenchatServiceCipher {
     List<OpenchatServiceAttachment> attachments      = new LinkedList<>();
     boolean                       endSession       = ((content.getFlags() & DataMessage.Flags.END_SESSION_VALUE) != 0);
     boolean                       expirationUpdate = ((content.getFlags() & DataMessage.Flags.EXPIRATION_TIMER_UPDATE_VALUE) != 0);
+    boolean                       profileKeyUpdate = ((content.getFlags() & DataMessage.Flags.PROFILE_KEY_UPDATE_VALUE) != 0);
 
     for (AttachmentPointer pointer : content.getAttachmentsList()) {
       attachments.add(new OpenchatServiceAttachmentPointer(pointer.getId(),
@@ -158,7 +158,8 @@ public class OpenchatServiceCipher {
 
     return new OpenchatServiceDataMessage(envelope.getTimestamp(), groupInfo, attachments,
                                         content.getBody(), endSession, content.getExpireTimer(),
-                                        expirationUpdate, content.hasProfileKey() ? content.getProfileKey().toByteArray() : null);
+                                        expirationUpdate, content.hasProfileKey() ? content.getProfileKey().toByteArray() : null,
+                                        profileKeyUpdate);
   }
 
   private OpenchatServiceSyncMessage createSynchronizeMessage(OpenchatServiceEnvelope envelope, SyncMessage content) throws InvalidMessageException {

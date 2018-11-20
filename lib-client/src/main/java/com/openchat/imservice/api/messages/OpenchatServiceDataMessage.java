@@ -15,6 +15,7 @@ public class OpenchatServiceDataMessage {
   private final boolean                                 endSession;
   private final boolean                                 expirationUpdate;
   private final int                                     expiresInSeconds;
+  private final boolean                                 profileKeyUpdate;
 
   
   public OpenchatServiceDataMessage(long timestamp, String body) {
@@ -47,14 +48,14 @@ public class OpenchatServiceDataMessage {
 
   
   public OpenchatServiceDataMessage(long timestamp, OpenchatServiceGroup group, List<OpenchatServiceAttachment> attachments, String body, int expiresInSeconds) {
-    this(timestamp, group, attachments, body, false, expiresInSeconds, false, null);
+    this(timestamp, group, attachments, body, false, expiresInSeconds, false, null, false);
   }
 
   
   public OpenchatServiceDataMessage(long timestamp, OpenchatServiceGroup group,
                                   List<OpenchatServiceAttachment> attachments,
                                   String body, boolean endSession, int expiresInSeconds,
-                                  boolean expirationUpdate, byte[] profileKey)
+                                  boolean expirationUpdate, byte[] profileKey, boolean profileKeyUpdate)
   {
     this.timestamp        = timestamp;
     this.body             = Optional.fromNullable(body);
@@ -63,6 +64,7 @@ public class OpenchatServiceDataMessage {
     this.expiresInSeconds = expiresInSeconds;
     this.expirationUpdate = expirationUpdate;
     this.profileKey       = Optional.fromNullable(profileKey);
+    this.profileKeyUpdate = profileKeyUpdate;
 
     if (attachments != null && !attachments.isEmpty()) {
       this.attachments = Optional.of(attachments);
@@ -103,6 +105,10 @@ public class OpenchatServiceDataMessage {
     return expirationUpdate;
   }
 
+  public boolean isProfileKeyUpdate() {
+    return profileKeyUpdate;
+  }
+
   public boolean isGroupUpdate() {
     return group.isPresent() && group.get().getType() != OpenchatServiceGroup.Type.DELIVER;
   }
@@ -125,6 +131,7 @@ public class OpenchatServiceDataMessage {
     private int                expiresInSeconds;
     private boolean            expirationUpdate;
     private byte[]             profileKey;
+    private boolean            profileKeyUpdate;
 
     private Builder() {}
 
@@ -181,10 +188,16 @@ public class OpenchatServiceDataMessage {
       return this;
     }
 
+    public Builder asProfileKeyUpdate(boolean profileKeyUpdate) {
+      this.profileKeyUpdate = profileKeyUpdate;
+      return this;
+    }
+
     public OpenchatServiceDataMessage build() {
       if (timestamp == 0) timestamp = System.currentTimeMillis();
       return new OpenchatServiceDataMessage(timestamp, group, attachments, body, endSession,
-                                          expiresInSeconds, expirationUpdate, profileKey);
+                                          expiresInSeconds, expirationUpdate, profileKey,
+                                          profileKeyUpdate);
     }
   }
 }

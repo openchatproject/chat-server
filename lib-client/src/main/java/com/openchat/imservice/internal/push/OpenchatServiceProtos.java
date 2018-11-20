@@ -5777,12 +5777,16 @@ public final class OpenchatServiceProtos {
       END_SESSION(0, 1),
       
       EXPIRATION_TIMER_UPDATE(1, 2),
+      
+      PROFILE_KEY_UPDATE(2, 4),
       ;
 
       
       public static final int END_SESSION_VALUE = 1;
       
       public static final int EXPIRATION_TIMER_UPDATE_VALUE = 2;
+      
+      public static final int PROFILE_KEY_UPDATE_VALUE = 4;
 
       public final int getNumber() { return value; }
 
@@ -5790,6 +5794,7 @@ public final class OpenchatServiceProtos {
         switch (value) {
           case 1: return END_SESSION;
           case 2: return EXPIRATION_TIMER_UPDATE;
+          case 4: return PROFILE_KEY_UPDATE;
           default: return null;
         }
       }
