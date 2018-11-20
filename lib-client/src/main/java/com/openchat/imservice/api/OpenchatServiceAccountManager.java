@@ -68,34 +68,26 @@ public class OpenchatServiceAccountManager {
   }
 
   
-  public void verifyAccountWithCode(String verificationCode, String openchatingKey, int openchatProtocolRegistrationId, boolean voice, boolean video, boolean fetchesMessages)
+  public void verifyAccountWithCode(String verificationCode, String openchatingKey, int openchatProtocolRegistrationId, boolean fetchesMessages)
       throws IOException
   {
     this.pushServiceSocket.verifyAccountCode(verificationCode, openchatingKey,
                                              openchatProtocolRegistrationId,
-                                             voice, video, fetchesMessages);
+                                             fetchesMessages);
   }
 
   
-  public void verifyAccountWithToken(String verificationToken, String openchatingKey, int openchatProtocolRegistrationId, boolean voice, boolean video, boolean fetchesMessages)
+  public void setAccountAttributes(String openchatingKey, int openchatProtocolRegistrationId, boolean fetchesMessages)
       throws IOException
   {
-    this.pushServiceSocket.verifyAccountToken(verificationToken, openchatingKey, openchatProtocolRegistrationId, voice, video, fetchesMessages);
+    this.pushServiceSocket.setAccountAttributes(openchatingKey, openchatProtocolRegistrationId, fetchesMessages);
   }
 
   
-  public void setAccountAttributes(String openchatingKey, int openchatProtocolRegistrationId, boolean voice, boolean video, boolean fetchesMessages)
+  public void setPreKeys(IdentityKey identityKey, SignedPreKeyRecord signedPreKey, List<PreKeyRecord> oneTimePreKeys)
       throws IOException
   {
-    this.pushServiceSocket.setAccountAttributes(openchatingKey, openchatProtocolRegistrationId, voice, video, fetchesMessages);
-  }
-
-  
-  public void setPreKeys(IdentityKey identityKey, PreKeyRecord lastResortKey,
-                         SignedPreKeyRecord signedPreKey, List<PreKeyRecord> oneTimePreKeys)
-      throws IOException
-  {
-    this.pushServiceSocket.registerPreKeys(identityKey, lastResortKey, signedPreKey, oneTimePreKeys);
+    this.pushServiceSocket.registerPreKeys(identityKey, signedPreKey, oneTimePreKeys);
   }
 
   

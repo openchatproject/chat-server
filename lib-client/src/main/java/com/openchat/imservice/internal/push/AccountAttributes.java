@@ -19,11 +19,11 @@ public class AccountAttributes {
   @JsonProperty
   private boolean fetchesMessages;
 
-  public AccountAttributes(String openchatingKey, int registrationId, boolean voice, boolean video, boolean fetchesMessages) {
+  public AccountAttributes(String openchatingKey, int registrationId, boolean fetchesMessages) {
     this.openchatingKey   = openchatingKey;
     this.registrationId = registrationId;
-    this.voice          = voice;
-    this.video          = video;
+    this.voice          = true;
+    this.video          = true;
     this.fetchesMessages = fetchesMessages;
   }
 
