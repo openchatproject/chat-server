@@ -11,13 +11,13 @@ import com.openchat.protocal.state.PreKeyRecord;
 import com.openchat.protocal.state.SignedPreKeyRecord;
 import com.openchat.protocal.util.Pair;
 import com.openchat.protocal.util.guava.Optional;
-import com.openchat.imservice.api.crypto.AttachmentCipherOutputStream;
+import com.openchat.imservice.api.crypto.DigestingOutputStream;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment.ProgressListener;
 import com.openchat.imservice.api.messages.calls.TurnServerInfo;
 import com.openchat.imservice.api.messages.multidevice.DeviceInfo;
+import com.openchat.imservice.api.profiles.OpenchatServiceProfile;
 import com.openchat.imservice.api.push.ContactTokenDetails;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
-import com.openchat.imservice.api.push.OpenchatServiceProfile;
 import com.openchat.imservice.api.push.SignedPreKeyEntity;
 import com.openchat.imservice.api.push.exceptions.AuthorizationFailedException;
 import com.openchat.imservice.api.push.exceptions.ExpectationFailedException;
@@ -27,10 +27,13 @@ import com.openchat.imservice.api.push.exceptions.PushNetworkException;
 import com.openchat.imservice.api.push.exceptions.RateLimitException;
 import com.openchat.imservice.api.push.exceptions.UnregisteredUserException;
 import com.openchat.imservice.api.util.CredentialsProvider;
+import com.openchat.imservice.internal.configuration.OpenchatServiceConfiguration;
+import com.openchat.imservice.internal.configuration.OpenchatUrl;
 import com.openchat.imservice.internal.push.exceptions.MismatchedDevicesException;
 import com.openchat.imservice.internal.push.exceptions.StaleDevicesException;
+import com.openchat.imservice.internal.push.http.DigestingRequestBody;
+import com.openchat.imservice.internal.push.http.OutputStreamFactory;
 import com.openchat.imservice.internal.util.Base64;
-import com.openchat.imservice.internal.util.BlacklistingTrustManager;
 import com.openchat.imservice.internal.util.JsonUtil;
 import com.openchat.imservice.internal.util.Util;
 
@@ -42,6 +45,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -60,8 +64,8 @@ import javax.net.ssl.X509TrustManager;
 import okhttp3.Call;
 import okhttp3.ConnectionSpec;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
-import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -99,66 +103,58 @@ public class PushServiceSocket {
   private       long      soTimeoutMillis = TimeUnit.SECONDS.toMillis(30);
   private final Set<Call> connections     = new HashSet<>();
 
-  private final OpenchatConnectionInformation[] openchatConnectionInformation;
-  private final CredentialsProvider           credentialsProvider;
-  private final String                        userAgent;
-  private final SecureRandom                  random;
+  private final OpenchatServiceConfiguration openchatServiceConfiguration;
+  private final CredentialsProvider        credentialsProvider;
+  private final String                     userAgent;
+  private final SecureRandom               random;
 
-  public PushServiceSocket(OpenchatServiceUrl[] serviceUrls, CredentialsProvider credentialsProvider, String userAgent) {
-    try {
-      this.credentialsProvider         = credentialsProvider;
-      this.userAgent                   = userAgent;
-      this.openchatConnectionInformation = new OpenchatConnectionInformation[serviceUrls.length];
-      this.random                      = SecureRandom.getInstance("SHA1PRNG");
-
-      for (int i = 0; i < serviceUrls.length; i++) {
-        openchatConnectionInformation[i] = new OpenchatConnectionInformation(serviceUrls[i]);
-      }
-    } catch (NoSuchAlgorithmException e) {
-      throw new AssertionError(e);
-    }
+  public PushServiceSocket(OpenchatServiceConfiguration openchatServiceConfiguration, CredentialsProvider credentialsProvider, String userAgent) {
+    this.credentialsProvider         = credentialsProvider;
+    this.userAgent                   = userAgent;
+    this.openchatServiceConfiguration  = openchatServiceConfiguration;
+    this.random                      = new SecureRandom();
   }
 
   public void createAccount(boolean voice) throws IOException {
     String path = voice ? CREATE_ACCOUNT_VOICE_PATH : CREATE_ACCOUNT_SMS_PATH;
-    makeRequest(String.format(path, credentialsProvider.getUser()), "GET", null);
+    makeServiceRequest(String.format(path, credentialsProvider.getUser()), "GET", null);
   }
 
   public void verifyAccountCode(String verificationCode, String openchatingKey, int registrationId, boolean fetchesMessages)
       throws IOException
   {
     AccountAttributes openchatingKeyEntity = new AccountAttributes(openchatingKey, registrationId, fetchesMessages);
-    makeRequest(String.format(VERIFY_ACCOUNT_CODE_PATH, verificationCode),
-                "PUT", JsonUtil.toJson(openchatingKeyEntity));
+    makeServiceRequest(String.format(VERIFY_ACCOUNT_CODE_PATH, verificationCode),
+                       "PUT", JsonUtil.toJson(openchatingKeyEntity));
   }
 
   public void setAccountAttributes(String openchatingKey, int registrationId, boolean fetchesMessages) throws IOException {
     AccountAttributes accountAttributes = new AccountAttributes(openchatingKey, registrationId, fetchesMessages);
-    makeRequest(SET_ACCOUNT_ATTRIBUTES, "PUT", JsonUtil.toJson(accountAttributes));
+    makeServiceRequest(SET_ACCOUNT_ATTRIBUTES, "PUT", JsonUtil.toJson(accountAttributes));
   }
 
   public String getAccountVerificationToken() throws IOException {
-    String responseText = makeRequest(REQUEST_TOKEN_PATH, "GET", null);
+    String responseText = makeServiceRequest(REQUEST_TOKEN_PATH, "GET", null);
     return JsonUtil.fromJson(responseText, AuthorizationToken.class).getToken();
   }
 
   public String getNewDeviceVerificationCode() throws IOException {
-    String responseText = makeRequest(PROVISIONING_CODE_PATH, "GET", null);
+    String responseText = makeServiceRequest(PROVISIONING_CODE_PATH, "GET", null);
     return JsonUtil.fromJson(responseText, DeviceCode.class).getVerificationCode();
   }
 
   public List<DeviceInfo> getDevices() throws IOException {
-    String responseText = makeRequest(String.format(DEVICE_PATH, ""), "GET", null);
+    String responseText = makeServiceRequest(String.format(DEVICE_PATH, ""), "GET", null);
     return JsonUtil.fromJson(responseText, DeviceInfoList.class).getDevices();
   }
 
   public void removeDevice(long deviceId) throws IOException {
-    makeRequest(String.format(DEVICE_PATH, String.valueOf(deviceId)), "DELETE", null);
+    makeServiceRequest(String.format(DEVICE_PATH, String.valueOf(deviceId)), "DELETE", null);
   }
 
   public void sendProvisioningMessage(String destination, byte[] body) throws IOException {
-    makeRequest(String.format(PROVISIONING_MESSAGE_PATH, destination), "PUT",
-                JsonUtil.toJson(new ProvisioningMessage(Base64.encodeBytes(body))));
+    makeServiceRequest(String.format(PROVISIONING_MESSAGE_PATH, destination), "PUT",
+                       JsonUtil.toJson(new ProvisioningMessage(Base64.encodeBytes(body))));
   }
 
   public void sendReceipt(String destination, long messageId, Optional<String> relay) throws IOException {
@@ -168,23 +164,23 @@ public class PushServiceSocket {
       path += "?relay=" + relay.get();
     }
 
-    makeRequest(path, "PUT", null);
+    makeServiceRequest(path, "PUT", null);
   }
 
   public void registerGcmId(String gcmRegistrationId) throws IOException {
     GcmRegistrationId registration = new GcmRegistrationId(gcmRegistrationId, true);
-    makeRequest(REGISTER_GCM_PATH, "PUT", JsonUtil.toJson(registration));
+    makeServiceRequest(REGISTER_GCM_PATH, "PUT", JsonUtil.toJson(registration));
   }
 
   public void unregisterGcmId() throws IOException {
-    makeRequest(REGISTER_GCM_PATH, "DELETE", null);
+    makeServiceRequest(REGISTER_GCM_PATH, "DELETE", null);
   }
 
   public SendMessageResponse sendMessage(OutgoingPushMessageList bundle)
       throws IOException
   {
     try {
-      String responseText = makeRequest(String.format(MESSAGE_PATH, bundle.getDestination()), "PUT", JsonUtil.toJson(bundle));
+      String responseText = makeServiceRequest(String.format(MESSAGE_PATH, bundle.getDestination()), "PUT", JsonUtil.toJson(bundle));
 
       if (responseText == null) return new SendMessageResponse(false);
       else                      return JsonUtil.fromJson(responseText, SendMessageResponse.class);
@@ -194,12 +190,12 @@ public class PushServiceSocket {
   }
 
   public List<OpenchatServiceEnvelopeEntity> getMessages() throws IOException {
-    String responseText = makeRequest(String.format(MESSAGE_PATH, ""), "GET", null);
+    String responseText = makeServiceRequest(String.format(MESSAGE_PATH, ""), "GET", null);
     return JsonUtil.fromJson(responseText, OpenchatServiceEnvelopeEntityList.class).getMessages();
   }
 
   public void acknowledgeMessage(String sender, long timestamp) throws IOException {
-    makeRequest(String.format(ACKNOWLEDGE_MESSAGE_PATH, sender, timestamp), "DELETE", null);
+    makeServiceRequest(String.format(ACKNOWLEDGE_MESSAGE_PATH, sender, timestamp), "DELETE", null);
   }
 
   public void registerPreKeys(IdentityKey identityKey,
@@ -220,12 +216,12 @@ public class PushServiceSocket {
                                                                    signedPreKey.getKeyPair().getPublicKey(),
                                                                    signedPreKey.getSignature());
 
-    makeRequest(String.format(PREKEY_PATH, ""), "PUT",
-                JsonUtil.toJson(new PreKeyState(entities, signedPreKeyEntity, identityKey)));
+    makeServiceRequest(String.format(PREKEY_PATH, ""), "PUT",
+                       JsonUtil.toJson(new PreKeyState(entities, signedPreKeyEntity, identityKey)));
   }
 
   public int getAvailablePreKeys() throws IOException {
-    String       responseText = makeRequest(PREKEY_METADATA_PATH, "GET", null);
+    String       responseText = makeServiceRequest(PREKEY_METADATA_PATH, "GET", null);
     PreKeyStatus preKeyStatus = JsonUtil.fromJson(responseText, PreKeyStatus.class);
 
     return preKeyStatus.getCount();
@@ -244,7 +240,7 @@ public class PushServiceSocket {
         path = path + "?relay=" + destination.getRelay().get();
       }
 
-      String             responseText = makeRequest(path, "GET", null);
+      String             responseText = makeServiceRequest(path, "GET", null);
       PreKeyResponse     response     = JsonUtil.fromJson(responseText, PreKeyResponse.class);
       List<PreKeyBundle> bundles      = new LinkedList<>();
 
@@ -286,7 +282,7 @@ public class PushServiceSocket {
         path = path + "?relay=" + destination.getRelay().get();
       }
 
-      String         responseText = makeRequest(path, "GET", null);
+      String         responseText = makeServiceRequest(path, "GET", null);
       PreKeyResponse response     = JsonUtil.fromJson(responseText, PreKeyResponse.class);
 
       if (response.getDevices() == null || response.getDevices().size() < 1)
@@ -319,7 +315,7 @@ public class PushServiceSocket {
 
   public SignedPreKeyEntity getCurrentSignedPreKey() throws IOException {
     try {
-      String responseText = makeRequest(SIGNED_PREKEY_PATH, "GET", null);
+      String responseText = makeServiceRequest(SIGNED_PREKEY_PATH, "GET", null);
       return JsonUtil.fromJson(responseText, SignedPreKeyEntity.class);
     } catch (NotFoundException e) {
       Log.w(TAG, e);
@@ -331,11 +327,11 @@ public class PushServiceSocket {
     SignedPreKeyEntity signedPreKeyEntity = new SignedPreKeyEntity(signedPreKey.getId(),
                                                                    signedPreKey.getKeyPair().getPublicKey(),
                                                                    signedPreKey.getSignature());
-    makeRequest(SIGNED_PREKEY_PATH, "PUT", JsonUtil.toJson(signedPreKeyEntity));
+    makeServiceRequest(SIGNED_PREKEY_PATH, "PUT", JsonUtil.toJson(signedPreKeyEntity));
   }
 
   public Pair<Long, byte[]> sendAttachment(PushAttachmentData attachment) throws IOException {
-    String               response      = makeRequest(String.format(ATTACHMENT_PATH, ""), "GET", null);
+    String               response      = makeServiceRequest(String.format(ATTACHMENT_PATH, ""), "GET", null);
     AttachmentDescriptor attachmentKey = JsonUtil.fromJson(response, AttachmentDescriptor.class);
 
     if (attachmentKey == null || attachmentKey.getLocation() == null) {
@@ -345,7 +341,7 @@ public class PushServiceSocket {
     Log.w(TAG, "Got attachment content location: " + attachmentKey.getLocation());
 
     byte[] digest = uploadAttachment("PUT", attachmentKey.getLocation(), attachment.getData(),
-                                     attachment.getDataSize(), attachment.getKey(), attachment.getListener());
+                                     attachment.getDataSize(), attachment.getOutputStreamFactory(), attachment.getListener());
 
     return new Pair<>(attachmentKey.getId(), digest);
   }
@@ -357,23 +353,49 @@ public class PushServiceSocket {
       path = path + "?relay=" + relay;
     }
 
-    String               response   = makeRequest(path, "GET", null);
+    String               response   = makeServiceRequest(path, "GET", null);
     AttachmentDescriptor descriptor = JsonUtil.fromJson(response, AttachmentDescriptor.class);
 
     Log.w(TAG, "Attachment: " + attachmentId + " is at: " + descriptor.getLocation());
-
-    downloadExternalFile(descriptor.getLocation(), destination, maxSizeBytes, listener);
+    downloadAttachment(descriptor.getLocation(), destination, maxSizeBytes, listener);
   }
 
   public OpenchatServiceProfile retrieveProfile(OpenchatServiceAddress target) throws
       NonSuccessfulResponseCodeException, PushNetworkException
   {
     try {
-      String response = makeRequest(String.format(PROFILE_PATH, target.getNumber()), "GET", null);
+      String response = makeServiceRequest(String.format(PROFILE_PATH, target.getNumber()), "GET", null);
       return JsonUtil.fromJson(response, OpenchatServiceProfile.class);
     } catch (IOException e) {
       Log.w(TAG, e);
       throw new NonSuccessfulResponseCodeException("Unable to parse entity");
+    }
+  }
+
+  public void setProfileName(String name) throws NonSuccessfulResponseCodeException, PushNetworkException {
+    makeServiceRequest(String.format(PROFILE_PATH, "name/" + (name == null ? "" : URLEncoder.encode(name))), "PUT", "");
+  }
+
+  public void setProfileAvatar(ProfileAvatarData profileAvatar)
+      throws NonSuccessfulResponseCodeException, PushNetworkException
+  {
+    String                        response       = makeServiceRequest(String.format(PROFILE_PATH, "form/avatar"), "GET", null);
+    ProfileAvatarUploadAttributes formAttributes;
+
+    try {
+      formAttributes = JsonUtil.fromJson(response, ProfileAvatarUploadAttributes.class);
+    } catch (IOException e) {
+      Log.w(TAG, e);
+      throw new NonSuccessfulResponseCodeException("Unable to parse entity");
+    }
+
+    if (profileAvatar != null) {
+      uploadToCdn(formAttributes.getAcl(), formAttributes.getKey(),
+                  formAttributes.getPolicy(), formAttributes.getAlgorithm(),
+                  formAttributes.getCredential(), formAttributes.getDate(),
+                  formAttributes.getSignature(), profileAvatar.getData(),
+                  profileAvatar.getContentType(), profileAvatar.getDataLength(),
+                  profileAvatar.getOutputStreamFactory());
     }
   }
 
@@ -382,7 +404,7 @@ public class PushServiceSocket {
   {
     try {
       ContactTokenList        contactTokenList = new ContactTokenList(new LinkedList<>(contactTokens));
-      String                  response         = makeRequest(DIRECTORY_TOKENS_PATH, "PUT", JsonUtil.toJson(contactTokenList));
+      String                  response         = makeServiceRequest(DIRECTORY_TOKENS_PATH, "PUT", JsonUtil.toJson(contactTokenList));
       ContactTokenDetailsList activeTokens     = JsonUtil.fromJson(response, ContactTokenDetailsList.class);
 
       return activeTokens.getContacts();
@@ -394,7 +416,7 @@ public class PushServiceSocket {
 
   public ContactTokenDetails getContactTokenDetails(String contactToken) throws IOException {
     try {
-      String response = makeRequest(String.format(DIRECTORY_VERIFY_PATH, contactToken), "GET", null);
+      String response = makeServiceRequest(String.format(DIRECTORY_VERIFY_PATH, contactToken), "GET", null);
       return JsonUtil.fromJson(response, ContactTokenDetails.class);
     } catch (NotFoundException nfe) {
       return null;
@@ -402,7 +424,7 @@ public class PushServiceSocket {
   }
 
   public TurnServerInfo getTurnServerInfo() throws IOException {
-    String response = makeRequest(TURN_SERVER_INFO, "GET", null);
+    String response = makeServiceRequest(TURN_SERVER_INFO, "GET", null);
     return JsonUtil.fromJson(response, TurnServerInfo.class);
   }
 
@@ -420,7 +442,7 @@ public class PushServiceSocket {
     }
   }
 
-  private void downloadExternalFile(String url, File localDestination, int maxSizeBytes, ProgressListener listener)
+  private void downloadAttachment(String url, File localDestination, int maxSizeBytes, ProgressListener listener)
       throws IOException
   {
     URL               downloadUrl = new URL(url);
@@ -468,7 +490,7 @@ public class PushServiceSocket {
   }
 
   private byte[] uploadAttachment(String method, String url, InputStream data,
-                                  long dataSize, byte[] key, ProgressListener listener)
+                                  long dataSize, OutputStreamFactory outputStreamFactory, ProgressListener listener)
     throws IOException
   {
     URL                uploadUrl  = new URL(url);
@@ -476,7 +498,7 @@ public class PushServiceSocket {
     connection.setDoOutput(true);
 
     if (dataSize > 0) {
-      connection.setFixedLengthStreamingMode((int) AttachmentCipherOutputStream.getCiphertextLength(dataSize));
+      connection.setFixedLengthStreamingMode((int) outputStreamFactory.getCiphertextLength(dataSize));
     } else {
       connection.setChunkedStreamingMode(0);
     }
@@ -487,10 +509,9 @@ public class PushServiceSocket {
     connection.connect();
 
     try {
-      OutputStream                 stream = connection.getOutputStream();
-      AttachmentCipherOutputStream out    = new AttachmentCipherOutputStream(key, stream);
-      byte[]                       buffer = new byte[4096];
-      int                   read, written = 0;
+      DigestingOutputStream out    = outputStreamFactory.createFor(connection.getOutputStream());
+      byte[]                buffer = new byte[4096];
+      int            read, written = 0;
 
       while ((read = data.read(buffer)) != -1) {
         out.write(buffer, 0, read);
@@ -501,24 +522,98 @@ public class PushServiceSocket {
         }
       }
 
-      data.close();
       out.flush();
+      data.close();
       out.close();
 
       if (connection.getResponseCode() != 200) {
         throw new IOException("Bad response: " + connection.getResponseCode() + " " + connection.getResponseMessage());
       }
 
-      return out.getAttachmentDigest();
+      return out.getTransmittedDigest();
     } finally {
       connection.disconnect();
     }
   }
 
-  private String makeRequest(String urlFragment, String method, String body)
+  private byte[] uploadToCdn(String acl, String key, String policy, String algorithm,
+                             String credential, String date, String signature,
+                             InputStream data, String contentType, long length,
+                             OutputStreamFactory outputStreamFactory)
+      throws PushNetworkException, NonSuccessfulResponseCodeException
+  {
+    try {
+      OpenchatUrl        openchatUrl     = getRandom(openchatServiceConfiguration.getOpenchatCdnUrls(), random);
+      String           url           = openchatUrl.getUrl();
+      Optional<String> hostHeader    = openchatUrl.getHostHeader();
+      TrustManager[]   trustManagers = openchatUrl.getTrustManagers();
+
+      SSLContext context = SSLContext.getInstance("TLS");
+      context.init(null, trustManagers, null);
+
+      OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder()
+          .sslSocketFactory(context.getSocketFactory(), (X509TrustManager)trustManagers[0])
+          .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+          .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS);
+
+      DigestingRequestBody file = new DigestingRequestBody(data, outputStreamFactory, contentType, length);
+
+      RequestBody requestBody = new MultipartBody.Builder()
+          .setType(MultipartBody.FORM)
+          .addFormDataPart("acl", acl)
+          .addFormDataPart("key", key)
+          .addFormDataPart("policy", policy)
+          .addFormDataPart("Content-Type", contentType)
+          .addFormDataPart("x-amz-algorithm", algorithm)
+          .addFormDataPart("x-amz-credential", credential)
+          .addFormDataPart("x-amz-date", date)
+          .addFormDataPart("x-amz-signature", signature)
+          .addFormDataPart("file", "file", file)
+          .build();
+
+      Request.Builder request = new Request.Builder().url(url).post(requestBody);
+
+      if (openchatUrl.getConnectionSpec().isPresent()) {
+        okHttpClientBuilder.connectionSpecs(Collections.singletonList(openchatUrl.getConnectionSpec().get()));
+      } else {
+        okHttpClientBuilder.connectionSpecs(Util.immutableList(ConnectionSpec.MODERN_TLS, ConnectionSpec.COMPATIBLE_TLS));
+      }
+
+      if (hostHeader.isPresent()) {
+        request.addHeader("Host", hostHeader.get());
+      }
+
+      Call call = okHttpClientBuilder.build().newCall(request.build());
+
+      synchronized (connections) {
+        connections.add(call);
+      }
+
+      try {
+        Response response;
+
+        try {
+          response = call.execute();
+        } catch (IOException e) {
+          throw new PushNetworkException(e);
+        }
+
+        if (response.isSuccessful()) return file.getTransmittedDigest();
+        else                         throw new NonSuccessfulResponseCodeException("Response: " + response);
+      } finally {
+        synchronized (connections) {
+          connections.remove(call);
+        }
+      }
+    } catch (NoSuchAlgorithmException | KeyManagementException e) {
+      throw new AssertionError(e);
+    }
+  }
+
+  private String makeServiceRequest(String urlFragment, String method, String body)
       throws NonSuccessfulResponseCodeException, PushNetworkException
   {
-    Response response = getConnection(urlFragment, method, body);
+    Response response = getServiceConnection(urlFragment, method, body);
 
     int    responseCode;
     String responseMessage;
@@ -589,14 +684,14 @@ public class PushServiceSocket {
     return responseBody;
   }
 
-  private Response getConnection(String urlFragment, String method, String body)
+  private Response getServiceConnection(String urlFragment, String method, String body)
       throws PushNetworkException
   {
     try {
-      OpenchatConnectionInformation connectionInformation = getRandom(openchatConnectionInformation, random);
-      String                      url                   = connectionInformation.getUrl();
-      Optional<String>            hostHeader            = connectionInformation.getHostHeader();
-      TrustManager[]              trustManagers         = connectionInformation.getTrustManagers();
+      OpenchatUrl        openchatUrl     = getRandom(openchatServiceConfiguration.getOpenchatServiceUrls(), random);
+      String           url           = openchatUrl.getUrl();
+      Optional<String> hostHeader    = openchatUrl.getHostHeader();
+      TrustManager[]   trustManagers = openchatUrl.getTrustManagers();
 
       Log.w(TAG, "Push service URL: " + url);
       Log.w(TAG, "Opening URL: " + String.format("%s%s", url, urlFragment));
@@ -619,21 +714,20 @@ public class PushServiceSocket {
       }
 
       if (credentialsProvider.getPassword() != null) {
-        request.addHeader("Authorization", getAuthorizationHeader());
+        request.addHeader("Authorization", getAuthorizationHeader(credentialsProvider));
       }
 
       if (userAgent != null) {
         request.addHeader("X-Openchat-Agent", userAgent);
       }
 
-      if (connectionInformation.getConnectionSpec().isPresent()) {
-        okHttpClientBuilder.connectionSpecs(Collections.singletonList(connectionInformation.getConnectionSpec().get()));
+      if (openchatUrl.getConnectionSpec().isPresent()) {
+        okHttpClientBuilder.connectionSpecs(Collections.singletonList(openchatUrl.getConnectionSpec().get()));
       } else {
         okHttpClientBuilder.connectionSpecs(Util.immutableList(ConnectionSpec.MODERN_TLS, ConnectionSpec.COMPATIBLE_TLS));
       }
 
       if (hostHeader.isPresent()) {
-        okHttpClientBuilder.protocols(Collections.singletonList(Protocol.HTTP_1_1));
         request.addHeader("Host", hostHeader.get());
       }
 
@@ -657,7 +751,7 @@ public class PushServiceSocket {
     }
   }
 
-  private String getAuthorizationHeader() {
+  private String getAuthorizationHeader(CredentialsProvider credentialsProvider) {
     try {
       return "Basic " + Base64.encodeBytes((credentialsProvider.getUser() + ":" + credentialsProvider.getPassword()).getBytes("UTF-8"));
     } catch (UnsupportedEncodingException e) {
@@ -665,9 +759,7 @@ public class PushServiceSocket {
     }
   }
 
-  private OpenchatConnectionInformation getRandom(OpenchatConnectionInformation[] connections,
-                                                SecureRandom random)
-  {
+  private OpenchatUrl getRandom(OpenchatUrl[] connections, SecureRandom random) {
     return connections[random.nextInt(connections.length)];
   }
 
@@ -700,37 +792,6 @@ public class PushServiceSocket {
 
     public String getLocation() {
       return location;
-    }
-  }
-
-  private static class OpenchatConnectionInformation {
-
-    private final String                   url;
-    private final Optional<String>         hostHeader;
-    private final Optional<ConnectionSpec> connectionSpec;
-    private final TrustManager[]           trustManagers;
-
-    private OpenchatConnectionInformation(OpenchatServiceUrl openchatServiceUrl) {
-      this.url            = openchatServiceUrl.getUrl();
-      this.hostHeader     = openchatServiceUrl.getHostHeader();
-      this.connectionSpec = openchatServiceUrl.getConnectionSpec();
-      this.trustManagers  = BlacklistingTrustManager.createFor(openchatServiceUrl.getTrustStore());
-    }
-
-    String getUrl() {
-      return url;
-    }
-
-    Optional<String> getHostHeader() {
-      return hostHeader;
-    }
-
-    TrustManager[] getTrustManagers() {
-      return trustManagers;
-    }
-
-    Optional<ConnectionSpec> getConnectionSpec() {
-      return connectionSpec;
     }
   }
 }

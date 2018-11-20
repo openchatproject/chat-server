@@ -1,28 +1,31 @@
-package com.openchat.imservice.internal.push;
+package com.openchat.imservice.internal.configuration;
 
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.push.TrustStore;
+import com.openchat.imservice.internal.util.BlacklistingTrustManager;
+
+import javax.net.ssl.TrustManager;
 
 import okhttp3.ConnectionSpec;
 
-public class OpenchatServiceUrl {
+public class OpenchatUrl {
 
   private final String                   url;
   private final Optional<String>         hostHeader;
   private final Optional<ConnectionSpec> connectionSpec;
-  private       TrustStore               trustStore;
+  private       TrustManager[]           trustManagers;
 
-  public OpenchatServiceUrl(String url, TrustStore trustStore) {
+  public OpenchatUrl(String url, TrustStore trustStore) {
     this(url, null, trustStore, null);
   }
 
-  public OpenchatServiceUrl(String url, String hostHeader,
-                          TrustStore trustStore,
-                          ConnectionSpec connectionSpec)
+  public OpenchatUrl(String url, String hostHeader,
+                   TrustStore trustStore,
+                   ConnectionSpec connectionSpec)
   {
     this.url            = url;
     this.hostHeader     = Optional.fromNullable(hostHeader);
-    this.trustStore     = trustStore;
+    this.trustManagers  = BlacklistingTrustManager.createFor(trustStore);
     this.connectionSpec = Optional.fromNullable(connectionSpec);
   }
 
@@ -34,11 +37,12 @@ public class OpenchatServiceUrl {
     return url;
   }
 
-  public TrustStore getTrustStore() {
-    return trustStore;
+  public TrustManager[] getTrustManagers() {
+    return trustManagers;
   }
 
   public Optional<ConnectionSpec> getConnectionSpec() {
     return connectionSpec;
   }
+
 }

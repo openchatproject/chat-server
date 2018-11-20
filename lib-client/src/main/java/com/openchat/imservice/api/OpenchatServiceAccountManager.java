@@ -9,19 +9,25 @@ import com.openchat.protocal.ecc.ECPublicKey;
 import com.openchat.protocal.state.PreKeyRecord;
 import com.openchat.protocal.state.SignedPreKeyRecord;
 import com.openchat.protocal.util.guava.Optional;
+import com.openchat.imservice.api.crypto.ProfileCipher;
+import com.openchat.imservice.api.crypto.ProfileCipherInputStream;
 import com.openchat.imservice.api.messages.calls.TurnServerInfo;
 import com.openchat.imservice.api.messages.multidevice.DeviceInfo;
 import com.openchat.imservice.api.push.ContactTokenDetails;
 import com.openchat.imservice.api.push.SignedPreKeyEntity;
-import com.openchat.imservice.api.push.TrustStore;
+import com.openchat.imservice.api.util.StreamDetails;
+import com.openchat.imservice.internal.configuration.OpenchatServiceConfiguration;
 import com.openchat.imservice.internal.crypto.ProvisioningCipher;
+import com.openchat.imservice.internal.push.ProfileAvatarData;
 import com.openchat.imservice.internal.push.PushServiceSocket;
-import com.openchat.imservice.internal.push.OpenchatServiceUrl;
+import com.openchat.imservice.internal.configuration.OpenchatServiceUrl;
+import com.openchat.imservice.internal.push.http.ProfileCipherOutputStreamFactory;
 import com.openchat.imservice.internal.util.Base64;
 import com.openchat.imservice.internal.util.StaticCredentialsProvider;
 import com.openchat.imservice.internal.util.Util;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
@@ -39,11 +45,11 @@ public class OpenchatServiceAccountManager {
   private final String            userAgent;
 
   
-  public OpenchatServiceAccountManager(OpenchatServiceUrl[] urls,
+  public OpenchatServiceAccountManager(OpenchatServiceConfiguration configuration,
                                      String user, String password,
                                      String userAgent)
   {
-    this.pushServiceSocket = new PushServiceSocket(urls, new StaticCredentialsProvider(user, password, null), userAgent);
+    this.pushServiceSocket = new PushServiceSocket(configuration, new StaticCredentialsProvider(user, password, null), userAgent);
     this.user              = user;
     this.userAgent         = userAgent;
   }
@@ -167,6 +173,32 @@ public class OpenchatServiceAccountManager {
 
   public TurnServerInfo getTurnServerInfo() throws IOException {
     return this.pushServiceSocket.getTurnServerInfo();
+  }
+
+  public void setProfileName(byte[] key, String name)
+      throws IOException
+  {
+    String ciphertextName = null;
+
+    if (name != null) {
+      ciphertextName = Base64.encodeBytesWithoutPadding(new ProfileCipher(key).encrypt(name.getBytes("UTF-8"), ProfileCipher.NAME_PADDED_LENGTH));
+    }
+
+    this.pushServiceSocket.setProfileName(ciphertextName);
+
+  }
+
+  public void setProfileAvatar(byte[] key, StreamDetails avatar)
+      throws IOException
+  {
+    ProfileAvatarData profileAvatarData = null;
+
+    if (avatar != null) {
+      profileAvatarData = new ProfileAvatarData(avatar.getStream(), avatar.getLength(), avatar.getContentType(),
+                                                new ProfileCipherOutputStreamFactory(key));
+    }
+
+    this.pushServiceSocket.setProfileAvatar(profileAvatarData);
   }
 
   public void setSoTimeoutMillis(long soTimeoutMillis) {

@@ -30,6 +30,7 @@ import com.openchat.imservice.api.push.exceptions.EncapsulatedExceptions;
 import com.openchat.imservice.api.push.exceptions.NetworkFailureException;
 import com.openchat.imservice.api.push.exceptions.PushNetworkException;
 import com.openchat.imservice.api.push.exceptions.UnregisteredUserException;
+import com.openchat.imservice.internal.configuration.OpenchatServiceConfiguration;
 import com.openchat.imservice.internal.push.MismatchedDevices;
 import com.openchat.imservice.internal.push.OutgoingPushMessage;
 import com.openchat.imservice.internal.push.OutgoingPushMessageList;
@@ -45,10 +46,10 @@ import com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.NullMessage;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.Verified;
-import com.openchat.imservice.internal.push.OpenchatServiceUrl;
 import com.openchat.imservice.internal.push.StaleDevices;
 import com.openchat.imservice.internal.push.exceptions.MismatchedDevicesException;
 import com.openchat.imservice.internal.push.exceptions.StaleDevicesException;
+import com.openchat.imservice.internal.push.http.AttachmentCipherOutputStreamFactory;
 import com.openchat.imservice.internal.util.Base64;
 import com.openchat.imservice.internal.util.StaticCredentialsProvider;
 import com.openchat.imservice.internal.util.Util;
@@ -69,7 +70,7 @@ public class OpenchatServiceMessageSender {
   private final Optional<EventListener>            eventListener;
 
   
-  public OpenchatServiceMessageSender(OpenchatServiceUrl[] urls,
+  public OpenchatServiceMessageSender(OpenchatServiceConfiguration urls,
                                     String user, String password,
                                     OpenchatProtocolStore store,
                                     String userAgent,
@@ -464,8 +465,8 @@ public class OpenchatServiceMessageSender {
     PushAttachmentData attachmentData = new PushAttachmentData(attachment.getContentType(),
                                                                attachment.getInputStream(),
                                                                attachment.getLength(),
-                                                               attachment.getListener(),
-                                                               attachmentKey);
+                                                               new AttachmentCipherOutputStreamFactory(attachmentKey),
+                                                               attachment.getListener());
 
     Pair<Long, byte[]> attachmentIdAndDigest = socket.sendAttachment(attachmentData);
 

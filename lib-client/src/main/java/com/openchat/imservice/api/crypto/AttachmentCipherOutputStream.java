@@ -5,7 +5,6 @@ import com.openchat.imservice.internal.util.Util;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.InvalidKeyException;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.BadPaddingException;
@@ -15,36 +14,27 @@ import javax.crypto.Mac;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
-public class AttachmentCipherOutputStream extends OutputStream {
+public class AttachmentCipherOutputStream extends DigestingOutputStream {
 
-  private final Cipher        cipher;
-  private final Mac           mac;
-  private final OutputStream  outputStream;
-  private final MessageDigest messageDigest;
-
-  private long ciphertextLength = 0;
-  private byte[] digest;
+  private final Cipher cipher;
+  private final Mac    mac;
 
   public AttachmentCipherOutputStream(byte[] combinedKeyMaterial,
                                       OutputStream outputStream)
       throws IOException
   {
+    super(outputStream);
     try {
-      this.outputStream  = outputStream;
-      this.cipher        = initializeCipher();
-      this.mac           = initializeMac();
-      this.messageDigest = MessageDigest.getInstance("SHA256");
-
+      this.cipher       = initializeCipher();
+      this.mac          = initializeMac();
       byte[][] keyParts = Util.split(combinedKeyMaterial, 32, 32);
 
       this.cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(keyParts[0], "AES"));
       this.mac.init(new SecretKeySpec(keyParts[1], "HmacSHA256"));
 
       mac.update(cipher.getIV());
-      messageDigest.update(cipher.getIV());
-      outputStream.write(cipher.getIV());
-      ciphertextLength += cipher.getIV().length;
-    } catch (InvalidKeyException | NoSuchAlgorithmException e) {
+      super.write(cipher.getIV());
+    } catch (InvalidKeyException e) {
       throw new AssertionError(e);
     }
   }
@@ -60,9 +50,7 @@ public class AttachmentCipherOutputStream extends OutputStream {
 
     if (ciphertext != null) {
       mac.update(ciphertext);
-      messageDigest.update(ciphertext);
-      outputStream.write(ciphertext);
-      ciphertextLength += ciphertext.length;
+      super.write(ciphertext);
     }
   }
 
@@ -77,23 +65,13 @@ public class AttachmentCipherOutputStream extends OutputStream {
       byte[] ciphertext = cipher.doFinal();
       byte[] auth       = mac.doFinal(ciphertext);
 
-      messageDigest.update(ciphertext);
-      this.digest = messageDigest.digest(auth);
+      super.write(ciphertext);
+      super.write(auth);
 
-      outputStream.write(ciphertext);
-      outputStream.write(auth);
-
-      ciphertextLength += ciphertext.length;
-      ciphertextLength += auth.length;
-
-      outputStream.flush();
+      super.flush();
     } catch (IllegalBlockSizeException | BadPaddingException e) {
       throw new AssertionError(e);
     }
-  }
-
-  public byte[] getAttachmentDigest() {
-    return digest;
   }
 
   public static long getCiphertextLength(long plaintextLength) {

@@ -6,7 +6,7 @@ import com.openchat.protocal.InvalidVersionException;
 import com.openchat.protocal.util.Pair;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
-import com.openchat.imservice.api.push.OpenchatServiceProfile;
+import com.openchat.imservice.api.profiles.OpenchatServiceProfile;
 import com.openchat.imservice.api.util.CredentialsProvider;
 import com.openchat.imservice.internal.push.OutgoingPushMessageList;
 import com.openchat.imservice.internal.push.SendMessageResponse;
