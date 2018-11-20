@@ -23,6 +23,7 @@ import com.openchat.imservice.api.messages.calls.IceUpdateMessage;
 import com.openchat.imservice.api.messages.calls.OfferMessage;
 import com.openchat.imservice.api.messages.calls.OpenchatServiceCallMessage;
 import com.openchat.imservice.api.messages.multidevice.BlockedListMessage;
+import com.openchat.imservice.api.messages.multidevice.ConfigurationMessage;
 import com.openchat.imservice.api.messages.multidevice.ReadMessage;
 import com.openchat.imservice.api.messages.multidevice.OpenchatServiceSyncMessage;
 import com.openchat.imservice.api.messages.multidevice.VerifiedMessage;
@@ -172,6 +173,8 @@ public class OpenchatServiceMessageSender {
       content = createMultiDeviceReadContent(message.getRead().get());
     } else if (message.getBlockedList().isPresent()) {
       content = createMultiDeviceBlockedContent(message.getBlockedList().get());
+    } else if (message.getConfiguration().isPresent()) {
+      content = createMultiDeviceConfigurationContent(message.getConfiguration().get());
     } else if (message.getVerified().isPresent()) {
       sendMessage(message.getVerified().get());
       return;
@@ -366,6 +369,18 @@ public class OpenchatServiceMessageSender {
     blockedMessage.addAllNumbers(blocked.getNumbers());
 
     return container.setSyncMessage(syncMessage.setBlocked(blockedMessage)).build().toByteArray();
+  }
+
+  private byte[] createMultiDeviceConfigurationContent(ConfigurationMessage configuration) {
+    Content.Builder                   container            = Content.newBuilder();
+    SyncMessage.Builder               syncMessage          = createSyncMessageBuilder();
+    SyncMessage.Configuration.Builder configurationMessage = SyncMessage.Configuration.newBuilder();
+
+    if (configuration.getReadReceipts().isPresent()) {
+      configurationMessage.setReadReceipts(configuration.getReadReceipts().get());
+    }
+
+    return container.setSyncMessage(syncMessage.setConfiguration(configurationMessage)).build().toByteArray();
   }
 
   private byte[] createMultiDeviceVerifiedContent(VerifiedMessage verifiedMessage, byte[] nullMessage) {
