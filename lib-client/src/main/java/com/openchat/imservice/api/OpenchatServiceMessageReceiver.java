@@ -78,7 +78,7 @@ public class OpenchatServiceMessageReceiver {
 
   
   public OpenchatServiceMessagePipe createMessagePipe() {
-    WebSocketConnection webSocket = new WebSocketConnection(urls.getOpenchatServiceUrls()[0].getUrl(), urls.getOpenchatServiceUrls()[0].getTrustManagers(), credentialsProvider, userAgent);
+    WebSocketConnection webSocket = new WebSocketConnection(urls.getOpenchatServiceUrls()[0].getUrl(), urls.getOpenchatServiceUrls()[0].getTrustStore(), credentialsProvider, userAgent);
     return new OpenchatServiceMessagePipe(webSocket, credentialsProvider);
   }
 

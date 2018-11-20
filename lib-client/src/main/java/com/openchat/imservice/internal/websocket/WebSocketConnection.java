@@ -4,7 +4,9 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 import com.openchat.protocal.logging.Log;
 import com.openchat.protocal.util.Pair;
+import com.openchat.imservice.api.push.TrustStore;
 import com.openchat.imservice.api.util.CredentialsProvider;
+import com.openchat.imservice.internal.util.BlacklistingTrustManager;
 import com.openchat.imservice.internal.util.Util;
 import com.openchat.imservice.internal.util.concurrent.SettableFuture;
 
@@ -45,7 +47,7 @@ public class WebSocketConnection extends WebSocketListener {
   private final Map<Long, SettableFuture<Pair<Integer, String>>> outgoingRequests = new HashMap<>();
 
   private final String              wsUri;
-  private final TrustManager[]      trustManagers;
+  private final TrustStore          trustStore;
   private final CredentialsProvider credentialsProvider;
   private final String              userAgent;
 
@@ -54,8 +56,8 @@ public class WebSocketConnection extends WebSocketListener {
   private int                 attempts;
   private boolean             connected;
 
-  public WebSocketConnection(String httpUri, TrustManager[] trustManagers, CredentialsProvider credentialsProvider, String userAgent) {
-    this.trustManagers       = trustManagers;
+  public WebSocketConnection(String httpUri, TrustStore trustStore, CredentialsProvider credentialsProvider, String userAgent) {
+    this.trustStore          = trustStore;
     this.credentialsProvider = credentialsProvider;
     this.userAgent           = userAgent;
     this.attempts            = 0;
@@ -69,7 +71,7 @@ public class WebSocketConnection extends WebSocketListener {
 
     if (client == null) {
       String                                   filledUri     = String.format(wsUri, credentialsProvider.getUser(), credentialsProvider.getPassword());
-      Pair<SSLSocketFactory, X509TrustManager> socketFactory = createTlsSocketFactory(trustManagers);
+      Pair<SSLSocketFactory, X509TrustManager> socketFactory = createTlsSocketFactory(trustStore);
 
       OkHttpClient okHttpClient = new OkHttpClient.Builder()
                                                   .sslSocketFactory(socketFactory.first(), socketFactory.second())
@@ -260,9 +262,10 @@ public class WebSocketConnection extends WebSocketListener {
     return System.currentTimeMillis() - startTime;
   }
 
-  private Pair<SSLSocketFactory, X509TrustManager> createTlsSocketFactory(TrustManager[] trustManagers) {
+  private Pair<SSLSocketFactory, X509TrustManager> createTlsSocketFactory(TrustStore trustStore) {
     try {
-      SSLContext context = SSLContext.getInstance("TLS");
+      SSLContext     context       = SSLContext.getInstance("TLS");
+      TrustManager[] trustManagers = BlacklistingTrustManager.createFor(trustStore);
       context.init(null, trustManagers, null);
 
       return new Pair<>(context.getSocketFactory(), (X509TrustManager)trustManagers[0]);

@@ -34,6 +34,7 @@ import com.openchat.imservice.internal.push.exceptions.StaleDevicesException;
 import com.openchat.imservice.internal.push.http.DigestingRequestBody;
 import com.openchat.imservice.internal.push.http.OutputStreamFactory;
 import com.openchat.imservice.internal.util.Base64;
+import com.openchat.imservice.internal.util.BlacklistingTrustManager;
 import com.openchat.imservice.internal.util.JsonUtil;
 import com.openchat.imservice.internal.util.Util;
 
@@ -49,7 +50,6 @@ import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -70,8 +70,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import okio.BufferedSink;
-import okio.Okio;
 
 public class PushServiceSocket {
 
@@ -106,16 +104,18 @@ public class PushServiceSocket {
   private       long      soTimeoutMillis = TimeUnit.SECONDS.toMillis(30);
   private final Set<Call> connections     = new HashSet<>();
 
-  private final OpenchatServiceConfiguration openchatServiceConfiguration;
-  private final CredentialsProvider        credentialsProvider;
-  private final String                     userAgent;
-  private final SecureRandom               random;
+  private final ConnectionHolder[]  serviceClients;
+  private final ConnectionHolder[]  cdnClients;
+  private final CredentialsProvider credentialsProvider;
+  private final String              userAgent;
+  private final SecureRandom        random;
 
   public PushServiceSocket(OpenchatServiceConfiguration openchatServiceConfiguration, CredentialsProvider credentialsProvider, String userAgent) {
-    this.credentialsProvider         = credentialsProvider;
-    this.userAgent                   = userAgent;
-    this.openchatServiceConfiguration  = openchatServiceConfiguration;
-    this.random                      = new SecureRandom();
+    this.credentialsProvider = credentialsProvider;
+    this.userAgent           = userAgent;
+    this.serviceClients      = createConnectionHolders(openchatServiceConfiguration.getOpenchatServiceUrls());
+    this.cdnClients          = createConnectionHolders(openchatServiceConfiguration.getOpenchatCdnUrls());
+    this.random              = new SecureRandom();
   }
 
   public void createAccount(boolean voice) throws IOException {
@@ -548,74 +548,58 @@ public class PushServiceSocket {
   private void downloadFromCdn(File destination, String path, int maxSizeBytes)
       throws PushNetworkException, NonSuccessfulResponseCodeException
   {
-    try {
-      OpenchatUrl        openchatUrl     = getRandom(openchatServiceConfiguration.getOpenchatCdnUrls(), random);
-      String           url           = openchatUrl.getUrl();
-      Optional<String> hostHeader    = openchatUrl.getHostHeader();
-      TrustManager[]   trustManagers = openchatUrl.getTrustManagers();
+    ConnectionHolder connectionHolder = getRandom(cdnClients, random);
+    OkHttpClient     okHttpClient     = connectionHolder.getClient()
+                                                        .newBuilder()
+                                                        .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                        .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                        .build();
 
-      SSLContext context = SSLContext.getInstance("TLS");
-      context.init(null, trustManagers, null);
+    Request.Builder request = new Request.Builder().url(connectionHolder.getUrl() + "/" + path).get();
 
-      OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder()
-          .sslSocketFactory(context.getSocketFactory(), (X509TrustManager)trustManagers[0])
-          .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-          .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS);
-
-      Request.Builder request = new Request.Builder().url(url + "/" + path).get();
-
-      if (openchatUrl.getConnectionSpec().isPresent()) {
-        okHttpClientBuilder.connectionSpecs(Collections.singletonList(openchatUrl.getConnectionSpec().get()));
-      } else {
-        okHttpClientBuilder.connectionSpecs(Util.immutableList(ConnectionSpec.MODERN_TLS, ConnectionSpec.COMPATIBLE_TLS));
-      }
-
-      if (hostHeader.isPresent()) {
-        request.addHeader("Host", hostHeader.get());
-      }
-
-      Call call = okHttpClientBuilder.build().newCall(request.build());
-
-      synchronized (connections) {
-        connections.add(call);
-      }
-
-      Response response;
-
-      try {
-        response = call.execute();
-
-        if (response.isSuccessful()) {
-          ResponseBody body = response.body();
-
-          if (body == null)                        throw new PushNetworkException("No response body!");
-          if (body.contentLength() > maxSizeBytes) throw new PushNetworkException("Response exceeds max size!");
-
-          InputStream  in     = body.byteStream();
-          OutputStream out    = new FileOutputStream(destination);
-          byte[]       buffer = new byte[4096];
-
-          int read, totalRead = 0;
-
-          while ((read = in.read(buffer, 0, buffer.length)) != -1) {
-            out.write(buffer, 0, read);
-            if ((totalRead += read) > maxSizeBytes) throw new PushNetworkException("Response exceeded max size!");
-          }
-
-          return;
-        }
-      } catch (IOException e) {
-        throw new PushNetworkException(e);
-      } finally {
-        synchronized (connections) {
-          connections.remove(call);
-        }
-      }
-
-      throw new NonSuccessfulResponseCodeException("Response: " + response);
-    } catch (NoSuchAlgorithmException | KeyManagementException e) {
-      throw new AssertionError(e);
+    if (connectionHolder.getHostHeader().isPresent()) {
+      request.addHeader("Host", connectionHolder.getHostHeader().get());
     }
+
+    Call call = okHttpClient.newCall(request.build());
+
+    synchronized (connections) {
+      connections.add(call);
+    }
+
+    Response response;
+
+    try {
+      response = call.execute();
+
+      if (response.isSuccessful()) {
+        ResponseBody body = response.body();
+
+        if (body == null)                        throw new PushNetworkException("No response body!");
+        if (body.contentLength() > maxSizeBytes) throw new PushNetworkException("Response exceeds max size!");
+
+        InputStream  in     = body.byteStream();
+        OutputStream out    = new FileOutputStream(destination);
+        byte[]       buffer = new byte[4096];
+
+        int read, totalRead = 0;
+
+        while ((read = in.read(buffer, 0, buffer.length)) != -1) {
+          out.write(buffer, 0, read);
+          if ((totalRead += read) > maxSizeBytes) throw new PushNetworkException("Response exceeded max size!");
+        }
+
+        return;
+      }
+    } catch (IOException e) {
+      throw new PushNetworkException(e);
+    } finally {
+      synchronized (connections) {
+        connections.remove(call);
+      }
+    }
+
+    throw new NonSuccessfulResponseCodeException("Response: " + response);
   }
 
   private byte[] uploadToCdn(String acl, String key, String policy, String algorithm,
@@ -624,71 +608,55 @@ public class PushServiceSocket {
                              OutputStreamFactory outputStreamFactory)
       throws PushNetworkException, NonSuccessfulResponseCodeException
   {
+    ConnectionHolder connectionHolder = getRandom(cdnClients, random);
+    OkHttpClient     okHttpClient     = connectionHolder.getClient()
+                                                        .newBuilder()
+                                                        .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                        .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                        .build();
+
+    DigestingRequestBody file = new DigestingRequestBody(data, outputStreamFactory, contentType, length);
+
+    RequestBody requestBody = new MultipartBody.Builder()
+        .setType(MultipartBody.FORM)
+        .addFormDataPart("acl", acl)
+        .addFormDataPart("key", key)
+        .addFormDataPart("policy", policy)
+        .addFormDataPart("Content-Type", contentType)
+        .addFormDataPart("x-amz-algorithm", algorithm)
+        .addFormDataPart("x-amz-credential", credential)
+        .addFormDataPart("x-amz-date", date)
+        .addFormDataPart("x-amz-signature", signature)
+        .addFormDataPart("file", "file", file)
+        .build();
+
+    Request.Builder request = new Request.Builder().url(connectionHolder.getUrl()).post(requestBody);
+
+    if (connectionHolder.getHostHeader().isPresent()) {
+      request.addHeader("Host", connectionHolder.getHostHeader().get());
+    }
+
+    Call call = okHttpClient.newCall(request.build());
+
+    synchronized (connections) {
+      connections.add(call);
+    }
+
     try {
-      OpenchatUrl        openchatUrl     = getRandom(openchatServiceConfiguration.getOpenchatCdnUrls(), random);
-      String           url           = openchatUrl.getUrl();
-      Optional<String> hostHeader    = openchatUrl.getHostHeader();
-      TrustManager[]   trustManagers = openchatUrl.getTrustManagers();
-
-      SSLContext context = SSLContext.getInstance("TLS");
-      context.init(null, trustManagers, null);
-
-      OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder()
-          .sslSocketFactory(context.getSocketFactory(), (X509TrustManager)trustManagers[0])
-          .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-          .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS);
-
-      DigestingRequestBody file = new DigestingRequestBody(data, outputStreamFactory, contentType, length);
-
-      RequestBody requestBody = new MultipartBody.Builder()
-          .setType(MultipartBody.FORM)
-          .addFormDataPart("acl", acl)
-          .addFormDataPart("key", key)
-          .addFormDataPart("policy", policy)
-          .addFormDataPart("Content-Type", contentType)
-          .addFormDataPart("x-amz-algorithm", algorithm)
-          .addFormDataPart("x-amz-credential", credential)
-          .addFormDataPart("x-amz-date", date)
-          .addFormDataPart("x-amz-signature", signature)
-          .addFormDataPart("file", "file", file)
-          .build();
-
-      Request.Builder request = new Request.Builder().url(url).post(requestBody);
-
-      if (openchatUrl.getConnectionSpec().isPresent()) {
-        okHttpClientBuilder.connectionSpecs(Collections.singletonList(openchatUrl.getConnectionSpec().get()));
-      } else {
-        okHttpClientBuilder.connectionSpecs(Util.immutableList(ConnectionSpec.MODERN_TLS, ConnectionSpec.COMPATIBLE_TLS));
-      }
-
-      if (hostHeader.isPresent()) {
-        request.addHeader("Host", hostHeader.get());
-      }
-
-      Call call = okHttpClientBuilder.build().newCall(request.build());
-
-      synchronized (connections) {
-        connections.add(call);
-      }
+      Response response;
 
       try {
-        Response response;
-
-        try {
-          response = call.execute();
-        } catch (IOException e) {
-          throw new PushNetworkException(e);
-        }
-
-        if (response.isSuccessful()) return file.getTransmittedDigest();
-        else                         throw new NonSuccessfulResponseCodeException("Response: " + response);
-      } finally {
-        synchronized (connections) {
-          connections.remove(call);
-        }
+        response = call.execute();
+      } catch (IOException e) {
+        throw new PushNetworkException(e);
       }
-    } catch (NoSuchAlgorithmException | KeyManagementException e) {
-      throw new AssertionError(e);
+
+      if (response.isSuccessful()) return file.getTransmittedDigest();
+      else                         throw new NonSuccessfulResponseCodeException("Response: " + response);
+    } finally {
+      synchronized (connections) {
+        connections.remove(call);
+      }
     }
   }
 
@@ -770,24 +738,17 @@ public class PushServiceSocket {
       throws PushNetworkException
   {
     try {
-      OpenchatUrl        openchatUrl     = getRandom(openchatServiceConfiguration.getOpenchatServiceUrls(), random);
-      String           url           = openchatUrl.getUrl();
-      Optional<String> hostHeader    = openchatUrl.getHostHeader();
-      TrustManager[]   trustManagers = openchatUrl.getTrustManagers();
+      ConnectionHolder connectionHolder = getRandom(serviceClients, random);
+      OkHttpClient     okHttpClient     = connectionHolder.getClient().newBuilder()
+                                                          .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                          .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                          .build();
 
-      Log.w(TAG, "Push service URL: " + url);
-      Log.w(TAG, "Opening URL: " + String.format("%s%s", url, urlFragment));
-
-      SSLContext context = SSLContext.getInstance("TLS");
-      context.init(null, trustManagers, null);
-
-      OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder()
-          .sslSocketFactory(context.getSocketFactory(), (X509TrustManager)trustManagers[0])
-          .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-          .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS);
+      Log.w(TAG, "Push service URL: " + connectionHolder.getUrl());
+      Log.w(TAG, "Opening URL: " + String.format("%s%s", connectionHolder.getUrl(), urlFragment));
 
       Request.Builder request = new Request.Builder();
-      request.url(String.format("%s%s", url, urlFragment));
+      request.url(String.format("%s%s", connectionHolder.getUrl(), urlFragment));
 
       if (body != null) {
         request.method(method, RequestBody.create(MediaType.parse("application/json"), body));
@@ -803,17 +764,11 @@ public class PushServiceSocket {
         request.addHeader("X-Openchat-Agent", userAgent);
       }
 
-      if (openchatUrl.getConnectionSpec().isPresent()) {
-        okHttpClientBuilder.connectionSpecs(Collections.singletonList(openchatUrl.getConnectionSpec().get()));
-      } else {
-        okHttpClientBuilder.connectionSpecs(Util.immutableList(ConnectionSpec.MODERN_TLS, ConnectionSpec.COMPATIBLE_TLS));
+      if (connectionHolder.getHostHeader().isPresent()) {
+        request.addHeader("Host", connectionHolder.getHostHeader().get());
       }
 
-      if (hostHeader.isPresent()) {
-        request.addHeader("Host", hostHeader.get());
-      }
-
-      Call call = okHttpClientBuilder.build().newCall(request.build());
+      Call call = okHttpClient.newCall(request.build());
 
       synchronized (connections) {
         connections.add(call);
@@ -828,6 +783,28 @@ public class PushServiceSocket {
       }
     } catch (IOException e) {
       throw new PushNetworkException(e);
+    }
+  }
+
+  private ConnectionHolder[] createConnectionHolders(OpenchatUrl[] urls) {
+    try {
+      List<ConnectionHolder> connectionHolders = new LinkedList<>();
+
+      for (OpenchatUrl url : urls) {
+        TrustManager[] trustManagers = BlacklistingTrustManager.createFor(url.getTrustStore());
+
+        SSLContext context = SSLContext.getInstance("TLS");
+        context.init(null, trustManagers, null);
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                                              .sslSocketFactory(context.getSocketFactory(), (X509TrustManager)trustManagers[0])
+                                              .connectionSpecs(url.getConnectionSpecs().or(Util.immutableList(ConnectionSpec.MODERN_TLS, ConnectionSpec.COMPATIBLE_TLS)))
+                                              .build();
+
+        connectionHolders.add(new ConnectionHolder(client, url.getUrl(), url.getHostHeader()));
+      }
+
+      return connectionHolders.toArray(new ConnectionHolder[0]);
     } catch (NoSuchAlgorithmException | KeyManagementException e) {
       throw new AssertionError(e);
     }
@@ -841,7 +818,7 @@ public class PushServiceSocket {
     }
   }
 
-  private OpenchatUrl getRandom(OpenchatUrl[] connections, SecureRandom random) {
+  private ConnectionHolder getRandom(ConnectionHolder[] connections, SecureRandom random) {
     return connections[random.nextInt(connections.length)];
   }
 
@@ -874,6 +851,30 @@ public class PushServiceSocket {
 
     public String getLocation() {
       return location;
+    }
+  }
+
+  private static class ConnectionHolder {
+    private final OkHttpClient     client;
+    private final String           url;
+    private final Optional<String> hostHeader;
+
+    private ConnectionHolder(OkHttpClient client, String url, Optional<String> hostHeader) {
+      this.client     = client;
+      this.url        = url;
+      this.hostHeader = hostHeader;
+    }
+
+    public OkHttpClient getClient() {
+      return client;
+    }
+
+    public String getUrl() {
+      return url;
+    }
+
+    public Optional<String> getHostHeader() {
+      return hostHeader;
     }
   }
 }
