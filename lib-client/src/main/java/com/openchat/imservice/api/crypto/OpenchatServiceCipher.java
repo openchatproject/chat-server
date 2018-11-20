@@ -24,6 +24,7 @@ import com.openchat.imservice.api.messages.OpenchatServiceContent;
 import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
+import com.openchat.imservice.api.messages.OpenchatServiceReceiptMessage;
 import com.openchat.imservice.api.messages.calls.AnswerMessage;
 import com.openchat.imservice.api.messages.calls.BusyMessage;
 import com.openchat.imservice.api.messages.calls.HangupMessage;
@@ -43,6 +44,7 @@ import com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPoin
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.Content;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.Envelope.Type;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos.ReceiptMessage;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.Verified;
 import com.openchat.imservice.internal.util.Base64;
@@ -106,6 +108,8 @@ public class OpenchatServiceCipher {
           content = new OpenchatServiceContent(createSynchronizeMessage(envelope, message.getSyncMessage()));
         } else if (message.hasCallMessage()) {
           content = new OpenchatServiceContent(createCallMessage(message.getCallMessage()));
+        } else if (message.hasReceiptMessage()) {
+          content = new OpenchatServiceContent(createReceiptMessage(envelope, message.getReceiptMessage()));
         }
       }
 
@@ -236,6 +240,16 @@ public class OpenchatServiceCipher {
     }
 
     return OpenchatServiceCallMessage.empty();
+  }
+
+  private OpenchatServiceReceiptMessage createReceiptMessage(OpenchatServiceEnvelope envelope, ReceiptMessage content) {
+    OpenchatServiceReceiptMessage.Type type;
+
+    if      (content.getType() == ReceiptMessage.Type.DELIVERY) type = OpenchatServiceReceiptMessage.Type.DELIVERY;
+    else if (content.getType() == ReceiptMessage.Type.READ)     type = OpenchatServiceReceiptMessage.Type.READ;
+    else                                                        type = OpenchatServiceReceiptMessage.Type.UNKNOWN;
+
+    return new OpenchatServiceReceiptMessage(type, content.getTimestampList(), envelope.getTimestamp());
   }
 
   private OpenchatServiceGroup createGroupInfo(OpenchatServiceEnvelope envelope, DataMessage content) {

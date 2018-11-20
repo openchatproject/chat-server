@@ -17,6 +17,7 @@ import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentStream;
 import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
+import com.openchat.imservice.api.messages.OpenchatServiceReceiptMessage;
 import com.openchat.imservice.api.messages.calls.AnswerMessage;
 import com.openchat.imservice.api.messages.calls.IceUpdateMessage;
 import com.openchat.imservice.api.messages.calls.OfferMessage;
@@ -30,6 +31,7 @@ import com.openchat.imservice.api.push.exceptions.EncapsulatedExceptions;
 import com.openchat.imservice.api.push.exceptions.NetworkFailureException;
 import com.openchat.imservice.api.push.exceptions.PushNetworkException;
 import com.openchat.imservice.api.push.exceptions.UnregisteredUserException;
+import com.openchat.imservice.api.util.CredentialsProvider;
 import com.openchat.imservice.internal.configuration.OpenchatServiceConfiguration;
 import com.openchat.imservice.internal.push.MismatchedDevices;
 import com.openchat.imservice.internal.push.OutgoingPushMessage;
@@ -44,6 +46,7 @@ import com.openchat.imservice.internal.push.OpenchatServiceProtos.Content;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.NullMessage;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos.ReceiptMessage;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.SyncMessage;
 import com.openchat.imservice.internal.push.OpenchatServiceProtos.Verified;
 import com.openchat.imservice.internal.push.StaleDevices;
@@ -77,16 +80,29 @@ public class OpenchatServiceMessageSender {
                                     Optional<OpenchatServiceMessagePipe> pipe,
                                     Optional<EventListener> eventListener)
   {
-    this.socket        = new PushServiceSocket(urls, new StaticCredentialsProvider(user, password, null), userAgent);
+    this(urls, new StaticCredentialsProvider(user, password, null), store, userAgent, pipe, eventListener);
+  }
+
+  public OpenchatServiceMessageSender(OpenchatServiceConfiguration urls,
+                                    CredentialsProvider credentialsProvider,
+                                    OpenchatProtocolStore store,
+                                    String userAgent,
+                                    Optional<OpenchatServiceMessagePipe> pipe,
+                                    Optional<EventListener> eventListener)
+  {
+    this.socket        = new PushServiceSocket(urls, credentialsProvider, userAgent);
     this.store         = store;
-    this.localAddress  = new OpenchatServiceAddress(user);
+    this.localAddress  = new OpenchatServiceAddress(credentialsProvider.getUser());
     this.pipe          = pipe;
     this.eventListener = eventListener;
   }
 
   
-  public void sendDeliveryReceipt(OpenchatServiceAddress recipient, long messageId) throws IOException {
-    this.socket.sendReceipt(recipient.getNumber(), messageId, recipient.getRelay());
+  public void sendReceipt(OpenchatServiceAddress recipient, OpenchatServiceReceiptMessage message)
+      throws IOException, UntrustedIdentityException
+  {
+    byte[] content = createReceiptContent(message);
+    sendMessage(recipient, message.getWhen(), content, true);
   }
 
   
@@ -195,6 +211,20 @@ public class OpenchatServiceMessageSender {
       byte[] syncMessage = createMultiDeviceVerifiedContent(message, nullMessage.toByteArray());
       sendMessage(localAddress, message.getTimestamp(), syncMessage, false);
     }
+  }
+
+  private byte[] createReceiptContent(OpenchatServiceReceiptMessage message) throws IOException {
+    Content.Builder        container = Content.newBuilder();
+    ReceiptMessage.Builder builder   = ReceiptMessage.newBuilder();
+
+    for (long timestamp : message.getTimestamps()) {
+      builder.addTimestamp(timestamp);
+    }
+
+    if      (message.isDeliveryReceipt()) builder.setType(ReceiptMessage.Type.DELIVERY);
+    else if (message.isReadReceipt())     builder.setType(ReceiptMessage.Type.READ);
+
+    return container.setReceiptMessage(builder).build().toByteArray();
   }
 
   private byte[] createMessageContent(OpenchatServiceDataMessage message) throws IOException {

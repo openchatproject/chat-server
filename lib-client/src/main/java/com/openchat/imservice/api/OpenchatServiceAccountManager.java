@@ -15,6 +15,7 @@ import com.openchat.imservice.api.messages.calls.TurnServerInfo;
 import com.openchat.imservice.api.messages.multidevice.DeviceInfo;
 import com.openchat.imservice.api.push.ContactTokenDetails;
 import com.openchat.imservice.api.push.SignedPreKeyEntity;
+import com.openchat.imservice.api.util.CredentialsProvider;
 import com.openchat.imservice.api.util.StreamDetails;
 import com.openchat.imservice.internal.configuration.OpenchatServiceConfiguration;
 import com.openchat.imservice.internal.crypto.ProvisioningCipher;
@@ -49,8 +50,15 @@ public class OpenchatServiceAccountManager {
                                      String user, String password,
                                      String userAgent)
   {
-    this.pushServiceSocket = new PushServiceSocket(configuration, new StaticCredentialsProvider(user, password, null), userAgent);
-    this.user              = user;
+    this(configuration, new StaticCredentialsProvider(user, password, null), userAgent);
+  }
+
+  public OpenchatServiceAccountManager(OpenchatServiceConfiguration configuration,
+                                     CredentialsProvider credentialsProvider,
+                                     String userAgent)
+  {
+    this.pushServiceSocket = new PushServiceSocket(configuration, credentialsProvider, userAgent);
+    this.user              = credentialsProvider.getUser();
     this.userAgent         = userAgent;
   }
 
