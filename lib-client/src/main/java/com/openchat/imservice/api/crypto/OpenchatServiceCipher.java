@@ -13,6 +13,7 @@ import com.openchat.protocal.NoSessionException;
 import com.openchat.protocal.SessionCipher;
 import com.openchat.protocal.OpenchatProtocolAddress;
 import com.openchat.protocal.UntrustedIdentityException;
+import com.openchat.protocal.logging.Log;
 import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
 import com.openchat.protocal.protocol.OpenchatMessage;
@@ -141,7 +142,7 @@ public class OpenchatServiceCipher {
     return transportDetails.getStrippedPaddingMessageBody(paddedMessage);
   }
 
-  private OpenchatServiceDataMessage createOpenchatServiceMessage(OpenchatServiceEnvelope envelope, DataMessage content) {
+  private OpenchatServiceDataMessage createOpenchatServiceMessage(OpenchatServiceEnvelope envelope, DataMessage content) throws InvalidMessageException {
     OpenchatServiceGroup            groupInfo        = createGroupInfo(envelope, content);
     List<OpenchatServiceAttachment> attachments      = new LinkedList<>();
     boolean                       endSession       = ((content.getFlags() & DataMessage.Flags.END_SESSION_VALUE) != 0);
@@ -158,6 +159,10 @@ public class OpenchatServiceCipher {
                                                          pointer.hasDigest() ? Optional.of(pointer.getDigest().toByteArray()) : Optional.<byte[]>absent(),
                                                          pointer.hasFileName() ? Optional.of(pointer.getFileName()) : Optional.<String>absent(),
                                                          (pointer.getFlags() & AttachmentPointer.Flags.VOICE_MESSAGE_VALUE) != 0));
+    }
+
+    if (content.hasTimestamp() && content.getTimestamp() != envelope.getTimestamp()) {
+      throw new InvalidMessageException("Timestamps don't match: " + content.getTimestamp() + " vs " + envelope.getTimestamp());
     }
 
     return new OpenchatServiceDataMessage(envelope.getTimestamp(), groupInfo, attachments,

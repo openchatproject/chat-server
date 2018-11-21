@@ -5797,6 +5797,11 @@ public final class OpenchatServiceProtos {
     boolean hasProfileKey();
     
     com.google.protobuf.ByteString getProfileKey();
+
+    
+    boolean hasTimestamp();
+    
+    long getTimestamp();
   }
   
   public static final class DataMessage extends
@@ -5885,6 +5890,11 @@ public final class OpenchatServiceProtos {
             case 50: {
               bitField0_ |= 0x00000010;
               profileKey_ = input.readBytes();
+              break;
+            }
+            case 56: {
+              bitField0_ |= 0x00000020;
+              timestamp_ = input.readUInt64();
               break;
             }
           }
@@ -6114,6 +6124,17 @@ public final class OpenchatServiceProtos {
       return profileKey_;
     }
 
+    public static final int TIMESTAMP_FIELD_NUMBER = 7;
+    private long timestamp_;
+    
+    public boolean hasTimestamp() {
+      return ((bitField0_ & 0x00000020) == 0x00000020);
+    }
+    
+    public long getTimestamp() {
+      return timestamp_;
+    }
+
     private void initFields() {
       body_ = "";
       attachments_ = java.util.Collections.emptyList();
@@ -6121,6 +6142,7 @@ public final class OpenchatServiceProtos {
       flags_ = 0;
       expireTimer_ = 0;
       profileKey_ = com.google.protobuf.ByteString.EMPTY;
+      timestamp_ = 0L;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -6151,6 +6173,9 @@ public final class OpenchatServiceProtos {
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeBytes(6, profileKey_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeUInt64(7, timestamp_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -6184,6 +6209,10 @@ public final class OpenchatServiceProtos {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(6, profileKey_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt64Size(7, timestamp_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -6320,6 +6349,8 @@ public final class OpenchatServiceProtos {
         bitField0_ = (bitField0_ & ~0x00000010);
         profileKey_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000020);
+        timestamp_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
 
@@ -6381,6 +6412,10 @@ public final class OpenchatServiceProtos {
           to_bitField0_ |= 0x00000010;
         }
         result.profileKey_ = profileKey_;
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.timestamp_ = timestamp_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -6439,6 +6474,9 @@ public final class OpenchatServiceProtos {
         }
         if (other.hasProfileKey()) {
           setProfileKey(other.getProfileKey());
+        }
+        if (other.hasTimestamp()) {
+          setTimestamp(other.getTimestamp());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -6900,6 +6938,30 @@ public final class OpenchatServiceProtos {
       public Builder clearProfileKey() {
         bitField0_ = (bitField0_ & ~0x00000020);
         profileKey_ = getDefaultInstance().getProfileKey();
+        onChanged();
+        return this;
+      }
+
+      private long timestamp_ ;
+      
+      public boolean hasTimestamp() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      
+      public long getTimestamp() {
+        return timestamp_;
+      }
+      
+      public Builder setTimestamp(long value) {
+        bitField0_ |= 0x00000040;
+        timestamp_ = value;
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearTimestamp() {
+        bitField0_ = (bitField0_ & ~0x00000040);
+        timestamp_ = 0L;
         onChanged();
         return this;
       }
@@ -18971,7 +19033,7 @@ public final class OpenchatServiceProtos {
           internal_static_openchatservice_DataMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_openchatservice_DataMessage_descriptor,
-              new java.lang.String[] { "Body", "Attachments", "Group", "Flags", "ExpireTimer", "ProfileKey", });
+              new java.lang.String[] { "Body", "Attachments", "Group", "Flags", "ExpireTimer", "ProfileKey", "Timestamp", });
           internal_static_openchatservice_NullMessage_descriptor =
             getDescriptor().getMessageTypes().get(4);
           internal_static_openchatservice_NullMessage_fieldAccessorTable = new
