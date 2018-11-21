@@ -8,6 +8,5 @@ import java.io.OutputStream;
 public interface OutputStreamFactory {
 
   public DigestingOutputStream createFor(OutputStream wrap) throws IOException;
-  public long getCiphertextLength(long plaintextLength);
 
 }

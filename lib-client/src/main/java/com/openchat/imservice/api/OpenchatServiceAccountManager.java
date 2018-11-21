@@ -11,6 +11,7 @@ import com.openchat.protocal.state.SignedPreKeyRecord;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.crypto.ProfileCipher;
 import com.openchat.imservice.api.crypto.ProfileCipherInputStream;
+import com.openchat.imservice.api.crypto.ProfileCipherOutputStream;
 import com.openchat.imservice.api.messages.calls.TurnServerInfo;
 import com.openchat.imservice.api.messages.multidevice.DeviceInfo;
 import com.openchat.imservice.api.push.ContactTokenDetails;
@@ -18,6 +19,7 @@ import com.openchat.imservice.api.push.SignedPreKeyEntity;
 import com.openchat.imservice.api.util.CredentialsProvider;
 import com.openchat.imservice.api.util.StreamDetails;
 import com.openchat.imservice.internal.configuration.OpenchatServiceConfiguration;
+import com.openchat.imservice.internal.crypto.PaddingInputStream;
 import com.openchat.imservice.internal.crypto.ProvisioningCipher;
 import com.openchat.imservice.internal.push.ProfileAvatarData;
 import com.openchat.imservice.internal.push.PushServiceSocket;
@@ -203,7 +205,9 @@ public class OpenchatServiceAccountManager {
     ProfileAvatarData profileAvatarData = null;
 
     if (avatar != null) {
-      profileAvatarData = new ProfileAvatarData(avatar.getStream(), avatar.getLength(), avatar.getContentType(),
+      profileAvatarData = new ProfileAvatarData(avatar.getStream(),
+                                                ProfileCipherOutputStream.getCiphertextLength(avatar.getLength()),
+                                                avatar.getContentType(),
                                                 new ProfileCipherOutputStreamFactory(key));
     }
 

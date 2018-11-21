@@ -50,7 +50,7 @@ public class DigestingRequestBody extends RequestBody {
 
   @Override
   public long contentLength() {
-    return outputStreamFactory.getCiphertextLength(contentLength);
+    return contentLength;
   }
 
   public byte[] getTransmittedDigest() {

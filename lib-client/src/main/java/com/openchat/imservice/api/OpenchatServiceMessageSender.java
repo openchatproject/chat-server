@@ -11,6 +11,7 @@ import com.openchat.protocal.state.PreKeyBundle;
 import com.openchat.protocal.state.OpenchatProtocolStore;
 import com.openchat.protocal.util.Pair;
 import com.openchat.protocal.util.guava.Optional;
+import com.openchat.imservice.api.crypto.AttachmentCipherOutputStream;
 import com.openchat.imservice.api.crypto.OpenchatServiceCipher;
 import com.openchat.imservice.api.crypto.UntrustedIdentityException;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
@@ -34,6 +35,7 @@ import com.openchat.imservice.api.push.exceptions.PushNetworkException;
 import com.openchat.imservice.api.push.exceptions.UnregisteredUserException;
 import com.openchat.imservice.api.util.CredentialsProvider;
 import com.openchat.imservice.internal.configuration.OpenchatServiceConfiguration;
+import com.openchat.imservice.internal.crypto.PaddingInputStream;
 import com.openchat.imservice.internal.push.MismatchedDevices;
 import com.openchat.imservice.internal.push.OutgoingPushMessage;
 import com.openchat.imservice.internal.push.OutgoingPushMessageList;
@@ -520,12 +522,14 @@ public class OpenchatServiceMessageSender {
   private AttachmentPointer createAttachmentPointer(OpenchatServiceAttachmentStream attachment)
       throws IOException
   {
-    byte[]             attachmentKey  = Util.getSecretBytes(64);
-    PushAttachmentData attachmentData = new PushAttachmentData(attachment.getContentType(),
-                                                               attachment.getInputStream(),
-                                                               attachment.getLength(),
-                                                               new AttachmentCipherOutputStreamFactory(attachmentKey),
-                                                               attachment.getListener());
+    byte[]             attachmentKey    = Util.getSecretBytes(64);
+    long               paddedLength     = PaddingInputStream.getPaddedSize(attachment.getLength());
+    long               ciphertextLength = AttachmentCipherOutputStream.getCiphertextLength(paddedLength);
+    PushAttachmentData attachmentData   = new PushAttachmentData(attachment.getContentType(),
+                                                                 new PaddingInputStream(attachment.getInputStream(), attachment.getLength()),
+                                                                 ciphertextLength,
+                                                                 new AttachmentCipherOutputStreamFactory(attachmentKey),
+                                                                 attachment.getListener());
 
     Pair<Long, byte[]> attachmentIdAndDigest = socket.sendAttachment(attachmentData);
 

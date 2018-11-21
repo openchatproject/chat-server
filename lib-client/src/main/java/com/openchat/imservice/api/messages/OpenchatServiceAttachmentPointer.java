@@ -14,10 +14,6 @@ public class OpenchatServiceAttachmentPointer extends OpenchatServiceAttachment 
   private final Optional<String>  fileName;
   private final boolean           voiceNote;
 
-  public OpenchatServiceAttachmentPointer(long id, String contentType, byte[] key, String relay, Optional<byte[]> digest, Optional<String> fileName, boolean voiceNote) {
-    this(id, contentType, key, relay, Optional.<Integer>absent(), Optional.<byte[]>absent(), digest, fileName, voiceNote);
-  }
-
   public OpenchatServiceAttachmentPointer(long id, String contentType, byte[] key, String relay,
                                         Optional<Integer> size, Optional<byte[]> preview,
                                         Optional<byte[]> digest, Optional<String> fileName,

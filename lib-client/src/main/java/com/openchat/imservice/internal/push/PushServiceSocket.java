@@ -496,7 +496,7 @@ public class PushServiceSocket {
     connection.setDoOutput(true);
 
     if (dataSize > 0) {
-      connection.setFixedLengthStreamingMode((int) outputStreamFactory.getCiphertextLength(dataSize));
+      connection.setFixedLengthStreamingMode(Util.toIntExact(dataSize));
     } else {
       connection.setChunkedStreamingMode(0);
     }

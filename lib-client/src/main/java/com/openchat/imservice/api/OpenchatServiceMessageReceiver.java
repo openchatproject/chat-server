@@ -72,8 +72,10 @@ public class OpenchatServiceMessageReceiver {
   public InputStream retrieveAttachment(OpenchatServiceAttachmentPointer pointer, File destination, int maxSizeBytes, ProgressListener listener)
       throws IOException, InvalidMessageException
   {
+    if (!pointer.getDigest().isPresent()) throw new InvalidMessageException("No attachment digest!");
+
     socket.retrieveAttachment(pointer.getRelay().orNull(), pointer.getId(), destination, maxSizeBytes, listener);
-    return new AttachmentCipherInputStream(destination, pointer.getKey(), pointer.getDigest());
+    return AttachmentCipherInputStream.createFor(destination, pointer.getSize().or(0), pointer.getKey(), pointer.getDigest().get());
   }
 
   
