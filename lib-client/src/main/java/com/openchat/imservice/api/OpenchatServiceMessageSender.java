@@ -62,16 +62,17 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class OpenchatServiceMessageSender {
 
   private static final String TAG = OpenchatServiceMessageSender.class.getSimpleName();
 
-  private final PushServiceSocket                  socket;
-  private final OpenchatProtocolStore                store;
-  private final OpenchatServiceAddress               localAddress;
-  private final Optional<OpenchatServiceMessagePipe> pipe;
-  private final Optional<EventListener>            eventListener;
+  private final PushServiceSocket                                   socket;
+  private final OpenchatProtocolStore                                 store;
+  private final OpenchatServiceAddress                                localAddress;
+  private final AtomicReference<Optional<OpenchatServiceMessagePipe>> pipe;
+  private final Optional<EventListener>                             eventListener;
 
   
   public OpenchatServiceMessageSender(OpenchatServiceConfiguration urls,
@@ -94,7 +95,7 @@ public class OpenchatServiceMessageSender {
     this.socket        = new PushServiceSocket(urls, credentialsProvider, userAgent);
     this.store         = store;
     this.localAddress  = new OpenchatServiceAddress(credentialsProvider.getUser());
-    this.pipe          = pipe;
+    this.pipe          = new AtomicReference<>(pipe);
     this.eventListener = eventListener;
   }
 
@@ -191,6 +192,10 @@ public class OpenchatServiceMessageSender {
 
   public void cancelInFlightRequests() {
     socket.cancelInFlightRequests();
+  }
+
+  public void setMessagePipe(OpenchatServiceMessagePipe pipe) {
+    this.pipe.set(Optional.fromNullable(pipe));
   }
 
   private void sendMessage(VerifiedMessage message) throws IOException, UntrustedIdentityException {
@@ -467,7 +472,8 @@ public class OpenchatServiceMessageSender {
   {
     for (int i=0;i<3;i++) {
       try {
-        OutgoingPushMessageList messages = getEncryptedMessages(socket, recipient, timestamp, content, silent);
+        OutgoingPushMessageList            messages = getEncryptedMessages(socket, recipient, timestamp, content, silent);
+        Optional<OpenchatServiceMessagePipe> pipe     = this.pipe.get();
 
         if (pipe.isPresent()) {
           try {
