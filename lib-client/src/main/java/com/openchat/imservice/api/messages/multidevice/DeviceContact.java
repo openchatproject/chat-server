@@ -11,19 +11,25 @@ public class DeviceContact {
   private final Optional<String>                        color;
   private final Optional<VerifiedMessage>               verified;
   private final Optional<byte[]>                        profileKey;
+  private final boolean                                 blocked;
+  private final Optional<Integer>                       expirationTimer;
 
   public DeviceContact(String number, Optional<String> name,
                        Optional<OpenchatServiceAttachmentStream> avatar,
                        Optional<String> color,
                        Optional<VerifiedMessage> verified,
-                       Optional<byte[]> profileKey)
+                       Optional<byte[]> profileKey,
+                       boolean blocked,
+                       Optional<Integer> expirationTimer)
   {
-    this.number     = number;
-    this.name       = name;
-    this.avatar     = avatar;
-    this.color      = color;
-    this.verified   = verified;
-    this.profileKey = profileKey;
+    this.number          = number;
+    this.name            = name;
+    this.avatar          = avatar;
+    this.color           = color;
+    this.verified        = verified;
+    this.profileKey      = profileKey;
+    this.blocked         = blocked;
+    this.expirationTimer = expirationTimer;
   }
 
   public Optional<OpenchatServiceAttachmentStream> getAvatar() {
@@ -48,5 +54,13 @@ public class DeviceContact {
 
   public Optional<byte[]> getProfileKey() {
     return profileKey;
+  }
+
+  public boolean isBlocked() {
+    return blocked;
+  }
+
+  public Optional<Integer> getExpirationTimer() {
+    return expirationTimer;
   }
 }

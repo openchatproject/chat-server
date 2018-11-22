@@ -66,6 +66,12 @@ public class DeviceContactsOutputStream extends ChunkedOutputStream {
       contactDetails.setProfileKey(ByteString.copyFrom(contact.getProfileKey().get()));
     }
 
+    if (contact.getExpirationTimer().isPresent()) {
+      contactDetails.setExpireTimer(contact.getExpirationTimer().get());
+    }
+
+    contactDetails.setBlocked(contact.isBlocked());
+
     byte[] serializedContactDetails = contactDetails.build().toByteArray();
 
     writeVarint32(serializedContactDetails.length);

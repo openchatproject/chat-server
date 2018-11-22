@@ -25,13 +25,15 @@ public class DeviceContactsInputStream extends ChunkedInputStream {
     byte[] detailsSerialized = new byte[(int)detailsLength];
     Util.readFully(in, detailsSerialized);
 
-    OpenchatServiceProtos.ContactDetails      details    = OpenchatServiceProtos.ContactDetails.parseFrom(detailsSerialized);
-    String                                  number     = details.getNumber();
-    Optional<String>                        name       = Optional.fromNullable(details.getName());
-    Optional<OpenchatServiceAttachmentStream> avatar     = Optional.absent();
-    Optional<String>                        color      = details.hasColor() ? Optional.of(details.getColor()) : Optional.<String>absent();
-    Optional<VerifiedMessage>               verified   = Optional.absent();
-    Optional<byte[]>                        profileKey = Optional.absent();
+    OpenchatServiceProtos.ContactDetails      details     = OpenchatServiceProtos.ContactDetails.parseFrom(detailsSerialized);
+    String                                  number      = details.getNumber();
+    Optional<String>                        name        = Optional.fromNullable(details.getName());
+    Optional<OpenchatServiceAttachmentStream> avatar      = Optional.absent();
+    Optional<String>                        color       = details.hasColor() ? Optional.of(details.getColor()) : Optional.<String>absent();
+    Optional<VerifiedMessage>               verified    = Optional.absent();
+    Optional<byte[]>                        profileKey  = Optional.absent();
+    boolean                                 blocked     = false;
+    Optional<Integer>                       expireTimer = Optional.absent();
 
     if (details.hasAvatar()) {
       long        avatarLength      = details.getAvatar().getLength();
@@ -66,7 +68,13 @@ public class DeviceContactsInputStream extends ChunkedInputStream {
       profileKey = Optional.fromNullable(details.getProfileKey().toByteArray());
     }
 
-    return new DeviceContact(number, name, avatar, color, verified, profileKey);
+    if (details.hasExpireTimer() && details.getExpireTimer() > 0) {
+      expireTimer = Optional.of(details.getExpireTimer());
+    }
+
+    blocked = details.getBlocked();
+
+    return new DeviceContact(number, name, avatar, color, verified, profileKey, blocked, expireTimer);
   }
 
 }
