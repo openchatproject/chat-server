@@ -156,6 +156,7 @@ public class OpenchatServiceCipher {
                                                          envelope.getRelay(),
                                                          pointer.hasSize() ? Optional.of(pointer.getSize()) : Optional.<Integer>absent(),
                                                          pointer.hasThumbnail() ? Optional.of(pointer.getThumbnail().toByteArray()): Optional.<byte[]>absent(),
+                                                         pointer.getWidth(), pointer.getHeight(),
                                                          pointer.hasDigest() ? Optional.of(pointer.getDigest().toByteArray()) : Optional.<byte[]>absent(),
                                                          pointer.hasFileName() ? Optional.of(pointer.getFileName()) : Optional.<String>absent(),
                                                          (pointer.getFlags() & AttachmentPointer.Flags.VOICE_MESSAGE_VALUE) != 0));
@@ -291,7 +292,7 @@ public class OpenchatServiceCipher {
                                                     pointer.getKey().toByteArray(),
                                                     envelope.getRelay(),
                                                     Optional.of(pointer.getSize()),
-                                                    Optional.<byte[]>absent(),
+                                                    Optional.<byte[]>absent(), 0, 0,
                                                     Optional.fromNullable(pointer.hasDigest() ? pointer.getDigest().toByteArray() : null),
                                                     Optional.<String>absent(),
                                                     false);

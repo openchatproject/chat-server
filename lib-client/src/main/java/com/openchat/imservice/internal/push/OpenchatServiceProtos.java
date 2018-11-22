@@ -13966,6 +13966,16 @@ public final class OpenchatServiceProtos {
     boolean hasFlags();
     
     int getFlags();
+
+    
+    boolean hasWidth();
+    
+    int getWidth();
+
+    
+    boolean hasHeight();
+    
+    int getHeight();
   }
   
   public static final class AttachmentPointer extends
@@ -14053,6 +14063,16 @@ public final class OpenchatServiceProtos {
             case 64: {
               bitField0_ |= 0x00000080;
               flags_ = input.readUInt32();
+              break;
+            }
+            case 72: {
+              bitField0_ |= 0x00000100;
+              width_ = input.readUInt32();
+              break;
+            }
+            case 80: {
+              bitField0_ |= 0x00000200;
+              height_ = input.readUInt32();
               break;
             }
           }
@@ -14298,6 +14318,28 @@ public final class OpenchatServiceProtos {
       return flags_;
     }
 
+    public static final int WIDTH_FIELD_NUMBER = 9;
+    private int width_;
+    
+    public boolean hasWidth() {
+      return ((bitField0_ & 0x00000100) == 0x00000100);
+    }
+    
+    public int getWidth() {
+      return width_;
+    }
+
+    public static final int HEIGHT_FIELD_NUMBER = 10;
+    private int height_;
+    
+    public boolean hasHeight() {
+      return ((bitField0_ & 0x00000200) == 0x00000200);
+    }
+    
+    public int getHeight() {
+      return height_;
+    }
+
     private void initFields() {
       id_ = 0L;
       contentType_ = "";
@@ -14307,6 +14349,8 @@ public final class OpenchatServiceProtos {
       digest_ = com.google.protobuf.ByteString.EMPTY;
       fileName_ = "";
       flags_ = 0;
+      width_ = 0;
+      height_ = 0;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -14343,6 +14387,12 @@ public final class OpenchatServiceProtos {
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         output.writeUInt32(8, flags_);
+      }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        output.writeUInt32(9, width_);
+      }
+      if (((bitField0_ & 0x00000200) == 0x00000200)) {
+        output.writeUInt32(10, height_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -14384,6 +14434,14 @@ public final class OpenchatServiceProtos {
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt32Size(8, flags_);
+      }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(9, width_);
+      }
+      if (((bitField0_ & 0x00000200) == 0x00000200)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(10, height_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -14514,6 +14572,10 @@ public final class OpenchatServiceProtos {
         bitField0_ = (bitField0_ & ~0x00000040);
         flags_ = 0;
         bitField0_ = (bitField0_ & ~0x00000080);
+        width_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000100);
+        height_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000200);
         return this;
       }
 
@@ -14574,6 +14636,14 @@ public final class OpenchatServiceProtos {
           to_bitField0_ |= 0x00000080;
         }
         result.flags_ = flags_;
+        if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
+          to_bitField0_ |= 0x00000100;
+        }
+        result.width_ = width_;
+        if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
+          to_bitField0_ |= 0x00000200;
+        }
+        result.height_ = height_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -14617,6 +14687,12 @@ public final class OpenchatServiceProtos {
         }
         if (other.hasFlags()) {
           setFlags(other.getFlags());
+        }
+        if (other.hasWidth()) {
+          setWidth(other.getWidth());
+        }
+        if (other.hasHeight()) {
+          setHeight(other.getHeight());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -14916,6 +14992,54 @@ public final class OpenchatServiceProtos {
       public Builder clearFlags() {
         bitField0_ = (bitField0_ & ~0x00000080);
         flags_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int width_ ;
+      
+      public boolean hasWidth() {
+        return ((bitField0_ & 0x00000100) == 0x00000100);
+      }
+      
+      public int getWidth() {
+        return width_;
+      }
+      
+      public Builder setWidth(int value) {
+        bitField0_ |= 0x00000100;
+        width_ = value;
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearWidth() {
+        bitField0_ = (bitField0_ & ~0x00000100);
+        width_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int height_ ;
+      
+      public boolean hasHeight() {
+        return ((bitField0_ & 0x00000200) == 0x00000200);
+      }
+      
+      public int getHeight() {
+        return height_;
+      }
+      
+      public Builder setHeight(int value) {
+        bitField0_ |= 0x00000200;
+        height_ = value;
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearHeight() {
+        bitField0_ = (bitField0_ & ~0x00000200);
+        height_ = 0;
         onChanged();
         return this;
       }
@@ -19105,7 +19229,7 @@ public final class OpenchatServiceProtos {
           internal_static_openchatservice_AttachmentPointer_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_openchatservice_AttachmentPointer_descriptor,
-              new java.lang.String[] { "Id", "ContentType", "Key", "Size", "Thumbnail", "Digest", "FileName", "Flags", });
+              new java.lang.String[] { "Id", "ContentType", "Key", "Size", "Thumbnail", "Digest", "FileName", "Flags", "Width", "Height", });
           internal_static_openchatservice_GroupContext_descriptor =
             getDescriptor().getMessageTypes().get(9);
           internal_static_openchatservice_GroupContext_fieldAccessorTable = new

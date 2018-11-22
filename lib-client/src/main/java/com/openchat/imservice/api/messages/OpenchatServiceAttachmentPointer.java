@@ -13,9 +13,12 @@ public class OpenchatServiceAttachmentPointer extends OpenchatServiceAttachment 
   private final Optional<byte[]>  digest;
   private final Optional<String>  fileName;
   private final boolean           voiceNote;
+  private final int               width;
+  private final int               height;
 
   public OpenchatServiceAttachmentPointer(long id, String contentType, byte[] key, String relay,
                                         Optional<Integer> size, Optional<byte[]> preview,
+                                        int width, int height,
                                         Optional<byte[]> digest, Optional<String> fileName,
                                         boolean voiceNote)
   {
@@ -25,6 +28,8 @@ public class OpenchatServiceAttachmentPointer extends OpenchatServiceAttachment 
     this.relay     = Optional.fromNullable(relay);
     this.size      = size;
     this.preview   = preview;
+    this.width     = width;
+    this.height    = height;
     this.digest    = digest;
     this.fileName  = fileName;
     this.voiceNote = voiceNote;
@@ -70,5 +75,13 @@ public class OpenchatServiceAttachmentPointer extends OpenchatServiceAttachment 
 
   public boolean getVoiceNote() {
     return voiceNote;
+  }
+
+  public int getWidth() {
+    return width;
+  }
+
+  public int getHeight() {
+    return height;
   }
 }

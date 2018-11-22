@@ -39,6 +39,8 @@ public abstract class OpenchatServiceAttachment {
     private long             length;
     private ProgressListener listener;
     private boolean          voiceNote;
+    private int              width;
+    private int              height;
 
     private Builder() {}
 
@@ -72,12 +74,22 @@ public abstract class OpenchatServiceAttachment {
       return this;
     }
 
+    public Builder withWidth(int width) {
+      this.width = width;
+      return this;
+    }
+
+    public Builder withHeight(int height) {
+      this.height = height;
+      return this;
+    }
+
     public OpenchatServiceAttachmentStream build() {
       if (inputStream == null) throw new IllegalArgumentException("Must specify stream!");
       if (contentType == null) throw new IllegalArgumentException("No content type specified!");
       if (length == 0)         throw new IllegalArgumentException("No length specified!");
 
-      return new OpenchatServiceAttachmentStream(inputStream, contentType, length, Optional.fromNullable(fileName), voiceNote, listener);
+      return new OpenchatServiceAttachmentStream(inputStream, contentType, length, Optional.fromNullable(fileName), voiceNote, Optional.<byte[]>absent(), width, height, listener);
     }
   }
 
