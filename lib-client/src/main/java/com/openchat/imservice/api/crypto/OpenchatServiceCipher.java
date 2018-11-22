@@ -13,7 +13,6 @@ import com.openchat.protocal.NoSessionException;
 import com.openchat.protocal.SessionCipher;
 import com.openchat.protocal.OpenchatProtocolAddress;
 import com.openchat.protocal.UntrustedIdentityException;
-import com.openchat.protocal.logging.Log;
 import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
 import com.openchat.protocal.protocol.OpenchatMessage;
@@ -58,6 +57,7 @@ import static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupCo
 
 public class OpenchatServiceCipher {
 
+  @SuppressWarnings("unused")
   private static final String TAG = OpenchatServiceCipher.class.getSimpleName();
 
   private final OpenchatProtocolStore  openchatProtocolStore;
@@ -143,23 +143,15 @@ public class OpenchatServiceCipher {
   }
 
   private OpenchatServiceDataMessage createOpenchatServiceMessage(OpenchatServiceEnvelope envelope, DataMessage content) throws InvalidMessageException {
-    OpenchatServiceGroup            groupInfo        = createGroupInfo(envelope, content);
-    List<OpenchatServiceAttachment> attachments      = new LinkedList<>();
-    boolean                       endSession       = ((content.getFlags() & DataMessage.Flags.END_SESSION_VALUE) != 0);
-    boolean                       expirationUpdate = ((content.getFlags() & DataMessage.Flags.EXPIRATION_TIMER_UPDATE_VALUE) != 0);
-    boolean                       profileKeyUpdate = ((content.getFlags() & DataMessage.Flags.PROFILE_KEY_UPDATE_VALUE) != 0);
+    OpenchatServiceGroup             groupInfo        = createGroupInfo(envelope, content);
+    List<OpenchatServiceAttachment>  attachments      = new LinkedList<>();
+    boolean                        endSession       = ((content.getFlags() & DataMessage.Flags.END_SESSION_VALUE            ) != 0);
+    boolean                        expirationUpdate = ((content.getFlags() & DataMessage.Flags.EXPIRATION_TIMER_UPDATE_VALUE) != 0);
+    boolean                        profileKeyUpdate = ((content.getFlags() & DataMessage.Flags.PROFILE_KEY_UPDATE_VALUE     ) != 0);
+    OpenchatServiceDataMessage.Quote quote            = createQuote(envelope, content);
 
     for (AttachmentPointer pointer : content.getAttachmentsList()) {
-      attachments.add(new OpenchatServiceAttachmentPointer(pointer.getId(),
-                                                         pointer.getContentType(),
-                                                         pointer.getKey().toByteArray(),
-                                                         envelope.getRelay(),
-                                                         pointer.hasSize() ? Optional.of(pointer.getSize()) : Optional.<Integer>absent(),
-                                                         pointer.hasThumbnail() ? Optional.of(pointer.getThumbnail().toByteArray()): Optional.<byte[]>absent(),
-                                                         pointer.getWidth(), pointer.getHeight(),
-                                                         pointer.hasDigest() ? Optional.of(pointer.getDigest().toByteArray()) : Optional.<byte[]>absent(),
-                                                         pointer.hasFileName() ? Optional.of(pointer.getFileName()) : Optional.<String>absent(),
-                                                         (pointer.getFlags() & AttachmentPointer.Flags.VOICE_MESSAGE_VALUE) != 0));
+      attachments.add(createAttachmentPointer(envelope, pointer));
     }
 
     if (content.hasTimestamp() && content.getTimestamp() != envelope.getTimestamp()) {
@@ -169,7 +161,7 @@ public class OpenchatServiceCipher {
     return new OpenchatServiceDataMessage(envelope.getTimestamp(), groupInfo, attachments,
                                         content.getBody(), endSession, content.getExpireTimer(),
                                         expirationUpdate, content.hasProfileKey() ? content.getProfileKey().toByteArray() : null,
-                                        profileKeyUpdate);
+                                        profileKeyUpdate, quote);
   }
 
   private OpenchatServiceSyncMessage createSynchronizeMessage(OpenchatServiceEnvelope envelope, SyncMessage content) throws InvalidMessageException {
@@ -256,6 +248,35 @@ public class OpenchatServiceCipher {
     else                                                        type = OpenchatServiceReceiptMessage.Type.UNKNOWN;
 
     return new OpenchatServiceReceiptMessage(type, content.getTimestampList(), envelope.getTimestamp());
+  }
+
+  private OpenchatServiceDataMessage.Quote createQuote(OpenchatServiceEnvelope envelope, DataMessage content) {
+    if (!content.hasQuote()) return null;
+
+    List<OpenchatServiceAttachment> attachments = new LinkedList<>();
+
+    for (AttachmentPointer pointer : content.getQuote().getAttachmentsList()) {
+      attachments.add(createAttachmentPointer(envelope, pointer));
+    }
+
+    return new OpenchatServiceDataMessage.Quote(content.getQuote().getId(),
+                                              new OpenchatServiceAddress(content.getQuote().getAuthor()),
+                                              content.getQuote().getText(),
+                                              attachments);
+  }
+
+  private OpenchatServiceAttachmentPointer createAttachmentPointer(OpenchatServiceEnvelope envelope, AttachmentPointer pointer) {
+    return new OpenchatServiceAttachmentPointer(pointer.getId(),
+                                              pointer.getContentType(),
+                                              pointer.getKey().toByteArray(),
+                                              envelope.getRelay(),
+                                              pointer.hasSize() ? Optional.of(pointer.getSize()) : Optional.<Integer>absent(),
+                                              pointer.hasThumbnail() ? Optional.of(pointer.getThumbnail().toByteArray()): Optional.<byte[]>absent(),
+                                              pointer.getWidth(), pointer.getHeight(),
+                                              pointer.hasDigest() ? Optional.of(pointer.getDigest().toByteArray()) : Optional.<byte[]>absent(),
+                                              pointer.hasFileName() ? Optional.of(pointer.getFileName()) : Optional.<String>absent(),
+                                              (pointer.getFlags() & AttachmentPointer.Flags.VOICE_MESSAGE_VALUE) != 0);
+
   }
 
   private OpenchatServiceGroup createGroupInfo(OpenchatServiceEnvelope envelope, DataMessage content) {

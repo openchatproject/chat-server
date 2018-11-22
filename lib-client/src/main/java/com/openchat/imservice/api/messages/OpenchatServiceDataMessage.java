@@ -1,6 +1,7 @@
 package com.openchat.imservice.api.messages;
 
 import com.openchat.protocal.util.guava.Optional;
+import com.openchat.imservice.api.push.OpenchatServiceAddress;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +17,7 @@ public class OpenchatServiceDataMessage {
   private final boolean                                 expirationUpdate;
   private final int                                     expiresInSeconds;
   private final boolean                                 profileKeyUpdate;
+  private final Optional<Quote>                         quote;
 
   
   public OpenchatServiceDataMessage(long timestamp, String body) {
@@ -48,14 +50,15 @@ public class OpenchatServiceDataMessage {
 
   
   public OpenchatServiceDataMessage(long timestamp, OpenchatServiceGroup group, List<OpenchatServiceAttachment> attachments, String body, int expiresInSeconds) {
-    this(timestamp, group, attachments, body, false, expiresInSeconds, false, null, false);
+    this(timestamp, group, attachments, body, false, expiresInSeconds, false, null, false, null);
   }
 
   
   public OpenchatServiceDataMessage(long timestamp, OpenchatServiceGroup group,
                                   List<OpenchatServiceAttachment> attachments,
                                   String body, boolean endSession, int expiresInSeconds,
-                                  boolean expirationUpdate, byte[] profileKey, boolean profileKeyUpdate)
+                                  boolean expirationUpdate, byte[] profileKey, boolean profileKeyUpdate,
+                                  Quote quote)
   {
     this.timestamp        = timestamp;
     this.body             = Optional.fromNullable(body);
@@ -65,6 +68,7 @@ public class OpenchatServiceDataMessage {
     this.expirationUpdate = expirationUpdate;
     this.profileKey       = Optional.fromNullable(profileKey);
     this.profileKeyUpdate = profileKeyUpdate;
+    this.quote            = Optional.fromNullable(quote);
 
     if (attachments != null && !attachments.isEmpty()) {
       this.attachments = Optional.of(attachments);
@@ -121,6 +125,10 @@ public class OpenchatServiceDataMessage {
     return profileKey;
   }
 
+  public Optional<Quote> getQuote() {
+    return quote;
+  }
+
   public static class Builder {
 
     private List<OpenchatServiceAttachment> attachments = new LinkedList<>();
@@ -132,6 +140,7 @@ public class OpenchatServiceDataMessage {
     private boolean            expirationUpdate;
     private byte[]             profileKey;
     private boolean            profileKeyUpdate;
+    private Quote              quote;
 
     private Builder() {}
 
@@ -193,11 +202,47 @@ public class OpenchatServiceDataMessage {
       return this;
     }
 
+    public Builder withQuote(Quote quote) {
+      this.quote = quote;
+      return this;
+    }
+
     public OpenchatServiceDataMessage build() {
       if (timestamp == 0) timestamp = System.currentTimeMillis();
       return new OpenchatServiceDataMessage(timestamp, group, attachments, body, endSession,
                                           expiresInSeconds, expirationUpdate, profileKey,
-                                          profileKeyUpdate);
+                                          profileKeyUpdate, quote);
     }
+  }
+
+  public static class Quote {
+    private final long                          id;
+    private final OpenchatServiceAddress          author;
+    private final String                        text;
+    private final List<OpenchatServiceAttachment> attachments;
+
+    public Quote(long id, OpenchatServiceAddress author, String text, List<OpenchatServiceAttachment> attachments) {
+      this.id          = id;
+      this.author      = author;
+      this.text        = text;
+      this.attachments = attachments;
+    }
+
+    public long getId() {
+      return id;
+    }
+
+    public OpenchatServiceAddress getAuthor() {
+      return author;
+    }
+
+    public String getText() {
+      return text;
+    }
+
+    public List<OpenchatServiceAttachment> getAttachments() {
+      return attachments;
+    }
+
   }
 }

@@ -274,6 +274,25 @@ public class OpenchatServiceMessageSender {
       builder.setProfileKey(ByteString.copyFrom(message.getProfileKey().get()));
     }
 
+    if (message.getQuote().isPresent()) {
+      DataMessage.Quote.Builder quoteBuilder = DataMessage.Quote.newBuilder()
+                                                                .setId(message.getQuote().get().getId())
+                                                                .setAuthor(message.getQuote().get().getAuthor().getNumber())
+                                                                .setText(message.getQuote().get().getText());
+
+      for (OpenchatServiceAttachment attachment : message.getQuote().get().getAttachments()) {
+        if (attachment.isPointer()) {
+          quoteBuilder.addAttachments(AttachmentPointer.newBuilder()
+                                                       .setContentType(attachment.asPointer().getContentType())
+                                                       .setFileName(attachment.asPointer().getFileName().orNull()));
+        } else {
+          quoteBuilder.addAttachments(createAttachmentPointer(attachment.asStream()));
+        }
+      }
+
+      builder.setQuote(quoteBuilder);
+    }
+
     builder.setTimestamp(message.getTimestamp());
 
     return container.setDataMessage(builder).build().toByteArray();
