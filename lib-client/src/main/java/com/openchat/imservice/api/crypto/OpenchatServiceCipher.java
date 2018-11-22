@@ -253,10 +253,12 @@ public class OpenchatServiceCipher {
   private OpenchatServiceDataMessage.Quote createQuote(OpenchatServiceEnvelope envelope, DataMessage content) {
     if (!content.hasQuote()) return null;
 
-    List<OpenchatServiceAttachment> attachments = new LinkedList<>();
+    List<OpenchatServiceDataMessage.Quote.QuotedAttachment> attachments = new LinkedList<>();
 
-    for (AttachmentPointer pointer : content.getQuote().getAttachmentsList()) {
-      attachments.add(createAttachmentPointer(envelope, pointer));
+    for (DataMessage.Quote.QuotedAttachment attachment : content.getQuote().getAttachmentsList()) {
+      attachments.add(new OpenchatServiceDataMessage.Quote.QuotedAttachment(attachment.getContentType(),
+                                                                          attachment.getFileName(),
+                                                                          attachment.hasThumbnail() ? createAttachmentPointer(envelope, attachment.getThumbnail()) : null));
     }
 
     return new OpenchatServiceDataMessage.Quote(content.getQuote().getId(),

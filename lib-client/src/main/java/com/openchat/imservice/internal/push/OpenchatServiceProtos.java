@@ -6059,17 +6059,17 @@ public final class OpenchatServiceProtos {
           getTextBytes();
 
       
-      java.util.List<com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer> 
+      java.util.List<com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment> 
           getAttachmentsList();
       
-      com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer getAttachments(int index);
+      com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment getAttachments(int index);
       
       int getAttachmentsCount();
       
-      java.util.List<? extends com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder> 
+      java.util.List<? extends com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachmentOrBuilder> 
           getAttachmentsOrBuilderList();
       
-      com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder getAttachmentsOrBuilder(
+      com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachmentOrBuilder getAttachmentsOrBuilder(
           int index);
     }
     
@@ -6137,10 +6137,10 @@ public final class OpenchatServiceProtos {
               }
               case 34: {
                 if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
-                  attachments_ = new java.util.ArrayList<com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer>();
+                  attachments_ = new java.util.ArrayList<com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment>();
                   mutable_bitField0_ |= 0x00000008;
                 }
-                attachments_.add(input.readMessage(com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.PARSER, extensionRegistry));
+                attachments_.add(input.readMessage(com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment.PARSER, extensionRegistry));
                 break;
               }
             }
@@ -6183,6 +6183,730 @@ public final class OpenchatServiceProtos {
       @java.lang.Override
       public com.google.protobuf.Parser<Quote> getParserForType() {
         return PARSER;
+      }
+
+      public interface QuotedAttachmentOrBuilder
+          extends com.google.protobuf.MessageOrBuilder {
+
+        
+        boolean hasContentType();
+        
+        java.lang.String getContentType();
+        
+        com.google.protobuf.ByteString
+            getContentTypeBytes();
+
+        
+        boolean hasFileName();
+        
+        java.lang.String getFileName();
+        
+        com.google.protobuf.ByteString
+            getFileNameBytes();
+
+        
+        boolean hasThumbnail();
+        
+        com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer getThumbnail();
+        
+        com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder getThumbnailOrBuilder();
+      }
+      
+      public static final class QuotedAttachment extends
+          com.google.protobuf.GeneratedMessage
+          implements QuotedAttachmentOrBuilder {
+        private QuotedAttachment(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+          super(builder);
+          this.unknownFields = builder.getUnknownFields();
+        }
+        private QuotedAttachment(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+        private static final QuotedAttachment defaultInstance;
+        public static QuotedAttachment getDefaultInstance() {
+          return defaultInstance;
+        }
+
+        public QuotedAttachment getDefaultInstanceForType() {
+          return defaultInstance;
+        }
+
+        private final com.google.protobuf.UnknownFieldSet unknownFields;
+        @java.lang.Override
+        public final com.google.protobuf.UnknownFieldSet
+            getUnknownFields() {
+          return this.unknownFields;
+        }
+        private QuotedAttachment(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          initFields();
+          int mutable_bitField0_ = 0;
+          com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+              com.google.protobuf.UnknownFieldSet.newBuilder();
+          try {
+            boolean done = false;
+            while (!done) {
+              int tag = input.readTag();
+              switch (tag) {
+                case 0:
+                  done = true;
+                  break;
+                default: {
+                  if (!parseUnknownField(input, unknownFields,
+                                         extensionRegistry, tag)) {
+                    done = true;
+                  }
+                  break;
+                }
+                case 10: {
+                  bitField0_ |= 0x00000001;
+                  contentType_ = input.readBytes();
+                  break;
+                }
+                case 18: {
+                  bitField0_ |= 0x00000002;
+                  fileName_ = input.readBytes();
+                  break;
+                }
+                case 26: {
+                  com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder subBuilder = null;
+                  if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                    subBuilder = thumbnail_.toBuilder();
+                  }
+                  thumbnail_ = input.readMessage(com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.PARSER, extensionRegistry);
+                  if (subBuilder != null) {
+                    subBuilder.mergeFrom(thumbnail_);
+                    thumbnail_ = subBuilder.buildPartial();
+                  }
+                  bitField0_ |= 0x00000004;
+                  break;
+                }
+              }
+            }
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.setUnfinishedMessage(this);
+          } catch (java.io.IOException e) {
+            throw new com.google.protobuf.InvalidProtocolBufferException(
+                e.getMessage()).setUnfinishedMessage(this);
+          } finally {
+            this.unknownFields = unknownFields.build();
+            makeExtensionsImmutable();
+          }
+        }
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_DataMessage_Quote_QuotedAttachment_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_DataMessage_Quote_QuotedAttachment_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment.class, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment.Builder.class);
+        }
+
+        public static com.google.protobuf.Parser<QuotedAttachment> PARSER =
+            new com.google.protobuf.AbstractParser<QuotedAttachment>() {
+          public QuotedAttachment parsePartialFrom(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
+            return new QuotedAttachment(input, extensionRegistry);
+          }
+        };
+
+        @java.lang.Override
+        public com.google.protobuf.Parser<QuotedAttachment> getParserForType() {
+          return PARSER;
+        }
+
+        private int bitField0_;
+        public static final int CONTENTTYPE_FIELD_NUMBER = 1;
+        private java.lang.Object contentType_;
+        
+        public boolean hasContentType() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        
+        public java.lang.String getContentType() {
+          java.lang.Object ref = contentType_;
+          if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+          } else {
+            com.google.protobuf.ByteString bs = 
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            if (bs.isValidUtf8()) {
+              contentType_ = s;
+            }
+            return s;
+          }
+        }
+        
+        public com.google.protobuf.ByteString
+            getContentTypeBytes() {
+          java.lang.Object ref = contentType_;
+          if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            contentType_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+
+        public static final int FILENAME_FIELD_NUMBER = 2;
+        private java.lang.Object fileName_;
+        
+        public boolean hasFileName() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        
+        public java.lang.String getFileName() {
+          java.lang.Object ref = fileName_;
+          if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+          } else {
+            com.google.protobuf.ByteString bs = 
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            if (bs.isValidUtf8()) {
+              fileName_ = s;
+            }
+            return s;
+          }
+        }
+        
+        public com.google.protobuf.ByteString
+            getFileNameBytes() {
+          java.lang.Object ref = fileName_;
+          if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            fileName_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+
+        public static final int THUMBNAIL_FIELD_NUMBER = 3;
+        private com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer thumbnail_;
+        
+        public boolean hasThumbnail() {
+          return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+        
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer getThumbnail() {
+          return thumbnail_;
+        }
+        
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder getThumbnailOrBuilder() {
+          return thumbnail_;
+        }
+
+        private void initFields() {
+          contentType_ = "";
+          fileName_ = "";
+          thumbnail_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance();
+        }
+        private byte memoizedIsInitialized = -1;
+        public final boolean isInitialized() {
+          byte isInitialized = memoizedIsInitialized;
+          if (isInitialized != -1) return isInitialized == 1;
+
+          memoizedIsInitialized = 1;
+          return true;
+        }
+
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                            throws java.io.IOException {
+          getSerializedSize();
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            output.writeBytes(1, getContentTypeBytes());
+          }
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            output.writeBytes(2, getFileNameBytes());
+          }
+          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+            output.writeMessage(3, thumbnail_);
+          }
+          getUnknownFields().writeTo(output);
+        }
+
+        private int memoizedSerializedSize = -1;
+        public int getSerializedSize() {
+          int size = memoizedSerializedSize;
+          if (size != -1) return size;
+
+          size = 0;
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            size += com.google.protobuf.CodedOutputStream
+              .computeBytesSize(1, getContentTypeBytes());
+          }
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            size += com.google.protobuf.CodedOutputStream
+              .computeBytesSize(2, getFileNameBytes());
+          }
+          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+            size += com.google.protobuf.CodedOutputStream
+              .computeMessageSize(3, thumbnail_);
+          }
+          size += getUnknownFields().getSerializedSize();
+          memoizedSerializedSize = size;
+          return size;
+        }
+
+        private static final long serialVersionUID = 0L;
+        @java.lang.Override
+        protected java.lang.Object writeReplace()
+            throws java.io.ObjectStreamException {
+          return super.writeReplace();
+        }
+
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment parseFrom(
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return PARSER.parseFrom(data);
+        }
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return PARSER.parseFrom(data, extensionRegistry);
+        }
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment parseFrom(byte[] data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return PARSER.parseFrom(data);
+        }
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return PARSER.parseFrom(data, extensionRegistry);
+        }
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment parseFrom(java.io.InputStream input)
+            throws java.io.IOException {
+          return PARSER.parseFrom(input);
+        }
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          return PARSER.parseFrom(input, extensionRegistry);
+        }
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment parseDelimitedFrom(java.io.InputStream input)
+            throws java.io.IOException {
+          return PARSER.parseDelimitedFrom(input);
+        }
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          return PARSER.parseDelimitedFrom(input, extensionRegistry);
+        }
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment parseFrom(
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
+          return PARSER.parseFrom(input);
+        }
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static Builder newBuilder() { return Builder.create(); }
+        public Builder newBuilderForType() { return newBuilder(); }
+        public static Builder newBuilder(com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment prototype) {
+          return newBuilder().mergeFrom(prototype);
+        }
+        public Builder toBuilder() { return newBuilder(this); }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+            com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+          Builder builder = new Builder(parent);
+          return builder;
+        }
+        
+        public static final class Builder extends
+            com.google.protobuf.GeneratedMessage.Builder<Builder>
+           implements com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachmentOrBuilder {
+          public static final com.google.protobuf.Descriptors.Descriptor
+              getDescriptor() {
+            return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_DataMessage_Quote_QuotedAttachment_descriptor;
+          }
+
+          protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+              internalGetFieldAccessorTable() {
+            return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_DataMessage_Quote_QuotedAttachment_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                    com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment.class, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment.Builder.class);
+          }
+
+          private Builder() {
+            maybeForceBuilderInitialization();
+          }
+
+          private Builder(
+              com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+            super(parent);
+            maybeForceBuilderInitialization();
+          }
+          private void maybeForceBuilderInitialization() {
+            if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+              getThumbnailFieldBuilder();
+            }
+          }
+          private static Builder create() {
+            return new Builder();
+          }
+
+          public Builder clear() {
+            super.clear();
+            contentType_ = "";
+            bitField0_ = (bitField0_ & ~0x00000001);
+            fileName_ = "";
+            bitField0_ = (bitField0_ & ~0x00000002);
+            if (thumbnailBuilder_ == null) {
+              thumbnail_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance();
+            } else {
+              thumbnailBuilder_.clear();
+            }
+            bitField0_ = (bitField0_ & ~0x00000004);
+            return this;
+          }
+
+          public Builder clone() {
+            return create().mergeFrom(buildPartial());
+          }
+
+          public com.google.protobuf.Descriptors.Descriptor
+              getDescriptorForType() {
+            return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_DataMessage_Quote_QuotedAttachment_descriptor;
+          }
+
+          public com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment getDefaultInstanceForType() {
+            return com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment.getDefaultInstance();
+          }
+
+          public com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment build() {
+            com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment result = buildPartial();
+            if (!result.isInitialized()) {
+              throw newUninitializedMessageException(result);
+            }
+            return result;
+          }
+
+          public com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment buildPartial() {
+            com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment result = new com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment(this);
+            int from_bitField0_ = bitField0_;
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+              to_bitField0_ |= 0x00000001;
+            }
+            result.contentType_ = contentType_;
+            if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+              to_bitField0_ |= 0x00000002;
+            }
+            result.fileName_ = fileName_;
+            if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+              to_bitField0_ |= 0x00000004;
+            }
+            if (thumbnailBuilder_ == null) {
+              result.thumbnail_ = thumbnail_;
+            } else {
+              result.thumbnail_ = thumbnailBuilder_.build();
+            }
+            result.bitField0_ = to_bitField0_;
+            onBuilt();
+            return result;
+          }
+
+          public Builder mergeFrom(com.google.protobuf.Message other) {
+            if (other instanceof com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment) {
+              return mergeFrom((com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment)other);
+            } else {
+              super.mergeFrom(other);
+              return this;
+            }
+          }
+
+          public Builder mergeFrom(com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment other) {
+            if (other == com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment.getDefaultInstance()) return this;
+            if (other.hasContentType()) {
+              bitField0_ |= 0x00000001;
+              contentType_ = other.contentType_;
+              onChanged();
+            }
+            if (other.hasFileName()) {
+              bitField0_ |= 0x00000002;
+              fileName_ = other.fileName_;
+              onChanged();
+            }
+            if (other.hasThumbnail()) {
+              mergeThumbnail(other.getThumbnail());
+            }
+            this.mergeUnknownFields(other.getUnknownFields());
+            return this;
+          }
+
+          public final boolean isInitialized() {
+            return true;
+          }
+
+          public Builder mergeFrom(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws java.io.IOException {
+            com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment parsedMessage = null;
+            try {
+              parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+              parsedMessage = (com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment) e.getUnfinishedMessage();
+              throw e;
+            } finally {
+              if (parsedMessage != null) {
+                mergeFrom(parsedMessage);
+              }
+            }
+            return this;
+          }
+          private int bitField0_;
+
+          private java.lang.Object contentType_ = "";
+          
+          public boolean hasContentType() {
+            return ((bitField0_ & 0x00000001) == 0x00000001);
+          }
+          
+          public java.lang.String getContentType() {
+            java.lang.Object ref = contentType_;
+            if (!(ref instanceof java.lang.String)) {
+              java.lang.String s = ((com.google.protobuf.ByteString) ref)
+                  .toStringUtf8();
+              contentType_ = s;
+              return s;
+            } else {
+              return (java.lang.String) ref;
+            }
+          }
+          
+          public com.google.protobuf.ByteString
+              getContentTypeBytes() {
+            java.lang.Object ref = contentType_;
+            if (ref instanceof String) {
+              com.google.protobuf.ByteString b = 
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                      (java.lang.String) ref);
+              contentType_ = b;
+              return b;
+            } else {
+              return (com.google.protobuf.ByteString) ref;
+            }
+          }
+          
+          public Builder setContentType(
+              java.lang.String value) {
+            if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+            contentType_ = value;
+            onChanged();
+            return this;
+          }
+          
+          public Builder clearContentType() {
+            bitField0_ = (bitField0_ & ~0x00000001);
+            contentType_ = getDefaultInstance().getContentType();
+            onChanged();
+            return this;
+          }
+          
+          public Builder setContentTypeBytes(
+              com.google.protobuf.ByteString value) {
+            if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+            contentType_ = value;
+            onChanged();
+            return this;
+          }
+
+          private java.lang.Object fileName_ = "";
+          
+          public boolean hasFileName() {
+            return ((bitField0_ & 0x00000002) == 0x00000002);
+          }
+          
+          public java.lang.String getFileName() {
+            java.lang.Object ref = fileName_;
+            if (!(ref instanceof java.lang.String)) {
+              java.lang.String s = ((com.google.protobuf.ByteString) ref)
+                  .toStringUtf8();
+              fileName_ = s;
+              return s;
+            } else {
+              return (java.lang.String) ref;
+            }
+          }
+          
+          public com.google.protobuf.ByteString
+              getFileNameBytes() {
+            java.lang.Object ref = fileName_;
+            if (ref instanceof String) {
+              com.google.protobuf.ByteString b = 
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                      (java.lang.String) ref);
+              fileName_ = b;
+              return b;
+            } else {
+              return (com.google.protobuf.ByteString) ref;
+            }
+          }
+          
+          public Builder setFileName(
+              java.lang.String value) {
+            if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+            fileName_ = value;
+            onChanged();
+            return this;
+          }
+          
+          public Builder clearFileName() {
+            bitField0_ = (bitField0_ & ~0x00000002);
+            fileName_ = getDefaultInstance().getFileName();
+            onChanged();
+            return this;
+          }
+          
+          public Builder setFileNameBytes(
+              com.google.protobuf.ByteString value) {
+            if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+            fileName_ = value;
+            onChanged();
+            return this;
+          }
+
+          private com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer thumbnail_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance();
+          private com.google.protobuf.SingleFieldBuilder<
+              com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder> thumbnailBuilder_;
+          
+          public boolean hasThumbnail() {
+            return ((bitField0_ & 0x00000004) == 0x00000004);
+          }
+          
+          public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer getThumbnail() {
+            if (thumbnailBuilder_ == null) {
+              return thumbnail_;
+            } else {
+              return thumbnailBuilder_.getMessage();
+            }
+          }
+          
+          public Builder setThumbnail(com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer value) {
+            if (thumbnailBuilder_ == null) {
+              if (value == null) {
+                throw new NullPointerException();
+              }
+              thumbnail_ = value;
+              onChanged();
+            } else {
+              thumbnailBuilder_.setMessage(value);
+            }
+            bitField0_ |= 0x00000004;
+            return this;
+          }
+          
+          public Builder setThumbnail(
+              com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder builderForValue) {
+            if (thumbnailBuilder_ == null) {
+              thumbnail_ = builderForValue.build();
+              onChanged();
+            } else {
+              thumbnailBuilder_.setMessage(builderForValue.build());
+            }
+            bitField0_ |= 0x00000004;
+            return this;
+          }
+          
+          public Builder mergeThumbnail(com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer value) {
+            if (thumbnailBuilder_ == null) {
+              if (((bitField0_ & 0x00000004) == 0x00000004) &&
+                  thumbnail_ != com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance()) {
+                thumbnail_ =
+                  com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.newBuilder(thumbnail_).mergeFrom(value).buildPartial();
+              } else {
+                thumbnail_ = value;
+              }
+              onChanged();
+            } else {
+              thumbnailBuilder_.mergeFrom(value);
+            }
+            bitField0_ |= 0x00000004;
+            return this;
+          }
+          
+          public Builder clearThumbnail() {
+            if (thumbnailBuilder_ == null) {
+              thumbnail_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance();
+              onChanged();
+            } else {
+              thumbnailBuilder_.clear();
+            }
+            bitField0_ = (bitField0_ & ~0x00000004);
+            return this;
+          }
+          
+          public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder getThumbnailBuilder() {
+            bitField0_ |= 0x00000004;
+            onChanged();
+            return getThumbnailFieldBuilder().getBuilder();
+          }
+          
+          public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder getThumbnailOrBuilder() {
+            if (thumbnailBuilder_ != null) {
+              return thumbnailBuilder_.getMessageOrBuilder();
+            } else {
+              return thumbnail_;
+            }
+          }
+          
+          private com.google.protobuf.SingleFieldBuilder<
+              com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder> 
+              getThumbnailFieldBuilder() {
+            if (thumbnailBuilder_ == null) {
+              thumbnailBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+                  com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder>(
+                      thumbnail_,
+                      getParentForChildren(),
+                      isClean());
+              thumbnail_ = null;
+            }
+            return thumbnailBuilder_;
+          }
+
+        }
+
+        static {
+          defaultInstance = new QuotedAttachment(true);
+          defaultInstance.initFields();
+        }
+
       }
 
       private int bitField0_;
@@ -6270,13 +6994,13 @@ public final class OpenchatServiceProtos {
       }
 
       public static final int ATTACHMENTS_FIELD_NUMBER = 4;
-      private java.util.List<com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer> attachments_;
+      private java.util.List<com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment> attachments_;
       
-      public java.util.List<com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer> getAttachmentsList() {
+      public java.util.List<com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment> getAttachmentsList() {
         return attachments_;
       }
       
-      public java.util.List<? extends com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder> 
+      public java.util.List<? extends com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachmentOrBuilder> 
           getAttachmentsOrBuilderList() {
         return attachments_;
       }
@@ -6285,11 +7009,11 @@ public final class OpenchatServiceProtos {
         return attachments_.size();
       }
       
-      public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer getAttachments(int index) {
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment getAttachments(int index) {
         return attachments_.get(index);
       }
       
-      public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder getAttachmentsOrBuilder(
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachmentOrBuilder getAttachmentsOrBuilder(
           int index) {
         return attachments_.get(index);
       }
@@ -6752,20 +7476,20 @@ public final class OpenchatServiceProtos {
           return this;
         }
 
-        private java.util.List<com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer> attachments_ =
+        private java.util.List<com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment> attachments_ =
           java.util.Collections.emptyList();
         private void ensureAttachmentsIsMutable() {
           if (!((bitField0_ & 0x00000008) == 0x00000008)) {
-            attachments_ = new java.util.ArrayList<com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer>(attachments_);
+            attachments_ = new java.util.ArrayList<com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment>(attachments_);
             bitField0_ |= 0x00000008;
            }
         }
 
         private com.google.protobuf.RepeatedFieldBuilder<
-            com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder> attachmentsBuilder_;
+            com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachmentOrBuilder> attachmentsBuilder_;
 
         
-        public java.util.List<com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer> getAttachmentsList() {
+        public java.util.List<com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment> getAttachmentsList() {
           if (attachmentsBuilder_ == null) {
             return java.util.Collections.unmodifiableList(attachments_);
           } else {
@@ -6781,7 +7505,7 @@ public final class OpenchatServiceProtos {
           }
         }
         
-        public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer getAttachments(int index) {
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment getAttachments(int index) {
           if (attachmentsBuilder_ == null) {
             return attachments_.get(index);
           } else {
@@ -6790,7 +7514,7 @@ public final class OpenchatServiceProtos {
         }
         
         public Builder setAttachments(
-            int index, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer value) {
+            int index, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment value) {
           if (attachmentsBuilder_ == null) {
             if (value == null) {
               throw new NullPointerException();
@@ -6805,7 +7529,7 @@ public final class OpenchatServiceProtos {
         }
         
         public Builder setAttachments(
-            int index, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder builderForValue) {
+            int index, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment.Builder builderForValue) {
           if (attachmentsBuilder_ == null) {
             ensureAttachmentsIsMutable();
             attachments_.set(index, builderForValue.build());
@@ -6816,7 +7540,7 @@ public final class OpenchatServiceProtos {
           return this;
         }
         
-        public Builder addAttachments(com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer value) {
+        public Builder addAttachments(com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment value) {
           if (attachmentsBuilder_ == null) {
             if (value == null) {
               throw new NullPointerException();
@@ -6831,7 +7555,7 @@ public final class OpenchatServiceProtos {
         }
         
         public Builder addAttachments(
-            int index, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer value) {
+            int index, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment value) {
           if (attachmentsBuilder_ == null) {
             if (value == null) {
               throw new NullPointerException();
@@ -6846,7 +7570,7 @@ public final class OpenchatServiceProtos {
         }
         
         public Builder addAttachments(
-            com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder builderForValue) {
+            com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment.Builder builderForValue) {
           if (attachmentsBuilder_ == null) {
             ensureAttachmentsIsMutable();
             attachments_.add(builderForValue.build());
@@ -6858,7 +7582,7 @@ public final class OpenchatServiceProtos {
         }
         
         public Builder addAttachments(
-            int index, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder builderForValue) {
+            int index, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment.Builder builderForValue) {
           if (attachmentsBuilder_ == null) {
             ensureAttachmentsIsMutable();
             attachments_.add(index, builderForValue.build());
@@ -6870,7 +7594,7 @@ public final class OpenchatServiceProtos {
         }
         
         public Builder addAllAttachments(
-            java.lang.Iterable<? extends com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer> values) {
+            java.lang.Iterable<? extends com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment> values) {
           if (attachmentsBuilder_ == null) {
             ensureAttachmentsIsMutable();
             super.addAll(values, attachments_);
@@ -6903,12 +7627,12 @@ public final class OpenchatServiceProtos {
           return this;
         }
         
-        public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder getAttachmentsBuilder(
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment.Builder getAttachmentsBuilder(
             int index) {
           return getAttachmentsFieldBuilder().getBuilder(index);
         }
         
-        public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder getAttachmentsOrBuilder(
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachmentOrBuilder getAttachmentsOrBuilder(
             int index) {
           if (attachmentsBuilder_ == null) {
             return attachments_.get(index);  } else {
@@ -6916,7 +7640,7 @@ public final class OpenchatServiceProtos {
           }
         }
         
-        public java.util.List<? extends com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder> 
+        public java.util.List<? extends com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachmentOrBuilder> 
              getAttachmentsOrBuilderList() {
           if (attachmentsBuilder_ != null) {
             return attachmentsBuilder_.getMessageOrBuilderList();
@@ -6925,27 +7649,27 @@ public final class OpenchatServiceProtos {
           }
         }
         
-        public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder addAttachmentsBuilder() {
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment.Builder addAttachmentsBuilder() {
           return getAttachmentsFieldBuilder().addBuilder(
-              com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance());
+              com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment.getDefaultInstance());
         }
         
-        public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder addAttachmentsBuilder(
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment.Builder addAttachmentsBuilder(
             int index) {
           return getAttachmentsFieldBuilder().addBuilder(
-              index, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance());
+              index, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment.getDefaultInstance());
         }
         
-        public java.util.List<com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder> 
+        public java.util.List<com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment.Builder> 
              getAttachmentsBuilderList() {
           return getAttachmentsFieldBuilder().getBuilderList();
         }
         private com.google.protobuf.RepeatedFieldBuilder<
-            com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder> 
+            com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachmentOrBuilder> 
             getAttachmentsFieldBuilder() {
           if (attachmentsBuilder_ == null) {
             attachmentsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-                com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder>(
+                com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachment.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Quote.QuotedAttachmentOrBuilder>(
                     attachments_,
                     ((bitField0_ & 0x00000008) == 0x00000008),
                     getParentForChildren(),
@@ -20286,6 +21010,11 @@ public final class OpenchatServiceProtos {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_openchatservice_DataMessage_Quote_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_openchatservice_DataMessage_Quote_QuotedAttachment_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_openchatservice_DataMessage_Quote_QuotedAttachment_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_openchatservice_NullMessage_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -20444,6 +21173,12 @@ public final class OpenchatServiceProtos {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_openchatservice_DataMessage_Quote_descriptor,
               new java.lang.String[] { "Id", "Author", "Text", "Attachments", });
+          internal_static_openchatservice_DataMessage_Quote_QuotedAttachment_descriptor =
+            internal_static_openchatservice_DataMessage_Quote_descriptor.getNestedTypes().get(0);
+          internal_static_openchatservice_DataMessage_Quote_QuotedAttachment_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_openchatservice_DataMessage_Quote_QuotedAttachment_descriptor,
+              new java.lang.String[] { "ContentType", "FileName", "Thumbnail", });
           internal_static_openchatservice_NullMessage_descriptor =
             getDescriptor().getMessageTypes().get(4);
           internal_static_openchatservice_NullMessage_fieldAccessorTable = new

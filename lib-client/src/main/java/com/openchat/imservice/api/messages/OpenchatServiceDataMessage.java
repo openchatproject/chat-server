@@ -216,12 +216,12 @@ public class OpenchatServiceDataMessage {
   }
 
   public static class Quote {
-    private final long                          id;
-    private final OpenchatServiceAddress          author;
-    private final String                        text;
-    private final List<OpenchatServiceAttachment> attachments;
+    private final long                   id;
+    private final OpenchatServiceAddress   author;
+    private final String                 text;
+    private final List<QuotedAttachment> attachments;
 
-    public Quote(long id, OpenchatServiceAddress author, String text, List<OpenchatServiceAttachment> attachments) {
+    public Quote(long id, OpenchatServiceAddress author, String text, List<QuotedAttachment> attachments) {
       this.id          = id;
       this.author      = author;
       this.text        = text;
@@ -240,9 +240,32 @@ public class OpenchatServiceDataMessage {
       return text;
     }
 
-    public List<OpenchatServiceAttachment> getAttachments() {
+    public List<QuotedAttachment> getAttachments() {
       return attachments;
     }
 
+    public static class QuotedAttachment {
+      private final String                  contentType;
+      private final String                  fileName;
+      private final OpenchatServiceAttachment thumbnail;
+
+      public QuotedAttachment(String contentType, String fileName, OpenchatServiceAttachment thumbnail) {
+        this.contentType = contentType;
+        this.fileName    = fileName;
+        this.thumbnail   = thumbnail;
+      }
+
+      public String getContentType() {
+        return contentType;
+      }
+
+      public String getFileName() {
+        return fileName;
+      }
+
+      public OpenchatServiceAttachment getThumbnail() {
+        return thumbnail;
+      }
+    }
   }
 }
