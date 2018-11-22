@@ -1,6 +1,7 @@
 package com.openchat.imservice.api.messages;
 
 import com.openchat.protocal.util.guava.Optional;
+import com.openchat.imservice.api.messages.shared.SharedContact;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
 
 import java.util.LinkedList;
@@ -18,6 +19,7 @@ public class OpenchatServiceDataMessage {
   private final int                                     expiresInSeconds;
   private final boolean                                 profileKeyUpdate;
   private final Optional<Quote>                         quote;
+  private final Optional<List<SharedContact>>           contacts;
 
   
   public OpenchatServiceDataMessage(long timestamp, String body) {
@@ -50,7 +52,7 @@ public class OpenchatServiceDataMessage {
 
   
   public OpenchatServiceDataMessage(long timestamp, OpenchatServiceGroup group, List<OpenchatServiceAttachment> attachments, String body, int expiresInSeconds) {
-    this(timestamp, group, attachments, body, false, expiresInSeconds, false, null, false, null);
+    this(timestamp, group, attachments, body, false, expiresInSeconds, false, null, false, null, null);
   }
 
   
@@ -58,7 +60,7 @@ public class OpenchatServiceDataMessage {
                                   List<OpenchatServiceAttachment> attachments,
                                   String body, boolean endSession, int expiresInSeconds,
                                   boolean expirationUpdate, byte[] profileKey, boolean profileKeyUpdate,
-                                  Quote quote)
+                                  Quote quote, List<SharedContact> sharedContacts)
   {
     this.timestamp        = timestamp;
     this.body             = Optional.fromNullable(body);
@@ -74,6 +76,12 @@ public class OpenchatServiceDataMessage {
       this.attachments = Optional.of(attachments);
     } else {
       this.attachments = Optional.absent();
+    }
+
+    if (sharedContacts != null && !sharedContacts.isEmpty()) {
+      this.contacts = Optional.of(sharedContacts);
+    } else {
+      this.contacts = Optional.absent();
     }
   }
 
@@ -129,9 +137,15 @@ public class OpenchatServiceDataMessage {
     return quote;
   }
 
+  public Optional<List<SharedContact>> getSharedContacts() {
+    return contacts;
+  }
+
   public static class Builder {
 
-    private List<OpenchatServiceAttachment> attachments = new LinkedList<>();
+    private List<OpenchatServiceAttachment> attachments    = new LinkedList<>();
+    private List<SharedContact>           sharedContacts = new LinkedList<>();
+
     private long               timestamp;
     private OpenchatServiceGroup group;
     private String             body;
@@ -207,11 +221,21 @@ public class OpenchatServiceDataMessage {
       return this;
     }
 
+    public Builder withSharedContact(SharedContact contact) {
+      this.sharedContacts.add(contact);
+      return this;
+    }
+
+    public Builder withSharedContacts(List<SharedContact> contacts) {
+      this.sharedContacts.addAll(contacts);
+      return this;
+    }
+
     public OpenchatServiceDataMessage build() {
       if (timestamp == 0) timestamp = System.currentTimeMillis();
       return new OpenchatServiceDataMessage(timestamp, group, attachments, body, endSession,
                                           expiresInSeconds, expirationUpdate, profileKey,
-                                          profileKeyUpdate, quote);
+                                          profileKeyUpdate, quote, sharedContacts);
     }
   }
 
@@ -268,4 +292,5 @@ public class OpenchatServiceDataMessage {
       }
     }
   }
+
 }

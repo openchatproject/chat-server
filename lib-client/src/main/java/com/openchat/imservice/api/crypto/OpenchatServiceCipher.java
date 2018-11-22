@@ -37,6 +37,7 @@ import com.openchat.imservice.api.messages.multidevice.SentTranscriptMessage;
 import com.openchat.imservice.api.messages.multidevice.OpenchatServiceSyncMessage;
 import com.openchat.imservice.api.messages.multidevice.VerifiedMessage;
 import com.openchat.imservice.api.messages.multidevice.VerifiedMessage.VerifiedState;
+import com.openchat.imservice.api.messages.shared.SharedContact;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.internal.push.OutgoingPushMessage;
 import com.openchat.imservice.internal.push.PushTransportDetails;
@@ -149,6 +150,7 @@ public class OpenchatServiceCipher {
     boolean                        expirationUpdate = ((content.getFlags() & DataMessage.Flags.EXPIRATION_TIMER_UPDATE_VALUE) != 0);
     boolean                        profileKeyUpdate = ((content.getFlags() & DataMessage.Flags.PROFILE_KEY_UPDATE_VALUE     ) != 0);
     OpenchatServiceDataMessage.Quote quote            = createQuote(envelope, content);
+    List<SharedContact>            sharedContacts   = createSharedContacts(envelope, content);
 
     for (AttachmentPointer pointer : content.getAttachmentsList()) {
       attachments.add(createAttachmentPointer(envelope, pointer));
@@ -161,7 +163,7 @@ public class OpenchatServiceCipher {
     return new OpenchatServiceDataMessage(envelope.getTimestamp(), groupInfo, attachments,
                                         content.getBody(), endSession, content.getExpireTimer(),
                                         expirationUpdate, content.hasProfileKey() ? content.getProfileKey().toByteArray() : null,
-                                        profileKeyUpdate, quote);
+                                        profileKeyUpdate, quote, sharedContacts);
   }
 
   private OpenchatServiceSyncMessage createSynchronizeMessage(OpenchatServiceEnvelope envelope, SyncMessage content) throws InvalidMessageException {
@@ -265,6 +267,94 @@ public class OpenchatServiceCipher {
                                               new OpenchatServiceAddress(content.getQuote().getAuthor()),
                                               content.getQuote().getText(),
                                               attachments);
+  }
+
+  private List<SharedContact> createSharedContacts(OpenchatServiceEnvelope envelope, DataMessage content) {
+    if (content.getContactCount() <= 0) return null;
+
+    List<SharedContact> results = new LinkedList<>();
+
+    for (DataMessage.Contact contact : content.getContactList()) {
+      SharedContact.Builder builder = SharedContact.newBuilder()
+                                                   .setName(SharedContact.Name.newBuilder()
+                                                                              .setFamily(contact.getName().getFamilyName())
+                                                                              .setGiven(contact.getName().getGivenName())
+                                                                              .setMiddle(contact.getName().getMiddleName())
+                                                                              .setPrefix(contact.getName().getPrefix())
+                                                                              .setSuffix(contact.getName().getSuffix())
+                                                                              .build());
+
+      if (contact.getAddressCount() > 0) {
+        for (DataMessage.Contact.PostalAddress address : contact.getAddressList()) {
+          SharedContact.PostalAddress.Type type = SharedContact.PostalAddress.Type.HOME;
+
+          switch (address.getType()) {
+            case WORK:   type = SharedContact.PostalAddress.Type.WORK;   break;
+            case HOME:   type = SharedContact.PostalAddress.Type.HOME;   break;
+            case CUSTOM: type = SharedContact.PostalAddress.Type.CUSTOM; break;
+          }
+
+          builder.withAddress(SharedContact.PostalAddress.newBuilder()
+                                                         .setCity(address.getCity())
+                                                         .setCountry(address.getCountry())
+                                                         .setLabel(address.getLabel())
+                                                         .setNeighborhood(address.getNeighborhood())
+                                                         .setPobox(address.getPobox())
+                                                         .setPostcode(address.getPostcode())
+                                                         .setRegion(address.getRegion())
+                                                         .setStreet(address.getStreet())
+                                                         .setType(type)
+                                                         .build());
+        }
+
+        if (contact.getNumberCount() > 0) {
+          for (DataMessage.Contact.Phone phone : contact.getNumberList()) {
+            SharedContact.Phone.Type type = SharedContact.Phone.Type.HOME;
+
+            switch (phone.getType()) {
+              case HOME:   type = SharedContact.Phone.Type.HOME;   break;
+              case WORK:   type = SharedContact.Phone.Type.WORK;   break;
+              case MOBILE: type = SharedContact.Phone.Type.MOBILE; break;
+              case CUSTOM: type = SharedContact.Phone.Type.CUSTOM; break;
+            }
+
+            builder.withPhone(SharedContact.Phone.newBuilder()
+                                                 .setLabel(phone.getLabel())
+                                                 .setType(type)
+                                                 .setValue(phone.getValue())
+                                                 .build());
+          }
+
+          if (contact.getEmailCount() > 0) {
+            for (DataMessage.Contact.Email email : contact.getEmailList()) {
+              SharedContact.Email.Type type = SharedContact.Email.Type.HOME;
+
+              switch (email.getType()) {
+                case HOME:   type = SharedContact.Email.Type.HOME;   break;
+                case WORK:   type = SharedContact.Email.Type.WORK;   break;
+                case MOBILE: type = SharedContact.Email.Type.MOBILE; break;
+                case CUSTOM: type = SharedContact.Email.Type.CUSTOM; break;
+              }
+
+              builder.withEmail(SharedContact.Email.newBuilder()
+                                                   .setLabel(email.getLabel())
+                                                   .setType(type)
+                                                   .setValue(email.getValue())
+                                                   .build());
+            }
+          }
+
+          if (contact.hasAvatar()) {
+            builder.setAvatar(createAttachmentPointer(envelope, contact.getAvatar()));
+          }
+        }
+
+      }
+
+      results.add(builder.build());
+    }
+
+    return results;
   }
 
   private OpenchatServiceAttachmentPointer createAttachmentPointer(OpenchatServiceEnvelope envelope, AttachmentPointer pointer) {
