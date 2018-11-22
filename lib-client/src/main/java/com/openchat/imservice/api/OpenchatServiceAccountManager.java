@@ -10,7 +10,6 @@ import com.openchat.protocal.state.PreKeyRecord;
 import com.openchat.protocal.state.SignedPreKeyRecord;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.crypto.ProfileCipher;
-import com.openchat.imservice.api.crypto.ProfileCipherInputStream;
 import com.openchat.imservice.api.crypto.ProfileCipherOutputStream;
 import com.openchat.imservice.api.messages.calls.TurnServerInfo;
 import com.openchat.imservice.api.messages.multidevice.DeviceInfo;
@@ -19,18 +18,15 @@ import com.openchat.imservice.api.push.SignedPreKeyEntity;
 import com.openchat.imservice.api.util.CredentialsProvider;
 import com.openchat.imservice.api.util.StreamDetails;
 import com.openchat.imservice.internal.configuration.OpenchatServiceConfiguration;
-import com.openchat.imservice.internal.crypto.PaddingInputStream;
 import com.openchat.imservice.internal.crypto.ProvisioningCipher;
 import com.openchat.imservice.internal.push.ProfileAvatarData;
 import com.openchat.imservice.internal.push.PushServiceSocket;
-import com.openchat.imservice.internal.configuration.OpenchatServiceUrl;
 import com.openchat.imservice.internal.push.http.ProfileCipherOutputStreamFactory;
 import com.openchat.imservice.internal.util.Base64;
 import com.openchat.imservice.internal.util.StaticCredentialsProvider;
 import com.openchat.imservice.internal.util.Util;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
@@ -64,6 +60,14 @@ public class OpenchatServiceAccountManager {
     this.userAgent         = userAgent;
   }
 
+  public void setPin(Optional<String> pin) throws IOException {
+    if (pin.isPresent()) {
+      this.pushServiceSocket.setPin(pin.get());
+    } else {
+      this.pushServiceSocket.removePin();
+    }
+  }
+
   
   public void setGcmId(Optional<String> gcmRegistrationId) throws IOException {
     if (gcmRegistrationId.isPresent()) {
@@ -84,19 +88,19 @@ public class OpenchatServiceAccountManager {
   }
 
   
-  public void verifyAccountWithCode(String verificationCode, String openchatingKey, int openchatProtocolRegistrationId, boolean fetchesMessages)
+  public void verifyAccountWithCode(String verificationCode, String openchatingKey, int openchatProtocolRegistrationId, boolean fetchesMessages, String pin)
       throws IOException
   {
     this.pushServiceSocket.verifyAccountCode(verificationCode, openchatingKey,
                                              openchatProtocolRegistrationId,
-                                             fetchesMessages);
+                                             fetchesMessages, pin);
   }
 
   
-  public void setAccountAttributes(String openchatingKey, int openchatProtocolRegistrationId, boolean fetchesMessages)
+  public void setAccountAttributes(String openchatingKey, int openchatProtocolRegistrationId, boolean fetchesMessages, String pin)
       throws IOException
   {
-    this.pushServiceSocket.setAccountAttributes(openchatingKey, openchatProtocolRegistrationId, fetchesMessages);
+    this.pushServiceSocket.setAccountAttributes(openchatingKey, openchatProtocolRegistrationId, fetchesMessages, pin);
   }
 
   
@@ -145,10 +149,6 @@ public class OpenchatServiceAccountManager {
     }
 
     return activeTokens;
-  }
-
-  public String getAccountVerificationToken() throws IOException {
-    return this.pushServiceSocket.getAccountVerificationToken();
   }
 
   public String getNewDeviceVerificationCode() throws IOException {
