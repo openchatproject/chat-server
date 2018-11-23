@@ -307,56 +307,55 @@ public class OpenchatServiceCipher {
                                                          .setType(type)
                                                          .build());
         }
+      }
 
-        if (contact.getNumberCount() > 0) {
-          for (DataMessage.Contact.Phone phone : contact.getNumberList()) {
-            SharedContact.Phone.Type type = SharedContact.Phone.Type.HOME;
+      if (contact.getNumberCount() > 0) {
+        for (DataMessage.Contact.Phone phone : contact.getNumberList()) {
+          SharedContact.Phone.Type type = SharedContact.Phone.Type.HOME;
 
-            switch (phone.getType()) {
-              case HOME:   type = SharedContact.Phone.Type.HOME;   break;
-              case WORK:   type = SharedContact.Phone.Type.WORK;   break;
-              case MOBILE: type = SharedContact.Phone.Type.MOBILE; break;
-              case CUSTOM: type = SharedContact.Phone.Type.CUSTOM; break;
-            }
-
-            builder.withPhone(SharedContact.Phone.newBuilder()
-                                                 .setLabel(phone.getLabel())
-                                                 .setType(type)
-                                                 .setValue(phone.getValue())
-                                                 .build());
+          switch (phone.getType()) {
+            case HOME:   type = SharedContact.Phone.Type.HOME;   break;
+            case WORK:   type = SharedContact.Phone.Type.WORK;   break;
+            case MOBILE: type = SharedContact.Phone.Type.MOBILE; break;
+            case CUSTOM: type = SharedContact.Phone.Type.CUSTOM; break;
           }
 
-          if (contact.getEmailCount() > 0) {
-            for (DataMessage.Contact.Email email : contact.getEmailList()) {
-              SharedContact.Email.Type type = SharedContact.Email.Type.HOME;
-
-              switch (email.getType()) {
-                case HOME:   type = SharedContact.Email.Type.HOME;   break;
-                case WORK:   type = SharedContact.Email.Type.WORK;   break;
-                case MOBILE: type = SharedContact.Email.Type.MOBILE; break;
-                case CUSTOM: type = SharedContact.Email.Type.CUSTOM; break;
-              }
-
-              builder.withEmail(SharedContact.Email.newBuilder()
-                                                   .setLabel(email.getLabel())
-                                                   .setType(type)
-                                                   .setValue(email.getValue())
-                                                   .build());
-            }
-          }
-
-          if (contact.hasAvatar()) {
-            builder.setAvatar(SharedContact.Avatar.newBuilder()
-                                                  .withAttachment(createAttachmentPointer(envelope, contact.getAvatar().getAvatar()))
-                                                  .withProfileFlag(contact.getAvatar().getIsProfile())
-                                                  .build());
-          }
-
-          if (contact.hasOrganization()) {
-            builder.withOrganization(contact.getOrganization());
-          }
+          builder.withPhone(SharedContact.Phone.newBuilder()
+                                               .setLabel(phone.getLabel())
+                                               .setType(type)
+                                               .setValue(phone.getValue())
+                                               .build());
         }
+      }
 
+      if (contact.getEmailCount() > 0) {
+        for (DataMessage.Contact.Email email : contact.getEmailList()) {
+          SharedContact.Email.Type type = SharedContact.Email.Type.HOME;
+
+          switch (email.getType()) {
+            case HOME:   type = SharedContact.Email.Type.HOME;   break;
+            case WORK:   type = SharedContact.Email.Type.WORK;   break;
+            case MOBILE: type = SharedContact.Email.Type.MOBILE; break;
+            case CUSTOM: type = SharedContact.Email.Type.CUSTOM; break;
+          }
+
+          builder.withEmail(SharedContact.Email.newBuilder()
+                                               .setLabel(email.getLabel())
+                                               .setType(type)
+                                               .setValue(email.getValue())
+                                               .build());
+        }
+      }
+
+      if (contact.hasAvatar()) {
+        builder.setAvatar(SharedContact.Avatar.newBuilder()
+                                              .withAttachment(createAttachmentPointer(envelope, contact.getAvatar().getAvatar()))
+                                              .withProfileFlag(contact.getAvatar().getIsProfile())
+                                              .build());
+      }
+
+      if (contact.hasOrganization()) {
+        builder.withOrganization(contact.getOrganization());
       }
 
       results.add(builder.build());

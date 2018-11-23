@@ -550,6 +550,8 @@ public class OpenchatServiceMessageSender {
           }
 
           if (phone.getLabel().isPresent()) phoneBuilder.setLabel(phone.getLabel().get());
+
+          contactBuilder.addNumber(phoneBuilder);
         }
       }
 
