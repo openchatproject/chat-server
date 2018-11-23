@@ -7768,9 +7768,9 @@ public final class OpenchatServiceProtos {
       
       boolean hasAvatar();
       
-      com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer getAvatar();
+      com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar getAvatar();
       
-      com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder getAvatarOrBuilder();
+      com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.AvatarOrBuilder getAvatarOrBuilder();
     }
     
     public static final class Contact extends
@@ -7858,11 +7858,11 @@ public final class OpenchatServiceProtos {
                 break;
               }
               case 50: {
-                com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder subBuilder = null;
+                com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar.Builder subBuilder = null;
                 if (((bitField0_ & 0x00000002) == 0x00000002)) {
                   subBuilder = avatar_.toBuilder();
                 }
-                avatar_ = input.readMessage(com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.PARSER, extensionRegistry);
+                avatar_ = input.readMessage(com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar.PARSER, extensionRegistry);
                 if (subBuilder != null) {
                   subBuilder.mergeFrom(avatar_);
                   avatar_ = subBuilder.buildPartial();
@@ -11787,6 +11787,534 @@ public final class OpenchatServiceProtos {
 
       }
 
+      public interface AvatarOrBuilder
+          extends com.google.protobuf.MessageOrBuilder {
+
+        
+        boolean hasAvatar();
+        
+        com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer getAvatar();
+        
+        com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder getAvatarOrBuilder();
+
+        
+        boolean hasIsProfile();
+        
+        boolean getIsProfile();
+      }
+      
+      public static final class Avatar extends
+          com.google.protobuf.GeneratedMessage
+          implements AvatarOrBuilder {
+        private Avatar(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+          super(builder);
+          this.unknownFields = builder.getUnknownFields();
+        }
+        private Avatar(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+        private static final Avatar defaultInstance;
+        public static Avatar getDefaultInstance() {
+          return defaultInstance;
+        }
+
+        public Avatar getDefaultInstanceForType() {
+          return defaultInstance;
+        }
+
+        private final com.google.protobuf.UnknownFieldSet unknownFields;
+        @java.lang.Override
+        public final com.google.protobuf.UnknownFieldSet
+            getUnknownFields() {
+          return this.unknownFields;
+        }
+        private Avatar(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          initFields();
+          int mutable_bitField0_ = 0;
+          com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+              com.google.protobuf.UnknownFieldSet.newBuilder();
+          try {
+            boolean done = false;
+            while (!done) {
+              int tag = input.readTag();
+              switch (tag) {
+                case 0:
+                  done = true;
+                  break;
+                default: {
+                  if (!parseUnknownField(input, unknownFields,
+                                         extensionRegistry, tag)) {
+                    done = true;
+                  }
+                  break;
+                }
+                case 10: {
+                  com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder subBuilder = null;
+                  if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                    subBuilder = avatar_.toBuilder();
+                  }
+                  avatar_ = input.readMessage(com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.PARSER, extensionRegistry);
+                  if (subBuilder != null) {
+                    subBuilder.mergeFrom(avatar_);
+                    avatar_ = subBuilder.buildPartial();
+                  }
+                  bitField0_ |= 0x00000001;
+                  break;
+                }
+                case 16: {
+                  bitField0_ |= 0x00000002;
+                  isProfile_ = input.readBool();
+                  break;
+                }
+              }
+            }
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.setUnfinishedMessage(this);
+          } catch (java.io.IOException e) {
+            throw new com.google.protobuf.InvalidProtocolBufferException(
+                e.getMessage()).setUnfinishedMessage(this);
+          } finally {
+            this.unknownFields = unknownFields.build();
+            makeExtensionsImmutable();
+          }
+        }
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_DataMessage_Contact_Avatar_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_DataMessage_Contact_Avatar_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar.class, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar.Builder.class);
+        }
+
+        public static com.google.protobuf.Parser<Avatar> PARSER =
+            new com.google.protobuf.AbstractParser<Avatar>() {
+          public Avatar parsePartialFrom(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
+            return new Avatar(input, extensionRegistry);
+          }
+        };
+
+        @java.lang.Override
+        public com.google.protobuf.Parser<Avatar> getParserForType() {
+          return PARSER;
+        }
+
+        private int bitField0_;
+        public static final int AVATAR_FIELD_NUMBER = 1;
+        private com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer avatar_;
+        
+        public boolean hasAvatar() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer getAvatar() {
+          return avatar_;
+        }
+        
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder getAvatarOrBuilder() {
+          return avatar_;
+        }
+
+        public static final int ISPROFILE_FIELD_NUMBER = 2;
+        private boolean isProfile_;
+        
+        public boolean hasIsProfile() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        
+        public boolean getIsProfile() {
+          return isProfile_;
+        }
+
+        private void initFields() {
+          avatar_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance();
+          isProfile_ = false;
+        }
+        private byte memoizedIsInitialized = -1;
+        public final boolean isInitialized() {
+          byte isInitialized = memoizedIsInitialized;
+          if (isInitialized != -1) return isInitialized == 1;
+
+          memoizedIsInitialized = 1;
+          return true;
+        }
+
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                            throws java.io.IOException {
+          getSerializedSize();
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            output.writeMessage(1, avatar_);
+          }
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            output.writeBool(2, isProfile_);
+          }
+          getUnknownFields().writeTo(output);
+        }
+
+        private int memoizedSerializedSize = -1;
+        public int getSerializedSize() {
+          int size = memoizedSerializedSize;
+          if (size != -1) return size;
+
+          size = 0;
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            size += com.google.protobuf.CodedOutputStream
+              .computeMessageSize(1, avatar_);
+          }
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            size += com.google.protobuf.CodedOutputStream
+              .computeBoolSize(2, isProfile_);
+          }
+          size += getUnknownFields().getSerializedSize();
+          memoizedSerializedSize = size;
+          return size;
+        }
+
+        private static final long serialVersionUID = 0L;
+        @java.lang.Override
+        protected java.lang.Object writeReplace()
+            throws java.io.ObjectStreamException {
+          return super.writeReplace();
+        }
+
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar parseFrom(
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return PARSER.parseFrom(data);
+        }
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return PARSER.parseFrom(data, extensionRegistry);
+        }
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar parseFrom(byte[] data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return PARSER.parseFrom(data);
+        }
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return PARSER.parseFrom(data, extensionRegistry);
+        }
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar parseFrom(java.io.InputStream input)
+            throws java.io.IOException {
+          return PARSER.parseFrom(input);
+        }
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          return PARSER.parseFrom(input, extensionRegistry);
+        }
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar parseDelimitedFrom(java.io.InputStream input)
+            throws java.io.IOException {
+          return PARSER.parseDelimitedFrom(input);
+        }
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          return PARSER.parseDelimitedFrom(input, extensionRegistry);
+        }
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar parseFrom(
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
+          return PARSER.parseFrom(input);
+        }
+        public static com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          return PARSER.parseFrom(input, extensionRegistry);
+        }
+
+        public static Builder newBuilder() { return Builder.create(); }
+        public Builder newBuilderForType() { return newBuilder(); }
+        public static Builder newBuilder(com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar prototype) {
+          return newBuilder().mergeFrom(prototype);
+        }
+        public Builder toBuilder() { return newBuilder(this); }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+            com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+          Builder builder = new Builder(parent);
+          return builder;
+        }
+        
+        public static final class Builder extends
+            com.google.protobuf.GeneratedMessage.Builder<Builder>
+           implements com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.AvatarOrBuilder {
+          public static final com.google.protobuf.Descriptors.Descriptor
+              getDescriptor() {
+            return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_DataMessage_Contact_Avatar_descriptor;
+          }
+
+          protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+              internalGetFieldAccessorTable() {
+            return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_DataMessage_Contact_Avatar_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                    com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar.class, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar.Builder.class);
+          }
+
+          private Builder() {
+            maybeForceBuilderInitialization();
+          }
+
+          private Builder(
+              com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+            super(parent);
+            maybeForceBuilderInitialization();
+          }
+          private void maybeForceBuilderInitialization() {
+            if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+              getAvatarFieldBuilder();
+            }
+          }
+          private static Builder create() {
+            return new Builder();
+          }
+
+          public Builder clear() {
+            super.clear();
+            if (avatarBuilder_ == null) {
+              avatar_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance();
+            } else {
+              avatarBuilder_.clear();
+            }
+            bitField0_ = (bitField0_ & ~0x00000001);
+            isProfile_ = false;
+            bitField0_ = (bitField0_ & ~0x00000002);
+            return this;
+          }
+
+          public Builder clone() {
+            return create().mergeFrom(buildPartial());
+          }
+
+          public com.google.protobuf.Descriptors.Descriptor
+              getDescriptorForType() {
+            return com.openchat.imservice.internal.push.OpenchatServiceProtos.internal_static_openchatservice_DataMessage_Contact_Avatar_descriptor;
+          }
+
+          public com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar getDefaultInstanceForType() {
+            return com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar.getDefaultInstance();
+          }
+
+          public com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar build() {
+            com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar result = buildPartial();
+            if (!result.isInitialized()) {
+              throw newUninitializedMessageException(result);
+            }
+            return result;
+          }
+
+          public com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar buildPartial() {
+            com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar result = new com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar(this);
+            int from_bitField0_ = bitField0_;
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+              to_bitField0_ |= 0x00000001;
+            }
+            if (avatarBuilder_ == null) {
+              result.avatar_ = avatar_;
+            } else {
+              result.avatar_ = avatarBuilder_.build();
+            }
+            if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+              to_bitField0_ |= 0x00000002;
+            }
+            result.isProfile_ = isProfile_;
+            result.bitField0_ = to_bitField0_;
+            onBuilt();
+            return result;
+          }
+
+          public Builder mergeFrom(com.google.protobuf.Message other) {
+            if (other instanceof com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar) {
+              return mergeFrom((com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar)other);
+            } else {
+              super.mergeFrom(other);
+              return this;
+            }
+          }
+
+          public Builder mergeFrom(com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar other) {
+            if (other == com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar.getDefaultInstance()) return this;
+            if (other.hasAvatar()) {
+              mergeAvatar(other.getAvatar());
+            }
+            if (other.hasIsProfile()) {
+              setIsProfile(other.getIsProfile());
+            }
+            this.mergeUnknownFields(other.getUnknownFields());
+            return this;
+          }
+
+          public final boolean isInitialized() {
+            return true;
+          }
+
+          public Builder mergeFrom(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws java.io.IOException {
+            com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar parsedMessage = null;
+            try {
+              parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+              parsedMessage = (com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar) e.getUnfinishedMessage();
+              throw e;
+            } finally {
+              if (parsedMessage != null) {
+                mergeFrom(parsedMessage);
+              }
+            }
+            return this;
+          }
+          private int bitField0_;
+
+          private com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer avatar_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance();
+          private com.google.protobuf.SingleFieldBuilder<
+              com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder> avatarBuilder_;
+          
+          public boolean hasAvatar() {
+            return ((bitField0_ & 0x00000001) == 0x00000001);
+          }
+          
+          public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer getAvatar() {
+            if (avatarBuilder_ == null) {
+              return avatar_;
+            } else {
+              return avatarBuilder_.getMessage();
+            }
+          }
+          
+          public Builder setAvatar(com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer value) {
+            if (avatarBuilder_ == null) {
+              if (value == null) {
+                throw new NullPointerException();
+              }
+              avatar_ = value;
+              onChanged();
+            } else {
+              avatarBuilder_.setMessage(value);
+            }
+            bitField0_ |= 0x00000001;
+            return this;
+          }
+          
+          public Builder setAvatar(
+              com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder builderForValue) {
+            if (avatarBuilder_ == null) {
+              avatar_ = builderForValue.build();
+              onChanged();
+            } else {
+              avatarBuilder_.setMessage(builderForValue.build());
+            }
+            bitField0_ |= 0x00000001;
+            return this;
+          }
+          
+          public Builder mergeAvatar(com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer value) {
+            if (avatarBuilder_ == null) {
+              if (((bitField0_ & 0x00000001) == 0x00000001) &&
+                  avatar_ != com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance()) {
+                avatar_ =
+                  com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.newBuilder(avatar_).mergeFrom(value).buildPartial();
+              } else {
+                avatar_ = value;
+              }
+              onChanged();
+            } else {
+              avatarBuilder_.mergeFrom(value);
+            }
+            bitField0_ |= 0x00000001;
+            return this;
+          }
+          
+          public Builder clearAvatar() {
+            if (avatarBuilder_ == null) {
+              avatar_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance();
+              onChanged();
+            } else {
+              avatarBuilder_.clear();
+            }
+            bitField0_ = (bitField0_ & ~0x00000001);
+            return this;
+          }
+          
+          public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder getAvatarBuilder() {
+            bitField0_ |= 0x00000001;
+            onChanged();
+            return getAvatarFieldBuilder().getBuilder();
+          }
+          
+          public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder getAvatarOrBuilder() {
+            if (avatarBuilder_ != null) {
+              return avatarBuilder_.getMessageOrBuilder();
+            } else {
+              return avatar_;
+            }
+          }
+          
+          private com.google.protobuf.SingleFieldBuilder<
+              com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder> 
+              getAvatarFieldBuilder() {
+            if (avatarBuilder_ == null) {
+              avatarBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+                  com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder>(
+                      avatar_,
+                      getParentForChildren(),
+                      isClean());
+              avatar_ = null;
+            }
+            return avatarBuilder_;
+          }
+
+          private boolean isProfile_ ;
+          
+          public boolean hasIsProfile() {
+            return ((bitField0_ & 0x00000002) == 0x00000002);
+          }
+          
+          public boolean getIsProfile() {
+            return isProfile_;
+          }
+          
+          public Builder setIsProfile(boolean value) {
+            bitField0_ |= 0x00000002;
+            isProfile_ = value;
+            onChanged();
+            return this;
+          }
+          
+          public Builder clearIsProfile() {
+            bitField0_ = (bitField0_ & ~0x00000002);
+            isProfile_ = false;
+            onChanged();
+            return this;
+          }
+
+        }
+
+        static {
+          defaultInstance = new Avatar(true);
+          defaultInstance.initFields();
+        }
+
+      }
+
       private int bitField0_;
       public static final int NAME_FIELD_NUMBER = 1;
       private com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Name name_;
@@ -11879,17 +12407,17 @@ public final class OpenchatServiceProtos {
       }
 
       public static final int AVATAR_FIELD_NUMBER = 6;
-      private com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer avatar_;
+      private com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar avatar_;
       
       public boolean hasAvatar() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       
-      public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer getAvatar() {
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar getAvatar() {
         return avatar_;
       }
       
-      public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder getAvatarOrBuilder() {
+      public com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.AvatarOrBuilder getAvatarOrBuilder() {
         return avatar_;
       }
 
@@ -11898,7 +12426,7 @@ public final class OpenchatServiceProtos {
         number_ = java.util.Collections.emptyList();
         email_ = java.util.Collections.emptyList();
         address_ = java.util.Collections.emptyList();
-        avatar_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance();
+        avatar_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar.getDefaultInstance();
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -12099,7 +12627,7 @@ public final class OpenchatServiceProtos {
             addressBuilder_.clear();
           }
           if (avatarBuilder_ == null) {
-            avatar_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance();
+            avatar_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar.getDefaultInstance();
           } else {
             avatarBuilder_.clear();
           }
@@ -13009,15 +13537,15 @@ public final class OpenchatServiceProtos {
           return addressBuilder_;
         }
 
-        private com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer avatar_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance();
+        private com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar avatar_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar.getDefaultInstance();
         private com.google.protobuf.SingleFieldBuilder<
-            com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder> avatarBuilder_;
+            com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.AvatarOrBuilder> avatarBuilder_;
         
         public boolean hasAvatar() {
           return ((bitField0_ & 0x00000010) == 0x00000010);
         }
         
-        public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer getAvatar() {
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar getAvatar() {
           if (avatarBuilder_ == null) {
             return avatar_;
           } else {
@@ -13025,7 +13553,7 @@ public final class OpenchatServiceProtos {
           }
         }
         
-        public Builder setAvatar(com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer value) {
+        public Builder setAvatar(com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar value) {
           if (avatarBuilder_ == null) {
             if (value == null) {
               throw new NullPointerException();
@@ -13040,7 +13568,7 @@ public final class OpenchatServiceProtos {
         }
         
         public Builder setAvatar(
-            com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder builderForValue) {
+            com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar.Builder builderForValue) {
           if (avatarBuilder_ == null) {
             avatar_ = builderForValue.build();
             onChanged();
@@ -13051,12 +13579,12 @@ public final class OpenchatServiceProtos {
           return this;
         }
         
-        public Builder mergeAvatar(com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer value) {
+        public Builder mergeAvatar(com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar value) {
           if (avatarBuilder_ == null) {
             if (((bitField0_ & 0x00000010) == 0x00000010) &&
-                avatar_ != com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance()) {
+                avatar_ != com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar.getDefaultInstance()) {
               avatar_ =
-                com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.newBuilder(avatar_).mergeFrom(value).buildPartial();
+                com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar.newBuilder(avatar_).mergeFrom(value).buildPartial();
             } else {
               avatar_ = value;
             }
@@ -13070,7 +13598,7 @@ public final class OpenchatServiceProtos {
         
         public Builder clearAvatar() {
           if (avatarBuilder_ == null) {
-            avatar_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.getDefaultInstance();
+            avatar_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar.getDefaultInstance();
             onChanged();
           } else {
             avatarBuilder_.clear();
@@ -13079,13 +13607,13 @@ public final class OpenchatServiceProtos {
           return this;
         }
         
-        public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder getAvatarBuilder() {
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar.Builder getAvatarBuilder() {
           bitField0_ |= 0x00000010;
           onChanged();
           return getAvatarFieldBuilder().getBuilder();
         }
         
-        public com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder getAvatarOrBuilder() {
+        public com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.AvatarOrBuilder getAvatarOrBuilder() {
           if (avatarBuilder_ != null) {
             return avatarBuilder_.getMessageOrBuilder();
           } else {
@@ -13094,11 +13622,11 @@ public final class OpenchatServiceProtos {
         }
         
         private com.google.protobuf.SingleFieldBuilder<
-            com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder> 
+            com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.AvatarOrBuilder> 
             getAvatarFieldBuilder() {
           if (avatarBuilder_ == null) {
             avatarBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-                com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointerOrBuilder>(
+                com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.Avatar.Builder, com.openchat.imservice.internal.push.OpenchatServiceProtos.DataMessage.Contact.AvatarOrBuilder>(
                     avatar_,
                     getParentForChildren(),
                     isClean());
@@ -26746,6 +27274,11 @@ public final class OpenchatServiceProtos {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_openchatservice_DataMessage_Contact_PostalAddress_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_openchatservice_DataMessage_Contact_Avatar_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_openchatservice_DataMessage_Contact_Avatar_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_openchatservice_NullMessage_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -26940,6 +27473,12 @@ public final class OpenchatServiceProtos {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_openchatservice_DataMessage_Contact_PostalAddress_descriptor,
               new java.lang.String[] { "Type", "Label", "Street", "Pobox", "Neighborhood", "City", "Region", "Postcode", "Country", });
+          internal_static_openchatservice_DataMessage_Contact_Avatar_descriptor =
+            internal_static_openchatservice_DataMessage_Contact_descriptor.getNestedTypes().get(4);
+          internal_static_openchatservice_DataMessage_Contact_Avatar_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_openchatservice_DataMessage_Contact_Avatar_descriptor,
+              new java.lang.String[] { "Avatar", "IsProfile", });
           internal_static_openchatservice_NullMessage_descriptor =
             getDescriptor().getMessageTypes().get(4);
           internal_static_openchatservice_NullMessage_fieldAccessorTable = new

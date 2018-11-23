@@ -553,7 +553,9 @@ public class OpenchatServiceMessageSender {
       }
 
       if (contact.getAvatar().isPresent()) {
-        contactBuilder.setAvatar(createAttachmentPointer(contact.getAvatar().get().asStream()));
+        contactBuilder.setAvatar(DataMessage.Contact.Avatar.newBuilder()
+                                                           .setAvatar(createAttachmentPointer(contact.getAvatar().get().getAttachment().asStream()))
+                                                           .setIsProfile(contact.getAvatar().get().isProfile()));
       }
 
       results.add(contactBuilder.build());
