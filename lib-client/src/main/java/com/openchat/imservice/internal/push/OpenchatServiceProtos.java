@@ -26064,6 +26064,14 @@ public final class OpenchatServiceProtos {
     boolean hasExpireTimer();
     
     int getExpireTimer();
+
+    
+    boolean hasColor();
+    
+    java.lang.String getColor();
+    
+    com.google.protobuf.ByteString
+        getColorBytes();
   }
   
   public static final class GroupDetails extends
@@ -26152,6 +26160,11 @@ public final class OpenchatServiceProtos {
             case 48: {
               bitField0_ |= 0x00000010;
               expireTimer_ = input.readUInt32();
+              break;
+            }
+            case 58: {
+              bitField0_ |= 0x00000020;
+              color_ = input.readBytes();
               break;
             }
           }
@@ -26800,6 +26813,42 @@ public final class OpenchatServiceProtos {
       return expireTimer_;
     }
 
+    public static final int COLOR_FIELD_NUMBER = 7;
+    private java.lang.Object color_;
+    
+    public boolean hasColor() {
+      return ((bitField0_ & 0x00000020) == 0x00000020);
+    }
+    
+    public java.lang.String getColor() {
+      java.lang.Object ref = color_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          color_ = s;
+        }
+        return s;
+      }
+    }
+    
+    public com.google.protobuf.ByteString
+        getColorBytes() {
+      java.lang.Object ref = color_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        color_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       id_ = com.google.protobuf.ByteString.EMPTY;
       name_ = "";
@@ -26807,6 +26856,7 @@ public final class OpenchatServiceProtos {
       avatar_ = com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupDetails.Avatar.getDefaultInstance();
       active_ = true;
       expireTimer_ = 0;
+      color_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -26837,6 +26887,9 @@ public final class OpenchatServiceProtos {
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeUInt32(6, expireTimer_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeBytes(7, getColorBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -26875,6 +26928,10 @@ public final class OpenchatServiceProtos {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt32Size(6, expireTimer_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(7, getColorBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -27006,6 +27063,8 @@ public final class OpenchatServiceProtos {
         bitField0_ = (bitField0_ & ~0x00000010);
         expireTimer_ = 0;
         bitField0_ = (bitField0_ & ~0x00000020);
+        color_ = "";
+        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
 
@@ -27064,6 +27123,10 @@ public final class OpenchatServiceProtos {
           to_bitField0_ |= 0x00000010;
         }
         result.expireTimer_ = expireTimer_;
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.color_ = color_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -27106,6 +27169,11 @@ public final class OpenchatServiceProtos {
         }
         if (other.hasExpireTimer()) {
           setExpireTimer(other.getExpireTimer());
+        }
+        if (other.hasColor()) {
+          bitField0_ |= 0x00000040;
+          color_ = other.color_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -27438,6 +27506,67 @@ public final class OpenchatServiceProtos {
       public Builder clearExpireTimer() {
         bitField0_ = (bitField0_ & ~0x00000020);
         expireTimer_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object color_ = "";
+      
+      public boolean hasColor() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      
+      public java.lang.String getColor() {
+        java.lang.Object ref = color_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          color_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      
+      public com.google.protobuf.ByteString
+          getColorBytes() {
+        java.lang.Object ref = color_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          color_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      
+      public Builder setColor(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        color_ = value;
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearColor() {
+        bitField0_ = (bitField0_ & ~0x00000040);
+        color_ = getDefaultInstance().getColor();
+        onChanged();
+        return this;
+      }
+      
+      public Builder setColorBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        color_ = value;
         onChanged();
         return this;
       }
@@ -27832,7 +27961,7 @@ public final class OpenchatServiceProtos {
           internal_static_openchatservice_GroupDetails_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_openchatservice_GroupDetails_descriptor,
-              new java.lang.String[] { "Id", "Name", "Members", "Avatar", "Active", "ExpireTimer", });
+              new java.lang.String[] { "Id", "Name", "Members", "Avatar", "Active", "ExpireTimer", "Color", });
           internal_static_openchatservice_GroupDetails_Avatar_descriptor =
             internal_static_openchatservice_GroupDetails_descriptor.getNestedTypes().get(0);
           internal_static_openchatservice_GroupDetails_Avatar_fieldAccessorTable = new
