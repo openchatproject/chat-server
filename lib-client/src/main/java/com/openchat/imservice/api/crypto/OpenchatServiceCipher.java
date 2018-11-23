@@ -277,6 +277,7 @@ public class OpenchatServiceCipher {
     for (DataMessage.Contact contact : content.getContactList()) {
       SharedContact.Builder builder = SharedContact.newBuilder()
                                                    .setName(SharedContact.Name.newBuilder()
+                                                                              .setDisplay(contact.getName().getDisplayName())
                                                                               .setFamily(contact.getName().getFamilyName())
                                                                               .setGiven(contact.getName().getGivenName())
                                                                               .setMiddle(contact.getName().getMiddleName())
@@ -349,6 +350,10 @@ public class OpenchatServiceCipher {
                                                   .withAttachment(createAttachmentPointer(envelope, contact.getAvatar().getAvatar()))
                                                   .withProfileFlag(contact.getAvatar().getIsProfile())
                                                   .build());
+          }
+
+          if (contact.hasOrganization()) {
+            builder.withOrganization(contact.getOrganization());
           }
         }
 
