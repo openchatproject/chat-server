@@ -2,16 +2,12 @@ package com.openchat.imservice.api;
 
 import com.google.protobuf.ByteString;
 
-import org.spongycastle.crypto.InvalidCipherTextException;
-import com.openchat.curve25519.Curve25519;
-import com.openchat.curve25519.Curve25519KeyPair;
 import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.IdentityKeyPair;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.ecc.ECPublicKey;
 import com.openchat.protocal.state.PreKeyRecord;
 import com.openchat.protocal.state.SignedPreKeyRecord;
-import com.openchat.protocal.util.Pair;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.crypto.ProfileCipher;
 import com.openchat.imservice.api.crypto.ProfileCipherOutputStream;
@@ -22,16 +18,6 @@ import com.openchat.imservice.api.push.SignedPreKeyEntity;
 import com.openchat.imservice.api.util.CredentialsProvider;
 import com.openchat.imservice.api.util.StreamDetails;
 import com.openchat.imservice.internal.configuration.OpenchatServiceConfiguration;
-import com.openchat.imservice.internal.contacts.crypto.ContactDiscoveryCipher;
-import com.openchat.imservice.internal.contacts.crypto.Quote;
-import com.openchat.imservice.internal.contacts.crypto.RemoteAttestation;
-import com.openchat.imservice.internal.contacts.crypto.RemoteAttestationKeys;
-import com.openchat.imservice.internal.contacts.crypto.UnauthenticatedQuoteException;
-import com.openchat.imservice.internal.contacts.crypto.UnauthenticatedResponseException;
-import com.openchat.imservice.internal.contacts.entities.DiscoveryRequest;
-import com.openchat.imservice.internal.contacts.entities.DiscoveryResponse;
-import com.openchat.imservice.internal.contacts.entities.RemoteAttestationRequest;
-import com.openchat.imservice.internal.contacts.entities.RemoteAttestationResponse;
 import com.openchat.imservice.internal.crypto.ProvisioningCipher;
 import com.openchat.imservice.internal.push.ProfileAvatarData;
 import com.openchat.imservice.internal.push.PushServiceSocket;
@@ -41,15 +27,10 @@ import com.openchat.imservice.internal.util.StaticCredentialsProvider;
 import com.openchat.imservice.internal.util.Util;
 
 import java.io.IOException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -168,51 +149,6 @@ public class OpenchatServiceAccountManager {
     }
 
     return activeTokens;
-  }
-
-  public List<String> getRegisteredUsers(KeyStore iasKeyStore, Set<String> e164numbers, String mrenclave)
-      throws IOException, Quote.InvalidQuoteFormatException, UnauthenticatedQuoteException, SignatureException, UnauthenticatedResponseException
-  {
-    try {
-      String            authorizationToken = this.pushServiceSocket.getContactDiscoveryAuthorization();
-      Curve25519        curve              = Curve25519.getInstance(Curve25519.BEST);
-      Curve25519KeyPair keyPair            = curve.generateKeyPair();
-
-      ContactDiscoveryCipher                        cipher              = new ContactDiscoveryCipher();
-      RemoteAttestationRequest                      attestationRequest  = new RemoteAttestationRequest(keyPair.getPublicKey());
-      Pair<RemoteAttestationResponse, List<String>> attestationResponse = this.pushServiceSocket.getContactDiscoveryRemoteAttestation(authorizationToken, attestationRequest, mrenclave);
-
-      RemoteAttestationKeys keys      = new RemoteAttestationKeys(keyPair, attestationResponse.first().getServerEphemeralPublic(), attestationResponse.first().getServerStaticPublic());
-      Quote                 quote     = new Quote(attestationResponse.first().getQuote());
-      byte[]                requestId = cipher.getRequestId(keys, attestationResponse.first());
-
-      cipher.verifyServerQuote(quote, attestationResponse.first().getServerStaticPublic(), mrenclave);
-      cipher.verifyIasSignature(iasKeyStore, attestationResponse.first().getCertificates(), attestationResponse.first().getSignatureBody(), attestationResponse.first().getSignature(), quote);
-
-      RemoteAttestation remoteAttestation = new RemoteAttestation(requestId, keys);
-      List<String>      addressBook       = new LinkedList<>();
-
-      for (String e164number : e164numbers) {
-        addressBook.add(e164number.substring(1));
-      }
-
-      DiscoveryRequest  request  = cipher.createDiscoveryRequest(addressBook, remoteAttestation);
-      DiscoveryResponse response = this.pushServiceSocket.getContactDiscoveryRegisteredUsers(authorizationToken, request, attestationResponse.second(), mrenclave);
-      byte[]            data     = cipher.getDiscoveryResponseData(response, remoteAttestation);
-
-      Iterator<String> addressBookIterator = addressBook.iterator();
-      List<String>     results             = new LinkedList<>();
-
-      for (byte aData : data) {
-        String candidate = addressBookIterator.next();
-
-        if (aData != 0) results.add('+' + candidate);
-      }
-
-      return results;
-    } catch (InvalidCipherTextException e) {
-      throw new UnauthenticatedResponseException(e);
-    }
   }
 
   public String getNewDeviceVerificationCode() throws IOException {

@@ -2,14 +2,12 @@ package com.openchat.imservice.internal.configuration;
 
 public class OpenchatServiceConfiguration {
 
-  private final OpenchatServiceUrl[]          openchatServiceUrls;
-  private final OpenchatCdnUrl[]              openchatCdnUrls;
-  private final OpenchatContactDiscoveryUrl[] openchatContactDiscoveryUrls;
+  private final OpenchatServiceUrl[] openchatServiceUrls;
+  private final OpenchatCdnUrl[]     openchatCdnUrls;
 
-  public OpenchatServiceConfiguration(OpenchatServiceUrl[] openchatServiceUrls, OpenchatCdnUrl[] openchatCdnUrls, OpenchatContactDiscoveryUrl[] openchatContactDiscoveryUrls) {
-    this.openchatServiceUrls          = openchatServiceUrls;
-    this.openchatCdnUrls              = openchatCdnUrls;
-    this.openchatContactDiscoveryUrls = openchatContactDiscoveryUrls;
+  public OpenchatServiceConfiguration(OpenchatServiceUrl[] openchatServiceUrls, OpenchatCdnUrl[] openchatCdnUrls) {
+    this.openchatServiceUrls = openchatServiceUrls;
+    this.openchatCdnUrls     = openchatCdnUrls;
   }
 
   public OpenchatServiceUrl[] getOpenchatServiceUrls() {
@@ -18,9 +16,5 @@ public class OpenchatServiceConfiguration {
 
   public OpenchatCdnUrl[] getOpenchatCdnUrls() {
     return openchatCdnUrls;
-  }
-
-  public OpenchatContactDiscoveryUrl[] getOpenchatContactDiscoveryUrls() {
-    return openchatContactDiscoveryUrls;
   }
 }
