@@ -67,6 +67,7 @@ import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Call;
 import okhttp3.ConnectionSpec;
+import okhttp3.Credentials;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -435,13 +436,14 @@ public class PushServiceSocket {
 
   public String getContactDiscoveryAuthorization() throws IOException {
     String response = makeServiceRequest(DIRECTORY_AUTH_PATH, "GET", null);
-    return JsonUtil.fromJson(response, AuthorizationToken.class).getToken();
+    ContactDiscoveryCredentials token = JsonUtil.fromJson(response, ContactDiscoveryCredentials.class);
+    return Credentials.basic(token.getUsername(), token.getPassword());
   }
 
-  public Pair<RemoteAttestationResponse, List<String>> getContactDiscoveryRemoteAttestation(String authorizationToken, RemoteAttestationRequest request, String mrenclave)
+  public Pair<RemoteAttestationResponse, List<String>> getContactDiscoveryRemoteAttestation(String authorization, RemoteAttestationRequest request, String mrenclave)
       throws IOException
   {
-    Response     response   = makeContactDiscoveryRequest(authorizationToken, new LinkedList<String>(), "/v1/attestation/" + mrenclave, "GET", JsonUtil.toJson(request));
+    Response     response   = makeContactDiscoveryRequest(authorization, new LinkedList<String>(), "/v1/attestation/" + mrenclave, "PUT", JsonUtil.toJson(request));
     ResponseBody body       = response.body();
     List<String> rawCookies = response.headers("Set-Cookie");
     List<String> cookies    = new LinkedList<>();
@@ -467,6 +469,30 @@ public class PushServiceSocket {
     } else {
       throw new NonSuccessfulResponseCodeException("Empty response!");
     }
+  }
+
+  public void reportContactDiscoveryServiceMatch() throws IOException {
+    makeServiceRequest("/v1/directory/feedback/ok", "PUT", "");
+  }
+
+  public void reportContactDiscoveryServiceMismatch() throws IOException {
+    makeServiceRequest("/v1/directory/feedback/mismatch", "PUT", "");
+  }
+
+  public void reportContactDiscoveryServiceServerError() throws IOException {
+    makeServiceRequest("/v1/directory/feedback/server-error", "PUT", "");
+  }
+
+  public void reportContactDiscoveryServiceClientError() throws IOException {
+    makeServiceRequest("/v1/directory/feedback/client-error", "PUT", "");
+  }
+
+  public void reportContactDiscoveryServiceAttestationError() throws IOException {
+    makeServiceRequest("/v1/directory/feedback/attestation-error", "PUT", "");
+  }
+
+  public void reportContactDiscoveryServiceUnexpectedError() throws IOException {
+    makeServiceRequest("/v1/directory/feedback/unexpected-error", "PUT", "");
   }
 
   public TurnServerInfo getTurnServerInfo() throws IOException {

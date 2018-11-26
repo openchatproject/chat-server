@@ -2,7 +2,7 @@ package com.openchat.imservice.internal.contacts.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.apache.commons.codec.binary.Hex;
+import com.openchat.imservice.internal.util.Hex;
 
 public class DiscoveryResponse {
 
@@ -36,6 +36,6 @@ public class DiscoveryResponse {
   }
 
   public String toString() {
-    return "{iv: " + (iv == null ? null : Hex.encodeHexString(iv)) + ", data: " + (data == null ? null: Hex.encodeHexString(data)) + ", mac: " + (mac == null ? null :Hex.encodeHexString(mac)) + "}";
+    return "{iv: " + (iv == null ? null : Hex.toString(iv)) + ", data: " + (data == null ? null: Hex.toString(data)) + ", mac: " + (mac == null ? null : Hex.toString(mac)) + "}";
   }
 }

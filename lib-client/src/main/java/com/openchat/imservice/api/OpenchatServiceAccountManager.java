@@ -9,6 +9,7 @@ import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.IdentityKeyPair;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.ecc.ECPublicKey;
+import com.openchat.protocal.logging.Log;
 import com.openchat.protocal.state.PreKeyRecord;
 import com.openchat.protocal.state.SignedPreKeyRecord;
 import com.openchat.protocal.util.Pair;
@@ -42,7 +43,6 @@ import com.openchat.imservice.internal.util.Util;
 
 import java.io.IOException;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
@@ -57,6 +57,8 @@ import java.util.Set;
 import static com.openchat.imservice.internal.push.ProvisioningProtos.ProvisionMessage;
 
 public class OpenchatServiceAccountManager {
+
+  private static final String TAG = OpenchatServiceAccountManager.class.getSimpleName();
 
   private final PushServiceSocket pushServiceSocket;
   private final String            user;
@@ -174,13 +176,13 @@ public class OpenchatServiceAccountManager {
       throws IOException, Quote.InvalidQuoteFormatException, UnauthenticatedQuoteException, SignatureException, UnauthenticatedResponseException
   {
     try {
-      String            authorizationToken = this.pushServiceSocket.getContactDiscoveryAuthorization();
-      Curve25519        curve              = Curve25519.getInstance(Curve25519.BEST);
-      Curve25519KeyPair keyPair            = curve.generateKeyPair();
+      String            authorization = this.pushServiceSocket.getContactDiscoveryAuthorization();
+      Curve25519        curve         = Curve25519.getInstance(Curve25519.BEST);
+      Curve25519KeyPair keyPair       = curve.generateKeyPair();
 
       ContactDiscoveryCipher                        cipher              = new ContactDiscoveryCipher();
       RemoteAttestationRequest                      attestationRequest  = new RemoteAttestationRequest(keyPair.getPublicKey());
-      Pair<RemoteAttestationResponse, List<String>> attestationResponse = this.pushServiceSocket.getContactDiscoveryRemoteAttestation(authorizationToken, attestationRequest, mrenclave);
+      Pair<RemoteAttestationResponse, List<String>> attestationResponse = this.pushServiceSocket.getContactDiscoveryRemoteAttestation(authorization, attestationRequest, mrenclave);
 
       RemoteAttestationKeys keys      = new RemoteAttestationKeys(keyPair, attestationResponse.first().getServerEphemeralPublic(), attestationResponse.first().getServerStaticPublic());
       Quote                 quote     = new Quote(attestationResponse.first().getQuote());
@@ -197,7 +199,7 @@ public class OpenchatServiceAccountManager {
       }
 
       DiscoveryRequest  request  = cipher.createDiscoveryRequest(addressBook, remoteAttestation);
-      DiscoveryResponse response = this.pushServiceSocket.getContactDiscoveryRegisteredUsers(authorizationToken, request, attestationResponse.second(), mrenclave);
+      DiscoveryResponse response = this.pushServiceSocket.getContactDiscoveryRegisteredUsers(authorization, request, attestationResponse.second(), mrenclave);
       byte[]            data     = cipher.getDiscoveryResponseData(response, remoteAttestation);
 
       Iterator<String> addressBookIterator = addressBook.iterator();
@@ -212,6 +214,38 @@ public class OpenchatServiceAccountManager {
       return results;
     } catch (InvalidCipherTextException e) {
       throw new UnauthenticatedResponseException(e);
+    }
+  }
+
+  public void reportContactDiscoveryServiceMatch() {
+    try {
+      this.pushServiceSocket.reportContactDiscoveryServiceMatch();
+    } catch (IOException e) {
+      Log.w(TAG, "Request to indicate a contact discovery result match failed. Ignoring.", e);
+    }
+  }
+
+  public void reportContactDiscoveryServiceMismatch() {
+    try {
+      this.pushServiceSocket.reportContactDiscoveryServiceMismatch();
+    } catch (IOException e) {
+      Log.w(TAG, "Request to indicate a contact discovery result mismatch failed. Ignoring.", e);
+    }
+  }
+
+  public void reportContactDiscoveryServiceAttestationError() {
+    try {
+      this.pushServiceSocket.reportContactDiscoveryServiceAttestationError();
+    } catch (IOException e) {
+      Log.w(TAG, "Request to indicate a contact discovery attestation error failed. Ignoring.", e);
+    }
+  }
+
+  public void reportContactDiscoveryServiceUnexpectedError() {
+    try {
+      this.pushServiceSocket.reportContactDiscoveryServiceUnexpectedError();
+    } catch (IOException e) {
+      Log.w(TAG, "Request to indicate a contact discovery unexpected error failed. Ignoring.", e);
     }
   }
 
