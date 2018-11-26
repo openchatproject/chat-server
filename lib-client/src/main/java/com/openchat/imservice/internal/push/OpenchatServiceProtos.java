@@ -18931,6 +18931,13 @@ public final class OpenchatServiceProtos {
       
       com.google.protobuf.ByteString
           getNumbersBytes(int index);
+
+      
+      java.util.List<com.google.protobuf.ByteString> getGroupIdsList();
+      
+      int getGroupIdsCount();
+      
+      com.google.protobuf.ByteString getGroupIds(int index);
     }
     
     public static final class Blocked extends
@@ -18988,6 +18995,14 @@ public final class OpenchatServiceProtos {
                 numbers_.add(input.readBytes());
                 break;
               }
+              case 18: {
+                if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                  groupIds_ = new java.util.ArrayList<com.google.protobuf.ByteString>();
+                  mutable_bitField0_ |= 0x00000002;
+                }
+                groupIds_.add(input.readBytes());
+                break;
+              }
             }
           }
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -18998,6 +19013,9 @@ public final class OpenchatServiceProtos {
         } finally {
           if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
             numbers_ = new com.google.protobuf.UnmodifiableLazyStringList(numbers_);
+          }
+          if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+            groupIds_ = java.util.Collections.unmodifiableList(groupIds_);
           }
           this.unknownFields = unknownFields.build();
           makeExtensionsImmutable();
@@ -19051,8 +19069,25 @@ public final class OpenchatServiceProtos {
         return numbers_.getByteString(index);
       }
 
+      public static final int GROUPIDS_FIELD_NUMBER = 2;
+      private java.util.List<com.google.protobuf.ByteString> groupIds_;
+      
+      public java.util.List<com.google.protobuf.ByteString>
+          getGroupIdsList() {
+        return groupIds_;
+      }
+      
+      public int getGroupIdsCount() {
+        return groupIds_.size();
+      }
+      
+      public com.google.protobuf.ByteString getGroupIds(int index) {
+        return groupIds_.get(index);
+      }
+
       private void initFields() {
         numbers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        groupIds_ = java.util.Collections.emptyList();
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -19068,6 +19103,9 @@ public final class OpenchatServiceProtos {
         getSerializedSize();
         for (int i = 0; i < numbers_.size(); i++) {
           output.writeBytes(1, numbers_.getByteString(i));
+        }
+        for (int i = 0; i < groupIds_.size(); i++) {
+          output.writeBytes(2, groupIds_.get(i));
         }
         getUnknownFields().writeTo(output);
       }
@@ -19086,6 +19124,15 @@ public final class OpenchatServiceProtos {
           }
           size += dataSize;
           size += 1 * getNumbersList().size();
+        }
+        {
+          int dataSize = 0;
+          for (int i = 0; i < groupIds_.size(); i++) {
+            dataSize += com.google.protobuf.CodedOutputStream
+              .computeBytesSizeNoTag(groupIds_.get(i));
+          }
+          size += dataSize;
+          size += 1 * getGroupIdsList().size();
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSerializedSize = size;
@@ -19202,6 +19249,8 @@ public final class OpenchatServiceProtos {
           super.clear();
           numbers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
           bitField0_ = (bitField0_ & ~0x00000001);
+          groupIds_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
           return this;
         }
 
@@ -19235,6 +19284,11 @@ public final class OpenchatServiceProtos {
             bitField0_ = (bitField0_ & ~0x00000001);
           }
           result.numbers_ = numbers_;
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            groupIds_ = java.util.Collections.unmodifiableList(groupIds_);
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.groupIds_ = groupIds_;
           onBuilt();
           return result;
         }
@@ -19257,6 +19311,16 @@ public final class OpenchatServiceProtos {
             } else {
               ensureNumbersIsMutable();
               numbers_.addAll(other.numbers_);
+            }
+            onChanged();
+          }
+          if (!other.groupIds_.isEmpty()) {
+            if (groupIds_.isEmpty()) {
+              groupIds_ = other.groupIds_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensureGroupIdsIsMutable();
+              groupIds_.addAll(other.groupIds_);
             }
             onChanged();
           }
@@ -19357,6 +19421,63 @@ public final class OpenchatServiceProtos {
   }
   ensureNumbersIsMutable();
           numbers_.add(value);
+          onChanged();
+          return this;
+        }
+
+        private java.util.List<com.google.protobuf.ByteString> groupIds_ = java.util.Collections.emptyList();
+        private void ensureGroupIdsIsMutable() {
+          if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+            groupIds_ = new java.util.ArrayList<com.google.protobuf.ByteString>(groupIds_);
+            bitField0_ |= 0x00000002;
+           }
+        }
+        
+        public java.util.List<com.google.protobuf.ByteString>
+            getGroupIdsList() {
+          return java.util.Collections.unmodifiableList(groupIds_);
+        }
+        
+        public int getGroupIdsCount() {
+          return groupIds_.size();
+        }
+        
+        public com.google.protobuf.ByteString getGroupIds(int index) {
+          return groupIds_.get(index);
+        }
+        
+        public Builder setGroupIds(
+            int index, com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureGroupIdsIsMutable();
+          groupIds_.set(index, value);
+          onChanged();
+          return this;
+        }
+        
+        public Builder addGroupIds(com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureGroupIdsIsMutable();
+          groupIds_.add(value);
+          onChanged();
+          return this;
+        }
+        
+        public Builder addAllGroupIds(
+            java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
+          ensureGroupIdsIsMutable();
+          super.addAll(values, groupIds_);
+          onChanged();
+          return this;
+        }
+        
+        public Builder clearGroupIds() {
+          groupIds_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
           onChanged();
           return this;
         }
@@ -26072,6 +26193,11 @@ public final class OpenchatServiceProtos {
     
     com.google.protobuf.ByteString
         getColorBytes();
+
+    
+    boolean hasBlocked();
+    
+    boolean getBlocked();
   }
   
   public static final class GroupDetails extends
@@ -26165,6 +26291,11 @@ public final class OpenchatServiceProtos {
             case 58: {
               bitField0_ |= 0x00000020;
               color_ = input.readBytes();
+              break;
+            }
+            case 64: {
+              bitField0_ |= 0x00000040;
+              blocked_ = input.readBool();
               break;
             }
           }
@@ -26849,6 +26980,17 @@ public final class OpenchatServiceProtos {
       }
     }
 
+    public static final int BLOCKED_FIELD_NUMBER = 8;
+    private boolean blocked_;
+    
+    public boolean hasBlocked() {
+      return ((bitField0_ & 0x00000040) == 0x00000040);
+    }
+    
+    public boolean getBlocked() {
+      return blocked_;
+    }
+
     private void initFields() {
       id_ = com.google.protobuf.ByteString.EMPTY;
       name_ = "";
@@ -26857,6 +26999,7 @@ public final class OpenchatServiceProtos {
       active_ = true;
       expireTimer_ = 0;
       color_ = "";
+      blocked_ = false;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -26890,6 +27033,9 @@ public final class OpenchatServiceProtos {
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         output.writeBytes(7, getColorBytes());
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        output.writeBool(8, blocked_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -26932,6 +27078,10 @@ public final class OpenchatServiceProtos {
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(7, getColorBytes());
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(8, blocked_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -27065,6 +27215,8 @@ public final class OpenchatServiceProtos {
         bitField0_ = (bitField0_ & ~0x00000020);
         color_ = "";
         bitField0_ = (bitField0_ & ~0x00000040);
+        blocked_ = false;
+        bitField0_ = (bitField0_ & ~0x00000080);
         return this;
       }
 
@@ -27127,6 +27279,10 @@ public final class OpenchatServiceProtos {
           to_bitField0_ |= 0x00000020;
         }
         result.color_ = color_;
+        if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+          to_bitField0_ |= 0x00000040;
+        }
+        result.blocked_ = blocked_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -27174,6 +27330,9 @@ public final class OpenchatServiceProtos {
           bitField0_ |= 0x00000040;
           color_ = other.color_;
           onChanged();
+        }
+        if (other.hasBlocked()) {
+          setBlocked(other.getBlocked());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -27571,6 +27730,30 @@ public final class OpenchatServiceProtos {
         return this;
       }
 
+      private boolean blocked_ ;
+      
+      public boolean hasBlocked() {
+        return ((bitField0_ & 0x00000080) == 0x00000080);
+      }
+      
+      public boolean getBlocked() {
+        return blocked_;
+      }
+      
+      public Builder setBlocked(boolean value) {
+        bitField0_ |= 0x00000080;
+        blocked_ = value;
+        onChanged();
+        return this;
+      }
+      
+      public Builder clearBlocked() {
+        bitField0_ = (bitField0_ & ~0x00000080);
+        blocked_ = false;
+        onChanged();
+        return this;
+      }
+
     }
 
     static {
@@ -27913,7 +28096,7 @@ public final class OpenchatServiceProtos {
           internal_static_openchatservice_SyncMessage_Blocked_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_openchatservice_SyncMessage_Blocked_descriptor,
-              new java.lang.String[] { "Numbers", });
+              new java.lang.String[] { "Numbers", "GroupIds", });
           internal_static_openchatservice_SyncMessage_Request_descriptor =
             internal_static_openchatservice_SyncMessage_descriptor.getNestedTypes().get(4);
           internal_static_openchatservice_SyncMessage_Request_fieldAccessorTable = new
@@ -27961,7 +28144,7 @@ public final class OpenchatServiceProtos {
           internal_static_openchatservice_GroupDetails_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_openchatservice_GroupDetails_descriptor,
-              new java.lang.String[] { "Id", "Name", "Members", "Avatar", "Active", "ExpireTimer", "Color", });
+              new java.lang.String[] { "Id", "Name", "Members", "Avatar", "Active", "ExpireTimer", "Color", "Blocked", });
           internal_static_openchatservice_GroupDetails_Avatar_descriptor =
             internal_static_openchatservice_GroupDetails_descriptor.getNestedTypes().get(0);
           internal_static_openchatservice_GroupDetails_Avatar_fieldAccessorTable = new
