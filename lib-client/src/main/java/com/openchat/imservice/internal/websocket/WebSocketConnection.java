@@ -6,6 +6,7 @@ import com.openchat.protocal.logging.Log;
 import com.openchat.protocal.util.Pair;
 import com.openchat.imservice.api.push.TrustStore;
 import com.openchat.imservice.api.util.CredentialsProvider;
+import com.openchat.imservice.api.util.SleepTimer;
 import com.openchat.imservice.api.websocket.ConnectivityListener;
 import com.openchat.imservice.internal.util.BlacklistingTrustManager;
 import com.openchat.imservice.internal.util.Util;
@@ -52,17 +53,25 @@ public class WebSocketConnection extends WebSocketListener {
   private final CredentialsProvider  credentialsProvider;
   private final String               userAgent;
   private final ConnectivityListener listener;
+  private final SleepTimer           sleepTimer;
 
   private WebSocket           client;
   private KeepAliveSender     keepAliveSender;
   private int                 attempts;
   private boolean             connected;
 
-  public WebSocketConnection(String httpUri, TrustStore trustStore, CredentialsProvider credentialsProvider, String userAgent, ConnectivityListener listener) {
+  public WebSocketConnection(String httpUri,
+                             TrustStore trustStore,
+                             CredentialsProvider credentialsProvider,
+                             String userAgent,
+                             ConnectivityListener listener,
+                             SleepTimer timer)
+  {
     this.trustStore          = trustStore;
     this.credentialsProvider = credentialsProvider;
     this.userAgent           = userAgent;
     this.listener            = listener;
+    this.sleepTimer          = timer;
     this.attempts            = 0;
     this.connected           = false;
     this.wsUri               = httpUri.replace("https://", "wss://")
@@ -297,7 +306,7 @@ public class WebSocketConnection extends WebSocketListener {
     public void run() {
       while (!stop.get()) {
         try {
-          Thread.sleep(TimeUnit.SECONDS.toMillis(KEEPALIVE_TIMEOUT_SECONDS));
+          sleepTimer.sleep(TimeUnit.SECONDS.toMillis(KEEPALIVE_TIMEOUT_SECONDS));
 
           Log.w(TAG, "Sending keep alive...");
           sendKeepAlive();

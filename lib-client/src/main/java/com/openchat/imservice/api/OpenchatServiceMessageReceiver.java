@@ -10,6 +10,7 @@ import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.api.profiles.OpenchatServiceProfile;
 import com.openchat.imservice.api.util.CredentialsProvider;
+import com.openchat.imservice.api.util.SleepTimer;
 import com.openchat.imservice.api.websocket.ConnectivityListener;
 import com.openchat.imservice.internal.configuration.OpenchatServiceConfiguration;
 import com.openchat.imservice.internal.push.PushServiceSocket;
@@ -33,24 +34,31 @@ public class OpenchatServiceMessageReceiver {
   private final CredentialsProvider        credentialsProvider;
   private final String                     userAgent;
   private final ConnectivityListener       connectivityListener;
+  private final SleepTimer                 sleepTimer;
 
   
   public OpenchatServiceMessageReceiver(OpenchatServiceConfiguration urls,
                                       String user, String password,
                                       String openchatingKey, String userAgent,
-                                      ConnectivityListener listener)
+                                      ConnectivityListener listener,
+                                      SleepTimer timer)
   {
-    this(urls, new StaticCredentialsProvider(user, password, openchatingKey), userAgent, listener);
+    this(urls, new StaticCredentialsProvider(user, password, openchatingKey), userAgent, listener, timer);
   }
 
   
-  public OpenchatServiceMessageReceiver(OpenchatServiceConfiguration urls, CredentialsProvider credentials, String userAgent, ConnectivityListener listener)
+  public OpenchatServiceMessageReceiver(OpenchatServiceConfiguration urls,
+                                      CredentialsProvider credentials,
+                                      String userAgent,
+                                      ConnectivityListener listener,
+                                      SleepTimer timer)
   {
     this.urls                 = urls;
     this.credentialsProvider  = credentials;
     this.socket               = new PushServiceSocket(urls, credentials, userAgent);
     this.userAgent            = userAgent;
     this.connectivityListener = listener;
+    this.sleepTimer           = timer;
   }
 
   
@@ -87,7 +95,8 @@ public class OpenchatServiceMessageReceiver {
   public OpenchatServiceMessagePipe createMessagePipe() {
     WebSocketConnection webSocket = new WebSocketConnection(urls.getOpenchatServiceUrls()[0].getUrl(),
                                                             urls.getOpenchatServiceUrls()[0].getTrustStore(),
-                                                            credentialsProvider, userAgent, connectivityListener);
+                                                            credentialsProvider, userAgent, connectivityListener,
+                                                            sleepTimer);
 
     return new OpenchatServiceMessagePipe(webSocket, credentialsProvider);
   }
