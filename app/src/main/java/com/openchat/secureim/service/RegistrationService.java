@@ -19,6 +19,7 @@ import com.openchat.secureim.util.DirectoryHelper;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.state.PreKeyRecord;
+import com.openchat.protocal.util.KeyHelper;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.crypto.PreKeyUtil;
 import com.openchat.imservice.push.ExpectationFailedException;
@@ -159,7 +160,7 @@ public class RegistrationService extends Service {
     int          registrationId = OpenchatServicePreferences.getLocalRegistrationId(this);
 
     if (registrationId == 0) {
-      registrationId = Util.generateRegistrationId();
+      registrationId = KeyHelper.generateRegistrationId();
       OpenchatServicePreferences.setLocalRegistrationId(this, registrationId);
     }
 
