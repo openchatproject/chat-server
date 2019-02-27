@@ -7,7 +7,6 @@ import android.util.Pair;
 
 import com.openchat.secureim.crypto.DecryptingQueue;
 import com.openchat.secureim.crypto.KeyExchangeProcessor;
-import com.openchat.secureim.crypto.KeyExchangeProcessorV2;
 import com.openchat.secureim.crypto.MasterSecretUtil;
 import com.openchat.secureim.crypto.protocol.KeyExchangeMessage;
 import com.openchat.secureim.database.DatabaseFactory;
@@ -98,7 +97,7 @@ public class SmsReceiver {
     try {
       Recipient              recipient        = RecipientFactory.getRecipientsFromString(context, message.getSender(), false).getPrimaryRecipient();
       RecipientDevice        recipientDevice  = new RecipientDevice(recipient.getRecipientId(), message.getSenderDeviceId());
-      KeyExchangeProcessorV2 processor        = new KeyExchangeProcessorV2(context, masterSecret, recipientDevice);
+      KeyExchangeProcessor processor        = new KeyExchangeProcessor(context, masterSecret, recipientDevice);
       SmsTransportDetails    transportDetails = new SmsTransportDetails();
       byte[]                 rawMessage       = transportDetails.getDecodedMessage(message.getMessageBody().getBytes());
       PreKeyOpenchatMessage   preKeyExchange   = new PreKeyOpenchatMessage(rawMessage);
@@ -111,7 +110,7 @@ public class SmsReceiver {
         IncomingEncryptedMessage bundledMessage     = new IncomingEncryptedMessage(message, bundledMessageBody);
         Pair<Long, Long>         messageAndThreadId = storeSecureMessage(masterSecret, bundledMessage);
 
-        Intent intent = new Intent(KeyExchangeProcessorV2.SECURITY_UPDATE_EVENT);
+        Intent intent = new Intent(KeyExchangeProcessor.SECURITY_UPDATE_EVENT);
         intent.putExtra("thread_id", messageAndThreadId.second);
         intent.setPackage(context.getPackageName());
         context.sendBroadcast(intent, KeyCachingService.KEY_PERMISSION);
@@ -148,8 +147,8 @@ public class SmsReceiver {
       try {
         Recipient            recipient       = RecipientFactory.getRecipientsFromString(context, message.getSender(), false).getPrimaryRecipient();
         RecipientDevice      recipientDevice = new RecipientDevice(recipient.getRecipientId(), message.getSenderDeviceId());
-        KeyExchangeMessage   exchangeMessage = KeyExchangeMessage.createFor(message.getMessageBody());
-        KeyExchangeProcessor processor       = KeyExchangeProcessor.createFor(context, masterSecret, recipientDevice, exchangeMessage);
+        KeyExchangeMessage   exchangeMessage = new KeyExchangeMessage(message.getMessageBody());
+        KeyExchangeProcessor processor       = new KeyExchangeProcessor(context, masterSecret, recipientDevice);
 
         if (processor.isStale(exchangeMessage)) {
           message.setStale(true);
@@ -164,13 +163,7 @@ public class SmsReceiver {
       } catch (InvalidVersionException e) {
         Log.w("SmsReceiver", e);
         message.setInvalidVersion(true);
-      } catch (InvalidKeyException e) {
-        Log.w("SmsReceiver", e);
-        message.setCorrupted(true);
-      } catch (InvalidMessageException e) {
-        Log.w("SmsReceiver", e);
-        message.setCorrupted(true);
-      } catch (RecipientFormattingException e) {
+      } catch (InvalidMessageException | RecipientFormattingException e) {
         Log.w("SmsReceiver", e);
         message.setCorrupted(true);
       } catch (LegacyMessageException e) {

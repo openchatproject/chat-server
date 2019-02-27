@@ -9,7 +9,6 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 import com.openchat.secureim.crypto.DecryptingQueue;
 import com.openchat.secureim.crypto.KeyExchangeProcessor;
-import com.openchat.secureim.crypto.KeyExchangeProcessorV2;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.MmsDatabase;
@@ -115,7 +114,7 @@ public class PushReceiver {
     try {
       Recipient              recipient       = RecipientFactory.getRecipientsFromString(context, message.getSource(), false).getPrimaryRecipient();
       RecipientDevice        recipientDevice = new RecipientDevice(recipient.getRecipientId(), message.getSourceDevice());
-      KeyExchangeProcessorV2 processor       = new KeyExchangeProcessorV2(context, masterSecret, recipientDevice);
+      KeyExchangeProcessor processor       = new KeyExchangeProcessor(context, masterSecret, recipientDevice);
       PreKeyOpenchatMessage   preKeyExchange  = new PreKeyOpenchatMessage(message.getBody());
 
       if (processor.isTrusted(preKeyExchange)) {

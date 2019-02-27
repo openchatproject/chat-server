@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.openchat.secureim.crypto.DecryptingQueue;
 import com.openchat.secureim.crypto.KeyExchangeProcessor;
-import com.openchat.secureim.crypto.KeyExchangeProcessorV2;
 import com.openchat.secureim.crypto.protocol.KeyExchangeMessage;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.recipients.Recipient;
@@ -126,19 +125,12 @@ public class ReceiveKeyActivity extends Activity {
   }
 
   private boolean isTrusted(KeyExchangeMessage message, PreKeyOpenchatMessage messageBundle, IdentityKey identityUpdateMessage) {
-    RecipientDevice recipientDevice = new RecipientDevice(recipient.getRecipientId(), recipientDeviceId);
+    RecipientDevice      recipientDevice = new RecipientDevice(recipient.getRecipientId(), recipientDeviceId);
+    KeyExchangeProcessor processor       = new KeyExchangeProcessor(this, masterSecret, recipientDevice);
 
-    if (message != null) {
-      KeyExchangeProcessor processor = KeyExchangeProcessor.createFor(this, masterSecret,
-                                                                      recipientDevice, message);
-      return processor.isTrusted(message);
-    } else if (messageBundle != null) {
-      KeyExchangeProcessorV2 processor = new KeyExchangeProcessorV2(this, masterSecret, recipientDevice);
-      return processor.isTrusted(messageBundle);
-    } else if (identityUpdateMessage != null) {
-      KeyExchangeProcessorV2 processor = new KeyExchangeProcessorV2(this, masterSecret, recipientDevice);
-      return processor.isTrusted(identityUpdateMessage);
-    }
+    if      (message != null)                return processor.isTrusted(message);
+    else if (messageBundle != null)          return processor.isTrusted(messageBundle);
+    else if (identityUpdateMessage != null)  return processor.isTrusted(identityUpdateMessage);
 
     return false;
   }
@@ -164,7 +156,7 @@ public class ReceiveKeyActivity extends Activity {
       } else if (getIntent().getBooleanExtra("is_identity_update", false)) {
         this.identityUpdateMessage = new IdentityKey(Base64.decodeWithoutPadding(messageBody), 0);
       } else {
-        this.keyExchangeMessage = KeyExchangeMessage.createFor(messageBody);
+        this.keyExchangeMessage = new KeyExchangeMessage(messageBody);
       }
     } catch (IOException e) {
       throw new AssertionError(e);
@@ -205,9 +197,13 @@ public class ReceiveKeyActivity extends Activity {
         protected Void doInBackground(Void... params) {
           if (keyExchangeMessage != null) {
             try {
-              RecipientDevice recipientDevice = new RecipientDevice(recipient.getRecipientId(), recipientDeviceId);
-              KeyExchangeProcessor processor = KeyExchangeProcessor.createFor(ReceiveKeyActivity.this, masterSecret, recipientDevice, keyExchangeMessage);
+              RecipientDevice recipientDevice = new RecipientDevice(recipient.getRecipientId(),
+                                                                    recipientDeviceId);
+              KeyExchangeProcessor processor = new KeyExchangeProcessor(ReceiveKeyActivity.this,
+                                                                        masterSecret, recipientDevice);
+
               processor.processKeyExchangeMessage(keyExchangeMessage, threadId);
+
               DatabaseFactory.getEncryptingSmsDatabase(ReceiveKeyActivity.this)
                              .markAsProcessedKeyExchange(messageId);
             } catch (InvalidMessageException e) {
@@ -218,7 +214,7 @@ public class ReceiveKeyActivity extends Activity {
           } else if (keyExchangeMessageBundle != null) {
             try {
               RecipientDevice recipientDevice = new RecipientDevice(recipient.getRecipientId(), recipientDeviceId);
-              KeyExchangeProcessorV2 processor = new KeyExchangeProcessorV2(ReceiveKeyActivity.this,
+              KeyExchangeProcessor processor = new KeyExchangeProcessor(ReceiveKeyActivity.this,
                                                                             masterSecret, recipientDevice);
               processor.processKeyExchangeMessage(keyExchangeMessageBundle);
 
