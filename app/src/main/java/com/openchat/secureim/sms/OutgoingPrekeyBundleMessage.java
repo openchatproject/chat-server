@@ -1,6 +1,5 @@
 package com.openchat.secureim.sms;
 
-
 public class OutgoingPrekeyBundleMessage extends OutgoingTextMessage {
 
   public OutgoingPrekeyBundleMessage(OutgoingTextMessage message, String body) {

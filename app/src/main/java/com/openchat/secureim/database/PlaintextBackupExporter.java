@@ -1,35 +1,38 @@
 package com.openchat.secureim.database;
 
-
 import android.content.Context;
+import android.os.Environment;
 
-import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.secureim.database.model.SmsMessageRecord;
-import com.openchat.secureim.util.StorageUtil;
 
 import java.io.File;
 import java.io.IOException;
 
 public class PlaintextBackupExporter {
 
-  private static final String FILENAME = "openchatPlaintextBackup.xml";
-
   public static void exportPlaintextToSd(Context context, MasterSecret masterSecret)
       throws NoExternalStorageException, IOException
   {
+    verifyExternalStorageForPlaintextExport();
     exportPlaintext(context, masterSecret);
   }
 
-  public static File getPlaintextExportFile() throws NoExternalStorageException {
-    return new File(StorageUtil.getBackupDir(), FILENAME);
+  private static void verifyExternalStorageForPlaintextExport() throws NoExternalStorageException {
+    if (!Environment.getExternalStorageDirectory().canWrite())
+      throw new NoExternalStorageException();
+  }
+
+  private static String getPlaintextExportDirectoryPath() {
+    File sdDirectory = Environment.getExternalStorageDirectory();
+    return sdDirectory.getAbsolutePath() + File.separator + "OpenchatServicePlaintextBackup.xml";
   }
 
   private static void exportPlaintext(Context context, MasterSecret masterSecret)
-      throws NoExternalStorageException, IOException
+      throws IOException
   {
     int count               = DatabaseFactory.getSmsDatabase(context).getMessageCount();
-    XmlBackup.Writer writer = new XmlBackup.Writer(getPlaintextExportFile().getAbsolutePath(), count);
-
+    XmlBackup.Writer writer = new XmlBackup.Writer(getPlaintextExportDirectoryPath(), count);
 
     SmsMessageRecord record;
     EncryptingSmsDatabase.Reader reader = null;
@@ -44,8 +47,7 @@ public class PlaintextBackupExporter {
 
       while ((record = reader.getNext()) != null) {
         XmlBackup.XmlBackupItem item =
-            new XmlBackup.XmlBackupItem(0, record.getIndividualRecipient().getAddress().serialize(),
-                                        record.getIndividualRecipient().getName(),
+            new XmlBackup.XmlBackupItem(0, record.getIndividualRecipient().getNumber(),
                                         record.getDateReceived(),
                                         MmsSmsColumns.Types.translateToSystemBaseType(record.getType()),
                                         null, record.getDisplayBody().toString(), null,

@@ -1,10 +1,14 @@
 package com.openchat.secureim.database;
 
 import android.content.ContentValues;
-
-import com.google.android.mms.pdu_alt.EncodedStringValue;
+import android.util.Log;
 
 import com.openchat.secureim.util.Util;
+
+import ws.com.google.android.mms.pdu.CharacterSets;
+import ws.com.google.android.mms.pdu.EncodedStringValue;
+
+import java.io.UnsupportedEncodingException;
 
 public class ContentValuesBuilder {
 

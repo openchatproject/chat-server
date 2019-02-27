@@ -1,143 +1,180 @@
 package com.openchat.secureim;
 
-import android.content.Context;
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 
-import com.openchat.secureim.components.ContactFilterToolbar;
-import com.openchat.secureim.components.ContactFilterToolbar.OnFilterChangedListener;
-import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.secureim.util.DirectoryHelper;
-import com.openchat.secureim.util.DynamicLanguage;
-import com.openchat.secureim.util.DynamicNoActionBarTheme;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.ActionBar.TabListener;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
 import com.openchat.secureim.util.DynamicTheme;
-import com.openchat.secureim.util.TextSecurePreferences;
-import com.openchat.secureim.util.ViewUtil;
 
-import java.io.IOException;
-import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Base activity container for selecting a list of contacts.
- *
- */
-public abstract class ContactSelectionActivity extends PassphraseRequiredActionBarActivity
-                                               implements SwipeRefreshLayout.OnRefreshListener,
-                                                          ContactSelectionListFragment.OnContactSelectedListener
-{
-  private static final String TAG = ContactSelectionActivity.class.getSimpleName();
+import static com.openchat.secureim.contacts.ContactAccessor.ContactData;
 
-  private final DynamicTheme    dynamicTheme    = new DynamicNoActionBarTheme();
-  private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
+public class ContactSelectionActivity extends PassphraseRequiredSherlockFragmentActivity {
 
-  protected ContactSelectionListFragment contactsFragment;
+  private final DynamicTheme dynamicTheme = new DynamicTheme();
 
-  private   MasterSecret         masterSecret;
-  private   ContactFilterToolbar toolbar;
+  private ViewPager viewPager;
+  private ContactSelectionListFragment contactsFragment;
+  private ContactSelectionGroupsFragment groupsFragment;
+  private ContactSelectionRecentFragment recentFragment;
 
   @Override
-  protected void onPreCreate() {
+  protected void onCreate(Bundle icicle) {
     dynamicTheme.onCreate(this);
-    dynamicLanguage.onCreate(this);
-  }
+    super.onCreate(icicle);
 
-  @Override
-  protected void onCreate(Bundle icicle, @NonNull MasterSecret masterSecret) {
-    this.masterSecret = masterSecret;
-    if (!getIntent().hasExtra(ContactSelectionListFragment.DISPLAY_MODE)) {
-      getIntent().putExtra(ContactSelectionListFragment.DISPLAY_MODE,
-                           TextSecurePreferences.isSmsEnabled(this)
-                           ? ContactSelectionListFragment.DISPLAY_MODE_ALL
-                           : ContactSelectionListFragment.DISPLAY_MODE_PUSH_ONLY);
-    }
+    final ActionBar actionBar = this.getSupportActionBar();
+    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+    actionBar.setDisplayHomeAsUpEnabled(true);
 
     setContentView(R.layout.contact_selection_activity);
 
-    initializeToolbar();
-    initializeResources();
-    initializeSearch();
+    setupFragments();
+    setupViewPager();
+    setupTabs();
   }
 
   @Override
   public void onResume() {
     super.onResume();
     dynamicTheme.onResume(this);
-    dynamicLanguage.onResume(this);
-  }
-
-  protected ContactFilterToolbar getToolbar() {
-    return toolbar;
-  }
-
-  private void initializeToolbar() {
-    this.toolbar = ViewUtil.findById(this, R.id.toolbar);
-    setSupportActionBar(toolbar);
-
-    getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-    getSupportActionBar().setDisplayShowTitleEnabled(false);
-    getSupportActionBar().setIcon(null);
-    getSupportActionBar().setLogo(null);
-  }
-
-  private void initializeResources() {
-    contactsFragment = (ContactSelectionListFragment) getSupportFragmentManager().findFragmentById(R.id.contact_selection_list_fragment);
-    contactsFragment.setOnContactSelectedListener(this);
-    contactsFragment.setOnRefreshListener(this);
-  }
-
-  private void initializeSearch() {
-    toolbar.setOnFilterChangedListener(new OnFilterChangedListener() {
-      @Override public void onFilterChanged(String filter) {
-        contactsFragment.setQueryFilter(filter);
-      }
-    });
   }
 
   @Override
-  public void onRefresh() {
-    new RefreshDirectoryTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getApplicationContext());
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = this.getSupportMenuInflater();
+    inflater.inflate(R.menu.contact_selection, menu);
+
+    return true;
   }
 
   @Override
-  public void onContactSelected(String number) {}
-
-  @Override
-  public void onContactDeselected(String number) {}
-
-  private static class RefreshDirectoryTask extends AsyncTask<Context, Void, Void> {
-
-    private final WeakReference<ContactSelectionActivity> activity;
-    private final MasterSecret masterSecret;
-
-    private RefreshDirectoryTask(ContactSelectionActivity activity) {
-      this.activity     = new WeakReference<>(activity);
-      this.masterSecret = activity.masterSecret;
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+    case R.id.menu_selection_finished:
+    case android.R.id.home:
+      handleSelectionFinished(); return true;
     }
 
+    return false;
+  }
 
-    @Override
-    protected Void doInBackground(Context... params) {
+  private void handleSelectionFinished() {
+    List<ContactData> contacts = contactsFragment.getSelectedContacts();
+    contacts.addAll(recentFragment.getSelectedContacts());
+    contacts.addAll(groupsFragment.getSelectedContacts(this));
 
-      try {
-        DirectoryHelper.refreshDirectory(params[0], masterSecret, true);
-      } catch (IOException e) {
-        Log.w(TAG, e);
-      }
+    Intent resultIntent = getIntent();
+    resultIntent.putParcelableArrayListExtra("contacts", new ArrayList<ContactData>(contacts));
 
-      return null;
+    setResult(RESULT_OK, resultIntent);
+
+    finish();
+  }
+
+  private void setupViewPager() {
+    viewPager = (ViewPager) findViewById(R.id.pager);
+    viewPager.setAdapter(new SelectionPagerAdapter());
+    viewPager.setOnPageChangeListener(new TabSwitchingPageListener());
+  }
+
+  private void setupTabs() {
+    int[] icons = new int[] { R.drawable.ic_tab_contacts, R.drawable.ic_tab_groups, R.drawable.ic_tab_recent };
+
+    for (int i = 0; i < icons.length; i++) {
+      ActionBar.Tab tab = getSupportActionBar().newTab();
+      tab.setIcon(icons[i]);
+      tab.setTabListener(new ViewPagerTabListener(i));
+      getSupportActionBar().addTab(tab);
+    }
+  }
+
+  private void setupFragments() {
+    contactsFragment = new ContactSelectionListFragment();
+    groupsFragment = new ContactSelectionGroupsFragment();
+    recentFragment = new ContactSelectionRecentFragment();
+  }
+
+  private class SelectionPagerAdapter extends FragmentPagerAdapter {
+
+    public SelectionPagerAdapter() {
+      super(getSupportFragmentManager());
     }
 
     @Override
-    protected void onPostExecute(Void result) {
-      ContactSelectionActivity activity = this.activity.get();
-
-      if (activity != null && !activity.isFinishing()) {
-        activity.toolbar.clear();
-        activity.contactsFragment.resetQueryFilter();
+    public Fragment getItem(int i) {
+      switch (i) {
+        case 0:
+          return contactsFragment;
+        case 1:
+          return groupsFragment;
+        case 2:
+        default:
+          return recentFragment;
       }
     }
+
+    @Override
+    public int getCount() {
+      return 3;
+    }
+
   }
+
+  private class ViewPagerTabListener implements TabListener {
+
+    private int tabIndex;
+
+    public ViewPagerTabListener(int index) {
+      tabIndex = index;
+    }
+
+    @Override
+    public void onTabSelected(Tab tab, FragmentTransaction fragmentTransaction) {
+      viewPager.setCurrentItem(tabIndex);
+    }
+
+    @Override
+    public void onTabUnselected(Tab tab, FragmentTransaction fragmentTransaction) {
+
+    }
+
+    @Override
+    public void onTabReselected(Tab tab, FragmentTransaction fragmentTransaction) {
+
+    }
+
+  }
+
+  private class TabSwitchingPageListener implements ViewPager.OnPageChangeListener {
+
+    @Override
+    public void onPageScrolled(int i, float v, int i2) {
+
+    }
+
+    @Override
+    public void onPageSelected(int i) {
+      getSupportActionBar().setSelectedNavigationItem(i);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int i) {
+
+    }
+
+  }
+
 }

@@ -2,40 +2,100 @@ package com.openchat.secureim;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.view.View;
+import android.util.Log;
 
-import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.util.DirectoryHelper;
+import com.openchat.secureim.util.DynamicLanguage;
+import com.openchat.secureim.util.DynamicTheme;
+import com.openchat.secureim.util.OpenchatServicePreferences;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Activity container for selecting a list of contacts.
- *
- */
-public class PushContactSelectionActivity extends ContactSelectionActivity {
+import static com.openchat.secureim.contacts.ContactAccessor.ContactData;
 
-  private final static String TAG = PushContactSelectionActivity.class.getSimpleName();
+public class PushContactSelectionActivity extends PassphraseRequiredSherlockFragmentActivity {
+  private final static String TAG             = "ContactSelectActivity";
+  public  final static String PUSH_ONLY_EXTRA = "push_only";
+
+  private final DynamicTheme    dynamicTheme    = new DynamicTheme   ();
+  private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
+
+  private PushContactSelectionListFragment contactsFragment;
 
   @Override
-  protected void onCreate(Bundle icicle, @NonNull MasterSecret masterSecret) {
-    getIntent().putExtra(ContactSelectionListFragment.MULTI_SELECT, true);
-    super.onCreate(icicle, masterSecret);
+  protected void onCreate(Bundle icicle) {
+    dynamicTheme.onCreate(this);
+    dynamicLanguage.onCreate(this);
+    super.onCreate(icicle);
 
-    getToolbar().setNavigationIcon(R.drawable.ic_check_white_24dp);
-    getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+    setContentView(R.layout.push_contact_selection_activity);
+    initializeResources();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    dynamicTheme.onResume(this);
+    dynamicLanguage.onResume(this);
+    getSupportActionBar().setTitle(R.string.AndroidManifest__select_contacts);
+  }
+
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    MenuInflater inflater = this.getSupportMenuInflater();
+    menu.clear();
+
+    if (OpenchatServicePreferences.isPushRegistered(this)) inflater.inflate(R.menu.push_directory, menu);
+
+    inflater.inflate(R.menu.contact_selection, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    super.onOptionsItemSelected(item);
+    switch (item.getItemId()) {
+    case R.id.menu_refresh_directory:  handleDirectoryRefresh();  return true;
+    case R.id.menu_selection_finished: handleSelectionFinished(); return true;
+    case android.R.id.home:            finish();                  return true;
+    }
+    return false;
+  }
+
+  private void initializeResources() {
+    contactsFragment = (PushContactSelectionListFragment) getSupportFragmentManager().findFragmentById(R.id.contact_selection_list_fragment);
+    contactsFragment.setMultiSelect(true);
+    contactsFragment.setOnContactSelectedListener(new PushContactSelectionListFragment.OnContactSelectedListener() {
       @Override
-      public void onClick(View v) {
-        Intent resultIntent = getIntent();
-        List<String> selectedContacts = contactsFragment.getSelectedContacts();
+      public void onContactSelected(ContactData contactData) {
+        Log.i(TAG, "Choosing contact from list.");
+      }
+    });
+  }
 
-        if (selectedContacts != null) {
-          resultIntent.putStringArrayListExtra("contacts", new ArrayList<>(selectedContacts));
-        }
+  private void handleSelectionFinished() {
 
-        setResult(RESULT_OK, resultIntent);
-        finish();
+    final Intent resultIntent = getIntent();
+    final List<ContactData> selectedContacts = contactsFragment.getSelectedContacts();
+    if (selectedContacts != null) {
+      resultIntent.putParcelableArrayListExtra("contacts", new ArrayList<ContactData>(contactsFragment.getSelectedContacts()));
+    }
+    setResult(RESULT_OK, resultIntent);
+    finish();
+  }
+
+  private void handleDirectoryRefresh() {
+    DirectoryHelper.refreshDirectoryWithProgressDialog(this, new DirectoryHelper.DirectoryUpdateFinishedListener() {
+      @Override
+      public void onUpdateFinished() {
+        contactsFragment.update();
       }
     });
   }

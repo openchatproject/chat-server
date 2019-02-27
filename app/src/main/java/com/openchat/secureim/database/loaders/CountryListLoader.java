@@ -1,6 +1,5 @@
 package com.openchat.secureim.database.loaders;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,9 +10,8 @@ import java.util.Set;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
-
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.openchat.imservice.api.util.PhoneNumberFormatter;
+import com.openchat.imservice.util.PhoneNumberFormatter;
 
 public class CountryListLoader extends AsyncTaskLoader<ArrayList<Map<String, String>>> {
 
@@ -38,7 +36,7 @@ public class CountryListLoader extends AsyncTaskLoader<ArrayList<Map<String, Str
     return results;
   }
 
-  private static class RegionComparator implements Comparator<Map<String, String>> {
+  private class RegionComparator implements Comparator<Map<String, String>> {
     @Override
     public int compare(Map<String, String> lhs, Map<String, String> rhs) {
       return lhs.get("country_name").compareTo(rhs.get("country_name"));

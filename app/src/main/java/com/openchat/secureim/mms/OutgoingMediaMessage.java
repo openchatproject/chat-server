@@ -1,65 +1,48 @@
 package com.openchat.secureim.mms;
 
-import android.text.TextUtils;
+import android.content.Context;
 
-import com.openchat.secureim.attachments.Attachment;
-import com.openchat.secureim.recipients.Recipient;
+import com.openchat.secureim.recipients.Recipients;
+import com.openchat.imservice.util.Util;
 
-import java.util.List;
+import ws.com.google.android.mms.pdu.PduBody;
 
 public class OutgoingMediaMessage {
 
-  private   final Recipient        recipient;
-  protected final String           body;
-  protected final List<Attachment> attachments;
-  private   final long             sentTimeMillis;
-  private   final int              distributionType;
-  private   final int              subscriptionId;
-  private   final long             expiresIn;
+  private   final Recipients recipients;
+  protected final PduBody    body;
+  private   final int        distributionType;
 
-  public OutgoingMediaMessage(Recipient recipient, String message,
-                              List<Attachment> attachments, long sentTimeMillis,
-                              int subscriptionId, long expiresIn,
-                              int distributionType)
+  public OutgoingMediaMessage(Context context, Recipients recipients, PduBody body,
+                              String message, int distributionType)
   {
-    this.recipient        = recipient;
-    this.body             = message;
-    this.sentTimeMillis   = sentTimeMillis;
+    this.recipients       = recipients;
+    this.body             = body;
     this.distributionType = distributionType;
-    this.attachments      = attachments;
-    this.subscriptionId   = subscriptionId;
-    this.expiresIn        = expiresIn;
+
+    if (!Util.isEmpty(message)) {
+      this.body.addPart(new TextSlide(context, message).getPart());
+    }
   }
 
-  public OutgoingMediaMessage(Recipient recipient, SlideDeck slideDeck, String message, long sentTimeMillis, int subscriptionId, long expiresIn, int distributionType)
+  public OutgoingMediaMessage(Context context, Recipients recipients, SlideDeck slideDeck,
+                              String message, int distributionType)
   {
-    this(recipient,
-         buildMessage(slideDeck, message),
-         slideDeck.asAttachments(),
-         sentTimeMillis, subscriptionId,
-         expiresIn, distributionType);
+    this(context, recipients, slideDeck.toPduBody(), message, distributionType);
   }
 
   public OutgoingMediaMessage(OutgoingMediaMessage that) {
-    this.recipient        = that.getRecipient();
+    this.recipients       = that.getRecipients();
     this.body             = that.body;
     this.distributionType = that.distributionType;
-    this.attachments      = that.attachments;
-    this.sentTimeMillis   = that.sentTimeMillis;
-    this.subscriptionId   = that.subscriptionId;
-    this.expiresIn        = that.expiresIn;
   }
 
-  public Recipient getRecipient() {
-    return recipient;
+  public Recipients getRecipients() {
+    return recipients;
   }
 
-  public String getBody() {
+  public PduBody getPduBody() {
     return body;
-  }
-
-  public List<Attachment> getAttachments() {
-    return attachments;
   }
 
   public int getDistributionType() {
@@ -74,29 +57,4 @@ public class OutgoingMediaMessage {
     return false;
   }
 
-  public boolean isExpirationUpdate() {
-    return false;
-  }
-
-  public long getSentTimeMillis() {
-    return sentTimeMillis;
-  }
-
-  public int getSubscriptionId() {
-    return subscriptionId;
-  }
-
-  public long getExpiresIn() {
-    return expiresIn;
-  }
-
-  private static String buildMessage(SlideDeck slideDeck, String message) {
-    if (!TextUtils.isEmpty(message) && !TextUtils.isEmpty(slideDeck.getBody())) {
-      return slideDeck.getBody() + "\n\n" + message;
-    } else if (!TextUtils.isEmpty(message)) {
-      return message;
-    } else {
-      return slideDeck.getBody();
-    }
-  }
 }

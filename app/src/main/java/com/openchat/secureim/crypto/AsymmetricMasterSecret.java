@@ -1,28 +1,13 @@
 package com.openchat.secureim.crypto;
 
-import com.openchat.libim.ecc.ECPrivateKey;
-import com.openchat.libim.ecc.ECPublicKey;
-
-/**
- * When a user first initializes TextSecure, a few secrets
- * are generated.  These are:
- * 
- * 1) A 128bit symmetric encryption key.
- * 2) A 160bit symmetric MAC key.
- * 3) An ECC keypair.
- * 
- * The first two, along with the ECC keypair's private key, are
- * then encrypted on disk using PBE.
- * 
- * This class represents the ECC keypair.
- * 
- */
+import com.openchat.imservice.crypto.ecc.Curve;
+import com.openchat.imservice.crypto.ecc.ECPrivateKey;
+import com.openchat.imservice.crypto.ecc.ECPublicKey;
 
 public class AsymmetricMasterSecret {
 
-  private final ECPublicKey djbPublicKey;
+  private final ECPublicKey  djbPublicKey;
   private final ECPrivateKey djbPrivateKey;
-
 
   public AsymmetricMasterSecret(ECPublicKey djbPublicKey, ECPrivateKey djbPrivateKey)
   {
@@ -33,7 +18,6 @@ public class AsymmetricMasterSecret {
   public ECPublicKey getDjbPublicKey() {
     return djbPublicKey;
   }
-
 
   public ECPrivateKey getPrivateKey() {
     return djbPrivateKey;

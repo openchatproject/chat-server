@@ -10,20 +10,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.SmsMigrator.ProgressDescription;
 import com.openchat.secureim.service.ApplicationMigrationService;
 import com.openchat.secureim.service.ApplicationMigrationService.ImportState;
 
-public class DatabaseMigrationActivity extends PassphraseRequiredActionBarActivity {
+public class DatabaseMigrationActivity extends PassphraseRequiredSherlockActivity {
 
   private final ImportServiceConnection serviceConnection  = new ImportServiceConnection();
   private final ImportStateHandler      importStateHandler = new ImportStateHandler();
@@ -40,7 +37,8 @@ public class DatabaseMigrationActivity extends PassphraseRequiredActionBarActivi
   private boolean isVisible = false;
 
   @Override
-  protected void onCreate(Bundle bundle, @NonNull MasterSecret masterSecret) {
+  public void onCreate(Bundle bundle) {
+    super.onCreate(bundle);
     setContentView(R.layout.database_migration_activity);
 
     initializeResources();
@@ -93,7 +91,7 @@ public class DatabaseMigrationActivity extends PassphraseRequiredActionBarActivi
       public void onClick(View v) {
         Intent intent = new Intent(DatabaseMigrationActivity.this, ApplicationMigrationService.class);
         intent.setAction(ApplicationMigrationService.MIGRATE_DATABASE);
-        intent.putExtra("master_secret", (Parcelable)getIntent().getParcelableExtra("master_secret"));
+        intent.putExtra("master_secret", getIntent().getParcelableExtra("master_secret"));
         startService(intent);
 
         promptLayout.setVisibility(View.GONE);
@@ -185,12 +183,11 @@ public class DatabaseMigrationActivity extends PassphraseRequiredActionBarActivi
     }
   }
 
-  private static class NullReceiver extends BroadcastReceiver {
+  private class NullReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
       abortBroadcast();
     }
   }
-
 
 }

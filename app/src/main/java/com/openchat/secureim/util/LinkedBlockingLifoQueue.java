@@ -1,7 +1,6 @@
 package com.openchat.secureim.util;
 
-
-import java.util.concurrent.LinkedBlockingDeque;
+import com.openchat.secureim.util.deque.LinkedBlockingDeque;
 
 public class LinkedBlockingLifoQueue<E> extends LinkedBlockingDeque<E> {
   @Override

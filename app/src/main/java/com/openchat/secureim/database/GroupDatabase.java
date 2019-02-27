@@ -1,41 +1,42 @@
 package com.openchat.secureim.database;
 
-
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.text.TextUtils;
-
-import com.annimon.stream.Stream;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.openchat.secureim.recipients.Recipient;
+import com.openchat.secureim.recipients.RecipientFactory;
+import com.openchat.secureim.recipients.RecipientFormattingException;
+import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.BitmapUtil;
 import com.openchat.secureim.util.GroupUtil;
-import com.openchat.secureim.util.Util;
-import com.openchat.libim.util.guava.Optional;
-import com.openchat.imservice.api.messages.openchatServiceAttachmentPointer;
+import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.imservice.util.Util;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+
+import static com.openchat.imservice.push.PushMessageProtos.PushMessageContent.AttachmentPointer;
 
 public class GroupDatabase extends Database {
 
-  @SuppressWarnings("unused")
+  public static final String DATABASE_UPDATE_ACTION = "com.openchat.secureim.database.GroupDatabase.UPDATE";
+
   private static final String TAG = GroupDatabase.class.getSimpleName();
 
-          static final String TABLE_NAME          = "groups";
+  private static final String TABLE_NAME          = "groups";
   private static final String ID                  = "_id";
-          static final String GROUP_ID            = "group_id";
+  private static final String GROUP_ID            = "group_id";
   private static final String TITLE               = "title";
   private static final String MEMBERS             = "members";
   private static final String AVATAR              = "avatar";
@@ -43,10 +44,8 @@ public class GroupDatabase extends Database {
   private static final String AVATAR_KEY          = "avatar_key";
   private static final String AVATAR_CONTENT_TYPE = "avatar_content_type";
   private static final String AVATAR_RELAY        = "avatar_relay";
-  private static final String AVATAR_DIGEST       = "avatar_digest";
   private static final String TIMESTAMP           = "timestamp";
   private static final String ACTIVE              = "active";
-  private static final String MMS                 = "mms";
 
   public static final String CREATE_TABLE =
       "CREATE TABLE " + TABLE_NAME +
@@ -60,238 +59,163 @@ public class GroupDatabase extends Database {
           AVATAR_CONTENT_TYPE + " TEXT, " +
           AVATAR_RELAY + " TEXT, " +
           TIMESTAMP + " INTEGER, " +
-          ACTIVE + " INTEGER DEFAULT 1, " +
-          AVATAR_DIGEST + " BLOB, " +
-          MMS + " INTEGER DEFAULT 0);";
+          ACTIVE + " INTEGER DEFAULT 1);";
 
-  static final String[] CREATE_INDEXS = {
+  public static final String[] CREATE_INDEXS = {
       "CREATE UNIQUE INDEX IF NOT EXISTS group_id_index ON " + TABLE_NAME + " (" + GROUP_ID + ");",
   };
-
-  private static final String[] GROUP_PROJECTION = {
-      GROUP_ID, TITLE, MEMBERS, AVATAR, AVATAR_ID, AVATAR_KEY, AVATAR_CONTENT_TYPE, AVATAR_RELAY, AVATAR_DIGEST,
-      TIMESTAMP, ACTIVE, MMS
-  };
-
-  static final List<String> TYPED_GROUP_PROJECTION = Stream.of(GROUP_PROJECTION).map(columnName -> TABLE_NAME + "." + columnName).toList();
 
   public GroupDatabase(Context context, SQLiteOpenHelper databaseHelper) {
     super(context, databaseHelper);
   }
 
-  public Optional<GroupRecord> getGroup(String groupId) {
-    try (Cursor cursor = databaseHelper.getReadableDatabase().query(TABLE_NAME, null, GROUP_ID + " = ?",
-                                                                    new String[] {groupId},
-                                                                    null, null, null))
-    {
-      if (cursor != null && cursor.moveToNext()) {
-        return getGroup(cursor);
-      }
-
-      return Optional.absent();
-    }
-  }
-
-  Optional<GroupRecord> getGroup(Cursor cursor) {
-    Reader reader = new Reader(cursor);
-    return Optional.fromNullable(reader.getCurrent());
-  }
-
-  public boolean isUnknownGroup(String groupId) {
-    return !getGroup(groupId).isPresent();
-  }
-
-  public Reader getGroupsFilteredByTitle(String constraint) {
-    @SuppressLint("Recycle")
-    Cursor cursor = databaseHelper.getReadableDatabase().query(TABLE_NAME, null, TITLE + " LIKE ?",
-                                                                                        new String[]{"%" + constraint + "%"},
-                                                                                        null, null, null);
-
-    return new Reader(cursor);
-  }
-
-  public String getOrCreateGroupForMembers(List<Address> members, boolean mms) {
-    Collections.sort(members);
-
-    Cursor cursor = databaseHelper.getReadableDatabase().query(TABLE_NAME, new String[] {GROUP_ID},
-                                                               MEMBERS + " = ? AND " + MMS + " = ?",
-                                                               new String[] {Address.toSerializedList(members, ','), mms ? "1" : "0"},
+  public GroupRecord getGroup(byte[] groupId) {
+    Cursor cursor = databaseHelper.getReadableDatabase().query(TABLE_NAME, null, GROUP_ID + " = ?",
+                                                               new String[] {GroupUtil.getEncodedId(groupId)},
                                                                null, null, null);
-    try {
-      if (cursor != null && cursor.moveToNext()) {
-        return cursor.getString(cursor.getColumnIndexOrThrow(GROUP_ID));
-      } else {
-        String groupId = GroupUtil.getEncodedId(allocateGroupId(), mms);
-        create(groupId, null, members, null, null);
-        return groupId;
-      }
-    } finally {
-      if (cursor != null) cursor.close();
-    }
+
+    Reader      reader = new Reader(cursor);
+    GroupRecord record = reader.getNext();
+
+    reader.close();
+    return record;
   }
 
-  public Reader getGroups() {
-    @SuppressLint("Recycle")
-    Cursor cursor = databaseHelper.getReadableDatabase().query(TABLE_NAME, null, null, null, null, null, null);
-    return new Reader(cursor);
-  }
+  public Recipients getGroupMembers(byte[] groupId, boolean includeSelf) {
+    String          localNumber = OpenchatServicePreferences.getLocalNumber(context);
+    List<String>    members     = getCurrentMembers(groupId);
+    List<Recipient> recipients  = new LinkedList<Recipient>();
 
-  public @NonNull List<Recipient> getGroupMembers(String groupId, boolean includeSelf) {
-    List<Address>   members     = getCurrentMembers(groupId);
-    List<Recipient> recipients  = new LinkedList<>();
-
-    for (Address member : members) {
-      if (!includeSelf && Util.isOwnNumber(context, member))
+    for (String member : members) {
+      if (!includeSelf && member.equals(localNumber))
         continue;
 
-      recipients.add(Recipient.from(context, member, false));
+      try {
+        recipients.addAll(RecipientFactory.getRecipientsFromString(context, member, false)
+                                          .getRecipientsList());
+      } catch (RecipientFormattingException e) {
+        Log.w("GroupDatabase", e);
+      }
     }
 
-    return recipients;
+    return new Recipients(recipients);
   }
 
-  public void create(@NonNull String groupId, @Nullable String title, @NonNull List<Address> members,
-                     @Nullable openchatServiceAttachmentPointer avatar, @Nullable String relay)
+  public void create(byte[] groupId, String title, List<String> members,
+                     AttachmentPointer avatar, String relay)
   {
-    Collections.sort(members);
-
     ContentValues contentValues = new ContentValues();
-    contentValues.put(GROUP_ID, groupId);
+    contentValues.put(GROUP_ID, GroupUtil.getEncodedId(groupId));
     contentValues.put(TITLE, title);
-    contentValues.put(MEMBERS, Address.toSerializedList(members, ','));
+    contentValues.put(MEMBERS, Util.join(members, ","));
 
     if (avatar != null) {
       contentValues.put(AVATAR_ID, avatar.getId());
-      contentValues.put(AVATAR_KEY, avatar.getKey());
+      contentValues.put(AVATAR_KEY, avatar.getKey().toByteArray());
       contentValues.put(AVATAR_CONTENT_TYPE, avatar.getContentType());
-      contentValues.put(AVATAR_DIGEST, avatar.getDigest().orNull());
     }
 
     contentValues.put(AVATAR_RELAY, relay);
     contentValues.put(TIMESTAMP, System.currentTimeMillis());
     contentValues.put(ACTIVE, 1);
-    contentValues.put(MMS, GroupUtil.isMmsGroup(groupId));
 
     databaseHelper.getWritableDatabase().insert(TABLE_NAME, null, contentValues);
-
-    Recipient.applyCached(Address.fromSerialized(groupId), recipient -> {
-      recipient.setName(title);
-      recipient.setGroupAvatarId(avatar != null ? avatar.getId() : null);
-      recipient.setParticipants(Stream.of(members).map(memberAddress -> Recipient.from(context, memberAddress, true)).toList());
-    });
-
-    notifyConversationListListeners();
   }
 
-  public void update(String groupId, String title, openchatServiceAttachmentPointer avatar) {
+  public void update(byte[] groupId, String title, AttachmentPointer avatar) {
     ContentValues contentValues = new ContentValues();
     if (title != null) contentValues.put(TITLE, title);
 
     if (avatar != null) {
       contentValues.put(AVATAR_ID, avatar.getId());
       contentValues.put(AVATAR_CONTENT_TYPE, avatar.getContentType());
-      contentValues.put(AVATAR_KEY, avatar.getKey());
-      contentValues.put(AVATAR_DIGEST, avatar.getDigest().orNull());
+      contentValues.put(AVATAR_KEY, avatar.getKey().toByteArray());
     }
 
     databaseHelper.getWritableDatabase().update(TABLE_NAME, contentValues,
                                                 GROUP_ID + " = ?",
-                                                new String[] {groupId});
+                                                new String[] {GroupUtil.getEncodedId(groupId)});
 
-    Recipient.applyCached(Address.fromSerialized(groupId), recipient -> {
-      recipient.setName(title);
-      recipient.setGroupAvatarId(avatar != null ? avatar.getId() : null);
-    });
-
-    notifyConversationListListeners();
+    RecipientFactory.clearCache();
+    notifyDatabaseListeners();
   }
 
-  public void updateTitle(String groupId, String title) {
+  public void updateTitle(byte[] groupId, String title) {
     ContentValues contentValues = new ContentValues();
     contentValues.put(TITLE, title);
     databaseHelper.getWritableDatabase().update(TABLE_NAME, contentValues, GROUP_ID +  " = ?",
-                                                new String[] {groupId});
+                                                new String[] {GroupUtil.getEncodedId(groupId)});
 
-    Recipient recipient = Recipient.from(context, Address.fromSerialized(groupId), false);
-    recipient.setName(title);
+    RecipientFactory.clearCache();
+    notifyDatabaseListeners();
   }
 
-  public void updateAvatar(String groupId, Bitmap avatar) {
+  public void updateAvatar(byte[] groupId, Bitmap avatar) {
     updateAvatar(groupId, BitmapUtil.toByteArray(avatar));
   }
 
-  public void updateAvatar(String groupId, byte[] avatar) {
-    long avatarId;
-
-    if (avatar != null) avatarId = Math.abs(new SecureRandom().nextLong());
-    else                avatarId = 0;
-
-
-    ContentValues contentValues = new ContentValues(2);
+  public void updateAvatar(byte[] groupId, byte[] avatar) {
+    ContentValues contentValues = new ContentValues();
     contentValues.put(AVATAR, avatar);
-    contentValues.put(AVATAR_ID, avatarId);
 
     databaseHelper.getWritableDatabase().update(TABLE_NAME, contentValues, GROUP_ID +  " = ?",
-                                                new String[] {groupId});
+                                                new String[] {GroupUtil.getEncodedId(groupId)});
 
-    Recipient.applyCached(Address.fromSerialized(groupId), recipient -> recipient.setGroupAvatarId(avatarId == 0 ? null : avatarId));
+    RecipientFactory.clearCache();
+    notifyDatabaseListeners();
   }
 
-  public void updateMembers(String groupId, List<Address> members) {
-    Collections.sort(members);
-
+  public void updateMembers(byte[] id, List<String> members) {
     ContentValues contents = new ContentValues();
-    contents.put(MEMBERS, Address.toSerializedList(members, ','));
+    contents.put(MEMBERS, Util.join(members, ","));
     contents.put(ACTIVE, 1);
 
     databaseHelper.getWritableDatabase().update(TABLE_NAME, contents, GROUP_ID + " = ?",
-                                                new String[] {groupId});
+                                                new String[] {GroupUtil.getEncodedId(id)});
   }
 
-  public void remove(String groupId, Address source) {
-    List<Address> currentMembers = getCurrentMembers(groupId);
+  public void remove(byte[] id, String source) {
+    List<String> currentMembers = getCurrentMembers(id);
     currentMembers.remove(source);
 
     ContentValues contents = new ContentValues();
-    contents.put(MEMBERS, Address.toSerializedList(currentMembers, ','));
+    contents.put(MEMBERS, Util.join(currentMembers, ","));
 
     databaseHelper.getWritableDatabase().update(TABLE_NAME, contents, GROUP_ID + " = ?",
-                                                new String[] {groupId});
+                                                new String[] {GroupUtil.getEncodedId(id)});
   }
 
-  private List<Address> getCurrentMembers(String groupId) {
+  private List<String> getCurrentMembers(byte[] id) {
     Cursor cursor = null;
 
     try {
       cursor = databaseHelper.getReadableDatabase().query(TABLE_NAME, new String[] {MEMBERS},
                                                           GROUP_ID + " = ?",
-                                                          new String[] {groupId},
+                                                          new String[] {GroupUtil.getEncodedId(id)},
                                                           null, null, null);
 
       if (cursor != null && cursor.moveToFirst()) {
-        String serializedMembers = cursor.getString(cursor.getColumnIndexOrThrow(MEMBERS));
-        return Address.fromSerializedList(serializedMembers, ',');
+        return Util.split(cursor.getString(cursor.getColumnIndexOrThrow(MEMBERS)), ",");
       }
 
-      return new LinkedList<>();
+      return new LinkedList<String>();
     } finally {
       if (cursor != null)
         cursor.close();
     }
   }
 
-  public boolean isActive(String groupId) {
-    Optional<GroupRecord> record = getGroup(groupId);
-    return record.isPresent() && record.get().isActive();
+  public boolean isActive(byte[] id) {
+    GroupRecord record = getGroup(id);
+    return record != null && record.isActive();
   }
 
-  public void setActive(String groupId, boolean active) {
+  public void setActive(byte[] id, boolean active) {
     SQLiteDatabase database = databaseHelper.getWritableDatabase();
     ContentValues  values   = new ContentValues();
     values.put(ACTIVE, active ? 1 : 0);
-    database.update(TABLE_NAME, values, GROUP_ID + " = ?", new String[] {groupId});
+    database.update(TABLE_NAME, values, GROUP_ID + " = ?", new String[] {GroupUtil.getEncodedId(id)});
   }
-
 
   public byte[] allocateGroupId() {
     try {
@@ -303,6 +227,11 @@ public class GroupDatabase extends Database {
     }
   }
 
+  private void notifyDatabaseListeners() {
+    Intent intent = new Intent(DATABASE_UPDATE_ACTION);
+    context.sendBroadcast(intent);
+  }
+
   public static class Reader {
 
     private final Cursor cursor;
@@ -311,16 +240,8 @@ public class GroupDatabase extends Database {
       this.cursor = cursor;
     }
 
-    public @Nullable GroupRecord getNext() {
+    public GroupRecord getNext() {
       if (cursor == null || !cursor.moveToNext()) {
-        return null;
-      }
-
-      return getCurrent();
-    }
-
-    public @Nullable GroupRecord getCurrent() {
-      if (cursor == null || cursor.getString(cursor.getColumnIndexOrThrow(GROUP_ID)) == null) {
         return null;
       }
 
@@ -332,9 +253,7 @@ public class GroupDatabase extends Database {
                              cursor.getBlob(cursor.getColumnIndexOrThrow(AVATAR_KEY)),
                              cursor.getString(cursor.getColumnIndexOrThrow(AVATAR_CONTENT_TYPE)),
                              cursor.getString(cursor.getColumnIndexOrThrow(AVATAR_RELAY)),
-                             cursor.getInt(cursor.getColumnIndexOrThrow(ACTIVE)) == 1,
-                             cursor.getBlob(cursor.getColumnIndexOrThrow(AVATAR_DIGEST)),
-                             cursor.getInt(cursor.getColumnIndexOrThrow(MMS)) == 1);
+                             cursor.getInt(cursor.getColumnIndexOrThrow(ACTIVE)) == 1);
     }
 
     public void close() {
@@ -345,35 +264,29 @@ public class GroupDatabase extends Database {
 
   public static class GroupRecord {
 
-    private final String        id;
-    private final String        title;
-    private final List<Address> members;
-    private final byte[]        avatar;
-    private final long          avatarId;
-    private final byte[]        avatarKey;
-    private final byte[]        avatarDigest;
-    private final String        avatarContentType;
-    private final String        relay;
-    private final boolean       active;
-    private final boolean       mms;
+    private final String       id;
+    private final String       title;
+    private final List<String> members;
+    private final byte[]       avatar;
+    private final long         avatarId;
+    private final byte[]       avatarKey;
+    private final String       avatarContentType;
+    private final String       relay;
+    private final boolean      active;
 
     public GroupRecord(String id, String title, String members, byte[] avatar,
                        long avatarId, byte[] avatarKey, String avatarContentType,
-                       String relay, boolean active, byte[] avatarDigest, boolean mms)
+                       String relay, boolean active)
     {
       this.id                = id;
       this.title             = title;
+      this.members           = Util.split(members, ",");
       this.avatar            = avatar;
       this.avatarId          = avatarId;
       this.avatarKey         = avatarKey;
-      this.avatarDigest      = avatarDigest;
       this.avatarContentType = avatarContentType;
       this.relay             = relay;
       this.active            = active;
-      this.mms               = mms;
-
-      if (!TextUtils.isEmpty(members)) this.members = Address.fromSerializedList(members, ',');
-      else                             this.members = new LinkedList<>();
     }
 
     public byte[] getId() {
@@ -384,15 +297,11 @@ public class GroupDatabase extends Database {
       }
     }
 
-    public String getEncodedId() {
-      return id;
-    }
-
     public String getTitle() {
       return title;
     }
 
-    public List<Address> getMembers() {
+    public List<String> getMembers() {
       return members;
     }
 
@@ -408,10 +317,6 @@ public class GroupDatabase extends Database {
       return avatarKey;
     }
 
-    public byte[] getAvatarDigest() {
-      return avatarDigest;
-    }
-
     public String getAvatarContentType() {
       return avatarContentType;
     }
@@ -422,10 +327,6 @@ public class GroupDatabase extends Database {
 
     public boolean isActive() {
       return active;
-    }
-
-    public boolean isMms() {
-      return mms;
     }
   }
 }

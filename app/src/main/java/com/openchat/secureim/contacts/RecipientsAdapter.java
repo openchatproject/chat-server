@@ -1,20 +1,3 @@
-/*
- * Copyright (C) 2008 Esmertec AG.
- * Copyright (C) 2008 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.openchat.secureim.contacts;
 
 import com.openchat.secureim.R;
@@ -31,9 +14,6 @@ import android.view.View;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
-/**
- * This adapter is used to filter contacts on both name and number.
- */
 public class RecipientsAdapter extends ResourceCursorAdapter {
 
     public static final int CONTACT_ID_INDEX = 1;
@@ -69,12 +49,6 @@ public class RecipientsAdapter extends ResourceCursorAdapter {
         if (name == null) {
             name = "";
         } else {
-            // Names with commas are the bane of the recipient editor's existence.
-            // We've worked around them by using spans, but there are edge cases
-            // where the spans get deleted. Furthermore, having commas in names
-            // can be confusing to the user since commas are used as separators
-            // between recipients. The best solution is to simply remove commas
-            // from names.
             name = name.replace(", ", " ")
                        .replace(",", " ");  // Make sure we leave a space between parts of names.
         }
@@ -121,10 +95,7 @@ public class RecipientsAdapter extends ResourceCursorAdapter {
        return mContactAccessor.getCursorForRecipientFilter( constraint, mContentResolver );
     }
 
-    /**
-     * Returns true if all the characters are meaningful as digits
-     * in a phone number -- letters, digits, and a few punctuation marks.
-     */
+    
     public static  boolean usefulAsDigits(CharSequence cons) {
         int len = cons.length();
 

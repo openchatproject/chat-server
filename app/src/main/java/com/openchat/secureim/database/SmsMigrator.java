@@ -3,26 +3,19 @@ package com.openchat.secureim.database;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteStatement;
 import android.net.Uri;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.openchat.secureim.crypto.MasterCipher;
-import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.secureim.recipients.Recipient;
-import com.openchat.secureim.util.TextSecurePreferences;
+import com.openchat.imservice.crypto.MasterCipher;
+import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.recipients.RecipientFactory;
+import com.openchat.secureim.recipients.RecipientFormattingException;
+import com.openchat.secureim.recipients.Recipients;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 public class SmsMigrator {
-
-  private static final String TAG = SmsMigrator.class.getSimpleName();
 
   private static void addEncryptedStringToStatement(Context context, SQLiteStatement statement,
                                                     Cursor cursor, MasterSecret masterSecret,
@@ -74,22 +67,11 @@ public class SmsMigrator {
     }
   }
 
-  private static boolean isAppropriateTypeForMigration(Cursor cursor, int columnIndex) {
-    long systemType = cursor.getLong(columnIndex);
-    long ourType    = SmsDatabase.Types.translateFromSystemBaseType(systemType);
-
-    return ourType == MmsSmsColumns.Types.BASE_INBOX_TYPE ||
-           ourType == MmsSmsColumns.Types.BASE_SENT_TYPE ||
-           ourType == MmsSmsColumns.Types.BASE_SENT_FAILED_TYPE;
-  }
-
   private static void getContentValuesForRow(Context context, MasterSecret masterSecret,
                                              Cursor cursor, long threadId,
                                              SQLiteStatement statement)
   {
-    String theirAddress = cursor.getString(cursor.getColumnIndexOrThrow(SmsDatabase.ADDRESS));
-    statement.bindString(1, Address.fromExternal(context, theirAddress).serialize());
-
+    addStringToStatement(statement, cursor, 1, SmsDatabase.ADDRESS);
     addIntToStatement(statement, cursor, 2, SmsDatabase.PERSON);
     addIntToStatement(statement, cursor, 3, SmsDatabase.DATE_RECEIVED);
     addIntToStatement(statement, cursor, 4, SmsDatabase.DATE_RECEIVED);
@@ -126,21 +108,30 @@ public class SmsMigrator {
     }
   }
 
-  private static @Nullable Set<Recipient> getOurRecipients(Context context, String theirRecipients) {
-    StringTokenizer tokenizer     = new StringTokenizer(theirRecipients.trim(), " ");
-    Set<Recipient>  recipientList = new HashSet<>();
+  private static Recipients getOurRecipients(Context context, String theirRecipients) {
+    StringTokenizer tokenizer = new StringTokenizer(theirRecipients.trim(), " ");
+    StringBuilder sb          = new StringBuilder();
 
     while (tokenizer.hasMoreTokens()) {
       String theirRecipientId = tokenizer.nextToken();
       String address          = getTheirCanonicalAddress(context, theirRecipientId);
 
-      if (address != null) {
-        recipientList.add(Recipient.from(context, Address.fromExternal(context, address), true));
-      }
+      if (address == null)
+        continue;
+
+      if (sb.length() != 0)
+        sb.append(',');
+
+      sb.append(address);
     }
 
-    if (recipientList.isEmpty()) return null;
-    else                         return recipientList;
+    try {
+      if (sb.length() == 0) return null;
+      else                  return RecipientFactory.getRecipientsFromString(context, sb.toString(), true);
+    } catch (RecipientFormattingException rfe) {
+      Log.w("SmsMigrator", rfe);
+      return null;
+    }
   }
 
   private static String encrypt(MasterSecret masterSecret, String body)
@@ -158,32 +149,20 @@ public class SmsMigrator {
     Cursor cursor              = null;
 
     try {
-      Uri uri = Uri.parse("content://sms/conversations/" + theirThreadId);
-
-      try {
-        cursor = context.getContentResolver().query(uri, null, null, null, null);
-      } catch (SQLiteException e) {
-        /// Work around for weird sony-specific (?) bug: #4309
-        Log.w(TAG, e);
-        return;
-      }
-
+      Uri uri                    = Uri.parse("content://sms/conversations/" + theirThreadId);
+      cursor                     = context.getContentResolver().query(uri, null, null, null, null);
       SQLiteDatabase transaction = ourSmsDatabase.beginTransaction();
       SQLiteStatement statement  = ourSmsDatabase.createInsertStatement(transaction);
 
       while (cursor != null && cursor.moveToNext()) {
-        int typeColumn = cursor.getColumnIndex(SmsDatabase.TYPE);
-
-        if (cursor.isNull(typeColumn) || isAppropriateTypeForMigration(cursor, typeColumn)) {
-          getContentValuesForRow(context, masterSecret, cursor, ourThreadId, statement);
-          statement.execute();
-        }
+        getContentValuesForRow(context, masterSecret, cursor, ourThreadId, statement);
+        statement.execute();
 
         listener.progressUpdate(new ProgressDescription(progress, cursor.getCount(), cursor.getPosition()));
       }
 
       ourSmsDatabase.endTransaction(transaction);
-      DatabaseFactory.getThreadDatabase(context).update(ourThreadId, true);
+      DatabaseFactory.getThreadDatabase(context).update(ourThreadId);
       DatabaseFactory.getThreadDatabase(context).notifyConversationListeners(ourThreadId);
 
     } finally {
@@ -196,8 +175,6 @@ public class SmsMigrator {
                                      MasterSecret masterSecret,
                                      SmsMigrationProgressListener listener)
   {
-//    if (context.getSharedPreferences("SecureSMS", Context.MODE_PRIVATE).getBoolean("migrated", false))
-//      return;
 
     ThreadDatabase threadDatabase = DatabaseFactory.getThreadDatabase(context);
     Cursor cursor                 = null;
@@ -207,30 +184,16 @@ public class SmsMigrator {
       cursor            = context.getContentResolver().query(threadListUri, null, null, null, "date ASC");
 
       while (cursor != null && cursor.moveToNext()) {
-        long                theirThreadId   = cursor.getLong(cursor.getColumnIndexOrThrow("_id"));
-        String              theirRecipients = cursor.getString(cursor.getColumnIndexOrThrow("recipient_ids"));
-        Set<Recipient>     ourRecipients   = getOurRecipients(context, theirRecipients);
-        ProgressDescription progress        = new ProgressDescription(cursor.getCount(), cursor.getPosition(), 100, 0);
+        long   theirThreadId         = cursor.getLong(cursor.getColumnIndexOrThrow("_id"));
+        String theirRecipients       = cursor.getString(cursor.getColumnIndexOrThrow("recipient_ids"));
+        Recipients ourRecipients     = getOurRecipients(context, theirRecipients);
+        ProgressDescription progress = new ProgressDescription(cursor.getCount(), cursor.getPosition(), 100, 0);
 
         if (ourRecipients != null) {
-          if (ourRecipients.size() == 1) {
-            long ourThreadId = threadDatabase.getThreadIdFor(ourRecipients.iterator().next());
-            migrateConversation(context, masterSecret, listener, progress, theirThreadId, ourThreadId);
-          } else if (ourRecipients.size() > 1) {
-            ourRecipients.add(Recipient.from(context, Address.fromSerialized(TextSecurePreferences.getLocalNumber(context)), true));
-
-            List<Address> memberAddresses = new LinkedList<>();
-
-            for (Recipient recipient : ourRecipients) {
-              memberAddresses.add(recipient.getAddress());
-            }
-
-            String    ourGroupId        = DatabaseFactory.getGroupDatabase(context).getOrCreateGroupForMembers(memberAddresses, true);
-            Recipient ourGroupRecipient = Recipient.from(context, Address.fromSerialized(ourGroupId), true);
-            long      ourThreadId       = threadDatabase.getThreadIdFor(ourGroupRecipient, ThreadDatabase.DistributionTypes.CONVERSATION);
-
-            migrateConversation(context, masterSecret, listener, progress, theirThreadId, ourThreadId);
-          }
+          long ourThreadId = threadDatabase.getThreadIdFor(ourRecipients);
+          migrateConversation(context, masterSecret,
+                              listener, progress,
+                              theirThreadId, ourThreadId);
         }
 
         progress.incrementPrimaryComplete();

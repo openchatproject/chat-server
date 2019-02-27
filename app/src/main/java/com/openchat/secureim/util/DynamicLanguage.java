@@ -1,13 +1,8 @@
 package com.openchat.secureim.util;
 
 import android.app.Activity;
-import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
-import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 
 import java.util.Locale;
@@ -20,7 +15,7 @@ public class DynamicLanguage {
 
   public void onCreate(Activity activity) {
     currentLocale = getSelectedLocale(activity);
-    setContextLocale(activity, currentLocale);
+    setActivityLocale(activity, currentLocale);
   }
 
   public void onResume(Activity activity) {
@@ -33,31 +28,13 @@ public class DynamicLanguage {
     }
   }
 
-  public void updateServiceLocale(Service service) {
-    currentLocale = getSelectedLocale(service);
-    setContextLocale(service, currentLocale);
-  }
-
-  public Locale getCurrentLocale() {
-    return currentLocale;
-  }
-
-  @RequiresApi(VERSION_CODES.JELLY_BEAN_MR1)
-  public static int getLayoutDirection(Context context) {
-    Configuration configuration = context.getResources().getConfiguration();
-    return configuration.getLayoutDirection();
-  }
-
-  private static void setContextLocale(Context context, Locale selectedLocale) {
-    Configuration configuration = context.getResources().getConfiguration();
+  private static void setActivityLocale(Activity activity, Locale selectedLocale) {
+    Configuration configuration = activity.getResources().getConfiguration();
 
     if (!configuration.locale.equals(selectedLocale)) {
       configuration.locale = selectedLocale;
-      if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
-        configuration.setLayoutDirection(selectedLocale);
-      }
-      context.getResources().updateConfiguration(configuration,
-                                                 context.getResources().getDisplayMetrics());
+      activity.getResources().updateConfiguration(configuration,
+                                                  activity.getResources().getDisplayMetrics());
     }
   }
 
@@ -65,8 +42,8 @@ public class DynamicLanguage {
     return activity.getResources().getConfiguration().locale;
   }
 
-  private static Locale getSelectedLocale(Context context) {
-    String language[] = TextUtils.split(TextSecurePreferences.getLanguage(context), "_");
+  private static Locale getSelectedLocale(Activity activity) {
+    String language[] = TextUtils.split(OpenchatServicePreferences.getLanguage(activity), "_");
 
     if (language[0].equals(DEFAULT)) {
       return Locale.getDefault();
@@ -82,4 +59,5 @@ public class DynamicLanguage {
       activity.overridePendingTransition(0, 0);
     }
   }
+
 }

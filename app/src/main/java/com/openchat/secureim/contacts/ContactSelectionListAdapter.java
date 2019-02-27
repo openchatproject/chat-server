@@ -3,247 +3,236 @@ package com.openchat.secureim.contacts;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.widget.CursorAdapter;
+import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.FilterQueryProvider;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.openchat.secureim.R;
-import com.openchat.secureim.components.RecyclerViewFastScroller.FastScrollAdapter;
-import com.openchat.secureim.contacts.ContactSelectionListAdapter.HeaderViewHolder;
-import com.openchat.secureim.contacts.ContactSelectionListAdapter.ViewHolder;
-import com.openchat.secureim.database.CursorRecyclerViewAdapter;
-import com.openchat.secureim.mms.GlideRequests;
-import com.openchat.secureim.util.StickyHeaderDecoration.StickyHeaderAdapter;
+import com.openchat.secureim.util.BitmapUtil;
+import com.openchat.secureim.util.BitmapWorkerRunnable;
+import com.openchat.secureim.util.BitmapWorkerRunnable.AsyncDrawable;
+import com.openchat.secureim.util.TaggedFutureTask;
 import com.openchat.secureim.util.Util;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.FutureTask;
 
-/**
- * List adapter to display all contacts and their related information
- */
-public class ContactSelectionListAdapter extends CursorRecyclerViewAdapter<ViewHolder>
-                                         implements FastScrollAdapter,
-                                                    StickyHeaderAdapter<HeaderViewHolder>
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+
+public class ContactSelectionListAdapter extends    CursorAdapter
+                                         implements StickyListHeadersAdapter
 {
-  private final static String TAG = ContactSelectionListAdapter.class.getSimpleName();
+  private final static String TAG = "ContactListAdapter";
 
-  private static final int VIEW_TYPE_CONTACT = 0;
-  private static final int VIEW_TYPE_DIVIDER = 1;
+  private final static ExecutorService photoResolver = Util.newSingleThreadedLifoExecutor();
 
   private final static int STYLE_ATTRIBUTES[] = new int[]{R.attr.contact_selection_push_user,
-                                                          R.attr.contact_selection_lay_user};
+                                                          R.attr.contact_selection_lay_user,
+                                                          R.attr.contact_selection_label_text};
 
-  private final boolean           multiSelect;
-  private final LayoutInflater    li;
-  private final TypedArray        drawables;
-  private final ItemClickListener clickListener;
-  private final GlideRequests     glideRequests;
+  private int TYPE_COLUMN        = -1;
+  private int NAME_COLUMN        = -1;
+  private int NUMBER_COLUMN      = -1;
+  private int NUMBER_TYPE_COLUMN = -1;
+  private int LABEL_COLUMN       = -1;
+  private int ID_COLUMN          = -1;
 
-  private final Set<String> selectedContacts = new HashSet<>();
+  private final Context        context;
+  private final boolean        multiSelect;
+  private final LayoutInflater li;
+  private final TypedArray     drawables;
+  private final Bitmap         defaultPhoto;
+  private final Bitmap         defaultCroppedPhoto;
+  private final int            scaledPhotoSize;
 
-  public abstract static class ViewHolder extends RecyclerView.ViewHolder {
+  private final HashMap<Long, ContactAccessor.ContactData> selectedContacts = new HashMap<Long, ContactAccessor.ContactData>();
 
-    public ViewHolder(View itemView) {
-      super(itemView);
-    }
-
-    public abstract void bind(@NonNull GlideRequests glideRequests, int type, String name, String number, String label, int color, boolean multiSelect);
-    public abstract void unbind(@NonNull GlideRequests glideRequests);
-    public abstract void setChecked(boolean checked);
+  public ContactSelectionListAdapter(Context context, Cursor cursor, boolean multiSelect) {
+    super(context, cursor, 0);
+    this.context             = context;
+    this.li                  = LayoutInflater.from(context);
+    this.drawables           = context.obtainStyledAttributes(STYLE_ATTRIBUTES);
+    this.multiSelect         = multiSelect;
+    this.defaultPhoto        = ContactPhotoFactory.getDefaultContactPhoto(context);
+    this.scaledPhotoSize     = context.getResources().getDimensionPixelSize(R.dimen.contact_selection_photo_size);
+    this.defaultCroppedPhoto = BitmapUtil.getScaledCircleCroppedBitmap(defaultPhoto, scaledPhotoSize);
   }
 
-  public static class ContactViewHolder extends ViewHolder {
-    ContactViewHolder(@NonNull  final View itemView,
-                      @Nullable final ItemClickListener clickListener)
-    {
-      super(itemView);
-      itemView.setOnClickListener(v -> {
-        if (clickListener != null) clickListener.onItemClick(getView());
-      });
-    }
-
-    public ContactSelectionListItem getView() {
-      return (ContactSelectionListItem) itemView;
-    }
-
-    public void bind(@NonNull GlideRequests glideRequests, int type, String name, String number, String label, int color, boolean multiSelect) {
-      getView().set(glideRequests, type, name, number, label, color, multiSelect);
-    }
-
-    @Override
-    public void unbind(@NonNull GlideRequests glideRequests) {
-      getView().unbind(glideRequests);
-    }
-
-    @Override
-    public void setChecked(boolean checked) {
-      getView().setChecked(checked);
-    }
+  public static class ViewHolder {
+    public CheckBox  checkBox;
+    public TextView  name;
+    public TextView  number;
+    public ImageView contactPhoto;
+    public int       position;
   }
 
-  public static class DividerViewHolder extends ViewHolder {
-
-    private final TextView label;
-
-    DividerViewHolder(View itemView) {
-      super(itemView);
-      this.label = itemView.findViewById(R.id.label);
-    }
-
-    @Override
-    public void bind(@NonNull GlideRequests glideRequests, int type, String name, String number, String label, int color, boolean multiSelect) {
-      this.label.setText(name);
-    }
-
-    @Override
-    public void unbind(@NonNull GlideRequests glideRequests) {}
-
-    @Override
-    public void setChecked(boolean checked) {}
+  public static class DataHolder {
+    public int    type;
+    public String name;
+    public String number;
+    public int    numberType;
+    public String label;
+    public long   id;
   }
 
-  static class HeaderViewHolder extends RecyclerView.ViewHolder {
-    HeaderViewHolder(View itemView) {
-      super(itemView);
-    }
+  public static class HeaderViewHolder {
+    TextView text;
   }
 
-  public ContactSelectionListAdapter(@NonNull  Context context,
-                                     @NonNull  GlideRequests glideRequests,
-                                     @Nullable Cursor cursor,
-                                     @Nullable ItemClickListener clickListener,
-                                     boolean multiSelect)
-  {
-    super(context, cursor);
-    this.li            = LayoutInflater.from(context);
-    this.glideRequests = glideRequests;
-    this.drawables     = context.obtainStyledAttributes(STYLE_ATTRIBUTES);
-    this.multiSelect   = multiSelect;
-    this.clickListener = clickListener;
+  @Override
+  public View newView(Context context, Cursor cursor, ViewGroup parent) {
+    final View v                 = li.inflate(R.layout.push_contact_selection_list_item, parent, false);
+    final ViewHolder holder      = new ViewHolder();
+
+    if (v != null) {
+      holder.name         = (TextView) v.findViewById(R.id.name);
+      holder.number       = (TextView) v.findViewById(R.id.number);
+      holder.checkBox     = (CheckBox) v.findViewById(R.id.check_box);
+      holder.contactPhoto = (ImageView) v.findViewById(R.id.contact_photo_image);
+
+      if (!multiSelect) holder.checkBox.setVisibility(View.GONE);
+
+      v.setTag(R.id.holder_tag, holder);
+      v.setTag(R.id.contact_info_tag, new DataHolder());
+    }
+    return v;
+  }
+
+  @Override
+  public void bindView(View view, Context context, Cursor cursor) {
+    final DataHolder contactData = (DataHolder) view.getTag(R.id.contact_info_tag);
+    final ViewHolder holder      = (ViewHolder) view.getTag(R.id.holder_tag);
+    if (holder == null) {
+      Log.w(TAG, "ViewHolder was null. This should not happen.");
+      return;
+    }
+    if (contactData == null) {
+      Log.w(TAG, "DataHolder was null. This should not happen.");
+      return;
+    }
+    if (ID_COLUMN < 0) {
+      populateColumnIndices(cursor);
+    }
+
+    contactData.type       = cursor.getInt(TYPE_COLUMN);
+    contactData.name       = cursor.getString(NAME_COLUMN);
+    contactData.number     = cursor.getString(NUMBER_COLUMN);
+    contactData.numberType = cursor.getInt(NUMBER_TYPE_COLUMN);
+    contactData.label      = cursor.getString(LABEL_COLUMN);
+    contactData.id         = cursor.getLong(ID_COLUMN);
+
+    if (contactData.type != ContactsDatabase.PUSH_TYPE) {
+      holder.name.setTextColor(drawables.getColor(1, 0xff000000));
+      holder.number.setTextColor(drawables.getColor(1, 0xff000000));
+    } else {
+      holder.name.setTextColor(drawables.getColor(0, 0xa0000000));
+      holder.number.setTextColor(drawables.getColor(0, 0xa0000000));
+    }
+
+    if (selectedContacts.containsKey(contactData.id)) {
+      holder.checkBox.setChecked(true);
+    } else {
+      holder.checkBox.setChecked(false);
+    }
+
+    holder.name.setText(contactData.name);
+
+    if (contactData.number == null || contactData.number.isEmpty()) {
+      holder.name.setEnabled(false);
+      holder.number.setText("");
+    } else if (contactData.type == ContactsDatabase.PUSH_TYPE) {
+      holder.number.setText(contactData.number);
+    } else {
+      final CharSequence label = ContactsContract.CommonDataKinds.Phone.getTypeLabel(context.getResources(),
+                                                                                     contactData.numberType, contactData.label);
+      final CharSequence numberWithLabel = contactData.number + "  " + label;
+      final Spannable    numberLabelSpan = new SpannableString(numberWithLabel);
+      numberLabelSpan.setSpan(new ForegroundColorSpan(drawables.getColor(2, 0xff444444)), contactData.number.length(), numberWithLabel.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+      holder.number.setText(numberLabelSpan);
+    }
+    holder.contactPhoto.setImageBitmap(defaultCroppedPhoto);
+    if (contactData.id > -1) loadBitmap(contactData.number, holder.contactPhoto);
+  }
+
+  @Override
+  public View getHeaderView(int i, View convertView, ViewGroup viewGroup) {
+    final Cursor c = getCursor();
+    final HeaderViewHolder holder;
+    if (convertView == null) {
+      holder = new HeaderViewHolder();
+      convertView = li.inflate(R.layout.push_contact_selection_list_header, viewGroup, false);
+      holder.text = (TextView) convertView.findViewById(R.id.text);
+      convertView.setTag(holder);
+    } else {
+      holder = (HeaderViewHolder) convertView.getTag();
+    }
+    c.moveToPosition(i);
+
+    final int type = c.getInt(c.getColumnIndexOrThrow(ContactsDatabase.TYPE_COLUMN));
+    final int headerTextRes;
+    switch (type) {
+    case 1:  headerTextRes = R.string.contact_selection_list__header_openchatservice_users; break;
+    default: headerTextRes = R.string.contact_selection_list__header_other;            break;
+    }
+    holder.text.setText(headerTextRes);
+    return convertView;
   }
 
   @Override
   public long getHeaderId(int i) {
-    if (!isActiveCursor()) return -1;
-
-    int contactType = getContactType(i);
-
-    if (contactType == ContactsDatabase.DIVIDER_TYPE) return -1;
-    return Util.hashCode(getHeaderString(i), getContactType(i));
+    final Cursor c = getCursor();
+    c.moveToPosition(i);
+    return c.getInt(c.getColumnIndexOrThrow(ContactsDatabase.TYPE_COLUMN));
   }
 
-  @Override
-  public ViewHolder onCreateItemViewHolder(ViewGroup parent, int viewType) {
-    if (viewType == VIEW_TYPE_CONTACT) {
-      return new ContactViewHolder(li.inflate(R.layout.contact_selection_list_item, parent, false), clickListener);
-    } else {
-      return new DividerViewHolder(li.inflate(R.layout.contact_selection_list_divider, parent, false));
+  public boolean cancelPotentialWork(String number, ImageView imageView) {
+    final TaggedFutureTask<?> bitmapWorkerTask = AsyncDrawable.getBitmapWorkerTask(imageView);
+
+    if (bitmapWorkerTask != null) {
+      final Object tag = bitmapWorkerTask.getTag();
+      if (tag != null && !tag.equals(number)) {
+        bitmapWorkerTask.cancel(true);
+      } else {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public void loadBitmap(String number, ImageView imageView) {
+    if (cancelPotentialWork(number, imageView)) {
+      final BitmapWorkerRunnable runnable = new BitmapWorkerRunnable(context, imageView, defaultPhoto, number, scaledPhotoSize);
+      final TaggedFutureTask<?> task      = new TaggedFutureTask<Void>(runnable, null, number);
+      final AsyncDrawable asyncDrawable   = new AsyncDrawable(context.getResources(), defaultCroppedPhoto, task);
+
+      imageView.setImageDrawable(asyncDrawable);
+      if (!task.isCancelled()) photoResolver.execute(new FutureTask<Void>(task, null));
     }
   }
 
-  @Override
-  public void onBindItemViewHolder(ViewHolder viewHolder, @NonNull Cursor cursor) {
-    int    contactType = cursor.getInt(cursor.getColumnIndexOrThrow(ContactsDatabase.CONTACT_TYPE_COLUMN));
-    String name        = cursor.getString(cursor.getColumnIndexOrThrow(ContactsDatabase.NAME_COLUMN));
-    String number      = cursor.getString(cursor.getColumnIndexOrThrow(ContactsDatabase.NUMBER_COLUMN));
-    int    numberType  = cursor.getInt(cursor.getColumnIndexOrThrow(ContactsDatabase.NUMBER_TYPE_COLUMN));
-    String label       = cursor.getString(cursor.getColumnIndexOrThrow(ContactsDatabase.LABEL_COLUMN));
-    String labelText   = ContactsContract.CommonDataKinds.Phone.getTypeLabel(getContext().getResources(),
-                                                                             numberType, label).toString();
-
-    int color = (contactType == ContactsDatabase.PUSH_TYPE) ? drawables.getColor(0, 0xa0000000) :
-                drawables.getColor(1, 0xff000000);
-
-    viewHolder.unbind(glideRequests);
-    viewHolder.bind(glideRequests, contactType, name, number, labelText, color, multiSelect);
-    viewHolder.setChecked(selectedContacts.contains(number));
-  }
-
-  @Override
-  public int getItemViewType(@NonNull Cursor cursor) {
-    if (cursor.getInt(cursor.getColumnIndexOrThrow(ContactsDatabase.CONTACT_TYPE_COLUMN)) == ContactsDatabase.DIVIDER_TYPE) {
-      return VIEW_TYPE_DIVIDER;
-    } else {
-      return VIEW_TYPE_CONTACT;
-    }
-  }
-
-
-  @Override
-  public HeaderViewHolder onCreateHeaderViewHolder(ViewGroup parent) {
-    return new HeaderViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.contact_selection_recyclerview_header, parent, false));
-  }
-
-  @Override
-  public void onBindHeaderViewHolder(HeaderViewHolder viewHolder, int position) {
-    ((TextView)viewHolder.itemView).setText(getSpannedHeaderString(position));
-  }
-
-  @Override
-  public void onItemViewRecycled(ViewHolder holder) {
-    holder.unbind(glideRequests);
-  }
-
-  @Override
-  public CharSequence getBubbleText(int position) {
-    return getHeaderString(position);
-  }
-
-  public Set<String> getSelectedContacts() {
+  public Map<Long,ContactAccessor.ContactData> getSelectedContacts() {
     return selectedContacts;
   }
 
-  private CharSequence getSpannedHeaderString(int position) {
-    final String headerString = getHeaderString(position);
-    if (isPush(position)) {
-      SpannableString spannable = new SpannableString(headerString);
-      spannable.setSpan(new ForegroundColorSpan(getContext().getResources().getColor(R.color.openchat_primary)), 0, headerString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-      return spannable;
-    } else {
-      return headerString;
-    }
-  }
-
-  private @NonNull String getHeaderString(int position) {
-    int contactType = getContactType(position);
-
-    if (contactType == ContactsDatabase.RECENT_TYPE || contactType == ContactsDatabase.DIVIDER_TYPE) {
-      return " ";
-    }
-
-    Cursor cursor = getCursorAtPositionOrThrow(position);
-    String letter = cursor.getString(cursor.getColumnIndexOrThrow(ContactsDatabase.NAME_COLUMN));
-
-    if (!TextUtils.isEmpty(letter)) {
-      String firstChar = letter.trim().substring(0, 1).toUpperCase();
-      if (Character.isLetterOrDigit(firstChar.codePointAt(0))) {
-        return firstChar;
-      }
-    }
-
-    return "#";
-  }
-
-  private int getContactType(int position) {
-    final Cursor cursor = getCursorAtPositionOrThrow(position);
-    return cursor.getInt(cursor.getColumnIndexOrThrow(ContactsDatabase.CONTACT_TYPE_COLUMN));
-  }
-
-  private boolean isPush(int position) {
-    return getContactType(position) == ContactsDatabase.PUSH_TYPE;
-  }
-
-  public interface ItemClickListener {
-    void onItemClick(ContactSelectionListItem item);
+  private void populateColumnIndices(final Cursor cursor) {
+    this.TYPE_COLUMN        = cursor.getColumnIndexOrThrow(ContactsDatabase.TYPE_COLUMN);
+    this.NAME_COLUMN        = cursor.getColumnIndexOrThrow(ContactsDatabase.NAME_COLUMN);
+    this.NUMBER_COLUMN      = cursor.getColumnIndexOrThrow(ContactsDatabase.NUMBER_COLUMN);
+    this.NUMBER_TYPE_COLUMN = cursor.getColumnIndexOrThrow(ContactsDatabase.NUMBER_TYPE_COLUMN);
+    this.LABEL_COLUMN       = cursor.getColumnIndexOrThrow(ContactsDatabase.LABEL_COLUMN);
+    this.ID_COLUMN          = cursor.getColumnIndexOrThrow(ContactsDatabase.ID_COLUMN);
   }
 }

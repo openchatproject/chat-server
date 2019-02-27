@@ -3,9 +3,6 @@ package com.openchat.secureim.util;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
-/**
- * FutureTask with a reference identifier tag.
- */
 public class TaggedFutureTask<V> extends FutureTask<V> {
   private final Object tag;
   public TaggedFutureTask(Runnable runnable, V result, Object tag) {

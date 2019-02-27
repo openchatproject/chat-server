@@ -1,7 +1,6 @@
 package com.openchat.secureim.database;
 
-import android.text.TextUtils;
-
+import com.openchat.imservice.util.Util;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -11,8 +10,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,9 +17,7 @@ public class XmlBackup {
 
   private static final String PROTOCOL       = "protocol";
   private static final String ADDRESS        = "address";
-  private static final String CONTACT_NAME   = "contact_name";
   private static final String DATE           = "date";
-  private static final String READABLE_DATE  = "readable_date";
   private static final String TYPE           = "type";
   private static final String SUBJECT        = "subject";
   private static final String BODY           = "body";
@@ -32,8 +27,6 @@ public class XmlBackup {
   private static final String TOA            = "toa";
   private static final String SC_TOA         = "sc_toa";
   private static final String LOCKED         = "locked";
-
-  private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
 
   private final XmlPullParser parser;
 
@@ -68,9 +61,7 @@ public class XmlBackup {
 
         if      (attributeName.equals(PROTOCOL      )) item.protocol      = Integer.parseInt(parser.getAttributeValue(i));
         else if (attributeName.equals(ADDRESS       )) item.address       = parser.getAttributeValue(i);
-        else if (attributeName.equals(CONTACT_NAME  )) item.contactName   = parser.getAttributeValue(i);
         else if (attributeName.equals(DATE          )) item.date          = Long.parseLong(parser.getAttributeValue(i));
-        else if (attributeName.equals(READABLE_DATE )) item.readableDate  = parser.getAttributeValue(i);
         else if (attributeName.equals(TYPE          )) item.type          = Integer.parseInt(parser.getAttributeValue(i));
         else if (attributeName.equals(SUBJECT       )) item.subject       = parser.getAttributeValue(i);
         else if (attributeName.equals(BODY          )) item.body          = parser.getAttributeValue(i);
@@ -88,9 +79,7 @@ public class XmlBackup {
   public static class XmlBackupItem {
     private int    protocol;
     private String address;
-    private String contactName;
     private long   date;
-    private String readableDate;
     private int    type;
     private String subject;
     private String body;
@@ -100,14 +89,12 @@ public class XmlBackup {
 
     public XmlBackupItem() {}
 
-    public XmlBackupItem(int protocol, String address, String contactName, long date, int type,
-                         String subject, String body, String serviceCenter, int read, int status)
+    public XmlBackupItem(int protocol, String address, long date, int type, String subject,
+                         String body, String serviceCenter, int read, int status)
     {
       this.protocol      = protocol;
       this.address       = address;
-      this.contactName   = contactName;
       this.date          = date;
-      this.readableDate  = dateFormatter.format(date);
       this.type          = type;
       this.subject       = subject;
       this.body          = body;
@@ -124,16 +111,8 @@ public class XmlBackup {
       return address;
     }
 
-    public String getContactName() {
-      return contactName;
-    }
-
     public long getDate() {
       return date;
-    }
-
-    public String getReadableDate() {
-      return readableDate;
     }
 
     public int getType() {
@@ -164,7 +143,7 @@ public class XmlBackup {
   public static class Writer {
 
     private static final String  XML_HEADER      = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>";
-    private static final String  CREATED_BY      = "<!-- File Created By openchat -->";
+    private static final String  CREATED_BY      = "<!-- File Created By OpenchatService -->";
     private static final String  OPEN_TAG_SMSES  = "<smses count=\"%d\">";
     private static final String  CLOSE_TAG_SMSES = "</smses>";
     private static final String  OPEN_TAG_SMS    = " <sms ";
@@ -183,7 +162,7 @@ public class XmlBackup {
       bufferedWriter.newLine();
       bufferedWriter.write(CREATED_BY);
       bufferedWriter.newLine();
-      bufferedWriter.write(String.format(Locale.ROOT, OPEN_TAG_SMSES, count));
+      bufferedWriter.write(String.format(OPEN_TAG_SMSES, count));
     }
 
     public void writeItem(XmlBackupItem item) throws IOException {
@@ -192,9 +171,7 @@ public class XmlBackup {
       stringBuilder.append(OPEN_TAG_SMS);
       appendAttribute(stringBuilder, PROTOCOL, item.getProtocol());
       appendAttribute(stringBuilder, ADDRESS, escapeXML(item.getAddress()));
-      appendAttribute(stringBuilder, CONTACT_NAME, escapeXML(item.getContactName()));
       appendAttribute(stringBuilder, DATE, item.getDate());
-      appendAttribute(stringBuilder, READABLE_DATE, item.getReadableDate());
       appendAttribute(stringBuilder, TYPE, item.getType());
       appendAttribute(stringBuilder, SUBJECT, escapeXML(item.getSubject()));
       appendAttribute(stringBuilder, BODY, escapeXML(item.getBody()));
@@ -221,7 +198,7 @@ public class XmlBackup {
     }
 
     private String escapeXML(String s) {
-      if (TextUtils.isEmpty(s)) return s;
+      if (Util.isEmpty(s)) return s;
 
       Matcher matcher = PATTERN.matcher( s.replace("&",  "&amp;")
                                           .replace("<",  "&lt;")

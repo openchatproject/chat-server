@@ -1,40 +1,35 @@
 package com.openchat.secureim.contacts;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.MergeCursor;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.Im;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Contacts;
+import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.PhoneLookup;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.telephony.PhoneNumberUtils;
-import android.text.TextUtils;
+import android.util.Log;
 
-import com.openchat.secureim.database.Address;
-import com.openchat.secureim.database.DatabaseFactory;
-import com.openchat.secureim.database.GroupDatabase;
+import com.openchat.imservice.crypto.IdentityKey;
+import com.openchat.imservice.crypto.InvalidKeyException;
+import com.openchat.imservice.directory.Directory;
+import com.openchat.imservice.util.Base64;
 
+import java.io.IOException;
+import java.lang.Long;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-
-import static com.openchat.secureim.database.GroupDatabase.GroupRecord;
-
-/**
- * This class was originally a layer of indirection between
- * ContactAccessorNewApi and ContactAccesorOldApi, which corresponded
- * to the API changes between 1.x and 2.x.
- *
- * Now that we no longer support 1.x, this class mostly serves as a place
- * to encapsulate Contact-related logic.  It's still a singleton, mostly
- * just because that's how it's currently called from everywhere.
- */
 
 public class ContactAccessor {
 
@@ -46,56 +41,49 @@ public class ContactAccessor {
     return instance;
   }
 
-  public Set<Address> getAllContactsWithNumbers(Context context) {
-    Set<Address> results = new HashSet<>();
+  public CursorLoader getCursorLoaderForContactsWithNumbers(Context context) {
+    Uri uri          = ContactsContract.Contacts.CONTENT_URI;
+    String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1";
 
-    try (Cursor cursor = context.getContentResolver().query(Phone.CONTENT_URI, new String[] {Phone.NUMBER}, null ,null, null)) {
-      while (cursor != null && cursor.moveToNext()) {
-        if (!TextUtils.isEmpty(cursor.getString(0))) {
-          results.add(Address.fromExternal(context, cursor.getString(0)));
-        }
-      }
-    }
-
-    return results;
+    return new CursorLoader(context, uri, null, selection, null,
+                            ContactsContract.Contacts.DISPLAY_NAME + " ASC");
   }
 
-  public Cursor getAllSystemContacts(Context context) {
-    return context.getContentResolver().query(Phone.CONTENT_URI, new String[] {Phone.NUMBER, Phone.DISPLAY_NAME, Phone.LABEL, Phone.PHOTO_URI, Phone._ID, Phone.LOOKUP_KEY}, null, null, null);
+  public CursorLoader getCursorLoaderForContactGroups(Context context) {
+    return new CursorLoader(context, ContactsContract.Groups.CONTENT_URI,
+                            null, null, null, ContactsContract.Groups.TITLE + " ASC");
   }
 
-  public boolean isSystemContact(Context context, String number) {
-    Uri      uri        = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
-    String[] projection = new String[]{PhoneLookup.DISPLAY_NAME, PhoneLookup.LOOKUP_KEY,
-                                       PhoneLookup._ID, PhoneLookup.NUMBER};
-    Cursor   cursor     = context.getContentResolver().query(uri, projection, null, null, null);
+  public Loader<Cursor> getCursorLoaderForContacts(Context context, String filter) {
+    return new ContactsCursorLoader(context, filter, false);
+  }
 
-    try {
-      if (cursor != null && cursor.moveToFirst()) {
-        return true;
-      }
-    } finally {
-      if (cursor != null) cursor.close();
-    }
+  public Loader<Cursor> getCursorLoaderForPushContacts(Context context, String filter) {
+    return new ContactsCursorLoader(context, filter, true);
+  }
 
-    return false;
+  public Cursor getCursorForContactsWithNumbers(Context context) {
+    Uri uri = ContactsContract.Contacts.CONTENT_URI;
+    String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1";
+
+    return context.getContentResolver().query(uri, null, selection, null,
+                                              ContactsContract.Contacts.DISPLAY_NAME + " ASC");
   }
 
   public Collection<ContactData> getContactsWithPush(Context context) {
     final ContentResolver resolver = context.getContentResolver();
     final String[] inProjection    = new String[]{PhoneLookup._ID, PhoneLookup.DISPLAY_NAME};
 
-    final List<Address>           registeredAddresses = DatabaseFactory.getRecipientDatabase(context).getRegistered();
-    final Collection<ContactData> lookupData          = new ArrayList<>(registeredAddresses.size());
+    List<String> pushNumbers = Directory.getInstance(context).getActiveNumbers();
+    final Collection<ContactData> lookupData = new ArrayList<ContactData>(pushNumbers.size());
 
-    for (Address registeredAddress : registeredAddresses) {
-      Uri    uri          = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(registeredAddress.serialize()));
+    for (String pushNumber : pushNumbers) {
+      Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(pushNumber));
       Cursor lookupCursor = resolver.query(uri, inProjection, null, null, null);
-
       try {
         if (lookupCursor != null && lookupCursor.moveToFirst()) {
           final ContactData contactData = new ContactData(lookupCursor.getLong(0), lookupCursor.getString(1));
-          contactData.numbers.add(new NumberData("TextSecure", registeredAddress.serialize()));
+          contactData.numbers.add(new NumberData("OpenchatService", pushNumber));
           lookupData.add(contactData);
         }
       } finally {
@@ -103,7 +91,6 @@ public class ContactAccessor {
           lookupCursor.close();
       }
     }
-
     return lookupData;
   }
 
@@ -123,6 +110,34 @@ public class ContactAccessor {
     }
 
     return null;
+  }
+
+  public String getNameForNumber(Context context, String number) {
+    Uri uri       = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
+    Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+
+    try {
+      if (cursor != null && cursor.moveToFirst())
+        return cursor.getString(cursor.getColumnIndexOrThrow(PhoneLookup.DISPLAY_NAME));
+    } finally {
+      if (cursor != null)
+        cursor.close();
+    }
+
+    return null;
+  }
+
+  public GroupData getGroupData(Context context, Cursor cursor) {
+    long id      = cursor.getLong(cursor.getColumnIndexOrThrow(ContactsContract.Groups._ID));
+    String title = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Groups.TITLE));
+
+    return new GroupData(id, title);
+  }
+
+  public ContactData getContactData(Context context, Cursor cursor) {
+    return getContactData(context,
+                          cursor.getString(cursor.getColumnIndexOrThrow(Contacts.DISPLAY_NAME)),
+                          cursor.getLong(cursor.getColumnIndexOrThrow(Contacts._ID)));
   }
 
   public ContactData getContactData(Context context, Uri uri) {
@@ -154,14 +169,40 @@ public class ContactAccessor {
     return contactData;
   }
 
-  public List<String> getNumbersForThreadSearchFilter(Context context, String constraint) {
-    LinkedList<String> numberList = new LinkedList<>();
+  public List<ContactData> getGroupMembership(Context context, long groupId) {
+    LinkedList<ContactData> contacts = new LinkedList<ContactData>();
+    Cursor groupMembership           = null;
+
+    try {
+      String selection = ContactsContract.CommonDataKinds.GroupMembership.GROUP_ROW_ID + " = ? AND " +
+                         ContactsContract.CommonDataKinds.GroupMembership.MIMETYPE + " = ?";
+      String[] args    = new String[] {groupId+"",
+                                       ContactsContract.CommonDataKinds.GroupMembership.CONTENT_ITEM_TYPE};
+
+      groupMembership = context.getContentResolver().query(Data.CONTENT_URI, null, selection, args, null);
+
+      while (groupMembership != null && groupMembership.moveToNext()) {
+        String displayName = groupMembership.getString(groupMembership.getColumnIndexOrThrow(Data.DISPLAY_NAME));
+        long contactId     = groupMembership.getLong(groupMembership.getColumnIndexOrThrow(Data.CONTACT_ID));
+
+        contacts.add(getContactData(context, displayName, contactId));
+      }
+    } finally {
+      if (groupMembership != null)
+        groupMembership.close();
+    }
+
+    return contacts;
+  }
+
+  public List<String> getNumbersForThreadSearchFilter(String constraint, ContentResolver contentResolver) {
+    LinkedList<String> numberList = new LinkedList<String>();
     Cursor cursor                 = null;
 
     try {
-      cursor = context.getContentResolver().query(Uri.withAppendedPath(Phone.CONTENT_FILTER_URI,
-                                                                       Uri.encode(constraint)),
-                                                  null, null, null, null);
+      cursor = contentResolver.query(Uri.withAppendedPath(Phone.CONTENT_FILTER_URI,
+                                     Uri.encode(constraint)),
+                                     null, null, null, null);
 
       while (cursor != null && cursor.moveToNext()) {
         numberList.add(cursor.getString(cursor.getColumnIndexOrThrow(Phone.NUMBER)));
@@ -172,25 +213,74 @@ public class ContactAccessor {
         cursor.close();
     }
 
-    GroupDatabase.Reader reader = null;
-    GroupRecord record;
-
-    try {
-      reader = DatabaseFactory.getGroupDatabase(context).getGroupsFilteredByTitle(constraint);
-
-      while ((record = reader.getNext()) != null) {
-        numberList.add(record.getEncodedId());
-      }
-    } finally {
-      if (reader != null)
-        reader.close();
-    }
-
     return numberList;
   }
 
   public CharSequence phoneTypeToString(Context mContext, int type, CharSequence label) {
     return Phone.getTypeLabel(mContext.getResources(), type, label);
+  }
+
+  public void insertIdentityKey(Context context, List<Long> rawContactIds, IdentityKey identityKey) {
+    for (long rawContactId : rawContactIds) {
+      Log.w("ContactAccessorNewApi", "Inserting data for raw contact id: " + rawContactId);
+      ContentValues contentValues = new ContentValues();
+      contentValues.put(Data.RAW_CONTACT_ID, rawContactId);
+      contentValues.put(Data.MIMETYPE, Im.CONTENT_ITEM_TYPE);
+      contentValues.put(Im.PROTOCOL, Im.PROTOCOL_CUSTOM);
+      contentValues.put(Im.CUSTOM_PROTOCOL, "OpenchatService-IdentityKey");
+      contentValues.put(Im.DATA, Base64.encodeBytes(identityKey.serialize()));
+
+      context.getContentResolver().insert(Data.CONTENT_URI, contentValues);
+    }
+  }
+
+  public IdentityKey importIdentityKey(Context context, Uri uri) {
+    long contactId         = getContactIdFromLookupUri(context, uri);
+    String selection       = Im.CONTACT_ID + " = ? AND " + Im.PROTOCOL + " = ? AND " + Im.CUSTOM_PROTOCOL + " = ?";
+    String[] selectionArgs = new String[] {contactId+"", Im.PROTOCOL_CUSTOM+"", "OpenchatService-IdentityKey"};
+
+    Cursor cursor          = context.getContentResolver().query(Data.CONTENT_URI, null, selection, selectionArgs, null);
+
+    try {
+      if (cursor != null && cursor.moveToFirst()) {
+        String data = cursor.getString(cursor.getColumnIndexOrThrow(Im.DATA));
+
+        if (data != null)
+          return new IdentityKey(Base64.decode(data), 0);
+
+      }
+    } catch (InvalidKeyException e) {
+      Log.w("ContactAccessorNewApi", e);
+      return null;
+    } catch (IOException e) {
+      Log.w("ContactAccessorNewApi", e);
+      return null;
+    } finally {
+      if (cursor != null)
+        cursor.close();
+    }
+
+    return null;
+  }
+
+  private long getContactIdFromLookupUri(Context context, Uri uri) {
+    Cursor cursor = null;
+
+    try {
+      cursor = context.getContentResolver().query(uri,
+                                                  new String[] {ContactsContract.Contacts._ID},
+                                                  null, null, null);
+
+      if (cursor != null && cursor.moveToFirst()) {
+        return cursor.getLong(0);
+      } else {
+        return -1;
+      }
+
+    } finally {
+      if (cursor != null)
+        cursor.close();
+    }
   }
 
   public static class NumberData implements Parcelable {
@@ -228,6 +318,16 @@ public class ContactAccessor {
     }
   }
 
+  public static class GroupData {
+    public final long id;
+    public final String name;
+
+    public GroupData(long id, String name) {
+      this.id   = id;
+      this.name = name;
+    }
+  }
+
   public static class ContactData implements Parcelable {
 
     public static final Parcelable.Creator<ContactData> CREATOR = new Parcelable.Creator<ContactData>() {
@@ -250,6 +350,12 @@ public class ContactAccessor {
       this.numbers = new LinkedList<NumberData>();
     }
 
+    public ContactData(long id, String name, List<NumberData> numbers) {
+      this.id      = id;
+      this.name    = name;
+      this.numbers = numbers;
+    }
+
     public ContactData(Parcel in) {
       id      = in.readLong();
       name    = in.readString();
@@ -268,10 +374,7 @@ public class ContactAccessor {
     }
   }
 
-  /***
-   * If the code below looks shitty to you, that's because it was taken
-   * directly from the Android source, where shitty code is all you get.
-   */
+  
 
   public Cursor getCursorForRecipientFilter(CharSequence constraint,
       ContentResolver mContentResolver)
@@ -327,11 +430,7 @@ public class ContactAccessor {
       result.add(Integer.valueOf(Phone.TYPE_CUSTOM));     // TYPE
       result.add(phone);                                  // NUMBER
 
-    /*
-    * The "\u00A0" keeps Phone.getDisplayLabel() from deciding
-    * to display the default label ("Home") next to the transformation
-    * of the letters into numbers.
-    */
+    
       result.add("\u00A0");                               // LABEL
       result.add(cons);                                   // NAME
 

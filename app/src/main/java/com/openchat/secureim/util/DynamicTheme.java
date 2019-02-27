@@ -2,13 +2,14 @@ package com.openchat.secureim.util;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 
+import com.openchat.secureim.ApplicationPreferencesActivity;
+import com.openchat.secureim.ConversationActivity;
+import com.openchat.secureim.ConversationListActivity;
 import com.openchat.secureim.R;
 
 public class DynamicTheme {
-
-  public static final String DARK  = "dark";
-  public static final String LIGHT = "light";
 
   private int currentTheme;
 
@@ -27,12 +28,18 @@ public class DynamicTheme {
     }
   }
 
-  protected int getSelectedTheme(Activity activity) {
-    String theme = TextSecurePreferences.getTheme(activity);
+  private static int getSelectedTheme(Activity activity) {
+    String theme = OpenchatServicePreferences.getTheme(activity);
 
-    if (theme.equals(DARK)) return R.style.TextSecure_DarkTheme;
+    if (theme.equals("light")) {
+      if (activity instanceof ConversationActivity) return R.style.OpenchatService_LightTheme_ConversationActivity;
+      else                                          return R.style.OpenchatService_LightTheme;
+    } else if (theme.equals("dark")) {
+      if (activity instanceof ConversationActivity) return R.style.OpenchatService_DarkTheme_ConversationActivity;
+      else                                          return R.style.OpenchatService_DarkTheme;
+    }
 
-    return R.style.TextSecure_LightTheme;
+    return R.style.OpenchatService_LightTheme;
   }
 
   private static final class OverridePendingTransition {

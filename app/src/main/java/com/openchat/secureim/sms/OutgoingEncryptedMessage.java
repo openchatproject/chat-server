@@ -1,11 +1,16 @@
 package com.openchat.secureim.sms;
 
 import com.openchat.secureim.recipients.Recipient;
+import com.openchat.secureim.recipients.Recipients;
 
 public class OutgoingEncryptedMessage extends OutgoingTextMessage {
 
-  public OutgoingEncryptedMessage(Recipient recipient, String body, long expiresIn) {
-    super(recipient, body, expiresIn, -1);
+  public OutgoingEncryptedMessage(Recipients recipients, String body) {
+    super(recipients, body);
+  }
+
+  public OutgoingEncryptedMessage(Recipient recipient, String body) {
+    super(recipient, body);
   }
 
   private OutgoingEncryptedMessage(OutgoingEncryptedMessage base, String body) {

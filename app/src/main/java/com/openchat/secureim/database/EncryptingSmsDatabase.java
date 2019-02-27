@@ -3,26 +3,22 @@ package com.openchat.secureim.database;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.Pair;
 
-import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.AsymmetricMasterCipher;
 import com.openchat.secureim.crypto.AsymmetricMasterSecret;
-import com.openchat.secureim.crypto.MasterCipher;
-import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.secureim.crypto.MasterSecretUnion;
 import com.openchat.secureim.database.model.DisplayRecord;
-import com.openchat.secureim.database.model.SmsMessageRecord;
 import com.openchat.secureim.sms.IncomingTextMessage;
 import com.openchat.secureim.sms.OutgoingTextMessage;
 import com.openchat.secureim.util.LRUCache;
-import com.openchat.libim.InvalidMessageException;
-import com.openchat.libim.util.guava.Optional;
+import com.openchat.imservice.crypto.InvalidMessageException;
+import com.openchat.imservice.crypto.MasterCipher;
+import com.openchat.imservice.crypto.MasterSecret;
 
 import java.lang.ref.SoftReference;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 public class EncryptingSmsDatabase extends SmsDatabase {
@@ -46,80 +42,53 @@ public class EncryptingSmsDatabase extends SmsDatabase {
     return ciphertext;
   }
 
-  public long insertMessageOutbox(MasterSecretUnion masterSecret, long threadId,
-                                  OutgoingTextMessage message, boolean forceSms,
-                                  long timestamp, InsertListener insertListener)
+  public List<Long> insertMessageOutbox(MasterSecret masterSecret, long threadId,
+                                        OutgoingTextMessage message, boolean forceSms)
   {
-    long type = Types.BASE_SENDING_TYPE;
+    long type = Types.BASE_OUTBOX_TYPE;
+    message   = message.withBody(getEncryptedBody(masterSecret, message.getMessageBody()));
+    type     |= Types.ENCRYPTION_SYMMETRIC_BIT;
 
-    if (masterSecret.getMasterSecret().isPresent()) {
-      message = message.withBody(getEncryptedBody(masterSecret.getMasterSecret().get(), message.getMessageBody()));
-      type   |= Types.ENCRYPTION_SYMMETRIC_BIT;
+    return insertMessageOutbox(threadId, message, type, forceSms);
+  }
+
+  public Pair<Long, Long> insertMessageInbox(MasterSecret masterSecret,
+                                             IncomingTextMessage message)
+  {
+    long type = Types.BASE_INBOX_TYPE;
+
+    if (!message.isSecureMessage() && !message.isEndSession()) {
+      type |= Types.ENCRYPTION_SYMMETRIC_BIT;
+      message = message.withMessageBody(getEncryptedBody(masterSecret, message.getMessageBody()));
+    }
+
+    return insertMessageInbox(message, type);
+  }
+
+  public Pair<Long, Long> insertMessageInbox(AsymmetricMasterSecret masterSecret,
+                                             IncomingTextMessage message)
+  {
+    long type = Types.BASE_INBOX_TYPE;
+
+    if (message.isSecureMessage()) {
+      type |= Types.ENCRYPTION_REMOTE_BIT;
     } else {
-      message = message.withBody(getAsymmetricEncryptedBody(masterSecret.getAsymmetricMasterSecret().get(), message.getMessageBody()));
+      message = message.withMessageBody(getAsymmetricEncryptedBody(masterSecret, message.getMessageBody()));
       type   |= Types.ENCRYPTION_ASYMMETRIC_BIT;
     }
 
-    return insertMessageOutbox(threadId, message, type, forceSms, timestamp, insertListener);
-  }
-
-  public Optional<InsertResult> insertMessageInbox(@NonNull MasterSecretUnion masterSecret,
-                                                   @NonNull IncomingTextMessage message)
-  {
-    if (masterSecret.getMasterSecret().isPresent()) {
-      return insertMessageInbox(masterSecret.getMasterSecret().get(), message);
-    } else {
-      return insertMessageInbox(masterSecret.getAsymmetricMasterSecret().get(), message);
-    }
-  }
-
-  private Optional<InsertResult> insertMessageInbox(@NonNull MasterSecret masterSecret,
-                                                    @NonNull IncomingTextMessage message)
-  {
-    long type = Types.BASE_INBOX_TYPE | Types.ENCRYPTION_SYMMETRIC_BIT;
-
-    message = message.withMessageBody(getEncryptedBody(masterSecret, message.getMessageBody()));
-
     return insertMessageInbox(message, type);
   }
 
-  private Optional<InsertResult> insertMessageInbox(@NonNull AsymmetricMasterSecret masterSecret,
-                                                    @NonNull IncomingTextMessage message)
-  {
-    long type = Types.BASE_INBOX_TYPE | Types.ENCRYPTION_ASYMMETRIC_BIT;
-
-    message = message.withMessageBody(getAsymmetricEncryptedBody(masterSecret, message.getMessageBody()));
-
-    return insertMessageInbox(message, type);
+  public void updateBundleMessageBody(MasterSecret masterSecret, long messageId, String body) {
+    updateMessageBodyAndType(messageId, body, Types.TOTAL_MASK,
+                             Types.BASE_INBOX_TYPE | Types.ENCRYPTION_REMOTE_BIT | Types.SECURE_MESSAGE_BIT);
   }
 
-  public Pair<Long, Long> updateBundleMessageBody(MasterSecretUnion masterSecret, long messageId, String body) {
-    long type = Types.BASE_INBOX_TYPE | Types.SECURE_MESSAGE_BIT | Types.PUSH_MESSAGE_BIT;
-    String encryptedBody;
-
-    if (masterSecret.getMasterSecret().isPresent()) {
-      encryptedBody = getEncryptedBody(masterSecret.getMasterSecret().get(), body);
-      type         |= Types.ENCRYPTION_SYMMETRIC_BIT;
-    } else {
-      encryptedBody = getAsymmetricEncryptedBody(masterSecret.getAsymmetricMasterSecret().get(), body);
-      type         |= Types.ENCRYPTION_ASYMMETRIC_BIT;
-    }
-
-    return updateMessageBodyAndType(messageId, encryptedBody, Types.TOTAL_MASK, type);
-  }
-
-  public void updateMessageBody(MasterSecretUnion masterSecret, long messageId, String body) {
-    long type;
-
-    if (masterSecret.getMasterSecret().isPresent()) {
-      body = getEncryptedBody(masterSecret.getMasterSecret().get(), body);
-      type = Types.ENCRYPTION_SYMMETRIC_BIT;
-    } else {
-      body = getAsymmetricEncryptedBody(masterSecret.getAsymmetricMasterSecret().get(), body);
-      type = Types.ENCRYPTION_ASYMMETRIC_BIT;
-    }
-
-    updateMessageBodyAndType(messageId, body, Types.ENCRYPTION_MASK, type);
+  public void updateMessageBody(MasterSecret masterSecret, long messageId, String body) {
+    String encryptedBody = getEncryptedBody(masterSecret, body);
+    updateMessageBodyAndType(messageId, encryptedBody, Types.ENCRYPTION_MASK,
+                             Types.ENCRYPTION_SYMMETRIC_BIT);
   }
 
   public Reader getMessages(MasterSecret masterSecret, int skip, int limit) {
@@ -132,15 +101,9 @@ public class EncryptingSmsDatabase extends SmsDatabase {
     return new DecryptingReader(masterSecret, cursor);
   }
 
-  public SmsMessageRecord getMessage(MasterSecret masterSecret, long messageId) throws NoSuchMessageException {
-    Cursor           cursor = super.getMessage(messageId);
-    DecryptingReader reader = new DecryptingReader(masterSecret, cursor);
-    SmsMessageRecord record = reader.getNext();
-
-    reader.close();
-
-    if (record == null) throw new NoSuchMessageException("No message for ID: " + messageId);
-    else                return record;
+  public Reader getMessage(MasterSecret masterSecret, long messageId) {
+    Cursor cursor = super.getMessage(messageId);
+    return new DecryptingReader(masterSecret, cursor);
   }
 
   public Reader getDecryptInProgressMessages(MasterSecret masterSecret) {
@@ -186,7 +149,7 @@ public class EncryptingSmsDatabase extends SmsDatabase {
         }
       } catch (InvalidMessageException e) {
         Log.w("EncryptingSmsDatabase", e);
-        return new DisplayRecord.Body(context.getString(R.string.EncryptingSmsDatabase_error_decrypting_message), true);
+        return new DisplayRecord.Body("Error decrypting message.", true);
       }
     }
   }

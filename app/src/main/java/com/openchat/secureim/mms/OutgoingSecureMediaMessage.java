@@ -1,19 +1,17 @@
 package com.openchat.secureim.mms;
 
-import com.openchat.secureim.attachments.Attachment;
-import com.openchat.secureim.recipients.Recipient;
+import android.content.Context;
 
-import java.util.List;
+import com.openchat.secureim.recipients.Recipients;
+
+import ws.com.google.android.mms.pdu.PduBody;
 
 public class OutgoingSecureMediaMessage extends OutgoingMediaMessage {
 
-  public OutgoingSecureMediaMessage(Recipient recipient, String body,
-                                    List<Attachment> attachments,
-                                    long sentTimeMillis,
-                                    int distributionType,
-                                    long expiresIn)
+  public OutgoingSecureMediaMessage(Context context, Recipients recipients, PduBody body,
+                                    String message, int distributionType)
   {
-    super(recipient, body, attachments, sentTimeMillis, -1, expiresIn, distributionType);
+    super(context, recipients, body, message, distributionType);
   }
 
   public OutgoingSecureMediaMessage(OutgoingMediaMessage base) {

@@ -4,22 +4,18 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.openchat.secureim.mms.LegacyMmsConnection.Apn;
-import com.openchat.secureim.util.TextSecurePreferences;
-import com.openchat.secureim.util.Util;
-import com.openchat.libim.util.guava.Optional;
+import com.openchat.secureim.mms.ApnUnavailableException;
+import com.openchat.secureim.mms.MmsConnection.Apn;
+import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.imservice.util.Util;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-/**
- * Database to query APN and MMSC information
- */
 public class ApnDatabase {
   private static final String TAG = ApnDatabase.class.getSimpleName();
 
@@ -58,7 +54,7 @@ public class ApnDatabase {
   private static ApnDatabase instance = null;
 
   public synchronized static ApnDatabase getInstance(Context context) throws IOException {
-    if (instance == null) instance = new ApnDatabase(context.getApplicationContext());
+    if (instance == null) instance = new ApnDatabase(context);
     return instance;
   }
 
@@ -74,33 +70,43 @@ public class ApnDatabase {
     Util.copy(context.getAssets().open(ASSET_PATH, AssetManager.ACCESS_STREAMING),
               new FileOutputStream(dbFile));
 
-    try {
-      this.db = SQLiteDatabase.openDatabase(context.getDatabasePath(DATABASE_NAME).getPath(),
-                                            null,
-                                            SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
-    } catch (SQLiteException e) {
-      throw new IOException(e);
-    }
+    this.db = SQLiteDatabase.openDatabase(context.getDatabasePath(DATABASE_NAME).getPath(),
+                                          null,
+                                          SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
   }
+  protected Apn getLocallyConfiguredMmsConnectionParameters() throws ApnUnavailableException {
+    if (OpenchatServicePreferences.isUseLocalApnsEnabled(context)) {
+      String mmsc = OpenchatServicePreferences.getMmscUrl(context).trim();
+      if (TextUtils.isEmpty(mmsc))
+        throw new ApnUnavailableException("Malformed locally configured MMSC.");
 
-  private Apn getCustomApnParameters() {
-      String mmsc = TextSecurePreferences.getMmscUrl(context).trim();
-
-      if (!TextUtils.isEmpty(mmsc) && !mmsc.startsWith("http"))
+      if (!mmsc.startsWith("http"))
         mmsc = "http://" + mmsc;
 
-      String proxy = TextSecurePreferences.getMmscProxy(context);
-      String port  = TextSecurePreferences.getMmscProxyPort(context);
-      String user  = TextSecurePreferences.getMmscUsername(context);
-      String pass  = TextSecurePreferences.getMmscPassword(context);
+      String proxy = OpenchatServicePreferences.getMmscProxy(context);
+      String port  = OpenchatServicePreferences.getMmscProxyPort(context);
 
-      return new Apn(mmsc, proxy, port, user, pass);
+      return new Apn(mmsc, proxy, port);
+    }
+
+    throw new ApnUnavailableException("No locally configured parameters available");
+
   }
 
-  public Apn getDefaultApnParameters(String mccmnc, String apn) {
+  public Apn getMmsConnectionParameters(final String mccmnc, final String apn) {
+
+    if (OpenchatServicePreferences.isUseLocalApnsEnabled(context)) {
+      Log.w(TAG, "Choosing locally-overridden MMS settings");
+      try {
+        return getLocallyConfiguredMmsConnectionParameters();
+      } catch (ApnUnavailableException aue) {
+        Log.w(TAG, "preference to use local apn set, but no parameters avaiable. falling back.");
+      }
+    }
+
     if (mccmnc == null) {
       Log.w(TAG, "mccmnc was null, returning null");
-      return Apn.EMPTY;
+      return null;
     }
 
     Cursor cursor = null;
@@ -126,33 +132,15 @@ public class ApnDatabase {
       if (cursor != null && cursor.moveToFirst()) {
         Apn params = new Apn(cursor.getString(cursor.getColumnIndexOrThrow(MMSC_COLUMN)),
                              cursor.getString(cursor.getColumnIndexOrThrow(MMS_PROXY_COLUMN)),
-                             cursor.getString(cursor.getColumnIndexOrThrow(MMS_PORT_COLUMN)),
-                             cursor.getString(cursor.getColumnIndexOrThrow(USER_COLUMN)),
-                             cursor.getString(cursor.getColumnIndexOrThrow(PASSWORD_COLUMN)));
+                             cursor.getString(cursor.getColumnIndexOrThrow(MMS_PORT_COLUMN)));
         Log.w(TAG, "Returning preferred APN " + params);
         return params;
       }
 
       Log.w(TAG, "No matching APNs found, returning null");
-
-      return Apn.EMPTY;
+      return null;
     } finally {
       if (cursor != null) cursor.close();
     }
-
-  }
-
-  public Optional<Apn> getMmsConnectionParameters(String mccmnc, String apn) {
-    Apn customApn  = getCustomApnParameters();
-    Apn defaultApn = getDefaultApnParameters(mccmnc, apn);
-    Apn result     = new Apn(customApn, defaultApn,
-                             TextSecurePreferences.getUseCustomMmsc(context),
-                             TextSecurePreferences.getUseCustomMmscProxy(context),
-                             TextSecurePreferences.getUseCustomMmscProxyPort(context),
-                             TextSecurePreferences.getUseCustomMmscUsername(context),
-                             TextSecurePreferences.getUseCustomMmscPassword(context));
-
-    if (TextUtils.isEmpty(result.getMmsc())) return Optional.absent();
-    else                                     return Optional.of(result);
   }
 }

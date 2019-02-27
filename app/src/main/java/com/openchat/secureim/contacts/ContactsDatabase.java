@@ -1,573 +1,252 @@
 package com.openchat.secureim.contacts;
 
-import android.accounts.Account;
-import android.content.ContentProviderOperation;
+import android.content.ContentValues;
 import android.content.Context;
-import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import android.database.MatrixCursor;
+import android.database.MergeCursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
-import android.os.Build;
-import android.os.RemoteException;
-import android.provider.BaseColumns;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.RawContacts;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.Log;
-import android.util.Pair;
 
 import com.openchat.secureim.R;
-import com.openchat.secureim.database.Address;
-import com.openchat.secureim.util.Util;
-import com.openchat.libim.util.guava.Optional;
+import com.openchat.secureim.util.NumberUtil;
+import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.imservice.util.Util;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-/**
- * Database to supply all types of contacts that TextSecure needs to know about
- */
 public class ContactsDatabase {
+  private static final String TAG = ContactsDatabase.class.getSimpleName();
+  private final DatabaseOpenHelper dbHelper;
+  private final Context            context;
 
-  private static final String TAG              = ContactsDatabase.class.getSimpleName();
-  private static final String CONTACT_MIMETYPE = "vnd.android.cursor.item/vnd.com.openchat.securesms.contact";
-  private static final String CALL_MIMETYPE    = "vnd.android.cursor.item/vnd.com.openchat.securesms.call";
-  private static final String SYNC             = "__TS";
+  public static final String TABLE_NAME         = "CONTACTS";
+  public static final String ID_COLUMN          = ContactsContract.CommonDataKinds.Phone._ID;
+  public static final String NAME_COLUMN        = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME;
+  public static final String NUMBER_TYPE_COLUMN = ContactsContract.CommonDataKinds.Phone.TYPE;
+  public static final String NUMBER_COLUMN      = ContactsContract.CommonDataKinds.Phone.NUMBER;
+  public static final String LABEL_COLUMN       = ContactsContract.CommonDataKinds.Phone.LABEL;
+  public static final String TYPE_COLUMN        = "type";
 
-  static final String NAME_COLUMN         = "name";
-  static final String NUMBER_COLUMN       = "number";
-  static final String NUMBER_TYPE_COLUMN  = "number_type";
-  static final String LABEL_COLUMN        = "label";
-  static final String CONTACT_TYPE_COLUMN = "contact_type";
+  private static final String   FILTER_SELECTION   = NAME_COLUMN + " LIKE ? OR " + NUMBER_COLUMN + " LIKE ?";
+  private static final String   CONTACT_LIST_SORT  = NAME_COLUMN + " COLLATE NOCASE ASC";
+  private static final String[] ANDROID_PROJECTION = new String[]{ID_COLUMN,
+                                                                  NAME_COLUMN,
+                                                                  NUMBER_TYPE_COLUMN,
+                                                                  LABEL_COLUMN,
+                                                                  NUMBER_COLUMN};
 
-  static final int NORMAL_TYPE  = 0;
-  static final int PUSH_TYPE    = 1;
-  static final int NEW_TYPE     = 2;
-  static final int RECENT_TYPE  = 3;
-  static final int DIVIDER_TYPE = 4;
+  private static final String[] CONTACTS_PROJECTION = new String[]{ID_COLUMN,
+                                                                   NAME_COLUMN,
+                                                                   NUMBER_TYPE_COLUMN,
+                                                                   LABEL_COLUMN,
+                                                                   NUMBER_COLUMN,
+                                                                   TYPE_COLUMN};
 
-  private final Context context;
+  public static final int NORMAL_TYPE = 0;
+  public static final int PUSH_TYPE   = 1;
+  public static final int GROUP_TYPE  = 2;
 
-  public ContactsDatabase(Context context) {
+  private static ContactsDatabase instance = null;
+
+  public synchronized static ContactsDatabase getInstance(Context context) {
+    if (instance == null) instance = new ContactsDatabase(context);
+    return instance;
+  }
+
+  public synchronized static void destroyInstance() {
+    if (instance != null) instance.close();
+    instance = null;
+  }
+
+  private ContactsDatabase(Context context) {
+    this.dbHelper = new DatabaseOpenHelper(context);
     this.context  = context;
   }
 
-  public synchronized void setRegisteredUsers(@NonNull Account account,
-                                              @NonNull List<Address> registeredAddressList,
-                                              boolean remove)
-      throws RemoteException, OperationApplicationException
-  {
-    Set<Address>                        registeredAddressSet = new HashSet<>();
-    ArrayList<ContentProviderOperation> operations           = new ArrayList<>();
-    Map<Address, openchatContact>         currentContacts      = getopenchatRawContacts(account);
-
-    for (Address registeredAddress : registeredAddressList) {
-      registeredAddressSet.add(registeredAddress);
-
-      if (!currentContacts.containsKey(registeredAddress)) {
-        Optional<SystemContactInfo> systemContactInfo = getSystemContactInfo(registeredAddress);
-
-        if (systemContactInfo.isPresent()) {
-          Log.w(TAG, "Adding number: " + registeredAddress);
-          addTextSecureRawContact(operations, account, systemContactInfo.get().number,
-                                  systemContactInfo.get().name, systemContactInfo.get().id,
-                                  true);
-        }
-      }
-    }
-
-    for (Map.Entry<Address, openchatContact> currentContactEntry : currentContacts.entrySet()) {
-      if (!registeredAddressSet.contains(currentContactEntry.getKey())) {
-        if (remove) {
-          Log.w(TAG, "Removing number: " + currentContactEntry.getKey());
-          removeTextSecureRawContact(operations, account, currentContactEntry.getValue().getId());
-        }
-      } else if (!currentContactEntry.getValue().isVoiceSupported()) {
-        Log.w(TAG, "Adding voice support: " + currentContactEntry.getKey());
-        addContactVoiceSupport(operations, currentContactEntry.getKey(), currentContactEntry.getValue().getId());
-      } else if (!Util.isStringEquals(currentContactEntry.getValue().getRawDisplayName(),
-                                      currentContactEntry.getValue().getAggregateDisplayName()))
-      {
-        Log.w(TAG, "Updating display name: " + currentContactEntry.getKey());
-        updateDisplayName(operations, currentContactEntry.getValue().getAggregateDisplayName(), currentContactEntry.getValue().getId(), currentContactEntry.getValue().getDisplayNameSource());
-      }
-    }
-
-    if (!operations.isEmpty()) {
-      context.getContentResolver().applyBatch(ContactsContract.AUTHORITY, operations);
-    }
+  public void close() {
+    dbHelper.close();
   }
 
-  @NonNull Cursor querySystemContacts(@Nullable String filter) {
-    Uri uri;
+  public Cursor query(String filter, boolean pushOnly) {
+    final boolean      includeAndroidContacts = !pushOnly && OpenchatServicePreferences.isDirectSmsAllowed(context);
+    final Cursor       localCursor            = queryLocalDb(filter);
+    final Cursor       androidCursor;
+    final MatrixCursor newNumberCursor;
 
-    if (!TextUtils.isEmpty(filter)) {
-      uri = Uri.withAppendedPath(ContactsContract.CommonDataKinds.Phone.CONTENT_FILTER_URI, Uri.encode(filter));
+    if (includeAndroidContacts) {
+      androidCursor = queryAndroidDb(filter);
     } else {
-      uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+      androidCursor = null;
     }
 
-    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      uri = uri.buildUpon().appendQueryParameter(ContactsContract.REMOVE_DUPLICATE_ENTRIES, "true").build();
-    }
-
-    String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                                       ContactsContract.CommonDataKinds.Phone.NUMBER,
-                                       ContactsContract.CommonDataKinds.Phone.TYPE,
-                                       ContactsContract.CommonDataKinds.Phone.LABEL};
-
-    String sort = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
-
-    Map<String, String> projectionMap = new HashMap<String, String>() {{
-      put(NAME_COLUMN, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
-      put(NUMBER_COLUMN, ContactsContract.CommonDataKinds.Phone.NUMBER);
-      put(NUMBER_TYPE_COLUMN, ContactsContract.CommonDataKinds.Phone.TYPE);
-      put(LABEL_COLUMN, ContactsContract.CommonDataKinds.Phone.LABEL);
-    }};
-
-    String formattedNumber = "REPLACE(REPLACE(REPLACE(REPLACE(data1,' ',''),'-',''),'(',''),')','')";
-    String excludeSelection = "(" + formattedNumber +" NOT IN " +
-            "(SELECT data1 FROM view_data WHERE "+formattedNumber+" = data1) " +
-            "OR "+formattedNumber+" = data1)" +
-            "AND " + formattedNumber + "NOT IN (SELECT "+formattedNumber+" FROM view_data where mimetype = '"+CONTACT_MIMETYPE+"')" ;
-
-    String fallbackSelection = ContactsContract.Data.SYNC2 + " IS NULL OR " + ContactsContract.Data.SYNC2 + " != '" + SYNC + "'";
-
-    Cursor cursor;
-
-    try {
-      cursor = context.getContentResolver().query(uri, projection, excludeSelection, null, sort);
-    } catch (Exception e) {
-      Log.w(TAG, e);
-      cursor = context.getContentResolver().query(uri, projection, fallbackSelection, null, sort);
-    }
-
-    return new ProjectionMappingCursor(cursor, projectionMap,
-                                       new Pair<String, Object>(CONTACT_TYPE_COLUMN, NORMAL_TYPE));
-  }
-
-  @NonNull Cursor queryTextSecureContacts(String filter) {
-    String[] projection = new String[] {ContactsContract.Contacts.DISPLAY_NAME,
-                                        ContactsContract.Data.DATA1};
-
-    String  sort = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
-
-    Map<String, String> projectionMap = new HashMap<String, String>(){{
-      put(NAME_COLUMN, ContactsContract.Contacts.DISPLAY_NAME);
-      put(NUMBER_COLUMN, ContactsContract.Data.DATA1);
-    }};
-
-    Cursor cursor;
-
-    if (TextUtils.isEmpty(filter)) {
-      cursor = context.getContentResolver().query(ContactsContract.Data.CONTENT_URI,
-                                                  projection,
-                                                  ContactsContract.Data.MIMETYPE + " = ?",
-                                                  new String[] {CONTACT_MIMETYPE},
-                                                  sort);
+    if (includeAndroidContacts && !Util.isEmpty(filter) && NumberUtil.isValidSmsOrEmail(filter)) {
+      newNumberCursor = new MatrixCursor(CONTACTS_PROJECTION, 1);
+      newNumberCursor.addRow(new Object[]{-1L, context.getString(R.string.contact_selection_list__unknown_contact),
+                             ContactsContract.CommonDataKinds.Phone.TYPE_CUSTOM, "\u21e2", filter, NORMAL_TYPE});
     } else {
-      cursor = context.getContentResolver().query(ContactsContract.Data.CONTENT_URI,
-                                                  projection,
-                                                  ContactsContract.Data.MIMETYPE + " = ? AND (" + ContactsContract.Contacts.DISPLAY_NAME + " LIKE ? OR " + ContactsContract.Data.DATA1 + " LIKE ?)",
-                                                  new String[] {CONTACT_MIMETYPE,
-                                                                "%" + filter + "%", "%" + filter + "%"},
-                                                  sort);
+      newNumberCursor = null;
     }
 
-    return new ProjectionMappingCursor(cursor, projectionMap,
-                                       new Pair<String, Object>(LABEL_COLUMN, "TextSecure"),
-                                       new Pair<String, Object>(NUMBER_TYPE_COLUMN, 0),
-                                       new Pair<String, Object>(CONTACT_TYPE_COLUMN, PUSH_TYPE));
+    List<Cursor> cursors = new ArrayList<Cursor>();
+    if (localCursor != null)     cursors.add(localCursor);
+    if (androidCursor != null)   cursors.add(androidCursor);
+    if (newNumberCursor != null) cursors.add(newNumberCursor);
 
+    switch (cursors.size()) {
+    case 0: return null;
+    case 1: return cursors.get(0);
+    default: return new MergeCursor(cursors.toArray(new Cursor[]{}));
+    }
   }
 
-  private void addContactVoiceSupport(List<ContentProviderOperation> operations,
-                                      @NonNull Address address, long rawContactId)
-  {
-    operations.add(ContentProviderOperation.newUpdate(RawContacts.CONTENT_URI)
-                                           .withSelection(RawContacts._ID + " = ?", new String[] {String.valueOf(rawContactId)})
-                                           .withValue(RawContacts.SYNC4, "true")
-                                           .build());
-
-    operations.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI.buildUpon().appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true").build())
-                                           .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)
-                                           .withValue(ContactsContract.Data.MIMETYPE, CALL_MIMETYPE)
-                                           .withValue(ContactsContract.Data.DATA1, address.toPhoneString())
-                                           .withValue(ContactsContract.Data.DATA2, context.getString(R.string.app_name))
-                                           .withValue(ContactsContract.Data.DATA3, context.getString(R.string.ContactsDatabase_openchat_call_s, address.toPhoneString()))
-                                           .withYieldAllowed(true)
-                                           .build());
-  }
-
-  private void updateDisplayName(List<ContentProviderOperation> operations,
-                                 @Nullable String displayName,
-                                 long rawContactId, int displayNameSource)
-  {
-    Uri dataUri = ContactsContract.Data.CONTENT_URI.buildUpon()
-                                                   .appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true")
-                                                   .build();
-
-    if (displayNameSource != ContactsContract.DisplayNameSources.STRUCTURED_NAME) {
-      operations.add(ContentProviderOperation.newInsert(dataUri)
-                                             .withValue(ContactsContract.CommonDataKinds.StructuredName.RAW_CONTACT_ID, rawContactId)
-                                             .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, displayName)
-                                             .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-                                             .build());
+  private Cursor queryAndroidDb(String filter) {
+    final Uri baseUri;
+    if (!Util.isEmpty(filter)) {
+      baseUri = Uri.withAppendedPath(ContactsContract.CommonDataKinds.Phone.CONTENT_FILTER_URI,
+                                     Uri.encode(filter));
     } else {
-      operations.add(ContentProviderOperation.newUpdate(dataUri)
-                                             .withSelection(ContactsContract.CommonDataKinds.StructuredName.RAW_CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ?",
-                                                            new String[] {String.valueOf(rawContactId), ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE})
-                                             .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, displayName)
-                                             .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-                                             .build());
+      baseUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
     }
+    Cursor cursor = context.getContentResolver().query(baseUri, ANDROID_PROJECTION, null, null, CONTACT_LIST_SORT);
+    return new TypedCursorWrapper(cursor);
   }
 
-  private void removeContactVoiceSupport(List<ContentProviderOperation> operations, long rawContactId) {
-    operations.add(ContentProviderOperation.newUpdate(RawContacts.CONTENT_URI)
-                                           .withSelection(RawContacts._ID + " = ?", new String[] {String.valueOf(rawContactId)})
-                                           .withValue(RawContacts.SYNC4, "false")
-                                           .build());
-
-    operations.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI.buildUpon().appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true").build())
-                                           .withSelection(ContactsContract.Data.RAW_CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ?",
-                                                          new String[] {String.valueOf(rawContactId), CALL_MIMETYPE})
-                                           .withYieldAllowed(true)
-                                           .build());
+  private Cursor queryLocalDb(String filter) {
+    final String   selection;
+    final String[] selectionArgs;
+    final String   fuzzyFilter = "%" + filter + "%";
+    if (!Util.isEmpty(filter)) {
+      selection     = FILTER_SELECTION;
+      selectionArgs = new String[]{fuzzyFilter, fuzzyFilter};
+    } else {
+      selection     = null;
+      selectionArgs = null;
+    }
+    return queryLocalDb(selection, selectionArgs, null);
   }
 
-  private void addTextSecureRawContact(List<ContentProviderOperation> operations,
-                                       Account account, String e164number, String displayName,
-                                       long aggregateId, boolean supportsVoice)
-  {
-    int index   = operations.size();
-    Uri dataUri = ContactsContract.Data.CONTENT_URI.buildUpon()
-                                                   .appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true")
-                                                   .build();
+  private Cursor queryLocalDb(String selection, String[] selectionArgs, String[] columns) {
+    SQLiteDatabase localDb = dbHelper.getReadableDatabase();
+    final Cursor localCursor;
+    if (localDb != null) localCursor = localDb.query(TABLE_NAME, columns, selection, selectionArgs, null, null, CONTACT_LIST_SORT);
+    else                 localCursor = null;
+    if (localCursor != null && !localCursor.moveToFirst()) {
+      localCursor.close();
+      return null;
+    }
+    return localCursor;
+  }
 
-    operations.add(ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
-                                           .withValue(RawContacts.ACCOUNT_NAME, account.name)
-                                           .withValue(RawContacts.ACCOUNT_TYPE, account.type)
-                                           .withValue(RawContacts.SYNC1, e164number)
-                                           .withValue(RawContacts.SYNC4, String.valueOf(supportsVoice))
-                                           .build());
+  private static class DatabaseOpenHelper extends SQLiteOpenHelper {
 
-    operations.add(ContentProviderOperation.newInsert(dataUri)
-                                           .withValueBackReference(ContactsContract.CommonDataKinds.StructuredName.RAW_CONTACT_ID, index)
-                                           .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, displayName)
-                                           .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-                                           .build());
+    private final Context        context;
+    private       SQLiteDatabase mDatabase;
 
-    operations.add(ContentProviderOperation.newInsert(dataUri)
-                                           .withValueBackReference(ContactsContract.CommonDataKinds.Phone.RAW_CONTACT_ID, index)
-                                           .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-                                           .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, e164number)
-                                           .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_OTHER)
-                                           .withValue(ContactsContract.Data.SYNC2, SYNC)
-                                           .build());
+    private static final String TABLE_CREATE =
+        "CREATE TABLE " + TABLE_NAME + " (" +
+            ID_COLUMN          + " INTEGER PRIMARY KEY, " +
+            NAME_COLUMN        + " TEXT, " +
+            NUMBER_TYPE_COLUMN + " INTEGER, " +
+            LABEL_COLUMN       + " TEXT, " +
+            NUMBER_COLUMN      + " TEXT, " +
+            TYPE_COLUMN        + " INTEGER);";
 
-    operations.add(ContentProviderOperation.newInsert(dataUri)
-                                           .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, index)
-                                           .withValue(ContactsContract.Data.MIMETYPE, CONTACT_MIMETYPE)
-                                           .withValue(ContactsContract.Data.DATA1, e164number)
-                                           .withValue(ContactsContract.Data.DATA2, context.getString(R.string.app_name))
-                                           .withValue(ContactsContract.Data.DATA3, context.getString(R.string.ContactsDatabase_message_s, e164number))
-                                           .withYieldAllowed(true)
-                                           .build());
-
-    if (supportsVoice) {
-      operations.add(ContentProviderOperation.newInsert(dataUri)
-                                             .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, index)
-                                             .withValue(ContactsContract.Data.MIMETYPE, CALL_MIMETYPE)
-                                             .withValue(ContactsContract.Data.DATA1, e164number)
-                                             .withValue(ContactsContract.Data.DATA2, context.getString(R.string.app_name))
-                                             .withValue(ContactsContract.Data.DATA3, context.getString(R.string.ContactsDatabase_openchat_call_s, e164number))
-                                             .withYieldAllowed(true)
-                                             .build());
+    DatabaseOpenHelper(Context context) {
+      super(context, null, null, 1);
+      this.context = context;
     }
 
-
-    if (Build.VERSION.SDK_INT >= 11) {
-      operations.add(ContentProviderOperation.newUpdate(ContactsContract.AggregationExceptions.CONTENT_URI)
-                                             .withValue(ContactsContract.AggregationExceptions.RAW_CONTACT_ID1, aggregateId)
-                                             .withValueBackReference(ContactsContract.AggregationExceptions.RAW_CONTACT_ID2, index)
-                                             .withValue(ContactsContract.AggregationExceptions.TYPE, ContactsContract.AggregationExceptions.TYPE_KEEP_TOGETHER)
-                                             .build());
-    }
-  }
-
-  private void removeTextSecureRawContact(List<ContentProviderOperation> operations,
-                                          Account account, long rowId)
-  {
-    operations.add(ContentProviderOperation.newDelete(RawContacts.CONTENT_URI.buildUpon()
-                                                                             .appendQueryParameter(RawContacts.ACCOUNT_NAME, account.name)
-                                                                             .appendQueryParameter(RawContacts.ACCOUNT_TYPE, account.type)
-                                                                             .appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true").build())
-                                           .withYieldAllowed(true)
-                                           .withSelection(BaseColumns._ID + " = ?", new String[] {String.valueOf(rowId)})
-                                           .build());
-  }
-
-  private @NonNull Map<Address, openchatContact> getopenchatRawContacts(@NonNull Account account) {
-    Uri currentContactsUri = RawContacts.CONTENT_URI.buildUpon()
-                                                    .appendQueryParameter(RawContacts.ACCOUNT_NAME, account.name)
-                                                    .appendQueryParameter(RawContacts.ACCOUNT_TYPE, account.type).build();
-
-    Map<Address, openchatContact> openchatContacts = new HashMap<>();
-    Cursor                      cursor         = null;
-
-    try {
-      String[] projection;
-
-      if (Build.VERSION.SDK_INT >= 11) {
-        projection = new String[] {BaseColumns._ID, RawContacts.SYNC1, RawContacts.SYNC4, RawContacts.CONTACT_ID, RawContacts.DISPLAY_NAME_PRIMARY, RawContacts.DISPLAY_NAME_SOURCE};
-      } else{
-        projection = new String[] {BaseColumns._ID, RawContacts.SYNC1, RawContacts.SYNC4, RawContacts.CONTACT_ID};
-      }
-
-      cursor = context.getContentResolver().query(currentContactsUri, projection, null, null, null);
-
-      while (cursor != null && cursor.moveToNext()) {
-        Address currentAddress              = Address.fromExternal(context, cursor.getString(1));
-        long    rawContactId                = cursor.getLong(0);
-        long    contactId                   = cursor.getLong(3);
-        String  supportsVoice               = cursor.getString(2);
-        String  rawContactDisplayName       = null;
-        String  aggregateDisplayName        = null;
-        int     rawContactDisplayNameSource = 0;
-
-        if (Build.VERSION.SDK_INT >= 11) {
-          rawContactDisplayName       = cursor.getString(4);
-          rawContactDisplayNameSource = cursor.getInt(5);
-          aggregateDisplayName        = getDisplayName(contactId);
-        }
-
-        openchatContacts.put(currentAddress, new openchatContact(rawContactId, supportsVoice, rawContactDisplayName, aggregateDisplayName, rawContactDisplayNameSource));
-      }
-    } finally {
-      if (cursor != null)
-        cursor.close();
-    }
-
-    return openchatContacts;
-  }
-
-  private Optional<SystemContactInfo> getSystemContactInfo(@NonNull Address address)
-  {
-    if (!address.isPhone()) return Optional.absent();
-
-    Uri      uri          = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(address.toPhoneString()));
-    String[] projection   = {ContactsContract.PhoneLookup.NUMBER,
-                             ContactsContract.PhoneLookup._ID,
-                             ContactsContract.PhoneLookup.DISPLAY_NAME};
-    Cursor   numberCursor = null;
-    Cursor   idCursor     = null;
-
-    try {
-      numberCursor = context.getContentResolver().query(uri, projection, null, null, null);
-
-      while (numberCursor != null && numberCursor.moveToNext()) {
-        String  systemNumber  = numberCursor.getString(0);
-        Address systemAddress = Address.fromExternal(context, systemNumber);
-
-        if (systemAddress.equals(address)) {
-          idCursor = context.getContentResolver().query(RawContacts.CONTENT_URI,
-                                                        new String[] {RawContacts._ID},
-                                                        RawContacts.CONTACT_ID + " = ? ",
-                                                        new String[] {String.valueOf(numberCursor.getLong(1))},
-                                                        null);
-
-          if (idCursor != null && idCursor.moveToNext()) {
-            return Optional.of(new SystemContactInfo(numberCursor.getString(2),
-                                                     numberCursor.getString(0),
-                                                     idCursor.getLong(0)));
-          }
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+      Log.d(TAG, "onCreate called for contacts database.");
+      mDatabase = db;
+      mDatabase.execSQL(TABLE_CREATE);
+      if (OpenchatServicePreferences.isPushRegistered(context)) {
+        try {
+          loadPushUsers();
+        } catch (IOException ioe) {
+          Log.e(TAG, "Issue when trying to load push users into memory db.", ioe);
         }
       }
-    } finally {
-      if (numberCursor != null) numberCursor.close();
-      if (idCursor     != null) idCursor.close();
     }
 
-    return Optional.absent();
-  }
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+      Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
+          + newVersion + ", which will destroy all old data");
+      db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+      onCreate(db);
+    }
 
-  private @Nullable String getDisplayName(long contactId) {
-    Cursor cursor = context.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
-                                                       new String[]{ContactsContract.Contacts.DISPLAY_NAME},
-                                                       ContactsContract.Contacts._ID + " = ?",
-                                                       new String[] {String.valueOf(contactId)},
-                                                       null);
-
-    try {
-      if (cursor != null && cursor.moveToFirst()) {
-        return cursor.getString(0);
-      } else {
-        return null;
+    private void loadPushUsers() throws IOException {
+      Log.d(TAG, "populating push users into virtual db.");
+      Collection<ContactAccessor.ContactData> pushUsers = ContactAccessor.getInstance().getContactsWithPush(context);
+      for (ContactAccessor.ContactData user : pushUsers) {
+        ContentValues values = new ContentValues();
+        values.put(ID_COLUMN, user.id);
+        values.put(NAME_COLUMN, user.name);
+        values.put(NUMBER_TYPE_COLUMN, ContactsContract.CommonDataKinds.Phone.TYPE_CUSTOM);
+        values.put(LABEL_COLUMN, (String)null);
+        values.put(NUMBER_COLUMN, user.numbers.get(0).number);
+        values.put(TYPE_COLUMN, PUSH_TYPE);
+        mDatabase.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
       }
-    } finally {
-      if (cursor != null) cursor.close();
+      Log.d(TAG, "finished populating push users.");
     }
   }
 
-  private static class ProjectionMappingCursor extends CursorWrapper {
+  private static class TypedCursorWrapper extends CursorWrapper {
 
-    private final Map<String, String>    projectionMap;
-    private final Pair<String, Object>[] extras;
+    private final int pushColumnIndex;
 
-    @SafeVarargs
-    ProjectionMappingCursor(Cursor cursor,
-                            Map<String, String> projectionMap,
-                            Pair<String, Object>... extras)
-    {
+    public TypedCursorWrapper(Cursor cursor) {
       super(cursor);
-      this.projectionMap = projectionMap;
-      this.extras        = extras;
+      pushColumnIndex = cursor.getColumnCount();
     }
 
     @Override
     public int getColumnCount() {
-      return super.getColumnCount() + extras.length;
+      return super.getColumnCount() + 1;
     }
 
     @Override
     public int getColumnIndex(String columnName) {
-      for (int i=0;i<extras.length;i++) {
-        if (extras[i].first.equals(columnName)) {
-          return super.getColumnCount() + i;
-        }
-      }
-
-      return super.getColumnIndex(projectionMap.get(columnName));
+      if (TYPE_COLUMN.equals(columnName)) return super.getColumnCount();
+      else return super.getColumnIndex(columnName);
     }
 
     @Override
     public int getColumnIndexOrThrow(String columnName) throws IllegalArgumentException {
-      int index = getColumnIndex(columnName);
-
-      if (index == -1) throw new IllegalArgumentException("Bad column name!");
-      else             return index;
+      if (TYPE_COLUMN.equals(columnName)) return super.getColumnCount();
+      else return super.getColumnIndexOrThrow(columnName);
     }
 
     @Override
     public String getColumnName(int columnIndex) {
-      int baseColumnCount = super.getColumnCount();
-
-      if (columnIndex >= baseColumnCount) {
-        int offset = columnIndex - baseColumnCount;
-        return extras[offset].first;
-      }
-
-      return getReverseProjection(super.getColumnName(columnIndex));
+      if (columnIndex == pushColumnIndex) return TYPE_COLUMN;
+      else                                return super.getColumnName(columnIndex);
     }
 
     @Override
     public String[] getColumnNames() {
-      String[] names    = super.getColumnNames();
-      String[] allNames = new String[names.length + extras.length];
-
-      for (int i=0;i<names.length;i++) {
-        allNames[i] = getReverseProjection(names[i]);
-      }
-
-      for (int i=0;i<extras.length;i++) {
-        allNames[names.length + i] = extras[i].first;
-      }
-
-      return allNames;
+      final String[] columns = new String[super.getColumnCount() + 1];
+      System.arraycopy(super.getColumnNames(), 0, columns, 0, super.getColumnCount());
+      columns[pushColumnIndex] = TYPE_COLUMN;
+      return columns;
     }
 
     @Override
     public int getInt(int columnIndex) {
-      if (columnIndex >= super.getColumnCount()) {
-        int offset = columnIndex - super.getColumnCount();
-        return (Integer)extras[offset].second;
-      }
-
-      return super.getInt(columnIndex);
-    }
-
-    @Override
-    public String getString(int columnIndex) {
-      if (columnIndex >= super.getColumnCount()) {
-        int offset = columnIndex - super.getColumnCount();
-        return (String)extras[offset].second;
-      }
-
-      return super.getString(columnIndex);
-    }
-
-
-    private @Nullable String getReverseProjection(String columnName) {
-      for (Map.Entry<String, String> entry : projectionMap.entrySet()) {
-        if (entry.getValue().equals(columnName)) {
-          return entry.getKey();
-        }
-      }
-
-      return null;
-    }
-  }
-
-  private static class SystemContactInfo {
-    private final String name;
-    private final String number;
-    private final long   id;
-
-    private SystemContactInfo(String name, String number, long id) {
-      this.name   = name;
-      this.number = number;
-      this.id     = id;
-    }
-  }
-
-  private static class openchatContact {
-
-              private final long   id;
-    @Nullable private final String supportsVoice;
-    @Nullable private final String rawDisplayName;
-    @Nullable private final String aggregateDisplayName;
-              private final int    displayNameSource;
-
-    openchatContact(long id,
-                  @Nullable String supportsVoice,
-                  @Nullable String rawDisplayName,
-                  @Nullable String aggregateDisplayName,
-                  int displayNameSource)
-    {
-      this.id                   = id;
-      this.supportsVoice        = supportsVoice;
-      this.rawDisplayName       = rawDisplayName;
-      this.aggregateDisplayName = aggregateDisplayName;
-      this.displayNameSource    = displayNameSource;
-    }
-
-    public long getId() {
-      return id;
-    }
-
-    boolean isVoiceSupported() {
-      return "true".equals(supportsVoice);
-    }
-
-    @Nullable
-    String getRawDisplayName() {
-      return rawDisplayName;
-    }
-
-    @Nullable
-    String getAggregateDisplayName() {
-      return aggregateDisplayName;
-    }
-
-    int getDisplayNameSource() {
-      return displayNameSource;
+      if (columnIndex == pushColumnIndex) return NORMAL_TYPE;
+      else                                return super.getInt(columnIndex);
     }
   }
 }

@@ -1,6 +1,12 @@
 package com.openchat.secureim.sms;
 
-import static com.openchat.imservice.internal.push.openchatServiceProtos.GroupContext;
+import com.google.protobuf.ByteString;
+
+import com.openchat.secureim.util.GroupUtil;
+
+import java.io.IOException;
+
+import static com.openchat.imservice.push.PushMessageProtos.PushMessageContent.GroupContext;
 
 public class IncomingGroupMessage extends IncomingTextMessage {
 
@@ -27,6 +33,16 @@ public class IncomingGroupMessage extends IncomingTextMessage {
 
   public boolean isQuit() {
     return groupContext.getType().getNumber() == GroupContext.Type.QUIT_VALUE;
+  }
+
+  public static IncomingGroupMessage createForQuit(String groupId, String user) throws IOException {
+    IncomingTextMessage base    = new IncomingTextMessage(user, groupId);
+    GroupContext        context = GroupContext.newBuilder()
+                                              .setType(GroupContext.Type.QUIT)
+                                              .setId(ByteString.copyFrom(GroupUtil.getDecodedId(groupId)))
+                                              .build();
+
+    return new IncomingGroupMessage(base, context, "");
   }
 
 }

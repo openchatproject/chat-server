@@ -1,106 +1,56 @@
 package com.openchat.secureim.util;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.ActivityManager;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.Telephony;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresPermission;
-import android.telephony.TelephonyManager;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.util.Log;
-import android.widget.EditText;
 
-import com.google.android.mms.pdu_alt.CharacterSets;
-import com.google.android.mms.pdu_alt.EncodedStringValue;
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
-
-import com.openchat.secureim.BuildConfig;
-import com.openchat.secureim.database.Address;
-import com.openchat.secureim.mms.OutgoingLegacyMmsConnection;
-import com.openchat.libim.util.guava.Optional;
+import com.openchat.imservice.util.InvalidNumberException;
+import com.openchat.imservice.util.PhoneNumberFormatter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import ws.com.google.android.mms.pdu.CharacterSets;
+import ws.com.google.android.mms.pdu.EncodedStringValue;
+
 public class Util {
-  private static final String TAG = Util.class.getSimpleName();
 
-  public static Handler handler = new Handler(Looper.getMainLooper());
+  public static String[] splitString(String string, int maxLength) {
+    int count = string.length() / maxLength;
 
-  public static <T> List<T> asList(T... elements) {
-    List<T> result = new LinkedList<>();
-    Collections.addAll(result, elements);
-    return result;
-  }
+    if (string.length() % maxLength > 0)
+      count++;
 
-  public static String join(String[] list, String delimiter) {
-    return join(Arrays.asList(list), delimiter);
-  }
+    String[] splitString = new String[count];
 
-  public static String join(Collection<String> list, String delimiter) {
-    StringBuilder result = new StringBuilder();
-    int i = 0;
+    for (int i=0;i<count-1;i++)
+      splitString[i] = string.substring(i*maxLength, (i*maxLength) + maxLength);
 
-    for (String item : list) {
-      result.append(item);
+    splitString[count-1] = string.substring((count-1) * maxLength);
 
-      if (++i < list.size())
-        result.append(delimiter);
-    }
-
-    return result.toString();
-  }
-
-  public static String join(long[] list, String delimeter) {
-    StringBuilder sb = new StringBuilder();
-
-    for (int j=0;j<list.length;j++) {
-      if (j != 0) sb.append(delimeter);
-      sb.append(list[j]);
-    }
-
-    return sb.toString();
+    return splitString;
   }
 
   public static ExecutorService newSingleThreadedLifoExecutor() {
     ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingLifoQueue<Runnable>());
 
-    executor.execute(() -> {
-//        Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-      Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+    executor.execute(new Runnable() {
+      @Override
+      public void run() {
+        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+      }
     });
 
     return executor;
@@ -108,10 +58,6 @@ public class Util {
 
   public static boolean isEmpty(EncodedStringValue[] value) {
     return value == null || value.length == 0;
-  }
-
-  public static boolean isEmpty(EditText value) {
-    return value == null || value.getText() == null || TextUtils.isEmpty(value.getText().toString());
   }
 
   public static CharSequence getBoldedString(String value) {
@@ -123,7 +69,16 @@ public class Util {
     return spanned;
   }
 
-  public static @NonNull String toIsoString(byte[] bytes) {
+  public static CharSequence getItalicizedString(String value) {
+    SpannableString spanned = new SpannableString(value);
+    spanned.setSpan(new StyleSpan(Typeface.ITALIC), 0,
+                    spanned.length(),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+    return spanned;
+  }
+
+  public static String toIsoString(byte[] bytes) {
     try {
       return new String(bytes, CharacterSets.MIMENAME_ISO_8859_1);
     } catch (UnsupportedEncodingException e) {
@@ -147,7 +102,7 @@ public class Util {
     }
   }
 
-  public static void wait(Object lock, long timeout) {
+  public static void wait(Object lock, int timeout) {
     try {
       lock.wait(timeout);
     } catch (InterruptedException ie) {
@@ -155,158 +110,25 @@ public class Util {
     }
   }
 
-  public static void close(InputStream in) {
-    try {
-      in.close();
-    } catch (IOException e) {
-      Log.w(TAG, e);
-    }
-  }
-
-  public static void close(OutputStream out) {
-    try {
-      out.close();
-    } catch (IOException e) {
-      Log.w(TAG, e);
-    }
-  }
-
-  public static long getStreamLength(InputStream in) throws IOException {
-    byte[] buffer    = new byte[4096];
-    int    totalSize = 0;
-
-    int read;
-
-    while ((read = in.read(buffer)) != -1) {
-      totalSize += read;
-    }
-
-    return totalSize;
-  }
-
-  public static boolean isOwnNumber(Context context, Address address) {
-    if (address.isGroup()) return false;
-    if (address.isEmail()) return false;
-
-    return TextSecurePreferences.getLocalNumber(context).equals(address.toPhoneString());
+  public static String canonicalizeNumber(Context context, String number)
+      throws InvalidNumberException
+  {
+    String localNumber = OpenchatServicePreferences.getLocalNumber(context);
+    return PhoneNumberFormatter.formatNumber(number, localNumber);
   }
 
   public static byte[] readFully(InputStream in) throws IOException {
-    ByteArrayOutputStream bout = new ByteArrayOutputStream();
-    byte[] buffer              = new byte[4096];
+    ByteArrayOutputStream baos   = new ByteArrayOutputStream();
+    byte[]                buffer = new byte[4069];
+
     int read;
 
     while ((read = in.read(buffer)) != -1) {
-      bout.write(buffer, 0, read);
+      baos.write(buffer, 0, read);
     }
 
     in.close();
-
-    return bout.toByteArray();
-  }
-
-  public static String readFullyAsString(InputStream in) throws IOException {
-    return new String(readFully(in));
-  }
-
-  public static long copy(InputStream in, OutputStream out) throws IOException {
-    byte[] buffer = new byte[4096];
-    int read;
-    long total = 0;
-
-    while ((read = in.read(buffer)) != -1) {
-      out.write(buffer, 0, read);
-      total += read;
-    }
-
-    in.close();
-    out.close();
-
-    return total;
-  }
-
-  @RequiresPermission(anyOf = {
-      android.Manifest.permission.READ_PHONE_STATE,
-      android.Manifest.permission.READ_SMS,
-      android.Manifest.permission.READ_PHONE_NUMBERS
-  })
-  @SuppressLint("MissingPermission")
-  public static Optional<Phonenumber.PhoneNumber> getDeviceNumber(Context context) {
-    try {
-      final String           localNumber = ((TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE)).getLine1Number();
-      final Optional<String> countryIso  = getSimCountryIso(context);
-
-      if (TextUtils.isEmpty(localNumber)) return Optional.absent();
-      if (!countryIso.isPresent())        return Optional.absent();
-
-      return Optional.fromNullable(PhoneNumberUtil.getInstance().parse(localNumber, countryIso.get()));
-    } catch (NumberParseException e) {
-      Log.w(TAG, e);
-      return Optional.absent();
-    }
-  }
-
-  public static Optional<String> getSimCountryIso(Context context) {
-    String simCountryIso = ((TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE)).getSimCountryIso();
-    return Optional.fromNullable(simCountryIso != null ? simCountryIso.toUpperCase() : null);
-  }
-
-  public static <T> List<List<T>> partition(List<T> list, int partitionSize) {
-    List<List<T>> results = new LinkedList<>();
-
-    for (int index=0;index<list.size();index+=partitionSize) {
-      int subListSize = Math.min(partitionSize, list.size() - index);
-
-      results.add(list.subList(index, index + subListSize));
-    }
-
-    return results;
-  }
-
-  public static List<String> split(String source, String delimiter) {
-    List<String> results = new LinkedList<>();
-
-    if (TextUtils.isEmpty(source)) {
-      return results;
-    }
-
-    String[] elements = source.split(delimiter);
-    Collections.addAll(results, elements);
-
-    return results;
-  }
-
-  public static byte[][] split(byte[] input, int firstLength, int secondLength) {
-    byte[][] parts = new byte[2][];
-
-    parts[0] = new byte[firstLength];
-    System.arraycopy(input, 0, parts[0], 0, firstLength);
-
-    parts[1] = new byte[secondLength];
-    System.arraycopy(input, firstLength, parts[1], 0, secondLength);
-
-    return parts;
-  }
-
-  public static byte[] combine(byte[]... elements) {
-    try {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-      for (byte[] element : elements) {
-        baos.write(element);
-      }
-
-      return baos.toByteArray();
-    } catch (IOException e) {
-      throw new AssertionError(e);
-    }
-  }
-
-  public static byte[] trim(byte[] input, int length) {
-    byte[] result = new byte[length];
-    System.arraycopy(input, 0, result, 0, result.length);
-
-    return result;
+    return baos.toByteArray();
   }
 
   @SuppressLint("NewApi")
@@ -321,154 +143,5 @@ public class Util {
     } catch (PackageManager.NameNotFoundException e) {
       throw new AssertionError(e);
     }
-  }
-
-  public static String getSecret(int size) {
-    byte[] secret = getSecretBytes(size);
-    return Base64.encodeBytes(secret);
-  }
-
-  public static byte[] getSecretBytes(int size) {
-    byte[] secret = new byte[size];
-    getSecureRandom().nextBytes(secret);
-    return secret;
-  }
-
-  public static SecureRandom getSecureRandom() {
-    try {
-      return SecureRandom.getInstance("SHA1PRNG");
-    } catch (NoSuchAlgorithmException e) {
-      throw new AssertionError(e);
-    }
-  }
-
-  public static int getDaysTillBuildExpiry() {
-    int age = (int)TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - BuildConfig.BUILD_TIMESTAMP);
-    return 90 - age;
-  }
-
-  @TargetApi(VERSION_CODES.LOLLIPOP)
-  public static boolean isMmsCapable(Context context) {
-    return (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) || OutgoingLegacyMmsConnection.isConnectionPossible(context);
-  }
-
-  public static boolean isMainThread() {
-    return Looper.myLooper() == Looper.getMainLooper();
-  }
-
-  public static void assertMainThread() {
-    if (!isMainThread()) {
-      throw new AssertionError("Main-thread assertion failed.");
-    }
-  }
-
-  public static void runOnMain(final @NonNull Runnable runnable) {
-    if (isMainThread()) runnable.run();
-    else                handler.post(runnable);
-  }
-
-  public static void runOnMainDelayed(final @NonNull Runnable runnable, long delayMillis) {
-    handler.postDelayed(runnable, delayMillis);
-  }
-
-  public static void runOnMainSync(final @NonNull Runnable runnable) {
-    if (isMainThread()) {
-      runnable.run();
-    } else {
-      final CountDownLatch sync = new CountDownLatch(1);
-      runOnMain(() -> {
-        try {
-          runnable.run();
-        } finally {
-          sync.countDown();
-        }
-      });
-      try {
-        sync.await();
-      } catch (InterruptedException ie) {
-        throw new AssertionError(ie);
-      }
-    }
-  }
-
-  public static <T> T getRandomElement(T[] elements) {
-    try {
-      return elements[SecureRandom.getInstance("SHA1PRNG").nextInt(elements.length)];
-    } catch (NoSuchAlgorithmException e) {
-      throw new AssertionError(e);
-    }
-  }
-
-  public static boolean equals(@Nullable Object a, @Nullable Object b) {
-    return a == b || (a != null && a.equals(b));
-  }
-
-  public static int hashCode(@Nullable Object... objects) {
-    return Arrays.hashCode(objects);
-  }
-
-  public static @Nullable Uri uri(@Nullable String uri) {
-    if (uri == null) return null;
-    else             return Uri.parse(uri);
-  }
-
-  @TargetApi(VERSION_CODES.KITKAT)
-  public static boolean isLowMemory(Context context) {
-    ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-
-    return (VERSION.SDK_INT >= VERSION_CODES.KITKAT && activityManager.isLowRamDevice()) ||
-           activityManager.getLargeMemoryClass() <= 64;
-  }
-
-  public static int clamp(int value, int min, int max) {
-    return Math.min(Math.max(value, min), max);
-  }
-
-  public static float clamp(float value, float min, float max) {
-    return Math.min(Math.max(value, min), max);
-  }
-
-  public static @Nullable String readTextFromClipboard(@NonNull Context context) {
-    {
-      ClipboardManager clipboardManager = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
-
-      if (clipboardManager.hasPrimaryClip() && clipboardManager.getPrimaryClip().getItemCount() > 0) {
-        return clipboardManager.getPrimaryClip().getItemAt(0).getText().toString();
-      } else {
-        return null;
-      }
-    }
-  }
-
-  public static void writeTextToClipboard(@NonNull Context context, @NonNull String text) {
-    {
-      ClipboardManager clipboardManager = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
-      clipboardManager.setPrimaryClip(ClipData.newPlainText("Safety numbers", text));
-    }
-  }
-
-  public static int toIntExact(long value) {
-    if ((int)value != value) {
-      throw new ArithmeticException("integer overflow");
-    }
-    return (int)value;
-  }
-
-  public static boolean isStringEquals(String first, String second) {
-    if (first == null) return second == null;
-    return first.equals(second);
-  }
-
-  public static boolean isEquals(@Nullable Long first, long second) {
-    return first != null && first == second;
-  }
-
-  public static String getPrettyFileSize(long sizeBytes) {
-    if (sizeBytes <= 0) return "0";
-
-    String[] units       = new String[]{"B", "kB", "MB", "GB", "TB"};
-    int      digitGroups = (int) (Math.log10(sizeBytes) / Math.log10(1024));
-
-    return new DecimalFormat("#,##0.#").format(sizeBytes/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
   }
 }

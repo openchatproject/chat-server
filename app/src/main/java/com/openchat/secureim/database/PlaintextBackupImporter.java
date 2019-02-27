@@ -6,9 +6,11 @@ import android.database.sqlite.SQLiteStatement;
 import android.os.Environment;
 import android.util.Log;
 
-import com.openchat.secureim.crypto.MasterCipher;
-import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.secureim.recipients.Recipient;
+import com.openchat.imservice.crypto.MasterCipher;
+import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.recipients.RecipientFactory;
+import com.openchat.secureim.recipients.RecipientFormattingException;
+import com.openchat.secureim.recipients.Recipients;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.File;
@@ -21,47 +23,67 @@ public class PlaintextBackupImporter {
   public static void importPlaintextFromSd(Context context, MasterSecret masterSecret)
       throws NoExternalStorageException, IOException
   {
+    Log.w("PlaintextBackupImporter", "Importing plaintext...");
+    verifyExternalStorageForPlaintextImport();
+    importPlaintext(context, masterSecret);
+  }
+
+  private static void verifyExternalStorageForPlaintextImport() throws NoExternalStorageException {
+    if (!Environment.getExternalStorageDirectory().canRead() ||
+        !(new File(getPlaintextExportDirectoryPath()).exists()))
+      throw new NoExternalStorageException();
+  }
+
+  private static String getPlaintextExportDirectoryPath() {
+    File sdDirectory = Environment.getExternalStorageDirectory();
+    return sdDirectory.getAbsolutePath() + File.separator + "OpenchatServicePlaintextBackup.xml";
+  }
+
+  private static void importPlaintext(Context context, MasterSecret masterSecret)
+      throws IOException
+  {
     Log.w("PlaintextBackupImporter", "importPlaintext()");
     SmsDatabase    db          = DatabaseFactory.getSmsDatabase(context);
     SQLiteDatabase transaction = db.beginTransaction();
 
     try {
       ThreadDatabase threads         = DatabaseFactory.getThreadDatabase(context);
-      XmlBackup      backup          = new XmlBackup(getPlaintextExportFile().getAbsolutePath());
+      XmlBackup      backup          = new XmlBackup(getPlaintextExportDirectoryPath());
       MasterCipher   masterCipher    = new MasterCipher(masterSecret);
-      Set<Long>      modifiedThreads = new HashSet<>();
+      Set<Long>      modifiedThreads = new HashSet<Long>();
       XmlBackup.XmlBackupItem item;
 
       while ((item = backup.getNext()) != null) {
-        Recipient       recipient  = Recipient.from(context, Address.fromExternal(context, item.getAddress()), false);
-        long            threadId   = threads.getThreadIdFor(recipient);
-        SQLiteStatement statement  = db.createInsertStatement(transaction);
+        try {
+          Recipients      recipients = RecipientFactory.getRecipientsFromString(context, item.getAddress(), false);
+          long            threadId   = threads.getThreadIdFor(recipients);
+          SQLiteStatement statement  = db.createInsertStatement(transaction);
 
-        if (item.getAddress() == null || item.getAddress().equals("null"))
-          continue;
+          if (item.getAddress() == null || item.getAddress().equals("null"))
+            continue;
 
-        if (!isAppropriateTypeForImport(item.getType()))
-          continue;
-
-        addStringToStatement(statement, 1, item.getAddress());
-        addNullToStatement(statement, 2);
-        addLongToStatement(statement, 3, item.getDate());
-        addLongToStatement(statement, 4, item.getDate());
-        addLongToStatement(statement, 5, item.getProtocol());
-        addLongToStatement(statement, 6, item.getRead());
-        addLongToStatement(statement, 7, item.getStatus());
-        addTranslatedTypeToStatement(statement, 8, item.getType());
-        addNullToStatement(statement, 9);
-        addStringToStatement(statement, 10, item.getSubject());
-        addEncryptedStringToStatement(masterCipher, statement, 11, item.getBody());
-        addStringToStatement(statement, 12, item.getServiceCenter());
-        addLongToStatement(statement, 13, threadId);
-        modifiedThreads.add(threadId);
-        statement.execute();
+          addStringToStatement(statement, 1, item.getAddress());
+          addNullToStatement(statement, 2);
+          addLongToStatement(statement, 3, item.getDate());
+          addLongToStatement(statement, 4, item.getDate());
+          addLongToStatement(statement, 5, item.getProtocol());
+          addLongToStatement(statement, 6, item.getRead());
+          addLongToStatement(statement, 7, item.getStatus());
+          addTranslatedTypeToStatement(statement, 8, item.getType());
+          addNullToStatement(statement, 9);
+          addStringToStatement(statement, 10, item.getSubject());
+          addEncryptedStingToStatement(masterCipher, statement, 11, item.getBody());
+          addStringToStatement(statement, 12, item.getServiceCenter());
+          addLongToStatement(statement, 13, threadId);
+          modifiedThreads.add(threadId);
+          statement.execute();
+        } catch (RecipientFormattingException rfe) {
+          Log.w("PlaintextBackupImporter", rfe);
+        }
       }
 
       for (long threadId : modifiedThreads) {
-        threads.update(threadId, true);
+        threads.update(threadId);
       }
 
       Log.w("PlaintextBackupImporter", "Exited loop");
@@ -73,14 +95,7 @@ public class PlaintextBackupImporter {
     }
   }
 
-  private static File getPlaintextExportFile() throws NoExternalStorageException {
-    File backup    = PlaintextBackupExporter.getPlaintextExportFile();
-    File oldBackup = new File(Environment.getExternalStorageDirectory(), "TextSecurePlaintextBackup.xml");
-
-    return !backup.exists() && oldBackup.exists() ? oldBackup : backup;
-  }
-
-  private static void addEncryptedStringToStatement(MasterCipher masterCipher, SQLiteStatement statement, int index, String value) {
+  private static void addEncryptedStingToStatement(MasterCipher masterCipher, SQLiteStatement statement, int index, String value) {
     if (value == null || value.equals("null")) {
       statement.bindNull(index);
     } else {
@@ -105,11 +120,4 @@ public class PlaintextBackupImporter {
     statement.bindLong(index, value);
   }
 
-  private static boolean isAppropriateTypeForImport(long theirType) {
-    long ourType = SmsDatabase.Types.translateFromSystemBaseType(theirType);
-
-    return ourType == MmsSmsColumns.Types.BASE_INBOX_TYPE ||
-           ourType == MmsSmsColumns.Types.BASE_SENT_TYPE ||
-           ourType == MmsSmsColumns.Types.BASE_SENT_FAILED_TYPE;
-  }
 }

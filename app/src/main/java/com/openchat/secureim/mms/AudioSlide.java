@@ -1,63 +1,80 @@
 package com.openchat.secureim.mms;
 
-import android.content.Context;
-import android.content.res.Resources.Theme;
-import android.net.Uri;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import java.io.IOException;
 
 import com.openchat.secureim.R;
-import com.openchat.secureim.attachments.Attachment;
-import com.openchat.secureim.attachments.UriAttachment;
-import com.openchat.secureim.database.AttachmentDatabase;
-import com.openchat.secureim.util.MediaUtil;
-import com.openchat.secureim.util.ResUtil;
+import com.openchat.secureim.util.SmilUtil;
+import org.w3c.dom.smil.SMILDocument;
+import org.w3c.dom.smil.SMILMediaElement;
+import org.w3c.dom.smil.SMILRegionElement;
+import org.w3c.dom.smil.SMILRegionMediaElement;
 
+import ws.com.google.android.mms.pdu.PduPart;
+import android.content.Context;
+import android.database.Cursor;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.provider.MediaStore.Audio;
 
 public class AudioSlide extends Slide {
 
-  public AudioSlide(Context context, Uri uri, long dataSize, boolean voiceNote) {
-    super(context, constructAttachmentFromUri(context, uri, MediaUtil.AUDIO_UNSPECIFIED, dataSize, false, null, voiceNote));
+  public AudioSlide(Context context, PduPart part) {
+    super(context, part);
   }
 
-  public AudioSlide(Context context, Uri uri, long dataSize, String contentType, boolean voiceNote) {
-    super(context,  new UriAttachment(uri, null, contentType, AttachmentDatabase.TRANSFER_PROGRESS_STARTED, dataSize, null, null, voiceNote));
+  public AudioSlide(Context context, Uri uri) throws IOException, MediaTooLargeException {
+    super(context, constructPartFromUri(context, uri));
   }
-
-  public AudioSlide(Context context, Attachment attachment) {
-    super(context, attachment);
+	
+  @Override
+    public boolean hasImage() {
+    return true;
+  }
+	
+  @Override
+    public boolean hasAudio() {
+    return true;
   }
 
   @Override
-  @Nullable
-  public Uri getThumbnailUri() {
+  public SMILRegionElement getSmilRegion(SMILDocument document) {
     return null;
   }
 
   @Override
-  public boolean hasPlaceholder() {
-    return true;
+  public SMILMediaElement getMediaElement(SMILDocument document) {
+    return SmilUtil.createMediaElement("audio", document, new String(getPart().getName()));
   }
 
   @Override
-  public boolean hasImage() {
-    return true;
+  public Drawable getThumbnail(int maxWidth, int maxHeight) {
+    return context.getResources().getDrawable(R.drawable.ic_menu_add_sound);
   }
 
-  @Override
-  public boolean hasAudio() {
-    return true;
-  }
+  public static PduPart constructPartFromUri(Context context, Uri uri) throws IOException, MediaTooLargeException {
+    PduPart part = new PduPart();
+		
+    if (getMediaSize(context, uri) > MAX_MESSAGE_SIZE)
+      throw new MediaTooLargeException("Audio track larger than size maximum.");
+		
+    Cursor cursor = null;
+		
+    try {
+      cursor = context.getContentResolver().query(uri, new String[]{Audio.Media.MIME_TYPE}, null, null, null);
+			
+      if (cursor != null && cursor.moveToFirst())
+        part.setContentType(cursor.getString(0).getBytes());
+      else
+        throw new IOException("Unable to query content type.");
+    } finally {
+      if (cursor != null)
+        cursor.close();
+    } 
 
-  @NonNull
-  @Override
-  public String getContentDescription() {
-    return context.getString(R.string.Slide_audio);
-  }
-
-  @Override
-  public @DrawableRes int getPlaceholderRes(Theme theme) {
-    return ResUtil.getDrawableRes(theme, R.attr.conversation_icon_attach_audio);
+    part.setDataUri(uri);
+    part.setContentId((System.currentTimeMillis()+"").getBytes());
+    part.setName(("Audio" + System.currentTimeMillis()).getBytes());
+		
+    return part;
   }
 }

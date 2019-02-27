@@ -1,64 +1,89 @@
 package com.openchat.secureim.mms;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.w3c.dom.smil.SMILDocument;
+import org.w3c.dom.smil.SMILMediaElement;
+import org.w3c.dom.smil.SMILRegionElement;
+import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.database.DatabaseFactory;
+import com.openchat.secureim.providers.PartProvider;
+
+import android.content.ContentUris;
 import android.content.Context;
-import android.content.res.Resources.Theme;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.util.Log;
+import android.widget.ImageView;
 
-import com.openchat.secureim.attachments.Attachment;
-import com.openchat.secureim.attachments.UriAttachment;
-import com.openchat.secureim.database.AttachmentDatabase;
-import com.openchat.secureim.util.MediaUtil;
-import com.openchat.secureim.util.Util;
-import com.openchat.libim.util.guava.Optional;
-
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import ws.com.google.android.mms.pdu.PduPart;
 
 public abstract class Slide {
 
-  protected final Attachment attachment;
-  protected final Context    context;
+  protected static final int MAX_MESSAGE_SIZE = 280 * 1024;
 
-  public Slide(@NonNull Context context, @NonNull Attachment attachment) {
-    this.context    = context;
-    this.attachment = attachment;
+  protected final PduPart part;
+  protected final Context context;
+  protected MasterSecret masterSecret;
 
+  public Slide(Context context, PduPart part) {
+    this.part    = part;
+    this.context = context;
+  }
+
+  public Slide(Context context, MasterSecret masterSecret, PduPart part) {
+    this(context, part);
+    this.masterSecret = masterSecret;
+  }
+
+  public InputStream getPartDataInputStream() throws FileNotFoundException {
+    Uri partUri = part.getDataUri();
+
+    Log.w("Slide", "Loading Part URI: " + partUri);
+
+    if (PartProvider.isAuthority(partUri))
+      return DatabaseFactory.getEncryptingPartDatabase(context, masterSecret).getPartStream(ContentUris.parseId(partUri));
+    else
+      return context.getContentResolver().openInputStream(partUri);
+  }
+
+  protected static long getMediaSize(Context context, Uri uri) throws IOException {
+    InputStream in = context.getContentResolver().openInputStream(uri);
+    long   size    = 0;
+    byte[] buffer  = new byte[512];
+    int read;
+
+    while ((read = in.read(buffer)) != -1)
+      size += read;
+
+    return size;
+  }
+
+  protected byte[] getPartData() {
+    if (part.getData() != null)
+      return part.getData();
+
+    long partId = ContentUris.parseId(part.getDataUri());
+    return DatabaseFactory.getEncryptingPartDatabase(context, masterSecret).getPart(partId, true).getData();
   }
 
   public String getContentType() {
-    return attachment.getContentType();
+    return new String(part.getContentType());
   }
 
-  @Nullable
   public Uri getUri() {
-    return attachment.getDataUri();
+    return part.getDataUri();
   }
 
-  @Nullable
-  public Uri getThumbnailUri() {
-    return attachment.getThumbnailUri();
+  public Drawable getThumbnail(int maxWidth, int maxHeight) {
+    throw new AssertionError("getThumbnail() called on non-thumbnail producing slide!");
   }
 
-  @NonNull
-  public Optional<String> getBody() {
-    return Optional.absent();
-  }
-
-  @NonNull
-  public Optional<String> getFileName() {
-    return Optional.fromNullable(attachment.getFileName());
-  }
-
-  @Nullable
-  public String getFastPreflightId() {
-    return attachment.getFastPreflightId();
-  }
-
-  public long getFileSize() {
-    return attachment.getSize();
+  public void setThumbnailOn(ImageView imageView) {
+    imageView.setImageDrawable(getThumbnail(imageView.getWidth(), imageView.getHeight()));
   }
 
   public boolean hasImage() {
@@ -73,81 +98,23 @@ public abstract class Slide {
     return false;
   }
 
-  public boolean hasDocument() {
+  public Bitmap getImage() {
+    throw new AssertionError("getImage() called on non-image slide!");
+  }
+
+  public boolean hasText() {
     return false;
   }
 
-  public boolean hasLocation() {
-    return false;
+  public String getText() {
+    throw new AssertionError("getText() called on non-text slide!");
   }
 
-  public @NonNull String getContentDescription() { return ""; }
-
-  public Attachment asAttachment() {
-    return attachment;
+  public PduPart getPart() {
+    return part;
   }
 
-  public boolean isInProgress() {
-    return attachment.isInProgress();
-  }
+  public abstract SMILRegionElement getSmilRegion(SMILDocument document);
 
-  public boolean isPendingDownload() {
-    return getTransferState() == AttachmentDatabase.TRANSFER_PROGRESS_FAILED ||
-           getTransferState() == AttachmentDatabase.TRANSFER_PROGRESS_PENDING;
-  }
-
-  public long getTransferState() {
-    return attachment.getTransferState();
-  }
-
-  public @DrawableRes int getPlaceholderRes(Theme theme) {
-    throw new AssertionError("getPlaceholderRes() called for non-drawable slide");
-  }
-
-  public boolean hasPlaceholder() {
-    return false;
-  }
-
-  public boolean hasPlayOverlay() {
-    return false;
-  }
-
-  protected static Attachment constructAttachmentFromUri(@NonNull  Context context,
-                                                         @NonNull  Uri     uri,
-                                                         @NonNull  String  defaultMime,
-                                                                   long     size,
-                                                                   boolean  hasThumbnail,
-                                                         @Nullable String   fileName,
-                                                                   boolean  voiceNote)
-  {
-    try {
-      Optional<String> resolvedType    = Optional.fromNullable(MediaUtil.getMimeType(context, uri));
-      String           fastPreflightId = String.valueOf(SecureRandom.getInstance("SHA1PRNG").nextLong());
-      return new UriAttachment(uri, hasThumbnail ? uri : null, resolvedType.or(defaultMime), AttachmentDatabase.TRANSFER_PROGRESS_STARTED, size, fileName, fastPreflightId, voiceNote);
-    } catch (NoSuchAlgorithmException e) {
-      throw new AssertionError(e);
-    }
-  }
-
-  @Override
-  public boolean equals(Object other) {
-    if (other == null)             return false;
-    if (!(other instanceof Slide)) return false;
-
-    Slide that = (Slide)other;
-
-    return Util.equals(this.getContentType(), that.getContentType()) &&
-           this.hasAudio() == that.hasAudio()                        &&
-           this.hasImage() == that.hasImage()                        &&
-           this.hasVideo() == that.hasVideo()                        &&
-           this.getTransferState() == that.getTransferState()        &&
-           Util.equals(this.getUri(), that.getUri())                 &&
-           Util.equals(this.getThumbnailUri(), that.getThumbnailUri());
-  }
-
-  @Override
-  public int hashCode() {
-    return Util.hashCode(getContentType(), hasAudio(), hasImage(),
-                         hasVideo(), getUri(), getThumbnailUri(), getTransferState());
-  }
+  public abstract SMILMediaElement getMediaElement(SMILDocument document);
 }

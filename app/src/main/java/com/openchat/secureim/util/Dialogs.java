@@ -1,7 +1,9 @@
 package com.openchat.secureim.util;
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.support.v7.app.AlertDialog;
+import android.graphics.drawable.Drawable;
+import android.util.TypedValue;
 
 import com.openchat.secureim.R;
 
@@ -10,17 +12,22 @@ public class Dialogs {
     AlertDialog.Builder dialog = new AlertDialog.Builder(context);
     dialog.setTitle(title);
     dialog.setMessage(message);
-    dialog.setIconAttribute(R.attr.dialog_alert_icon);
+    dialog.setIcon(resolveIcon(context, R.attr.dialog_alert_icon));
     dialog.setPositiveButton(android.R.string.ok, null);
     dialog.show();
   }
-
   public static void showInfoDialog(Context context, String title, String message) {
     AlertDialog.Builder dialog = new AlertDialog.Builder(context);
     dialog.setTitle(title);
     dialog.setMessage(message);
-    dialog.setIconAttribute(R.attr.dialog_info_icon);
+    dialog.setIcon(resolveIcon(context, R.attr.dialog_info_icon));
     dialog.setPositiveButton(android.R.string.ok, null);
     dialog.show();
+  }
+
+  public static Drawable resolveIcon(Context c, int iconAttr) {
+    TypedValue out = new TypedValue();
+    c.getTheme().resolveAttribute(iconAttr, out, true);
+    return c.getResources().getDrawable(out.resourceId);
   }
 }

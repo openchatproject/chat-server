@@ -1,298 +1,288 @@
 package com.openchat.secureim;
 
-
-import android.Manifest;
-import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
+import android.widget.CheckedTextView;
+import android.widget.CursorAdapter;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.pnikosis.materialishprogress.ProgressWheel;
+import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
-import com.openchat.secureim.components.RecyclerViewFastScroller;
-import com.openchat.secureim.contacts.ContactSelectionListAdapter;
-import com.openchat.secureim.contacts.ContactSelectionListItem;
-import com.openchat.secureim.contacts.ContactsCursorLoader;
-import com.openchat.secureim.database.CursorRecyclerViewAdapter;
-import com.openchat.secureim.mms.GlideApp;
-import com.openchat.secureim.permissions.Permissions;
-import com.openchat.secureim.service.KeyCachingService;
-import com.openchat.secureim.util.DirectoryHelper;
-import com.openchat.secureim.util.StickyHeaderDecoration;
-import com.openchat.secureim.util.TextSecurePreferences;
-import com.openchat.secureim.util.ViewUtil;
+import com.openchat.secureim.contacts.ContactAccessor;
+import com.openchat.secureim.contacts.ContactAccessor.ContactData;
+import com.openchat.secureim.contacts.ContactAccessor.NumberData;
+import com.openchat.secureim.recipients.Recipient;
+import com.openchat.secureim.recipients.Recipients;
 
-import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
-/**
- * Fragment for selecting a one or more contacts from a list.
- *
- */
-public class ContactSelectionListFragment extends    Fragment
-                                          implements LoaderManager.LoaderCallbacks<Cursor>
+public class ContactSelectionListFragment extends SherlockListFragment
+    implements LoaderManager.LoaderCallbacks<Cursor>
 {
-  @SuppressWarnings("unused")
-  private static final String TAG = ContactSelectionListFragment.class.getSimpleName();
 
-  public static final String DISPLAY_MODE = "display_mode";
-  public static final String MULTI_SELECT = "multi_select";
-  public static final String REFRESHABLE  = "refreshable";
-  public static final String RECENTS      = "recents";
-
-  public final static int DISPLAY_MODE_ALL       = ContactsCursorLoader.MODE_ALL;
-  public final static int DISPLAY_MODE_PUSH_ONLY = ContactsCursorLoader.MODE_PUSH_ONLY;
-  public final static int DISPLAY_MODE_SMS_ONLY  = ContactsCursorLoader.MODE_SMS_ONLY;
-
-  private TextView emptyText;
-
-  private Set<String>               selectedContacts;
-  private OnContactSelectedListener onContactSelectedListener;
-  private SwipeRefreshLayout        swipeRefresh;
-  private View                      showContactsLayout;
-  private Button                    showContactsButton;
-  private TextView                  showContactsDescription;
-  private ProgressWheel             showContactsProgress;
-  private String                    cursorFilter;
-  private RecyclerView              recyclerView;
-  private RecyclerViewFastScroller  fastScroller;
+  private final HashMap<Long, ContactData> selectedContacts = new HashMap<Long, ContactData>();
 
   @Override
   public void onActivityCreated(Bundle icicle) {
-    super.onActivityCreated(icicle);
+    super.onCreate(icicle);
 
+    initializeResources();
     initializeCursor();
   }
 
   @Override
-  public void onStart() {
-    super.onStart();
-
-    Permissions.with(this)
-               .request(Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_CONTACTS)
-               .ifNecessary()
-               .onAllGranted(() -> {
-                 if (!TextSecurePreferences.hasSuccessfullyRetrievedDirectory(getActivity())) {
-                   handleContactPermissionGranted();
-                 } else {
-                   this.getLoaderManager().initLoader(0, null, this);
-                 }
-               })
-               .onAnyDenied(() -> {
-                 getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-                 if (getActivity().getIntent().getBooleanExtra(RECENTS, false)) {
-                   getLoaderManager().initLoader(0, null, ContactSelectionListFragment.this);
-                 } else {
-                   initializeNoContactsPermission();
-                 }
-               })
-               .execute();
-  }
-
-  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.contact_selection_list_fragment, container, false);
-
-    emptyText               = ViewUtil.findById(view, android.R.id.empty);
-    recyclerView            = ViewUtil.findById(view, R.id.recycler_view);
-    swipeRefresh            = ViewUtil.findById(view, R.id.swipe_refresh);
-    fastScroller            = ViewUtil.findById(view, R.id.fast_scroller);
-    showContactsLayout      = view.findViewById(R.id.show_contacts_container);
-    showContactsButton      = view.findViewById(R.id.show_contacts_button);
-    showContactsDescription = view.findViewById(R.id.show_contacts_description);
-    showContactsProgress    = view.findViewById(R.id.progress);
-    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-    swipeRefresh.setEnabled(getActivity().getIntent().getBooleanExtra(REFRESHABLE, true) &&
-                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN);
-
-    return view;
+    return inflater.inflate(R.layout.contact_selection_list_activity, container, false);
   }
 
   @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    Permissions.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.contact_selection_list, menu);
+    super.onCreateOptionsMenu(menu, inflater);
   }
 
-  public @NonNull List<String> getSelectedContacts() {
-    List<String> selected = new LinkedList<>();
-    if (selectedContacts != null) {
-      selected.addAll(selectedContacts);
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+
+    switch (item.getItemId()) {
+    case R.id.menu_select_all:   handleSelectAll();   return true;
+    case R.id.menu_unselect_all: handleUnselectAll(); return true;
     }
 
-    return selected;
+    super.onOptionsItemSelected(item);
+    return false;
   }
 
-  private boolean isMulti() {
-    return getActivity().getIntent().getBooleanExtra(MULTI_SELECT, false);
+  public List<ContactData> getSelectedContacts() {
+    List<ContactData> contacts = new LinkedList<ContactData>();
+    contacts.addAll(selectedContacts.values());
+
+    return contacts;
+  }
+
+  private void handleUnselectAll() {
+    selectedContacts.clear();
+    ((CursorAdapter)getListView().getAdapter()).notifyDataSetChanged();
+  }
+
+  private void handleSelectAll() {
+    selectedContacts.clear();
+
+    Cursor cursor = null;
+
+    try {
+      cursor = ContactAccessor.getInstance().getCursorForContactsWithNumbers(getActivity());
+
+      while (cursor != null && cursor.moveToNext()) {
+        ContactData contactData = ContactAccessor.getInstance().getContactData(getActivity(), cursor);
+
+        if      (contactData.numbers.isEmpty())   continue;
+        else if (contactData.numbers.size() == 1) addSingleNumberContact(contactData);
+        else                                      addMultipleNumberContact(contactData, null);
+      }
+    } finally {
+      if (cursor != null)
+        cursor.close();
+    }
+
+    ((CursorAdapter)getListView().getAdapter()).notifyDataSetChanged();
+  }
+
+  private void addSingleNumberContact(ContactData contactData) {
+    selectedContacts.put(contactData.id, contactData);
+  }
+
+  private void removeContact(ContactData contactData) {
+    selectedContacts.remove(contactData.id);
+  }
+
+  private void addMultipleNumberContact(ContactData contactData, CheckedTextView textView) {
+    String[] options = new String[contactData.numbers.size()];
+    int i            = 0;
+
+    for (NumberData option : contactData.numbers) {
+      options[i++] = option.type + " " + option.number;
+    }
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+    builder.setTitle(R.string.ContactSelectionlistFragment_select_for + " " + contactData.name);
+    builder.setMultiChoiceItems(options, null, new DiscriminatorClickedListener(contactData));
+    builder.setPositiveButton(android.R.string.ok, new DiscriminatorFinishedListener(contactData, textView));
+    builder.setOnCancelListener(new DiscriminatorFinishedListener(contactData, textView));
+    builder.show();
   }
 
   private void initializeCursor() {
-    ContactSelectionListAdapter adapter = new ContactSelectionListAdapter(getActivity(),
-                                                                          GlideApp.with(this),
-                                                                          null,
-                                                                          new ListClickListener(),
-                                                                          isMulti());
-    selectedContacts = adapter.getSelectedContacts();
-    recyclerView.setAdapter(adapter);
-    recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter, true, true));
+    setListAdapter(new ContactSelectionListAdapter(getActivity(), null));
+    this.getLoaderManager().initLoader(0, null, this);
   }
 
-  private void initializeNoContactsPermission() {
-    swipeRefresh.setVisibility(View.GONE);
-
-    showContactsLayout.setVisibility(View.VISIBLE);
-    showContactsProgress.setVisibility(View.INVISIBLE);
-    showContactsDescription.setText(R.string.contact_selection_list_fragment__openchat_needs_access_to_your_contacts_in_order_to_display_them);
-    showContactsButton.setVisibility(View.VISIBLE);
-
-    showContactsButton.setOnClickListener(v -> {
-      Permissions.with(this)
-                 .request(Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_CONTACTS)
-                 .ifNecessary()
-                 .withPermanentDenialDialog(getString(R.string.ContactSelectionListFragment_openchat_requires_the_contacts_permission_in_order_to_display_your_contacts))
-                 .onSomeGranted(permissions -> {
-                   if (permissions.contains(Manifest.permission.WRITE_CONTACTS)) {
-                     handleContactPermissionGranted();
-                   }
-                 })
-                 .execute();
-    });
+  private void initializeResources() {
+    this.getListView().setFocusable(true);
   }
 
-  public void setQueryFilter(String filter) {
-    this.cursorFilter = filter;
-    this.getLoaderManager().restartLoader(0, null, this);
+  @Override
+  public void onListItemClick(ListView l, View v, int position, long id) {
+    ((ContactItemView)v).selected();
   }
 
-  public void resetQueryFilter() {
-    setQueryFilter(null);
-    swipeRefresh.setRefreshing(false);
-  }
+  private class ContactSelectionListAdapter extends CursorAdapter {
 
-  public void setRefreshing(boolean refreshing) {
-    swipeRefresh.setRefreshing(refreshing);
-  }
-
-  public void reset() {
-    selectedContacts.clear();
-
-    if (!isDetached() && !isRemoving() && getActivity() != null && !getActivity().isFinishing()) {
-      getLoaderManager().restartLoader(0, null, this);
+    public ContactSelectionListAdapter(Context context, Cursor c) {
+      super(context, c);
     }
-  }
 
-  @Override
-  public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-    return new ContactsCursorLoader(getActivity(), KeyCachingService.getMasterSecret(getContext()),
-                                    getActivity().getIntent().getIntExtra(DISPLAY_MODE, DISPLAY_MODE_ALL),
-                                    cursorFilter, getActivity().getIntent().getBooleanExtra(RECENTS, false));
-  }
-
-  @Override
-  public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-    swipeRefresh.setVisibility(View.VISIBLE);
-    showContactsLayout.setVisibility(View.GONE);
-
-    ((CursorRecyclerViewAdapter) recyclerView.getAdapter()).changeCursor(data);
-    emptyText.setText(R.string.contact_selection_group_activity__no_contacts);
-    boolean useFastScroller = (recyclerView.getAdapter().getItemCount() > 20);
-    recyclerView.setVerticalScrollBarEnabled(!useFastScroller);
-    if (useFastScroller) {
-      fastScroller.setVisibility(View.VISIBLE);
-      fastScroller.setRecyclerView(recyclerView);
-    }
-  }
-
-  @Override
-  public void onLoaderReset(Loader<Cursor> loader) {
-    ((CursorRecyclerViewAdapter) recyclerView.getAdapter()).changeCursor(null);
-    fastScroller.setVisibility(View.GONE);
-  }
-
-  @SuppressLint("StaticFieldLeak")
-  private void handleContactPermissionGranted() {
-    new AsyncTask<Void, Void, Boolean>() {
-      @Override
-      protected void onPreExecute() {
-        swipeRefresh.setVisibility(View.GONE);
-        showContactsLayout.setVisibility(View.VISIBLE);
-        showContactsButton.setVisibility(View.INVISIBLE);
-        showContactsDescription.setText(R.string.ConversationListFragment_loading);
-        showContactsProgress.setVisibility(View.VISIBLE);
-        showContactsProgress.spin();
-      }
-
-      @Override
-      protected Boolean doInBackground(Void... voids) {
-        try {
-          DirectoryHelper.refreshDirectory(getContext(), null, false);
-          return true;
-        } catch (IOException e) {
-          Log.w(TAG, e);
-        }
-        return false;
-      }
-
-      @Override
-      protected void onPostExecute(Boolean result) {
-        if (result) {
-          showContactsLayout.setVisibility(View.GONE);
-          swipeRefresh.setVisibility(View.VISIBLE);
-          reset();
-        } else {
-          Toast.makeText(getContext(), R.string.ContactSelectionListFragment_error_retrieving_contacts_check_your_network_connection, Toast.LENGTH_LONG).show();
-          initializeNoContactsPermission();
-        }
-      }
-    }.execute();
-  }
-
-  private class ListClickListener implements ContactSelectionListAdapter.ItemClickListener {
     @Override
-    public void onItemClick(ContactSelectionListItem contact) {
-      if (!isMulti() || !selectedContacts.contains(contact.getNumber())) {
-        selectedContacts.add(contact.getNumber());
-        contact.setChecked(true);
-        if (onContactSelectedListener != null) onContactSelectedListener.onContactSelected(contact.getNumber());
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+      ContactItemView view = new ContactItemView(context);
+      bindView(view, context, cursor);
+
+      return view;
+    }
+
+    @Override
+    public void bindView(View view, Context context, Cursor cursor) {
+      ContactData contactData = ContactAccessor.getInstance().getContactData(context, cursor);
+      ((ContactItemView)view).set(contactData);
+    }
+  }
+
+  private class ContactItemView extends RelativeLayout {
+    private ContactData contactData;
+    private CheckedTextView name;
+    private TextView number;
+    private TextView label;
+    private long id;
+
+    public ContactItemView(Context context) {
+      super(context);
+
+      LayoutInflater li = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      li.inflate(R.layout.contact_selection_list_item, this, true);
+
+      this.name   = (CheckedTextView)findViewById(R.id.name);
+      this.number = (TextView)findViewById(R.id.number);
+      this.label  = (TextView)findViewById(R.id.label);
+    }
+
+    public void selected() {
+      name.toggle();
+
+      if (name.isChecked()) {
+        if (contactData.numbers.size() == 1) addSingleNumberContact(contactData);
+        else                                 addMultipleNumberContact(contactData, name);
       } else {
-        selectedContacts.remove(contact.getNumber());
-        contact.setChecked(false);
-        if (onContactSelectedListener != null) onContactSelectedListener.onContactDeselected(contact.getNumber());
+        removeContact(contactData);
+      }
+    }
+
+    public void set(ContactData contactData) {
+      this.contactData = contactData;
+
+      if (selectedContacts.containsKey(contactData.id))
+        this.name.setChecked(true);
+      else
+        this.name.setChecked(false);
+
+      this.name.setText(contactData.name);
+
+      if (contactData.numbers.isEmpty()) {
+        this.name.setEnabled(false);
+        this.number.setText("");
+        this.label.setText("");
+      } else {
+        this.number.setText(contactData.numbers.get(0).number);
+        this.label.setText(contactData.numbers.get(0).type);
       }
     }
   }
 
-  public void setOnContactSelectedListener(OnContactSelectedListener onContactSelectedListener) {
-    this.onContactSelectedListener = onContactSelectedListener;
+  private class DiscriminatorFinishedListener implements DialogInterface.OnClickListener, DialogInterface.OnCancelListener {
+    private final ContactData contactData;
+    private final CheckedTextView textView;
+
+    public DiscriminatorFinishedListener(ContactData contactData, CheckedTextView textView) {
+      this.contactData = contactData;
+      this.textView    = textView;
+    }
+
+    public void onClick(DialogInterface dialog, int which) {
+      ContactData selected = selectedContacts.get(contactData.id);
+
+      if (selected == null && textView != null) {
+        if (textView != null) textView.setChecked(false);
+      } else if (selected.numbers.size() == 0) {
+        selectedContacts.remove(selected.id);
+        if (textView != null) textView.setChecked(false);
+      }
+
+      if (textView == null)
+        ((CursorAdapter)getListView().getAdapter()).notifyDataSetChanged();
+    }
+
+    public void onCancel(DialogInterface dialog) {
+      onClick(dialog, 0);
+    }
   }
 
-  public void setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener onRefreshListener) {
-    this.swipeRefresh.setOnRefreshListener(onRefreshListener);
+  private class DiscriminatorClickedListener implements DialogInterface.OnMultiChoiceClickListener {
+    private final ContactData contactData;
+
+    public DiscriminatorClickedListener(ContactData contactData) {
+      this.contactData = contactData;
+    }
+
+    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+      Log.w("ContactSelectionListActivity", "Got checked: " + isChecked);
+
+      ContactData existing = selectedContacts.get(contactData.id);
+
+      if (existing == null) {
+        Log.w("ContactSelectionListActivity", "No existing contact data, creating...");
+
+        if (!isChecked)
+          throw new AssertionError("We shouldn't be unchecking data that doesn't exist.");
+
+        existing = new ContactData(contactData.id, contactData.name);
+        selectedContacts.put(existing.id, existing);
+      }
+
+      NumberData selectedData = contactData.numbers.get(which);
+
+      if (!isChecked) existing.numbers.remove(selectedData);
+      else            existing.numbers.add(selectedData);
+    }
   }
 
-  public interface OnContactSelectedListener {
-    void onContactSelected(String number);
-    void onContactDeselected(String number);
+  @Override
+  public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+    return ContactAccessor.getInstance().getCursorLoaderForContactsWithNumbers(getActivity());
   }
 
+  @Override
+  public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
+    ((CursorAdapter)getListAdapter()).changeCursor(cursor);
+  }
+
+  @Override
+  public void onLoaderReset(Loader<Cursor> arg0) {
+    ((CursorAdapter)getListAdapter()).changeCursor(null);
+  }
 }

@@ -1,76 +1,91 @@
 package com.openchat.secureim.providers;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.ContentProvider;
-import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.UriMatcher;
 import android.database.Cursor;
-import android.database.MatrixCursor;
 import android.net.Uri;
-import android.os.MemoryFile;
+import android.os.IBinder;
 import android.os.ParcelFileDescriptor;
-import android.provider.OpenableColumns;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.openchat.secureim.attachments.AttachmentId;
-import com.openchat.secureim.attachments.DatabaseAttachment;
-import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
-import com.openchat.secureim.mms.PartUriParser;
 import com.openchat.secureim.service.KeyCachingService;
-import com.openchat.secureim.util.MemoryFileUtil;
-import com.openchat.secureim.util.Util;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 public class PartProvider extends ContentProvider {
 
-  private static final String TAG = PartProvider.class.getSimpleName();
-
-  private static final String CONTENT_URI_STRING = "content://org.thoughtcrime.provider.securesms/part";
-  private static final Uri    CONTENT_URI        = Uri.parse(CONTENT_URI_STRING);
+  private static final String CONTENT_URI_STRING = "content://com.openchat.secureim.provider/part";
+  public  static final Uri    CONTENT_URI        = Uri.parse(CONTENT_URI_STRING);
   private static final int    SINGLE_ROW         = 1;
 
   private static final UriMatcher uriMatcher;
 
   static {
     uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-    uriMatcher.addURI("org.thoughtcrime.provider.securesms", "part/*/#", SINGLE_ROW);
+    uriMatcher.addURI("com.openchat.secureim.provider", "part/#", SINGLE_ROW);
   }
+
+  private MasterSecret masterSecret;
+  private NewKeyReceiver receiver;
 
   @Override
   public boolean onCreate() {
-    Log.w(TAG, "onCreate()");
+    initializeMasterSecret();
     return true;
   }
 
-  public static Uri getContentUri(AttachmentId attachmentId) {
-    Uri uri = Uri.withAppendedPath(CONTENT_URI, String.valueOf(attachmentId.getUniqueId()));
-    return ContentUris.withAppendedId(uri, attachmentId.getRowId());
+  public static boolean isAuthority(Uri uri) {
+    return uriMatcher.match(uri) != -1;
+  }
+
+  private File copyPartToTemporaryFile(MasterSecret masterSecret, long partId) throws IOException {
+    InputStream in        = DatabaseFactory.getEncryptingPartDatabase(getContext(), masterSecret).getPartStream(partId);
+    File tmpDir           = getContext().getDir("tmp", 0);
+    File tmpFile          = File.createTempFile("test", ".jpg", tmpDir);
+    FileOutputStream fout = new FileOutputStream(tmpFile);
+
+    byte[] buffer         = new byte[512];
+    int read;
+
+    while ((read = in.read(buffer)) != -1)
+      fout.write(buffer, 0, read);
+
+    in.close();
+
+    return tmpFile;
   }
 
   @Override
-  public ParcelFileDescriptor openFile(@NonNull Uri uri, @NonNull String mode) throws FileNotFoundException {
-    final MasterSecret masterSecret = KeyCachingService.getMasterSecret(getContext());
-    Log.w(TAG, "openFile() called!");
+    public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
+    Log.w("PartProvider", "openFile() called!");
 
-    if (masterSecret == null) {
-      Log.w(TAG, "masterSecret was null, abandoning.");
+    if (this.masterSecret == null)
       return null;
-    }
 
     switch (uriMatcher.match(uri)) {
     case SINGLE_ROW:
-      Log.w(TAG, "Parting out a single row...");
+      Log.w("PartProvider", "Parting out a single row...");
       try {
-        final PartUriParser partUri = new PartUriParser(uri);
-        return getParcelStreamForAttachment(masterSecret, partUri.getPartId());
+        int partId               = Integer.parseInt(uri.getPathSegments().get(1));
+        File tmpFile             = copyPartToTemporaryFile(masterSecret, partId);
+        ParcelFileDescriptor pdf = ParcelFileDescriptor.open(tmpFile, ParcelFileDescriptor.MODE_READ_ONLY);
+        tmpFile.delete();
+        return pdf;
       } catch (IOException ioe) {
-        Log.w(TAG, ioe);
+        Log.w("PartProvider", ioe);
         throw new FileNotFoundException("Error opening file");
       }
     }
@@ -79,82 +94,63 @@ public class PartProvider extends ContentProvider {
   }
 
   @Override
-  public int delete(@NonNull Uri arg0, String arg1, String[] arg2) {
-    Log.w(TAG, "delete() called");
+  public int delete(Uri arg0, String arg1, String[] arg2) {
     return 0;
   }
 
   @Override
-  public String getType(@NonNull Uri uri) {
-    Log.w(TAG, "getType() called: " + uri);
-
-    switch (uriMatcher.match(uri)) {
-      case SINGLE_ROW:
-        PartUriParser      partUriParser = new PartUriParser(uri);
-        DatabaseAttachment attachment    = DatabaseFactory.getAttachmentDatabase(getContext())
-                                                          .getAttachment(null, partUriParser.getPartId());
-
-        if (attachment != null) {
-          return attachment.getContentType();
-        }
-    }
-
+  public String getType(Uri arg0) {
     return null;
   }
 
   @Override
-  public Uri insert(@NonNull Uri arg0, ContentValues arg1) {
-    Log.w(TAG, "insert() called");
+  public Uri insert(Uri arg0, ContentValues arg1) {
     return null;
   }
 
   @Override
-  public Cursor query(@NonNull Uri url, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-    Log.w(TAG, "query() called: " + url);
-    MasterSecret masterSecret = KeyCachingService.getMasterSecret(getContext());
-
-    if (projection == null || projection.length <= 0) return null;
-
-    switch (uriMatcher.match(url)) {
-      case SINGLE_ROW:
-        PartUriParser      partUri      = new PartUriParser(url);
-        DatabaseAttachment attachment   = DatabaseFactory.getAttachmentDatabase(getContext()).getAttachment(masterSecret, partUri.getPartId());
-
-        if (attachment == null) return null;
-
-        MatrixCursor       matrixCursor = new MatrixCursor(projection, 1);
-        Object[]           resultRow    = new Object[projection.length];
-
-        for (int i=0;i<projection.length;i++) {
-          if (OpenableColumns.DISPLAY_NAME.equals(projection[i])) {
-            resultRow[i] = attachment.getFileName();
-          }
-        }
-
-        matrixCursor.addRow(resultRow);
-        return matrixCursor;
-    }
-
+  public Cursor query(Uri arg0, String[] arg1, String arg2, String[] arg3, String arg4) {
     return null;
   }
 
   @Override
-  public int update(@NonNull Uri arg0, ContentValues arg1, String arg2, String[] arg3) {
-    Log.w(TAG, "update() called");
+  public int update(Uri arg0, ContentValues arg1, String arg2, String[] arg3) {
     return 0;
   }
 
-  private ParcelFileDescriptor getParcelStreamForAttachment(MasterSecret masterSecret, AttachmentId attachmentId) throws IOException {
-    long       plaintextLength = Util.getStreamLength(DatabaseFactory.getAttachmentDatabase(getContext()).getAttachmentStream(masterSecret, attachmentId));
-    MemoryFile memoryFile      = new MemoryFile(attachmentId.toString(), Util.toIntExact(plaintextLength));
-
-    InputStream  in  = DatabaseFactory.getAttachmentDatabase(getContext()).getAttachmentStream(masterSecret, attachmentId);
-    OutputStream out = memoryFile.getOutputStream();
-
-    Util.copy(in, out);
-    Util.close(out);
-    Util.close(in);
-
-    return MemoryFileUtil.getParcelFileDescriptor(memoryFile);
+  private void initializeWithMasterSecret(MasterSecret masterSecret) {
+    Log.w("PartProvider", "Got master secret: " + masterSecret);
+    this.masterSecret = masterSecret;
   }
+
+  private void initializeMasterSecret() {
+    receiver            = new NewKeyReceiver();
+    IntentFilter filter = new IntentFilter(KeyCachingService.NEW_KEY_EVENT);
+    getContext().registerReceiver(receiver, filter, KeyCachingService.KEY_PERMISSION, null);
+
+    Intent bindIntent   = new Intent(getContext(), KeyCachingService.class);
+    getContext().bindService(bindIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+  }
+
+  private ServiceConnection serviceConnection = new ServiceConnection() {
+      public void onServiceConnected(ComponentName className, IBinder service) {
+        KeyCachingService keyCachingService  = ((KeyCachingService.KeyCachingBinder)service).getService();
+        MasterSecret masterSecret            = keyCachingService.getMasterSecret();
+
+        initializeWithMasterSecret(masterSecret);
+
+        PartProvider.this.getContext().unbindService(this);
+      }
+
+      public void onServiceDisconnected(ComponentName name) {}
+    };
+
+  private class NewKeyReceiver extends BroadcastReceiver {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      Log.w("SendReceiveService", "Got a MasterSecret broadcast...");
+      initializeWithMasterSecret((MasterSecret)intent.getParcelableExtra("master_secret"));
+    }
+  };
+
 }

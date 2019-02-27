@@ -1,10 +1,12 @@
 package com.openchat.secureim;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 
-public class CountrySelectionActivity extends BaseActivity
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.openchat.secureim.util.DynamicTheme;
+
+public class CountrySelectionActivity extends SherlockFragmentActivity
     implements CountrySelectionFragment.CountrySelectedListener
 
 {

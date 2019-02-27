@@ -2,18 +2,17 @@ package com.openchat.secureim.crypto;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.Log;
 
-import com.openchat.secureim.util.Base64;
-import com.openchat.secureim.util.Util;
-import com.openchat.libim.InvalidKeyException;
-import com.openchat.libim.ecc.Curve;
-import com.openchat.libim.ecc.ECKeyPair;
-import com.openchat.libim.ecc.ECPrivateKey;
-import com.openchat.libim.ecc.ECPublicKey;
+import com.openchat.imservice.crypto.InvalidKeyException;
+import com.openchat.imservice.crypto.MasterCipher;
+import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.imservice.crypto.ecc.Curve;
+import com.openchat.imservice.crypto.ecc.ECKeyPair;
+import com.openchat.imservice.crypto.ecc.ECPrivateKey;
+import com.openchat.imservice.crypto.ecc.ECPublicKey;
+import com.openchat.imservice.util.Base64;
+import com.openchat.imservice.util.Util;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -30,10 +29,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-/**
- * Helper class for generating and securely storing a MasterSecret.
- */
 
 public class MasterSecretUtil {
 
@@ -104,15 +99,15 @@ public class MasterSecretUtil {
     }
   }
 
-  public static AsymmetricMasterSecret getAsymmetricMasterSecret(@NonNull  Context context,
-                                                                 @Nullable MasterSecret masterSecret)
+  public static AsymmetricMasterSecret getAsymmetricMasterSecret(Context context,
+                                                                 MasterSecret masterSecret)
   {
     try {
       byte[] djbPublicBytes   = retrieve(context, ASYMMETRIC_LOCAL_PUBLIC_DJB);
       byte[] djbPrivateBytes  = retrieve(context, ASYMMETRIC_LOCAL_PRIVATE_DJB);
 
-      ECPublicKey  djbPublicKey  = null;
-      ECPrivateKey djbPrivateKey = null;
+      ECPublicKey  djbPublicKey   = null;
+      ECPrivateKey djbPrivateKey  = null;
 
       if (djbPublicBytes != null) {
         djbPublicKey = Curve.decodePoint(djbPublicBytes, 0);
@@ -127,8 +122,10 @@ public class MasterSecretUtil {
       }
 
       return new AsymmetricMasterSecret(djbPublicKey, djbPrivateKey);
-    } catch (InvalidKeyException | IOException ike) {
+    } catch (InvalidKeyException ike) {
       throw new AssertionError(ike);
+    } catch (IOException e) {
+      throw new AssertionError(e);
     }
   }
 
@@ -136,7 +133,7 @@ public class MasterSecretUtil {
                                                                       MasterSecret masterSecret)
   {
     MasterCipher masterCipher = new MasterCipher(masterSecret);
-    ECKeyPair    keyPair      = Curve.generateKeyPair();
+    ECKeyPair    keyPair      = Curve.generateKeyPair(true);
 
     save(context, ASYMMETRIC_LOCAL_PUBLIC_DJB, keyPair.getPublicKey().serialize());
     save(context, ASYMMETRIC_LOCAL_PRIVATE_DJB, masterCipher.encryptKey(keyPair.getPrivateKey()));
@@ -213,8 +210,8 @@ public class MasterSecretUtil {
     SharedPreferences settings = context.getSharedPreferences(PREFERENCES_NAME, 0);
     String encodedValue        = settings.getString(key, "");
 
-    if (TextUtils.isEmpty(encodedValue)) return null;
-    else                                 return Base64.decode(encodedValue);
+    if (Util.isEmpty(encodedValue)) return null;
+    else                            return Base64.decode(encodedValue);
   }
 
   private static int retrieve(Context context, String key, int defaultValue) throws IOException {

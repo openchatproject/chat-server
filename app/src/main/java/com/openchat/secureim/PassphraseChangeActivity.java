@@ -1,41 +1,31 @@
 package com.openchat.secureim;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.openchat.secureim.crypto.InvalidPassphraseException;
-import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.secureim.crypto.MasterSecretUtil;
-import com.openchat.secureim.util.DynamicLanguage;
-import com.openchat.secureim.util.DynamicTheme;
-import com.openchat.secureim.util.TextSecurePreferences;
-
-/**
- * Activity for changing a user's local encryption passphrase.
- */
+import com.openchat.secureim.util.MemoryCleaner;
+import com.openchat.secureim.util.OpenchatServicePreferences;
 
 public class PassphraseChangeActivity extends PassphraseActivity {
-
-  private DynamicTheme    dynamicTheme    = new DynamicTheme();
-  private DynamicLanguage dynamicLanguage = new DynamicLanguage();
 
   private EditText originalPassphrase;
   private EditText newPassphrase;
   private EditText repeatPassphrase;
+  private TextView originalPassphraseLabel;
   private Button   okButton;
   private Button   cancelButton;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
-    dynamicTheme.onCreate(this);
-    dynamicLanguage.onCreate(this);
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.change_passphrase_activity);
@@ -43,14 +33,8 @@ public class PassphraseChangeActivity extends PassphraseActivity {
     initializeResources();
   }
 
-  @Override
-  public void onResume() {
-    super.onResume();
-    dynamicTheme.onResume(this);
-    dynamicLanguage.onResume(this);
-  }
-
   private void initializeResources() {
+    this.originalPassphraseLabel = (TextView) findViewById(R.id.old_passphrase_label);
     this.originalPassphrase      = (EditText) findViewById(R.id.old_passphrase      );
     this.newPassphrase           = (EditText) findViewById(R.id.new_passphrase      );
     this.repeatPassphrase        = (EditText) findViewById(R.id.repeat_passphrase   );
@@ -61,10 +45,12 @@ public class PassphraseChangeActivity extends PassphraseActivity {
     this.okButton.setOnClickListener(new OkButtonClickListener());
     this.cancelButton.setOnClickListener(new CancelButtonClickListener());
 
-    if (TextSecurePreferences.isPasswordDisabled(this)) {
+    if (OpenchatServicePreferences.isPasswordDisabled(this)) {
       this.originalPassphrase.setVisibility(View.GONE);
+      this.originalPassphraseLabel.setVisibility(View.GONE);
     } else {
       this.originalPassphrase.setVisibility(View.VISIBLE);
+      this.originalPassphraseLabel.setVisibility(View.VISIBLE);
     }
   }
 
@@ -77,20 +63,31 @@ public class PassphraseChangeActivity extends PassphraseActivity {
     String passphrase       = (newText == null ? "" : newText.toString());
     String passphraseRepeat = (repeatText == null ? "" : repeatText.toString());
 
-    if (TextSecurePreferences.isPasswordDisabled(this)) {
+    if (OpenchatServicePreferences.isPasswordDisabled(this)) {
       original = MasterSecretUtil.UNENCRYPTED_PASSPHRASE;
     }
 
-    if (!passphrase.equals(passphraseRepeat)) {
-      this.newPassphrase.setText("");
-      this.repeatPassphrase.setText("");
-      this.newPassphrase.setError(getString(R.string.PassphraseChangeActivity_passphrases_dont_match_exclamation));
-      this.newPassphrase.requestFocus();
-    } else if (passphrase.equals("")) {
-      this.newPassphrase.setError(getString(R.string.PassphraseChangeActivity_enter_new_passphrase_exclamation));
-      this.newPassphrase.requestFocus();
-    } else {
-      new ChangePassphraseTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, original, passphrase);
+    try {
+      if (!passphrase.equals(passphraseRepeat)) {
+        Toast.makeText(getApplicationContext(),
+                       R.string.PassphraseChangeActivity_passphrases_dont_match_exclamation,
+                       Toast.LENGTH_SHORT).show();
+        this.newPassphrase.setText("");
+        this.repeatPassphrase.setText("");
+      } else {
+        MasterSecret masterSecret = MasterSecretUtil.changeMasterSecretPassphrase(this, original, passphrase);
+        OpenchatServicePreferences.setPasswordDisabled(this, false);
+
+        MemoryCleaner.clean(original);
+        MemoryCleaner.clean(passphrase);
+        MemoryCleaner.clean(passphraseRepeat);
+
+        setMasterSecret(masterSecret);
+      }
+    } catch (InvalidPassphraseException e) {
+      Toast.makeText(this, R.string.PassphraseChangeActivity_incorrect_old_passphrase_exclamation,
+                     Toast.LENGTH_LONG).show();
+      this.originalPassphrase.setText("");
     }
   }
 
@@ -103,46 +100,6 @@ public class PassphraseChangeActivity extends PassphraseActivity {
   private class OkButtonClickListener implements OnClickListener {
     public void onClick(View v) {
       verifyAndSavePassphrases();
-    }
-  }
-
-  private class ChangePassphraseTask extends AsyncTask<String, Void, MasterSecret> {
-    private final Context context;
-
-    public ChangePassphraseTask(Context context) {
-      this.context = context;
-    }
-
-    @Override
-    protected void onPreExecute() {
-      okButton.setEnabled(false);
-    }
-
-    @Override
-    protected MasterSecret doInBackground(String... params) {
-      try {
-        MasterSecret masterSecret = MasterSecretUtil.changeMasterSecretPassphrase(context, params[0], params[1]);
-        TextSecurePreferences.setPasswordDisabled(context, false);
-
-        return masterSecret;
-
-      } catch (InvalidPassphraseException e) {
-        Log.w(PassphraseChangeActivity.class.getSimpleName(), e);
-        return null;
-      }
-    }
-
-    @Override
-    protected void onPostExecute(MasterSecret masterSecret) {
-      okButton.setEnabled(true);
-
-      if (masterSecret != null) {
-        setMasterSecret(masterSecret);
-      } else {
-        originalPassphrase.setText("");
-        originalPassphrase.setError(getString(R.string.PassphraseChangeActivity_incorrect_old_passphrase_exclamation));
-        originalPassphrase.requestFocus();
-      }
     }
   }
 

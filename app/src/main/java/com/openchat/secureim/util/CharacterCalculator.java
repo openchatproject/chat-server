@@ -1,10 +1,29 @@
 package com.openchat.secureim.util;
 
-public abstract class CharacterCalculator {
+import com.openchat.secureim.sms.SmsTransportDetails;
 
-  public abstract CharacterState calculateCharacters(String messageBody);
+public class CharacterCalculator {
 
-  public static class CharacterState {
+  public CharacterState calculateCharacters(int charactersSpent) {
+    int maxMessageSize;
+
+    if (charactersSpent <= SmsTransportDetails.SMS_SIZE) {
+      maxMessageSize = SmsTransportDetails.SMS_SIZE;
+    } else {
+      maxMessageSize = SmsTransportDetails.MULTIPART_SMS_SIZE;
+    }
+
+    int messagesSpent = charactersSpent / maxMessageSize;
+
+    if (((charactersSpent % maxMessageSize) > 0) || (messagesSpent == 0))
+      messagesSpent++;
+
+    int charactersRemaining = (maxMessageSize * messagesSpent) - charactersSpent;
+
+    return new CharacterState(messagesSpent, charactersRemaining, maxMessageSize);
+  }
+
+  public class CharacterState {
     public int charactersRemaining;
     public int messagesSpent;
     public int maxMessageSize;

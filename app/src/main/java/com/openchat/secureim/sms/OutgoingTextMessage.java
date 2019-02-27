@@ -2,46 +2,33 @@ package com.openchat.secureim.sms;
 
 import com.openchat.secureim.database.model.SmsMessageRecord;
 import com.openchat.secureim.recipients.Recipient;
+import com.openchat.secureim.recipients.Recipients;
 
 public class OutgoingTextMessage {
 
-  private final Recipient recipient;
-  private final String    message;
-  private final int       subscriptionId;
-  private final long      expiresIn;
+  private final Recipients recipients;
+  private final String     message;
 
-  public OutgoingTextMessage(Recipient recipient, String message, int subscriptionId) {
-    this(recipient, message, 0, subscriptionId);
+  public OutgoingTextMessage(Recipient recipient, String message) {
+    this(new Recipients(recipient), message);
   }
 
-  public OutgoingTextMessage(Recipient recipient, String message, long expiresIn, int subscriptionId) {
-    this.recipient      = recipient;
-    this.message        = message;
-    this.expiresIn      = expiresIn;
-    this.subscriptionId = subscriptionId;
+  public OutgoingTextMessage(Recipients recipients, String message) {
+    this.recipients = recipients;
+    this.message    = message;
   }
 
   protected OutgoingTextMessage(OutgoingTextMessage base, String body) {
-    this.recipient      = base.getRecipient();
-    this.subscriptionId = base.getSubscriptionId();
-    this.expiresIn      = base.getExpiresIn();
-    this.message        = body;
-  }
-
-  public long getExpiresIn() {
-    return expiresIn;
-  }
-
-  public int getSubscriptionId() {
-    return subscriptionId;
+    this.recipients = base.getRecipients();
+    this.message    = body;
   }
 
   public String getMessageBody() {
     return message;
   }
 
-  public Recipient getRecipient() {
-    return recipient;
+  public Recipients getRecipients() {
+    return recipients;
   }
 
   public boolean isKeyExchange() {
@@ -60,23 +47,15 @@ public class OutgoingTextMessage {
     return false;
   }
 
-  public boolean isIdentityVerified() {
-    return false;
-  }
-
-  public boolean isIdentityDefault() {
-    return false;
-  }
-
   public static OutgoingTextMessage from(SmsMessageRecord record) {
     if (record.isSecure()) {
-      return new OutgoingEncryptedMessage(record.getRecipient(), record.getBody().getBody(), record.getExpiresIn());
+      return new OutgoingEncryptedMessage(record.getIndividualRecipient(), record.getBody().getBody());
     } else if (record.isKeyExchange()) {
-      return new OutgoingKeyExchangeMessage(record.getRecipient(), record.getBody().getBody());
+      return new OutgoingKeyExchangeMessage(record.getIndividualRecipient(), record.getBody().getBody());
     } else if (record.isEndSession()) {
-      return new OutgoingEndSessionMessage(new OutgoingTextMessage(record.getRecipient(), record.getBody().getBody(), 0, -1));
+      return new OutgoingEndSessionMessage(new OutgoingTextMessage(record.getIndividualRecipient(), record.getBody().getBody()));
     } else {
-      return new OutgoingTextMessage(record.getRecipient(), record.getBody().getBody(), record.getExpiresIn(), record.getSubscriptionId());
+      return new OutgoingTextMessage(record.getIndividualRecipient(), record.getBody().getBody());
     }
   }
 

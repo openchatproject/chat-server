@@ -1,75 +1,59 @@
 package com.openchat.secureim;
 
-import android.*;
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.database.ContentObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.provider.ContactsContract;
+import android.util.Log;
 
-import com.openchat.secureim.components.RatingManager;
-import com.openchat.secureim.components.SearchToolbar;
-import com.openchat.secureim.crypto.MasterSecret;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
+import com.openchat.secureim.service.DirectoryRefreshListener;
 import com.openchat.secureim.database.DatabaseFactory;
-import com.openchat.secureim.database.MessagingDatabase.MarkedMessageInfo;
-import com.openchat.secureim.notifications.MarkReadReceiver;
 import com.openchat.secureim.notifications.MessageNotifier;
-import com.openchat.secureim.permissions.Permissions;
-import com.openchat.secureim.recipients.Recipient;
+import com.openchat.secureim.recipients.RecipientFactory;
+import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.service.KeyCachingService;
+import com.openchat.secureim.service.SendReceiveService;
 import com.openchat.secureim.util.DynamicLanguage;
-import com.openchat.secureim.util.DynamicNoActionBarTheme;
 import com.openchat.secureim.util.DynamicTheme;
-import com.openchat.secureim.util.TextSecurePreferences;
+import com.openchat.secureim.util.MemoryCleaner;
+import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.imservice.crypto.MasterSecret;
 
-import java.util.List;
-
-public class ConversationListActivity extends PassphraseRequiredActionBarActivity
+public class ConversationListActivity extends PassphraseRequiredSherlockFragmentActivity
     implements ConversationListFragment.ConversationSelectedListener
-{
-  @SuppressWarnings("unused")
-  private static final String TAG = ConversationListActivity.class.getSimpleName();
-
-  private final DynamicTheme    dynamicTheme    = new DynamicNoActionBarTheme();
+  {
+  private final DynamicTheme    dynamicTheme    = new DynamicTheme   ();
   private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
 
   private ConversationListFragment fragment;
-  private MasterSecret             masterSecret;
-  private SearchToolbar            searchToolbar;
-  private ImageView                searchAction;
+  private MasterSecret    masterSecret;
+  private ContentObserver observer;
 
   @Override
-  protected void onPreCreate() {
+  public void onCreate(Bundle icicle) {
     dynamicTheme.onCreate(this);
     dynamicLanguage.onCreate(this);
-  }
-
-  @Override
-  protected void onCreate(Bundle icicle, @NonNull MasterSecret masterSecret) {
-    this.masterSecret = masterSecret;
+    super.onCreate(icicle);
 
     setContentView(R.layout.conversation_list_activity);
 
-    Toolbar toolbar = findViewById(R.id.toolbar);
-    setSupportActionBar(toolbar);
+    getSupportActionBar().setTitle(R.string.app_name);
 
-    searchToolbar = findViewById(R.id.search_toolbar);
-    searchAction  = findViewById(R.id.search_action);
-    fragment      = initFragment(R.id.fragment_container, new ConversationListFragment(), masterSecret, dynamicLanguage.getCurrentLocale());
+    initializeSenderReceiverService();
+    initializeResources();
+    initializeContactUpdatesReceiver();
 
-    initializeSearchListener();
+    DirectoryRefreshListener.schedule(this);
+  }
 
-    RatingManager.showRatingDialogIfNecessary(this);
+  @Override
+  public void onPostCreate(Bundle bundle) {
+    super.onPostCreate(bundle);
   }
 
   @Override
@@ -81,48 +65,29 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
 
   @Override
   public void onDestroy() {
+    Log.w("ConversationListActivity", "onDestroy...");
+    MemoryCleaner.clean(masterSecret);
+    if (observer != null) getContentResolver().unregisterContentObserver(observer);
     super.onDestroy();
   }
 
   @Override
+  public void onMasterSecretCleared() {
+    startActivity(new Intent(this, RoutingActivity.class));
+    super.onMasterSecretCleared();
+  }
+
+  @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
-    MenuInflater inflater = this.getMenuInflater();
+    MenuInflater inflater = this.getSupportMenuInflater();
     menu.clear();
 
     inflater.inflate(R.menu.text_secure_normal, menu);
 
-    menu.findItem(R.id.menu_clear_passphrase).setVisible(!TextSecurePreferences.isPasswordDisabled(this));
+    menu.findItem(R.id.menu_clear_passphrase).setVisible(!OpenchatServicePreferences.isPasswordDisabled(this));
 
     super.onPrepareOptionsMenu(menu);
     return true;
-  }
-
-  private void initializeSearchListener() {
-    searchAction.setOnClickListener(v -> {
-      Permissions.with(this)
-                 .request(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS)
-                 .ifNecessary()
-                 .onAllGranted(() -> searchToolbar.display(searchAction.getX() + (searchAction.getWidth() / 2),
-                                                           searchAction.getY() + (searchAction.getHeight() / 2)))
-                 .withPermanentDenialDialog(getString(R.string.ConversationListActivity_openchat_needs_contacts_permission_in_order_to_search_your_contacts_but_it_has_been_permanently_denied))
-                 .execute();
-    });
-
-    searchToolbar.setListener(new SearchToolbar.SearchListener() {
-      @Override
-      public void onSearchTextChange(String text) {
-        if (fragment != null) {
-          fragment.setQueryFilter(text);
-        }
-      }
-
-      @Override
-      public void onSearchReset() {
-        if (fragment != null) {
-          fragment.resetQueryFilter();
-        }
-      }
-    });
   }
 
   @Override
@@ -130,50 +95,48 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
     super.onOptionsItemSelected(item);
 
     switch (item.getItemId()) {
-    case R.id.menu_new_group:         createGroup();           return true;
-    case R.id.menu_settings:          handleDisplaySettings(); return true;
-    case R.id.menu_clear_passphrase:  handleClearPassphrase(); return true;
-    case R.id.menu_mark_all_read:     handleMarkAllRead();     return true;
-    case R.id.menu_import_export:     handleImportExport();    return true;
-    case R.id.menu_invite:            handleInvite();          return true;
-    case R.id.menu_help:              handleHelp();            return true;
+    case R.id.menu_new_message:       openSingleContactSelection();   return true;
+    case R.id.menu_new_group:         createGroup();                  return true;
+    case R.id.menu_settings:          handleDisplaySettings();        return true;
+    case R.id.menu_clear_passphrase:  handleClearPassphrase();        return true;
+    case R.id.menu_mark_all_read:     handleMarkAllRead();            return true;
+    case R.id.menu_import_export:     handleImportExport();           return true;
+    case R.id.menu_my_identity:       handleMyIdentity();             return true;
     }
 
     return false;
   }
 
   @Override
-  public void onCreateConversation(long threadId, Recipient recipient, int distributionType, long lastSeen) {
-    Intent intent = new Intent(this, ConversationActivity.class);
-    intent.putExtra(ConversationActivity.ADDRESS_EXTRA, recipient.getAddress());
-    intent.putExtra(ConversationActivity.THREAD_ID_EXTRA, threadId);
-    intent.putExtra(ConversationActivity.DISTRIBUTION_TYPE_EXTRA, distributionType);
-    intent.putExtra(ConversationActivity.TIMING_EXTRA, System.currentTimeMillis());
-    intent.putExtra(ConversationActivity.LAST_SEEN_EXTRA, lastSeen);
-
-    startActivity(intent);
-    overridePendingTransition(R.anim.slide_from_right, R.anim.fade_scale_out);
-  }
-
-  @Override
-  public void onSwitchToArchive() {
-    Intent intent = new Intent(this, ConversationListArchiveActivity.class);
-    startActivity(intent);
-  }
-
-  @Override
-  public void onBackPressed() {
-    if (searchToolbar.isVisible()) searchToolbar.collapse();
-    else                           super.onBackPressed();
+  public void onCreateConversation(long threadId, Recipients recipients, int distributionType) {
+    createConversation(threadId, recipients, distributionType);
   }
 
   private void createGroup() {
     Intent intent = new Intent(this, GroupCreateActivity.class);
+    intent.putExtra("master_secret", masterSecret);
+    startActivity(intent);
+  }
+
+  private void openSingleContactSelection() {
+    Intent intent = new Intent(this, NewConversationActivity.class);
+    intent.putExtra(NewConversationActivity.MASTER_SECRET_EXTRA, masterSecret);
+    startActivity(intent);
+  }
+
+  private void createConversation(long threadId, Recipients recipients, int distributionType) {
+    Intent intent = new Intent(this, ConversationActivity.class);
+    intent.putExtra(ConversationActivity.RECIPIENTS_EXTRA, recipients.toIdString());
+    intent.putExtra(ConversationActivity.THREAD_ID_EXTRA, threadId);
+    intent.putExtra(ConversationActivity.MASTER_SECRET_EXTRA, masterSecret);
+    intent.putExtra(ConversationActivity.DISTRIBUTION_TYPE_EXTRA, distributionType);
+
     startActivity(intent);
   }
 
   private void handleDisplaySettings() {
     Intent preferencesIntent = new Intent(this, ApplicationPreferencesActivity.class);
+    preferencesIntent.putExtra("master_secret", masterSecret);
     startActivity(preferencesIntent);
   }
 
@@ -184,34 +147,63 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
   }
 
   private void handleImportExport() {
-    startActivity(new Intent(this, ImportExportActivity.class));
+    final Intent intent = new Intent(this, ImportExportActivity.class);
+    intent.putExtra("master_secret", masterSecret);
+    startActivity(intent);
   }
 
-  @SuppressLint("StaticFieldLeak")
+  private void handleMyIdentity() {
+    final Intent intent = new Intent(this, ViewLocalIdentityActivity.class);
+    intent.putExtra("master_secret", masterSecret);
+    startActivity(intent);
+  }
+
   private void handleMarkAllRead() {
     new AsyncTask<Void, Void, Void>() {
       @Override
       protected Void doInBackground(Void... params) {
-        Context                 context    = ConversationListActivity.this;
-        List<MarkedMessageInfo> messageIds = DatabaseFactory.getThreadDatabase(context).setAllThreadsRead();
-
-        MessageNotifier.updateNotification(context, masterSecret);
-        MarkReadReceiver.process(context, messageIds);
-
+        DatabaseFactory.getThreadDatabase(ConversationListActivity.this).setAllThreadsRead();
+        MessageNotifier.updateNotification(ConversationListActivity.this, masterSecret);
         return null;
       }
-    }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }.execute();
   }
 
-  private void handleInvite() {
-    startActivity(new Intent(this, InviteActivity.class));
+  private void initializeContactUpdatesReceiver() {
+    observer = new ContentObserver(null) {
+      @Override
+      public void onChange(boolean selfChange) {
+        super.onChange(selfChange);
+        Log.w("ConversationListActivity", "detected android contact data changed, refreshing cache");
+        RecipientFactory.clearCache();
+        ConversationListActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((ConversationListAdapter)fragment.getListAdapter()).notifyDataSetChanged();
+              }
+          });
+      }
+    };
+
+    getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI,
+                                                 true, observer);
   }
 
-  private void handleHelp() {
-    try {
-      startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://support.openchat.co")));
-    } catch (ActivityNotFoundException e) {
-      Toast.makeText(this, R.string.ConversationListActivity_there_is_no_browser_installed_on_your_device, Toast.LENGTH_LONG).show();
-    }
+  private void initializeSenderReceiverService() {
+    Intent smsSenderIntent = new Intent(SendReceiveService.SEND_SMS_ACTION, null, this,
+                                        SendReceiveService.class);
+    Intent mmsSenderIntent = new Intent(SendReceiveService.SEND_MMS_ACTION, null, this,
+                                        SendReceiveService.class);
+    startService(smsSenderIntent);
+    startService(mmsSenderIntent);
+  }
+
+  private void initializeResources() {
+    this.masterSecret = getIntent().getParcelableExtra("master_secret");
+
+    this.fragment = (ConversationListFragment)this.getSupportFragmentManager()
+        .findFragmentById(R.id.fragment_content);
+
+    this.fragment.setMasterSecret(masterSecret);
   }
 }

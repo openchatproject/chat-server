@@ -1,93 +1,90 @@
 package com.openchat.secureim.mms;
 
-import com.openchat.secureim.attachments.Attachment;
-import com.openchat.secureim.attachments.PointerAttachment;
-import com.openchat.secureim.crypto.MasterSecretUnion;
-import com.openchat.secureim.database.Address;
 import com.openchat.secureim.util.GroupUtil;
-import com.openchat.libim.util.guava.Optional;
-import com.openchat.imservice.api.messages.openchatServiceAttachment;
-import com.openchat.imservice.api.messages.openchatServiceGroup;
+import com.openchat.secureim.util.Util;
+import com.openchat.imservice.crypto.MasterCipher;
+import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.imservice.push.IncomingPushMessage;
+import com.openchat.imservice.push.PushMessageProtos.PushMessageContent;
+import com.openchat.imservice.util.Base64;
+import com.openchat.imservice.util.Hex;
 
-import java.util.LinkedList;
-import java.util.List;
+import ws.com.google.android.mms.pdu.CharacterSets;
+import ws.com.google.android.mms.pdu.EncodedStringValue;
+import ws.com.google.android.mms.pdu.PduBody;
+import ws.com.google.android.mms.pdu.PduHeaders;
+import ws.com.google.android.mms.pdu.PduPart;
+import ws.com.google.android.mms.pdu.RetrieveConf;
 
 public class IncomingMediaMessage {
 
-  private final Address from;
-  private final Address groupId;
-  private final String  body;
-  private final boolean push;
-  private final long    sentTimeMillis;
-  private final int     subscriptionId;
-  private final long    expiresIn;
-  private final boolean expirationUpdate;
+  private final PduHeaders headers;
+  private final PduBody    body;
+  private final String     groupId;
+  private final boolean    push;
 
-  private final List<Attachment> attachments = new LinkedList<>();
+  public IncomingMediaMessage(RetrieveConf retreived) {
+    this.headers = retreived.getPduHeaders();
+    this.body    = retreived.getBody();
+    this.groupId = null;
+    this.push    = false;
+  }
 
-  public IncomingMediaMessage(Address from,
-                              Optional<Address> groupId,
-                              String body,
-                              long sentTimeMillis,
-                              List<Attachment> attachments,
-                              int subscriptionId,
-                              long expiresIn,
-                              boolean expirationUpdate)
+  public IncomingMediaMessage(MasterSecret masterSecret, String localNumber,
+                              IncomingPushMessage message,
+                              PushMessageContent messageContent)
   {
-    this.from             = from;
-    this.groupId          = groupId.orNull();
-    this.sentTimeMillis   = sentTimeMillis;
-    this.body             = body;
-    this.push             = false;
-    this.subscriptionId   = subscriptionId;
-    this.expiresIn        = expiresIn;
-    this.expirationUpdate = expirationUpdate;
+    this.headers = new PduHeaders();
+    this.body    = new PduBody();
+    this.push    = true;
 
-    this.attachments.addAll(attachments);
+    if (messageContent.hasGroup()) {
+      this.groupId = GroupUtil.getEncodedId(messageContent.getGroup().getId().toByteArray());
+    } else {
+      this.groupId = null;
+    }
+
+    this.headers.setEncodedStringValue(new EncodedStringValue(message.getSource()), PduHeaders.FROM);
+    this.headers.appendEncodedStringValue(new EncodedStringValue(localNumber), PduHeaders.TO);
+    this.headers.setLongInteger(message.getTimestampMillis() / 1000, PduHeaders.DATE);
+
+    if (!com.openchat.imservice.util.Util.isEmpty(messageContent.getBody())) {
+      PduPart text = new PduPart();
+      text.setData(Util.toUtf8Bytes(messageContent.getBody()));
+      text.setContentType(Util.toIsoBytes("text/plain"));
+      text.setCharset(CharacterSets.UTF_8);
+      body.addPart(text);
+    }
+
+    if (messageContent.getAttachmentsCount() > 0) {
+      for (PushMessageContent.AttachmentPointer attachment : messageContent.getAttachmentsList()) {
+        PduPart media        = new PduPart();
+        byte[]  encryptedKey = new MasterCipher(masterSecret).encryptBytes(attachment.getKey().toByteArray());
+
+        media.setContentType(Util.toIsoBytes(attachment.getContentType()));
+        media.setContentLocation(Util.toIsoBytes(String.valueOf(attachment.getId())));
+        media.setContentDisposition(Util.toIsoBytes(Base64.encodeBytes(encryptedKey)));
+
+        if (message.getRelay() != null) {
+          media.setName(Util.toIsoBytes(message.getRelay()));
+        }
+
+        media.setPendingPush(true);
+
+        body.addPart(media);
+      }
+    }
   }
 
-  public IncomingMediaMessage(MasterSecretUnion masterSecret,
-                              Address from,
-                              long sentTimeMillis,
-                              int subscriptionId,
-                              long expiresIn,
-                              boolean expirationUpdate,
-                              Optional<String> relay,
-                              Optional<String> body,
-                              Optional<openchatServiceGroup> group,
-                              Optional<List<openchatServiceAttachment>> attachments)
-  {
-    this.push             = true;
-    this.from             = from;
-    this.sentTimeMillis   = sentTimeMillis;
-    this.body             = body.orNull();
-    this.subscriptionId   = subscriptionId;
-    this.expiresIn        = expiresIn;
-    this.expirationUpdate = expirationUpdate;
-
-    if (group.isPresent()) this.groupId = Address.fromSerialized(GroupUtil.getEncodedId(group.get().getGroupId(), false));
-    else                   this.groupId = null;
-
-    this.attachments.addAll(PointerAttachment.forPointers(masterSecret, attachments));
+  public PduHeaders getPduHeaders() {
+    return headers;
   }
 
-  public int getSubscriptionId() {
-    return subscriptionId;
-  }
-
-  public String getBody() {
+  public PduBody getBody() {
     return body;
   }
 
-  public List<Attachment> getAttachments() {
-    return attachments;
-  }
-
-  public Address getFrom() {
-    return from;
-  }
-
-  public Address getGroupId() {
+  public String getGroupId() {
     return groupId;
   }
 
@@ -95,19 +92,10 @@ public class IncomingMediaMessage {
     return push;
   }
 
-  public boolean isExpirationUpdate() {
-    return expirationUpdate;
-  }
-
-  public long getSentTimeMillis() {
-    return sentTimeMillis;
-  }
-
-  public long getExpiresIn() {
-    return expiresIn;
-  }
-
   public boolean isGroupMessage() {
-    return groupId != null;
+    return groupId != null                                           ||
+        !Util.isEmpty(headers.getEncodedStringValues(PduHeaders.CC)) ||
+        (headers.getEncodedStringValues(PduHeaders.TO) != null &&
+         headers.getEncodedStringValues(PduHeaders.TO).length > 1);
   }
 }

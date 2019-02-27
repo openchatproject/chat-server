@@ -1,47 +1,37 @@
 package com.openchat.secureim.mms;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.content.Context;
 
-import com.openchat.secureim.attachments.Attachment;
 import com.openchat.secureim.database.ThreadDatabase;
-import com.openchat.secureim.recipients.Recipient;
-import com.openchat.secureim.util.Base64;
-import com.openchat.imservice.internal.push.openchatServiceProtos.GroupContext;
+import com.openchat.secureim.recipients.Recipients;
+import com.openchat.imservice.util.Base64;
 
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import ws.com.google.android.mms.ContentType;
+import ws.com.google.android.mms.pdu.PduBody;
+import ws.com.google.android.mms.pdu.PduPart;
+
+import static com.openchat.imservice.push.PushMessageProtos.PushMessageContent.GroupContext;
 
 public class OutgoingGroupMediaMessage extends OutgoingSecureMediaMessage {
 
   private final GroupContext group;
 
-  public OutgoingGroupMediaMessage(@NonNull Recipient recipient,
-                                   @NonNull String encodedGroupContext,
-                                   @NonNull List<Attachment> avatar,
-                                   long sentTimeMillis,
-                                   long expiresIn)
-      throws IOException
+  public OutgoingGroupMediaMessage(Context context, Recipients recipients,
+                                   GroupContext group, byte[] avatar)
   {
-    super(recipient, encodedGroupContext, avatar, sentTimeMillis,
-          ThreadDatabase.DistributionTypes.CONVERSATION, expiresIn);
-
-    this.group = GroupContext.parseFrom(Base64.decode(encodedGroupContext));
-  }
-
-  public OutgoingGroupMediaMessage(@NonNull Recipient recipient,
-                                   @NonNull GroupContext group,
-                                   @Nullable final Attachment avatar,
-                                   long sentTimeMillis,
-                                   long expireIn)
-  {
-    super(recipient, Base64.encodeBytes(group.toByteArray()),
-          new LinkedList<Attachment>() {{if (avatar != null) add(avatar);}},
-          System.currentTimeMillis(),
-          ThreadDatabase.DistributionTypes.CONVERSATION, expireIn);
+    super(context, recipients, new PduBody(), Base64.encodeBytes(group.toByteArray()),
+          ThreadDatabase.DistributionTypes.CONVERSATION);
 
     this.group = group;
+
+    if (avatar != null) {
+      PduPart part = new PduPart();
+      part.setData(avatar);
+      part.setContentType(ContentType.IMAGE_PNG.getBytes());
+      part.setContentId((System.currentTimeMillis()+"").getBytes());
+      part.setName(("Image" + System.currentTimeMillis()).getBytes());
+      body.addPart(part);
+    }
   }
 
   @Override
@@ -55,9 +45,5 @@ public class OutgoingGroupMediaMessage extends OutgoingSecureMediaMessage {
 
   public boolean isGroupQuit() {
     return group.getType().getNumber() == GroupContext.Type.QUIT_VALUE;
-  }
-
-  public GroupContext getGroupContext() {
-    return group;
   }
 }

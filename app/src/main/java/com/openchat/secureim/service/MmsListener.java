@@ -7,16 +7,22 @@ import android.os.Build;
 import android.provider.Telephony;
 import android.util.Log;
 
-import com.openchat.secureim.ApplicationContext;
-import com.openchat.secureim.jobs.MmsReceiveJob;
-import com.openchat.secureim.util.TextSecurePreferences;
+import com.openchat.secureim.protocol.WirePrefix;
+import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
+
+import ws.com.google.android.mms.pdu.GenericPdu;
+import ws.com.google.android.mms.pdu.NotificationInd;
+import ws.com.google.android.mms.pdu.PduHeaders;
+import ws.com.google.android.mms.pdu.PduParser;
 
 public class MmsListener extends BroadcastReceiver {
 
-  private static final String TAG = MmsListener.class.getSimpleName();
-
   private boolean isRelevant(Context context, Intent intent) {
+    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.DONUT) {
+      return false;
+    }
+
     if (!ApplicationMigrationService.isDatabaseImported(context)) {
       return false;
     }
@@ -29,34 +35,42 @@ public class MmsListener extends BroadcastReceiver {
     }
 
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT &&
-        TextSecurePreferences.isInterceptAllMmsEnabled(context))
+        OpenchatServicePreferences.isInterceptAllMmsEnabled(context))
     {
       return true;
     }
 
-    return false;
+    byte[] mmsData   = intent.getByteArrayExtra("data");
+    PduParser parser = new PduParser(mmsData);
+    GenericPdu pdu   = parser.parse();
+
+    if (pdu.getMessageType() != PduHeaders.MESSAGE_TYPE_NOTIFICATION_IND)
+      return false;
+
+    NotificationInd notificationPdu = (NotificationInd)pdu;
+
+    if (notificationPdu.getSubject() == null)
+      return false;
+
+    return WirePrefix.isEncryptedMmsSubject(notificationPdu.getSubject().getString());
   }
 
   @Override
     public void onReceive(Context context, Intent intent) {
-    Log.w(TAG, "Got MMS broadcast..." + intent.getAction());
+    Log.w("MmsListener", "Got MMS broadcast..." + intent.getAction());
 
-    if ((Telephony.Sms.Intents.WAP_PUSH_DELIVER_ACTION.equals(intent.getAction())  &&
-        Util.isDefaultSmsProvider(context))                                        ||
+    if (Telephony.Sms.Intents.WAP_PUSH_DELIVER_ACTION.equals(intent.getAction()) ||
         (Telephony.Sms.Intents.WAP_PUSH_RECEIVED_ACTION.equals(intent.getAction()) &&
          isRelevant(context, intent)))
     {
-      Log.w(TAG, "Relevant!");
-      int subscriptionId = intent.getExtras().getInt("subscription", -1);
+      Log.w("MmsListener", "Relevant!");
+      intent.setAction(SendReceiveService.RECEIVE_MMS_ACTION);
+      intent.putExtra("ResultCode", this.getResultCode());
+      intent.setClass(context, SendReceiveService.class);
 
-      ApplicationContext.getInstance(context)
-                        .getJobManager()
-                        .add(new MmsReceiveJob(context, intent.getByteArrayExtra("data"), subscriptionId));
-
+      context.startService(intent);
       abortBroadcast();
     }
   }
-
-
 
 }

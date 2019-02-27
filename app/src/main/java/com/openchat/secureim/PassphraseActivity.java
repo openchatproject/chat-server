@@ -5,16 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.util.Log;
 
-import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.secureim.service.KeyCachingService;
+import com.openchat.secureim.util.MemoryCleaner;
 
+import com.actionbarsherlock.app.SherlockActivity;
 
-/**
- * Base Activity for changing/prompting local encryption passphrase.
- */
-public abstract class PassphraseActivity extends BaseActionBarActivity {
+public abstract class PassphraseActivity extends SherlockActivity {
 
   private KeyCachingService keyCachingService;
   private MasterSecret masterSecret;
@@ -22,8 +20,11 @@ public abstract class PassphraseActivity extends BaseActionBarActivity {
   protected void setMasterSecret(MasterSecret masterSecret) {
     this.masterSecret = masterSecret;
     Intent bindIntent = new Intent(this, KeyCachingService.class);
-    startService(bindIntent);
     bindService(bindIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+  }
+
+  protected MasterSecret getMasterSecret() {
+    return masterSecret;
   }
 
   protected abstract void cleanup();
@@ -31,25 +32,18 @@ public abstract class PassphraseActivity extends BaseActionBarActivity {
   private ServiceConnection serviceConnection = new ServiceConnection() {
       @Override
       public void onServiceConnected(ComponentName className, IBinder service) {
-        keyCachingService = ((KeyCachingService.KeySetBinder)service).getService();
+        keyCachingService = ((KeyCachingService.KeyCachingBinder)service).getService();
         keyCachingService.setMasterSecret(masterSecret);
 
         PassphraseActivity.this.unbindService(PassphraseActivity.this.serviceConnection);
 
-        masterSecret = null;
+        MemoryCleaner.clean(masterSecret);
         cleanup();
 
-        Intent nextIntent = getIntent().getParcelableExtra("next_intent");
-        if (nextIntent != null) {
-            try {
-                startActivity(nextIntent);
-            } catch (java.lang.SecurityException e) {
-                Log.w("PassphraseActivity",
-                        "Access permission not passed from PassphraseActivity, retry sharing.");
-            }
-        }
-        finish();
+        PassphraseActivity.this.setResult(RESULT_OK);
+        PassphraseActivity.this.finish();
       }
+
       @Override
       public void onServiceDisconnected(ComponentName name) {
         keyCachingService = null;

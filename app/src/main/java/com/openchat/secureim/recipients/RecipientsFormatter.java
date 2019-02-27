@@ -44,10 +44,6 @@ public class RecipientsFormatter {
   }
 
   public static String formatNameAndNumber(String name, String number) {
-    // Format like this: Mike Cleron <(650) 555-1234>
-    //                   Erick Tseng <(650) 555-1212>
-    //                   Tutankhamun <tutank1341@gmail.com>
-    //                   (408) 555-1289
     String formattedNumber = PhoneNumberUtils.formatNumber(number);
     if (!TextUtils.isEmpty(name) && !name.equals(number)) {
       return name + " <" + formattedNumber + ">";
@@ -55,6 +51,5 @@ public class RecipientsFormatter {
       return formattedNumber;
     }
   }
-
 
 }

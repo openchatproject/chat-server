@@ -1,19 +1,24 @@
 package com.openchat.secureim;
 
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import com.actionbarsherlock.app.ActionBar;
 
 import com.openchat.secureim.crypto.IdentityKeyUtil;
-import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.secureim.crypto.MasterSecretUtil;
-import com.openchat.secureim.util.TextSecurePreferences;
-import com.openchat.secureim.util.Util;
+import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.VersionTracker;
-
-/**
- * Activity for creating a user's local encryption passphrase.
- */
+import com.openchat.imservice.util.Util;
 
 public class PassphraseCreateActivity extends PassphraseActivity {
 
@@ -29,7 +34,12 @@ public class PassphraseCreateActivity extends PassphraseActivity {
   }
 
   private void initializeResources() {
-    new SecretGenerator().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, MasterSecretUtil.UNENCRYPTED_PASSPHRASE);
+    getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+    getSupportActionBar().setCustomView(R.layout.light_centered_app_title);
+    mitigateAndroidTilingBug();
+
+    OpenchatServicePreferences.setPasswordDisabled(this, true);
+    new SecretGenerator().execute(MasterSecretUtil.UNENCRYPTED_PASSPHRASE);
   }
 
   private class SecretGenerator extends AsyncTask<String, Void, Void> {
@@ -45,12 +55,11 @@ public class PassphraseCreateActivity extends PassphraseActivity {
       masterSecret      = MasterSecretUtil.generateMasterSecret(PassphraseCreateActivity.this,
                                                                 passphrase);
 
+      MemoryCleaner.clean(passphrase);
+
       MasterSecretUtil.generateAsymmetricMasterSecret(PassphraseCreateActivity.this, masterSecret);
-      IdentityKeyUtil.generateIdentityKeys(PassphraseCreateActivity.this);
+      IdentityKeyUtil.generateIdentityKeys(PassphraseCreateActivity.this, masterSecret);
       VersionTracker.updateLastSeenVersion(PassphraseCreateActivity.this);
-      TextSecurePreferences.setLastExperienceVersionCode(PassphraseCreateActivity.this, Util.getCurrentApkReleaseVersion(PassphraseCreateActivity.this));
-      TextSecurePreferences.setPasswordDisabled(PassphraseCreateActivity.this, true);
-      TextSecurePreferences.setReadReceiptsEnabled(PassphraseCreateActivity.this, true);
 
       return null;
     }
@@ -58,6 +67,15 @@ public class PassphraseCreateActivity extends PassphraseActivity {
     @Override
     protected void onPostExecute(Void param) {
       setMasterSecret(masterSecret);
+    }
+  }
+
+  private void mitigateAndroidTilingBug() {
+    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+      Drawable actionBarBackground = getResources().getDrawable(R.drawable.background_pattern_repeat);
+      Util.fixBackgroundRepeat(actionBarBackground);
+      getSupportActionBar().setBackgroundDrawable(actionBarBackground);
+      Util.fixBackgroundRepeat(findViewById(R.id.scroll_parent).getBackground());
     }
   }
 

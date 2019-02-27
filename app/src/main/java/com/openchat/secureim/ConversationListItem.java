@@ -1,274 +1,195 @@
 package com.openchat.secureim;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
+import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.graphics.drawable.RippleDrawable;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
-import android.support.annotation.NonNull;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Handler;
+import android.provider.Contacts.Intents;
+import android.provider.ContactsContract.QuickContact;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
+import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.amulyakhare.textdrawable.TextDrawable;
-
-import com.openchat.secureim.components.AlertView;
-import com.openchat.secureim.components.AvatarImageView;
-import com.openchat.secureim.components.DeliveryStatusView;
-import com.openchat.secureim.components.FromTextView;
-import com.openchat.secureim.components.ThumbnailView;
-import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.model.ThreadRecord;
-import com.openchat.secureim.mms.GlideRequests;
 import com.openchat.secureim.recipients.Recipient;
-import com.openchat.secureim.recipients.RecipientModifiedListener;
+import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.DateUtils;
-import com.openchat.secureim.util.Util;
-import com.openchat.secureim.util.ViewUtil;
+import com.openchat.secureim.util.Emoji;
 
-import java.util.Locale;
 import java.util.Set;
 
-import static com.openchat.secureim.util.SpanUtil.color;
-
 public class ConversationListItem extends RelativeLayout
-                                  implements RecipientModifiedListener,
-                                             BindableConversationListItem, Unbindable
+                                  implements Recipient.RecipientModifiedListener
 {
-  @SuppressWarnings("unused")
   private final static String TAG = ConversationListItem.class.getSimpleName();
 
-  private final static Typeface BOLD_TYPEFACE  = Typeface.create("sans-serif", Typeface.BOLD);
-  private final static Typeface LIGHT_TYPEFACE = Typeface.create("sans-serif-light", Typeface.NORMAL);
+  private Context           context;
+  private Set<Long>         selectedThreads;
+  private Recipients        recipients;
+  private long              threadId;
+  private TextView          subjectView;
+  private TextView          fromView;
+  private TextView          dateView;
+  private long              count;
+  private boolean           read;
 
-  private Set<Long>          selectedThreads;
-  private Recipient          recipient;
-  private long               threadId;
-  private GlideRequests      glideRequests;
-  private TextView           subjectView;
-  private FromTextView       fromView;
-  private TextView           dateView;
-  private TextView           archivedView;
-  private DeliveryStatusView deliveryStatusIndicator;
-  private AlertView          alertView;
-  private ImageView          unreadIndicator;
-  private long               lastSeen;
+  private ImageView         contactPhotoImage;
 
-  private int             unreadCount;
-  private AvatarImageView contactPhotoImage;
-  private ThumbnailView   thumbnailView;
-
+  private final Handler handler = new Handler();
   private int distributionType;
 
   public ConversationListItem(Context context) {
-    this(context, null);
+    super(context);
+    this.context = context;
   }
 
   public ConversationListItem(Context context, AttributeSet attrs) {
     super(context, attrs);
+    this.context = context;
   }
 
   @Override
   protected void onFinishInflate() {
-    super.onFinishInflate();
-    this.subjectView             = findViewById(R.id.subject);
-    this.fromView                = findViewById(R.id.from);
-    this.dateView                = findViewById(R.id.date);
-    this.deliveryStatusIndicator = findViewById(R.id.delivery_status);
-    this.alertView               = findViewById(R.id.indicators_parent);
-    this.contactPhotoImage       = findViewById(R.id.contact_photo_image);
-    this.thumbnailView           = findViewById(R.id.thumbnail);
-    this.archivedView            = findViewById(R.id.archived);
-    this.unreadIndicator         = findViewById(R.id.unread_indicator);
-    thumbnailView.setClickable(false);
+    this.subjectView       = (TextView) findViewById(R.id.subject);
+    this.fromView          = (TextView) findViewById(R.id.from);
+    this.dateView          = (TextView) findViewById(R.id.date);
 
-    ViewUtil.setTextViewGravityStart(this.fromView, getContext());
-    ViewUtil.setTextViewGravityStart(this.subjectView, getContext());
+    this.contactPhotoImage = (ImageView) findViewById(R.id.contact_photo_image);
+
+    initializeContactWidgetVisibility();
   }
 
-  @Override
-  public void bind(@NonNull MasterSecret masterSecret, @NonNull ThreadRecord thread,
-                   @NonNull GlideRequests glideRequests, @NonNull Locale locale,
-                   @NonNull Set<Long> selectedThreads, boolean batchMode)
-  {
+  public void set(ThreadRecord thread, Set<Long> selectedThreads, boolean batchMode) {
     this.selectedThreads  = selectedThreads;
-    this.recipient        = thread.getRecipient();
+    this.recipients       = thread.getRecipients();
     this.threadId         = thread.getThreadId();
-    this.glideRequests    = glideRequests;
-    this.unreadCount      = thread.getUnreadCount();
+    this.count            = thread.getCount();
+    this.read             = thread.isRead();
     this.distributionType = thread.getDistributionType();
-    this.lastSeen         = thread.getLastSeen();
 
-    this.recipient.addListener(this);
-    this.fromView.setText(recipient, unreadCount == 0);
+    this.recipients.addListener(this);
+    this.fromView.setText(formatFrom(recipients, count, read));
 
-    this.subjectView.setText(thread.getDisplayBody());
-//    this.subjectView.setTypeface(read ? LIGHT_TYPEFACE : BOLD_TYPEFACE);
+      this.subjectView.setText(Emoji.getInstance(context).emojify(thread.getDisplayBody(),
+                                                                  Emoji.EMOJI_SMALL,
+                                                                  new Emoji.InvalidatingPageLoadedListener(subjectView)),
+                               TextView.BufferType.SPANNABLE);
 
-    if (thread.getDate() > 0) {
-      CharSequence date = DateUtils.getBriefRelativeTimeSpanString(getContext(), locale, thread.getDate());
-      dateView.setText(unreadCount == 0 ? date : color(getResources().getColor(R.color.textsecure_primary_dark), date));
-      dateView.setTypeface(unreadCount == 0 ? LIGHT_TYPEFACE : BOLD_TYPEFACE);
-    }
+    if (thread.getDate() > 0)
+      this.dateView.setText(DateUtils.getBetterRelativeTimeSpanString(getContext(), thread.getDate()));
 
-    if (thread.isArchived()) {
-      this.archivedView.setVisibility(View.VISIBLE);
-    } else {
-      this.archivedView.setVisibility(View.GONE);
-    }
-
-    setStatusIcons(thread);
-    setThumbnailSnippet(masterSecret, thread);
-    setBatchState(batchMode);
-    setRippleColor(recipient);
-    setUnreadIndicator(thread);
-    this.contactPhotoImage.setAvatar(glideRequests, recipient, true);
+    setBackground(read, batchMode);
+    setContactPhoto(this.recipients.getPrimaryRecipient());
   }
 
-  @Override
   public void unbind() {
-    if (this.recipient != null) this.recipient.removeListener(this);
+    if (this.recipients != null)
+      this.recipients.removeListener(this);
   }
 
-  private void setBatchState(boolean batch) {
-    setSelected(batch && selectedThreads.contains(threadId));
+  private void initializeContactWidgetVisibility() {
+    contactPhotoImage.setVisibility(View.VISIBLE);
   }
 
-  public Recipient getRecipient() {
-    return recipient;
+  private void setContactPhoto(final Recipient recipient) {
+    if (recipient == null) return;
+
+    contactPhotoImage.setImageBitmap(recipient.getCircleCroppedContactPhoto());
+
+    if (!recipient.isGroupRecipient()) {
+      contactPhotoImage.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          if (recipient.getContactUri() != null) {
+            QuickContact.showQuickContact(context, contactPhotoImage, recipient.getContactUri(), QuickContact.MODE_LARGE, null);
+          } else {
+            Intent intent = new Intent(Intents.SHOW_OR_CREATE_CONTACT,  Uri.fromParts("tel", recipient.getNumber(), null));
+            context.startActivity(intent);
+          }
+        }
+      });
+    } else {
+      contactPhotoImage.setOnClickListener(null);
+    }
+  }
+
+  private void setBackground(boolean read, boolean batch) {
+    int[]      attributes = new int[]{R.attr.conversation_list_item_background_selected,
+                                      R.attr.conversation_list_item_background_read,
+                                      R.attr.conversation_list_item_background_unread};
+
+    TypedArray drawables  = context.obtainStyledAttributes(attributes);
+
+    if (batch && selectedThreads.contains(threadId)) {
+      setBackgroundDrawable(drawables.getDrawable(0));
+    } else if (read) {
+      setBackgroundDrawable(drawables.getDrawable(1));
+    } else {
+      setBackgroundDrawable(drawables.getDrawable(2));
+    }
+
+    drawables.recycle();
+  }
+
+  private CharSequence formatFrom(Recipients from, long count, boolean read) {
+    int attributes[]  = new int[] {R.attr.conversation_list_item_count_color};
+    TypedArray colors = context.obtainStyledAttributes(attributes);
+
+    final String fromString;
+    final boolean isUnnamedGroup = from.isGroupRecipient() && TextUtils.isEmpty(from.getPrimaryRecipient().getName());
+    if (isUnnamedGroup) {
+      fromString = context.getString(R.string.ConversationActivity_unnamed_group);
+    } else {
+      fromString = from.toShortString();
+    }
+    SpannableStringBuilder builder = new SpannableStringBuilder(fromString);
+
+    final int typeface;
+    if (isUnnamedGroup) {
+      if (!read) typeface = Typeface.BOLD_ITALIC;
+      else       typeface = Typeface.ITALIC;
+    } else if (!read) {
+      typeface = Typeface.BOLD;
+    } else {
+      typeface = Typeface.NORMAL;
+    }
+
+    builder.setSpan(new StyleSpan(typeface), 0, builder.length(),
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+
+    colors.recycle();
+    return builder;
+  }
+
+  public Recipients getRecipients() {
+    return recipients;
   }
 
   public long getThreadId() {
     return threadId;
   }
 
-  public int getUnreadCount() {
-    return unreadCount;
-  }
-
   public int getDistributionType() {
     return distributionType;
   }
 
-  public long getLastSeen() {
-    return lastSeen;
-  }
-
-  private void setThumbnailSnippet(MasterSecret masterSecret, ThreadRecord thread) {
-    if (thread.getSnippetUri() != null) {
-      this.thumbnailView.setVisibility(View.VISIBLE);
-      this.thumbnailView.setImageResource(masterSecret, glideRequests, thread.getSnippetUri());
-
-      LayoutParams subjectParams = (RelativeLayout.LayoutParams)this.subjectView.getLayoutParams();
-      subjectParams.addRule(RelativeLayout.LEFT_OF, R.id.thumbnail);
-      if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
-        subjectParams.addRule(RelativeLayout.START_OF, R.id.thumbnail);
-      }
-      this.subjectView.setLayoutParams(subjectParams);
-      this.post(new ThumbnailPositioner(thumbnailView, archivedView, deliveryStatusIndicator, dateView));
-    } else {
-      this.thumbnailView.setVisibility(View.GONE);
-
-      LayoutParams subjectParams = (RelativeLayout.LayoutParams)this.subjectView.getLayoutParams();
-      subjectParams.addRule(RelativeLayout.LEFT_OF, R.id.status);
-      if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
-        subjectParams.addRule(RelativeLayout.START_OF, R.id.status);
-      }
-      this.subjectView.setLayoutParams(subjectParams);
-    }
-  }
-
-  private void setStatusIcons(ThreadRecord thread) {
-    if (!thread.isOutgoing() || thread.isOutgoingCall() || thread.isVerificationStatusChange()) {
-      deliveryStatusIndicator.setNone();
-      alertView.setNone();
-    } else if (thread.isFailed()) {
-      deliveryStatusIndicator.setNone();
-      alertView.setFailed();
-    } else if (thread.isPendingInsecureSmsFallback()) {
-      deliveryStatusIndicator.setNone();
-      alertView.setPendingApproval();
-    } else {
-      alertView.setNone();
-
-      if      (thread.isPending())    deliveryStatusIndicator.setPending();
-      else if (thread.isRemoteRead()) deliveryStatusIndicator.setRead();
-      else if (thread.isDelivered())  deliveryStatusIndicator.setDelivered();
-      else                            deliveryStatusIndicator.setSent();
-    }
-  }
-
-  private void setRippleColor(Recipient recipient) {
-    if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-      ((RippleDrawable)(getBackground()).mutate())
-          .setColor(ColorStateList.valueOf(recipient.getColor().toConversationColor(getContext())));
-    }
-  }
-
-  private void setUnreadIndicator(ThreadRecord thread) {
-    if (thread.isOutgoing() || thread.getUnreadCount() == 0) {
-      unreadIndicator.setVisibility(View.GONE);
-      return;
-    }
-
-    unreadIndicator.setImageDrawable(TextDrawable.builder()
-                                                 .beginConfig()
-                                                 .width(ViewUtil.dpToPx(getContext(), 24))
-                                                 .height(ViewUtil.dpToPx(getContext(), 24))
-                                                 .textColor(Color.WHITE)
-                                                 .bold()
-                                                 .endConfig()
-                                                 .buildRound(String.valueOf(thread.getUnreadCount()), getResources().getColor(R.color.textsecure_primary_dark)));
-    unreadIndicator.setVisibility(View.VISIBLE);
-  }
-
   @Override
-  public void onModified(final Recipient recipient) {
-    Util.runOnMain(() -> {
-      fromView.setText(recipient, unreadCount == 0);
-      contactPhotoImage.setAvatar(glideRequests, recipient, true);
-      setRippleColor(recipient);
+  public void onModified(Recipient recipient) {
+    handler.post(new Runnable() {
+      @Override
+      public void run() {
+        ConversationListItem.this.fromView.setText(formatFrom(recipients, count, read));
+        setContactPhoto(ConversationListItem.this.recipients.getPrimaryRecipient());
+      }
     });
   }
-
-  private static class ThumbnailPositioner implements Runnable {
-
-    private final View thumbnailView;
-    private final View archivedView;
-    private final View deliveryStatusView;
-    private final View dateView;
-
-    ThumbnailPositioner(View thumbnailView, View archivedView, View deliveryStatusView, View dateView) {
-      this.thumbnailView      = thumbnailView;
-      this.archivedView       = archivedView;
-      this.deliveryStatusView = deliveryStatusView;
-      this.dateView           = dateView;
-    }
-
-    @Override
-    public void run() {
-      LayoutParams thumbnailParams = (RelativeLayout.LayoutParams)thumbnailView.getLayoutParams();
-
-      if (archivedView.getVisibility() == View.VISIBLE &&
-          (archivedView.getWidth() + deliveryStatusView.getWidth()) > dateView.getWidth())
-      {
-        thumbnailParams.addRule(RelativeLayout.LEFT_OF, R.id.status);
-        if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
-          thumbnailParams.addRule(RelativeLayout.START_OF, R.id.status);
-        }
-      } else {
-        thumbnailParams.addRule(RelativeLayout.LEFT_OF, R.id.date);
-        if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
-          thumbnailParams.addRule(RelativeLayout.START_OF, R.id.date);
-        }
-      }
-
-      thumbnailView.setLayoutParams(thumbnailParams);
-    }
-  }
-
 }

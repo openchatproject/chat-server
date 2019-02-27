@@ -2,30 +2,32 @@ package com.openchat.secureim.components;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.openchat.secureim.R;
+import com.openchat.secureim.contacts.ContactAccessor;
 import com.openchat.secureim.contacts.RecipientsAdapter;
 import com.openchat.secureim.contacts.RecipientsEditor;
-import com.openchat.secureim.database.Address;
 import com.openchat.secureim.recipients.Recipient;
-import com.openchat.secureim.recipients.RecipientModifiedListener;
+import com.openchat.secureim.recipients.RecipientFactory;
+import com.openchat.secureim.recipients.RecipientFormattingException;
+import com.openchat.secureim.recipients.Recipients;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.Set;
 
-/**
- * Panel component combining both an editable field with a button for
- * a list-based contact selector.
- */
-public class PushRecipientsPanel extends RelativeLayout implements RecipientModifiedListener {
+public class PushRecipientsPanel extends RelativeLayout {
   private final String                         TAG = PushRecipientsPanel.class.getSimpleName();
   private       RecipientsPanelChangedListener panelChangeListener;
 
@@ -49,9 +51,29 @@ public class PushRecipientsPanel extends RelativeLayout implements RecipientModi
     initialize();
   }
 
-  public List<Recipient> getRecipients() {
+  public void addRecipient(String name, String number) {
+    if (name != null) recipientsText.append(name + "< " + number + ">, ");
+    else recipientsText.append(number + ", ");
+  }
+
+  public void addRecipients(Recipients recipients) {
+    List<Recipient> recipientList = recipients.getRecipientsList();
+    Iterator<Recipient> iterator = recipientList.iterator();
+
+    while (iterator.hasNext()) {
+      Recipient recipient = iterator.next();
+      addRecipient(recipient.getName(), recipient.getNumber());
+    }
+  }
+
+  public Recipients getRecipients() throws RecipientFormattingException {
     String rawText = recipientsText.getText().toString();
-    return getRecipientsFromString(getContext(), rawText, true);
+    Recipients recipients = RecipientFactory.getRecipientsFromString(getContext(), rawText, false);
+
+    if (recipients.isEmpty())
+      throw new RecipientFormattingException("Recipient List Is Empty!");
+
+    return recipients;
   }
 
   public void disable() {
@@ -77,13 +99,13 @@ public class PushRecipientsPanel extends RelativeLayout implements RecipientModi
   }
 
   private void initRecipientsEditor() {
+    Recipients recipients;
+    recipientsText = (RecipientsEditor)findViewById(R.id.recipients_text);
 
-    this.recipientsText = (RecipientsEditor)findViewById(R.id.recipients_text);
-
-    List<Recipient> recipients = getRecipients();
-
-    for (Recipient recipient : recipients) {
-      recipient.addListener(this);
+    try {
+      recipients = getRecipients();
+    } catch (RecipientFormattingException e) {
+      recipients = new Recipients( new LinkedList<Recipient>() );
     }
 
     recipientsText.setAdapter(new RecipientsAdapter(this.getContext()));
@@ -94,59 +116,31 @@ public class PushRecipientsPanel extends RelativeLayout implements RecipientModi
       @Override
       public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         if (panelChangeListener != null) {
-          panelChangeListener.onRecipientsPanelUpdate(getRecipients());
+          try {
+            panelChangeListener.onRecipientsPanelUpdate(getRecipients());
+          } catch (RecipientFormattingException rfe) {
+            panelChangeListener.onRecipientsPanelUpdate(null);
+          }
         }
         recipientsText.setText("");
       }
     });
   }
 
-  private @NonNull List<Recipient> getRecipientsFromString(Context context, @NonNull String rawText, boolean asynchronous) {
-    StringTokenizer tokenizer  = new StringTokenizer(rawText, ",");
-    List<Recipient> recipients = new LinkedList<>();
-
-    while (tokenizer.hasMoreTokens()) {
-      String token = tokenizer.nextToken().trim();
-
-      if (!TextUtils.isEmpty(token)) {
-        if (hasBracketedNumber(token)) recipients.add(Recipient.from(context, Address.fromExternal(context, parseBracketedNumber(token)), asynchronous));
-        else                           recipients.add(Recipient.from(context, Address.fromExternal(context, token), asynchronous));
-      }
-    }
-
-    return recipients;
-  }
-
-  private boolean hasBracketedNumber(String recipient) {
-    int openBracketIndex = recipient.indexOf('<');
-
-    return (openBracketIndex != -1) &&
-           (recipient.indexOf('>', openBracketIndex) != -1);
-  }
-
-  private  String parseBracketedNumber(String recipient) {
-    int begin    = recipient.indexOf('<');
-    int end      = recipient.indexOf('>', begin);
-    String value = recipient.substring(begin + 1, end);
-
-    return value;
-  }
-
-  @Override
-  public void onModified(Recipient recipient) {
-    recipientsText.populate(getRecipients());
-  }
-
   private class FocusChangedListener implements View.OnFocusChangeListener {
     public void onFocusChange(View v, boolean hasFocus) {
       if (!hasFocus && (panelChangeListener != null)) {
-        panelChangeListener.onRecipientsPanelUpdate(getRecipients());
+        try {
+          panelChangeListener.onRecipientsPanelUpdate(getRecipients());
+        } catch (RecipientFormattingException rfe) {
+          panelChangeListener.onRecipientsPanelUpdate(null);
+        }
       }
     }
   }
 
   public interface RecipientsPanelChangedListener {
-    public void onRecipientsPanelUpdate(List<Recipient> recipients);
+    public void onRecipientsPanelUpdate(Recipients recipients);
   }
 
 }

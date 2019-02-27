@@ -6,8 +6,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <com.openchat.secureim.contacts.RecipientsEditor
-            android:id="@+id/recipients_text"
+        <com.openchat.secureim.contacts.RecipientsEditor android:id="@+id/recipients_text"
            android:layout_height="wrap_content"
             android:capitalize="sentences"
             android:autoText="true"

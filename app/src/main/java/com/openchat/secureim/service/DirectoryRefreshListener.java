@@ -1,39 +1,59 @@
 package com.openchat.secureim.service;
 
-
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
-import com.openchat.secureim.ApplicationContext;
-import com.openchat.secureim.jobs.DirectoryRefreshJob;
-import com.openchat.secureim.util.TextSecurePreferences;
+import com.openchat.secureim.util.OpenchatServicePreferences;
 
-import java.util.concurrent.TimeUnit;
+public class DirectoryRefreshListener extends BroadcastReceiver {
 
-public class DirectoryRefreshListener extends PersistentAlarmManagerListener {
+  private static final String REFRESH_EVENT = "com.openchat.openchatpush.DIRECTORY_REFRESH";
+  private static final String BOOT_EVENT    = "android.intent.action.BOOT_COMPLETED";
 
-  private static final long INTERVAL = TimeUnit.HOURS.toMillis(12);
+  private static final long   INTERVAL      = 12 * 60 * 60 * 1000; // 12 hours.
 
   @Override
-  protected long getNextScheduledExecutionTime(Context context) {
-    return TextSecurePreferences.getDirectoryRefreshTime(context);
+  public void onReceive(Context context, Intent intent) {
+    if      (REFRESH_EVENT.equals(intent.getAction())) handleRefreshAction(context);
+    else if (BOOT_EVENT.equals(intent.getAction()))    handleBootEvent(context);
   }
 
-  @Override
-  protected long onAlarm(Context context, long scheduledTime) {
-    if (scheduledTime != 0 && TextSecurePreferences.isPushRegistered(context)) {
-      ApplicationContext.getInstance(context)
-                        .getJobManager()
-                        .add(new DirectoryRefreshJob(context, true));
-    }
+  private void handleBootEvent(Context context) {
+    schedule(context);
+  }
 
-    long newTime = System.currentTimeMillis() + INTERVAL;
-    TextSecurePreferences.setDirectoryRefreshTime(context, newTime);
-
-    return newTime;
+  private void handleRefreshAction(Context context) {
+    schedule(context);
   }
 
   public static void schedule(Context context) {
-    new DirectoryRefreshListener().onReceive(context, new Intent());
+    if (!OpenchatServicePreferences.isPushRegistered(context)) return;
+
+    AlarmManager      alarmManager  = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+    Intent            intent        = new Intent(DirectoryRefreshListener.REFRESH_EVENT);
+    PendingIntent     pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+    long              time          = OpenchatServicePreferences.getDirectoryRefreshTime(context);
+
+    if (time <= System.currentTimeMillis()) {
+      if (time != 0) {
+        Intent serviceIntent = new Intent(context, DirectoryRefreshService.class);
+        serviceIntent.setAction(DirectoryRefreshService.REFRESH_ACTION);
+        context.startService(serviceIntent);
+      }
+
+      time = System.currentTimeMillis() + INTERVAL;
+    }
+
+    Log.w("DirectoryRefreshListener", "Scheduling for: " + time);
+
+    alarmManager.cancel(pendingIntent);
+    alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+
+    OpenchatServicePreferences.setDirectoryRefreshTime(context, time);
   }
+
 }

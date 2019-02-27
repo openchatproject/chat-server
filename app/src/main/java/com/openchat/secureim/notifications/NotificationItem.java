@@ -4,86 +4,85 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.TaskStackBuilder;
+import android.text.SpannableStringBuilder;
 
-import com.openchat.secureim.ConversationActivity;
-import com.openchat.secureim.mms.SlideDeck;
+import com.openchat.secureim.RoutingActivity;
 import com.openchat.secureim.recipients.Recipient;
+import com.openchat.secureim.recipients.Recipients;
+import com.openchat.secureim.util.Util;
 
 public class NotificationItem {
 
-  private final long                        id;
-  private final boolean                     mms;
-  private final @NonNull  Recipient         conversationRecipient;
-  private final @NonNull  Recipient         individualRecipient;
-  private final @Nullable Recipient         threadRecipient;
-  private final long                        threadId;
-  private final @Nullable CharSequence      text;
-  private final long                        timestamp;
-  private final @Nullable SlideDeck         slideDeck;
+  private final Recipients   recipients;
+  private final Recipient    individualRecipient;
+  private final Recipients   threadRecipients;
+  private final long         threadId;
+  private final CharSequence text;
+  private final Uri          image;
 
-  public NotificationItem(long id, boolean mms,
-                          @NonNull   Recipient individualRecipient,
-                          @NonNull   Recipient conversationRecipient,
-                          @Nullable  Recipient threadRecipient,
-                          long threadId, @Nullable CharSequence text, long timestamp,
-                          @Nullable SlideDeck slideDeck)
+  public NotificationItem(Recipient individualRecipient, Recipients recipients,
+                          Recipients threadRecipients, long threadId,
+                          CharSequence text, Uri image)
   {
-    this.id                    = id;
-    this.mms                   = mms;
-    this.individualRecipient   = individualRecipient;
-    this.conversationRecipient = conversationRecipient;
-    this.threadRecipient       = threadRecipient;
-    this.text                  = text;
-    this.threadId              = threadId;
-    this.timestamp             = timestamp;
-    this.slideDeck             = slideDeck;
+    this.individualRecipient = individualRecipient;
+    this.recipients          = recipients;
+    this.threadRecipients    = threadRecipients;
+    this.text                = text;
+    this.image               = image;
+    this.threadId            = threadId;
   }
 
-  public @NonNull  Recipient getRecipient() {
-    return threadRecipient == null ? conversationRecipient : threadRecipient;
-  }
-
-  public @NonNull  Recipient getIndividualRecipient() {
+  public Recipient getIndividualRecipient() {
     return individualRecipient;
+  }
+
+  public String getIndividualRecipientName() {
+    return individualRecipient.toShortString();
   }
 
   public CharSequence getText() {
     return text;
   }
 
-  public long getTimestamp() {
-    return timestamp;
+  public Uri getImage() {
+    return image;
+  }
+
+  public boolean hasImage() {
+    return image != null;
   }
 
   public long getThreadId() {
     return threadId;
   }
 
-  public @Nullable SlideDeck getSlideDeck() {
-    return slideDeck;
+  public CharSequence getBigStyleSummary() {
+    return (text == null) ? "" : text;
+  }
+
+  public CharSequence getTickerText() {
+    SpannableStringBuilder builder = new SpannableStringBuilder();
+    builder.append(Util.getBoldedString(getIndividualRecipientName()));
+    builder.append(": ");
+    builder.append(getText());
+
+    return builder;
   }
 
   public PendingIntent getPendingIntent(Context context) {
-    Intent     intent           = new Intent(context, ConversationActivity.class);
-    Recipient  notifyRecipients = threadRecipient != null ? threadRecipient : conversationRecipient;
-    if (notifyRecipients != null) intent.putExtra(ConversationActivity.ADDRESS_EXTRA, notifyRecipients.getAddress());
+    Intent intent = new Intent(context, RoutingActivity.class);
+    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-    intent.putExtra("thread_id", threadId);
+    if (recipients != null || threadRecipients != null) {
+      if (threadRecipients != null) intent.putExtra("recipients", threadRecipients);
+      else                          intent.putExtra("recipients", recipients);
+
+      intent.putExtra("thread_id", threadId);
+    }
+
     intent.setData((Uri.parse("custom://"+System.currentTimeMillis())));
 
-    return TaskStackBuilder.create(context)
-                           .addNextIntentWithParentStack(intent)
-                           .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+    return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
-  public long getId() {
-    return id;
-  }
-
-  public boolean isMms() {
-    return mms;
-  }
 }

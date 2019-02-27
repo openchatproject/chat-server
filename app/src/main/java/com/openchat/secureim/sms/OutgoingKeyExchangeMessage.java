@@ -5,7 +5,7 @@ import com.openchat.secureim.recipients.Recipient;
 public class OutgoingKeyExchangeMessage extends OutgoingTextMessage {
 
   public OutgoingKeyExchangeMessage(Recipient recipient, String message) {
-    super(recipient, message, -1);
+    super(recipient, message);
   }
 
   private OutgoingKeyExchangeMessage(OutgoingKeyExchangeMessage base, String body) {

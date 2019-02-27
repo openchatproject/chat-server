@@ -6,35 +6,26 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Telephony;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
-import com.openchat.secureim.ApplicationContext;
-import com.openchat.secureim.RegistrationActivity;
-import com.openchat.secureim.jobs.SmsReceiveJob;
-import com.openchat.secureim.util.TextSecurePreferences;
+import com.openchat.secureim.protocol.WirePrefix;
+import com.openchat.secureim.sms.IncomingTextMessage;
+import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
 
 public class SmsListener extends BroadcastReceiver {
 
   private static final String SMS_RECEIVED_ACTION  = Telephony.Sms.Intents.SMS_RECEIVED_ACTION;
   private static final String SMS_DELIVERED_ACTION = Telephony.Sms.Intents.SMS_DELIVER_ACTION;
 
-  private static final Pattern CHALLENGE_PATTERN = Pattern.compile(".*Your (openchat|TextSecure) verification code:? ([0-9]{3,4})-([0-9]{3,4}).*", Pattern.DOTALL);
-
   private boolean isExemption(SmsMessage message, String messageBody) {
 
-    // ignore CLASS0 ("flash") messages
     if (message.getMessageClass() == SmsMessage.MessageClass.CLASS_0)
       return true;
 
-    // ignore OTP messages from Sparebank1 (Norwegian bank)
     if (messageBody.startsWith("Sparebank1://otp?")) {
       return true;
     }
@@ -69,6 +60,16 @@ public class SmsListener extends BroadcastReceiver {
     return bodyBuilder.toString();
   }
 
+  private ArrayList<IncomingTextMessage> getAsTextMessages(Intent intent) {
+    Object[] pdus                   = (Object[])intent.getExtras().get("pdus");
+    ArrayList<IncomingTextMessage> messages = new ArrayList<IncomingTextMessage>(pdus.length);
+
+    for (int i=0;i<pdus.length;i++)
+      messages.add(new IncomingTextMessage(SmsMessage.createFromPdu((byte[])pdus[i])));
+
+    return messages;
+  }
+
   private boolean isRelevant(Context context, Intent intent) {
     SmsMessage message = getSmsMessageFromIntent(intent);
     String messageBody = getSmsMessageBodyFromIntent(intent);
@@ -82,7 +83,7 @@ public class SmsListener extends BroadcastReceiver {
     if (!ApplicationMigrationService.isDatabaseImported(context))
       return false;
 
-    if (isChallenge(context, messageBody))
+    if (isChallenge(context, intent))
       return false;
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT &&
@@ -93,20 +94,22 @@ public class SmsListener extends BroadcastReceiver {
     }
 
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT &&
-        TextSecurePreferences.isInterceptAllSmsEnabled(context))
+        OpenchatServicePreferences.isInterceptAllSmsEnabled(context))
     {
       return true;
     }
 
-    return false;
+    return WirePrefix.isEncryptedMessage(messageBody) || WirePrefix.isKeyExchange(messageBody);
   }
 
-  @VisibleForTesting boolean isChallenge(@NonNull Context context, @Nullable String messageBody) {
+  private boolean isChallenge(Context context, Intent intent) {
+    String messageBody = getSmsMessageBodyFromIntent(intent);
+
     if (messageBody == null)
       return false;
 
-    if (CHALLENGE_PATTERN.matcher(messageBody).matches() &&
-        TextSecurePreferences.isVerifying(context))
+    if (messageBody.matches("Your OpenchatService verification code: [0-9]{3,4}-[0-9]{3,4}") &&
+        OpenchatServicePreferences.isVerifying(context))
     {
       return true;
     }
@@ -114,36 +117,33 @@ public class SmsListener extends BroadcastReceiver {
     return false;
   }
 
-  @VisibleForTesting String parseChallenge(String messageBody) {
-    Matcher challengeMatcher = CHALLENGE_PATTERN.matcher(messageBody);
+  private String parseChallenge(Context context, Intent intent) {
+    String messageBody    = getSmsMessageBodyFromIntent(intent);
+    String[] messageParts = messageBody.split(":");
+    String[] codeParts    = messageParts[1].trim().split("-");
 
-    if (!challengeMatcher.matches()) {
-      throw new AssertionError("Expression should match.");
-    }
-
-    return challengeMatcher.group(2) + challengeMatcher.group(3);
+    return codeParts[0] + codeParts[1];
   }
 
   @Override
   public void onReceive(Context context, Intent intent) {
     Log.w("SMSListener", "Got SMS broadcast...");
 
-    String messageBody = getSmsMessageBodyFromIntent(intent);
-    if (SMS_RECEIVED_ACTION.equals(intent.getAction()) && isChallenge(context, messageBody)) {
+    if (SMS_RECEIVED_ACTION.equals(intent.getAction()) && isChallenge(context, intent)) {
       Log.w("SmsListener", "Got challenge!");
-      Intent challengeIntent = new Intent(RegistrationActivity.CHALLENGE_EVENT);
-      challengeIntent.putExtra(RegistrationActivity.CHALLENGE_EXTRA, parseChallenge(messageBody));
+      Intent challengeIntent = new Intent(RegistrationService.CHALLENGE_EVENT);
+      challengeIntent.putExtra(RegistrationService.CHALLENGE_EXTRA, parseChallenge(context, intent));
       context.sendBroadcast(challengeIntent);
 
       abortBroadcast();
     } else if ((intent.getAction().equals(SMS_DELIVERED_ACTION)) ||
                (intent.getAction().equals(SMS_RECEIVED_ACTION)) && isRelevant(context, intent))
     {
-      Log.w("SmsListener", "Constructing SmsReceiveJob...");
-      Object[] pdus           = (Object[]) intent.getExtras().get("pdus");
-      int      subscriptionId = intent.getExtras().getInt("subscription", -1);
-
-      ApplicationContext.getInstance(context).getJobManager().add(new SmsReceiveJob(context, pdus, subscriptionId));
+      Intent receivedIntent = new Intent(context, SendReceiveService.class);
+      receivedIntent.setAction(SendReceiveService.RECEIVE_SMS_ACTION);
+      receivedIntent.putExtra("ResultCode", this.getResultCode());
+      receivedIntent.putParcelableArrayListExtra("text_messages",getAsTextMessages(intent));
+      context.startService(receivedIntent);
 
       abortBroadcast();
     }

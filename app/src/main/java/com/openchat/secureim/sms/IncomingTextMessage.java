@@ -1,19 +1,16 @@
 package com.openchat.secureim.sms;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.telephony.SmsMessage;
 
-import com.openchat.secureim.database.Address;
 import com.openchat.secureim.util.GroupUtil;
-import com.openchat.libim.util.guava.Optional;
-import com.openchat.imservice.api.messages.openchatServiceGroup;
-import com.openchat.imservice.api.push.openchatServiceAddress;
+import com.openchat.imservice.push.IncomingPushMessage;
+import com.openchat.imservice.storage.RecipientDevice;
 
 import java.util.List;
+
+import static com.openchat.imservice.push.PushMessageProtos.PushMessageContent.GroupContext;
 
 public class IncomingTextMessage implements Parcelable {
 
@@ -28,54 +25,44 @@ public class IncomingTextMessage implements Parcelable {
       return new IncomingTextMessage[size];
     }
   };
-  private static final String TAG = IncomingTextMessage.class.getSimpleName();
 
   private final String  message;
-  private       Address sender;
+  private final String  sender;
   private final int     senderDeviceId;
   private final int     protocol;
   private final String  serviceCenterAddress;
   private final boolean replyPathPresent;
   private final String  pseudoSubject;
   private final long    sentTimestampMillis;
-  private final Address groupId;
+  private final String  groupId;
   private final boolean push;
-  private final int     subscriptionId;
-  private final long    expiresInMillis;
 
-  public IncomingTextMessage(@NonNull Context context, @NonNull SmsMessage message, int subscriptionId) {
+  public IncomingTextMessage(SmsMessage message) {
     this.message              = message.getDisplayMessageBody();
-    this.sender               = Address.fromExternal(context, message.getDisplayOriginatingAddress());
-    this.senderDeviceId       = openchatServiceAddress.DEFAULT_DEVICE_ID;
+    this.sender               = message.getDisplayOriginatingAddress();
+    this.senderDeviceId       = RecipientDevice.DEFAULT_DEVICE_ID;
     this.protocol             = message.getProtocolIdentifier();
     this.serviceCenterAddress = message.getServiceCenterAddress();
     this.replyPathPresent     = message.isReplyPathPresent();
     this.pseudoSubject        = message.getPseudoSubject();
     this.sentTimestampMillis  = message.getTimestampMillis();
-    this.subscriptionId       = subscriptionId;
-    this.expiresInMillis      = 0;
     this.groupId              = null;
     this.push                 = false;
   }
 
-  public IncomingTextMessage(Address sender, int senderDeviceId, long sentTimestampMillis,
-                             String encodedBody, Optional<openchatServiceGroup> group,
-                             long expiresInMillis)
-  {
+  public IncomingTextMessage(IncomingPushMessage message, String encodedBody, GroupContext group) {
     this.message              = encodedBody;
-    this.sender               = sender;
-    this.senderDeviceId       = senderDeviceId;
+    this.sender               = message.getSource();
+    this.senderDeviceId       = message.getSourceDevice();
     this.protocol             = 31337;
     this.serviceCenterAddress = "GCM";
     this.replyPathPresent     = true;
     this.pseudoSubject        = "";
-    this.sentTimestampMillis  = sentTimestampMillis;
+    this.sentTimestampMillis  = message.getTimestampMillis();
     this.push                 = true;
-    this.subscriptionId       = -1;
-    this.expiresInMillis      = expiresInMillis;
 
-    if (group.isPresent()) {
-      this.groupId = Address.fromSerialized(GroupUtil.getEncodedId(group.get().getGroupId(), false));
+    if (group != null && group.hasId()) {
+      this.groupId = GroupUtil.getEncodedId(group.getId().toByteArray());
     } else {
       this.groupId = null;
     }
@@ -83,17 +70,15 @@ public class IncomingTextMessage implements Parcelable {
 
   public IncomingTextMessage(Parcel in) {
     this.message              = in.readString();
-    this.sender               = in.readParcelable(IncomingTextMessage.class.getClassLoader());
+    this.sender               = in.readString();
     this.senderDeviceId       = in.readInt();
     this.protocol             = in.readInt();
     this.serviceCenterAddress = in.readString();
     this.replyPathPresent     = (in.readInt() == 1);
     this.pseudoSubject        = in.readString();
     this.sentTimestampMillis  = in.readLong();
-    this.groupId              = in.readParcelable(IncomingTextMessage.class.getClassLoader());
+    this.groupId              = in.readString();
     this.push                 = (in.readInt() == 1);
-    this.subscriptionId       = in.readInt();
-    this.expiresInMillis      = in.readLong();
   }
 
   public IncomingTextMessage(IncomingTextMessage base, String newBody) {
@@ -107,8 +92,6 @@ public class IncomingTextMessage implements Parcelable {
     this.sentTimestampMillis  = base.getSentTimestampMillis();
     this.groupId              = base.getGroupId();
     this.push                 = base.isPush();
-    this.subscriptionId       = base.getSubscriptionId();
-    this.expiresInMillis      = base.getExpiresIn();
   }
 
   public IncomingTextMessage(List<IncomingTextMessage> fragments) {
@@ -128,15 +111,13 @@ public class IncomingTextMessage implements Parcelable {
     this.sentTimestampMillis  = fragments.get(0).getSentTimestampMillis();
     this.groupId              = fragments.get(0).getGroupId();
     this.push                 = fragments.get(0).isPush();
-    this.subscriptionId       = fragments.get(0).getSubscriptionId();
-    this.expiresInMillis      = fragments.get(0).getExpiresIn();
   }
 
-  protected IncomingTextMessage(@NonNull Address sender, @Nullable Address groupId)
+  protected IncomingTextMessage(String sender, String groupId)
   {
     this.message              = "";
     this.sender               = sender;
-    this.senderDeviceId       = openchatServiceAddress.DEFAULT_DEVICE_ID;
+    this.senderDeviceId       = RecipientDevice.DEFAULT_DEVICE_ID;
     this.protocol             = 31338;
     this.serviceCenterAddress = "Outgoing";
     this.replyPathPresent     = true;
@@ -144,16 +125,6 @@ public class IncomingTextMessage implements Parcelable {
     this.sentTimestampMillis  = System.currentTimeMillis();
     this.groupId              = groupId;
     this.push                 = true;
-    this.subscriptionId       = -1;
-    this.expiresInMillis      = 0;
-  }
-
-  public int getSubscriptionId() {
-    return subscriptionId;
-  }
-
-  public long getExpiresIn() {
-    return expiresInMillis;
   }
 
   public long getSentTimestampMillis() {
@@ -172,7 +143,7 @@ public class IncomingTextMessage implements Parcelable {
     return new IncomingTextMessage(this, message);
   }
 
-  public Address getSender() {
+  public String getSender() {
     return sender;
   }
 
@@ -192,19 +163,15 @@ public class IncomingTextMessage implements Parcelable {
     return replyPathPresent;
   }
 
+  public boolean isKeyExchange() {
+    return false;
+  }
+
   public boolean isSecureMessage() {
     return false;
   }
 
   public boolean isPreKeyBundle() {
-    return isLegacyPreKeyBundle() || isContentPreKeyBundle();
-  }
-
-  public boolean isLegacyPreKeyBundle() {
-    return false;
-  }
-
-  public boolean isContentPreKeyBundle() {
     return false;
   }
 
@@ -216,27 +183,11 @@ public class IncomingTextMessage implements Parcelable {
     return push;
   }
 
-  public @Nullable Address getGroupId() {
+  public String getGroupId() {
     return groupId;
   }
 
   public boolean isGroup() {
-    return false;
-  }
-
-  public boolean isJoined() {
-    return false;
-  }
-
-  public boolean isIdentityUpdate() {
-    return false;
-  }
-
-  public boolean isIdentityVerified() {
-    return false;
-  }
-
-  public boolean isIdentityDefault() {
     return false;
   }
 
@@ -248,15 +199,14 @@ public class IncomingTextMessage implements Parcelable {
   @Override
   public void writeToParcel(Parcel out, int flags) {
     out.writeString(message);
-    out.writeParcelable(sender, flags);
+    out.writeString(sender);
     out.writeInt(senderDeviceId);
     out.writeInt(protocol);
     out.writeString(serviceCenterAddress);
     out.writeInt(replyPathPresent ? 1 : 0);
     out.writeString(pseudoSubject);
     out.writeLong(sentTimestampMillis);
-    out.writeParcelable(groupId, flags);
+    out.writeString(groupId);
     out.writeInt(push ? 1 : 0);
-    out.writeInt(subscriptionId);
   }
 }

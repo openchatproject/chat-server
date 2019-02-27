@@ -1,15 +1,18 @@
 package com.openchat.secureim.contacts;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.PhoneLookup;
 import android.provider.ContactsContract.RawContacts;
 import android.telephony.TelephonyManager;
 
-import com.openchat.secureim.util.TextSecurePreferences;
+import com.openchat.secureim.ApplicationPreferencesActivity;
+import com.openchat.secureim.util.OpenchatServicePreferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +25,7 @@ class ContactIdentityManagerGingerbread extends ContactIdentityManager {
 
   @Override
   public Uri getSelfIdentityUri() {
-    String contactUriString = TextSecurePreferences.getIdentityContactUri(context);
+    String contactUriString = OpenchatServicePreferences.getIdentityContactUri(context);
 
     if      (hasLocalNumber())         return getContactUriForNumber(getLocalNumber());
     else if (contactUriString != null) return Uri.parse(contactUriString);
@@ -125,7 +128,5 @@ class ContactIdentityManagerGingerbread extends ContactIdentityManager {
     String number = getLocalNumber();
     return (number != null) && (number.trim().length() > 0);
   }
-
-
 
 }

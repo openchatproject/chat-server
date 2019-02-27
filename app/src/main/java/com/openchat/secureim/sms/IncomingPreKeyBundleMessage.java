@@ -1,27 +1,18 @@
 package com.openchat.secureim.sms;
 
-public class IncomingPreKeyBundleMessage extends IncomingTextMessage {
+public class IncomingPreKeyBundleMessage extends IncomingKeyExchangeMessage {
 
-  private final boolean legacy;
-
-  public IncomingPreKeyBundleMessage(IncomingTextMessage base, String newBody, boolean legacy) {
+  public IncomingPreKeyBundleMessage(IncomingTextMessage base, String newBody) {
     super(base, newBody);
-    this.legacy = legacy;
   }
 
   @Override
   public IncomingPreKeyBundleMessage withMessageBody(String messageBody) {
-    return new IncomingPreKeyBundleMessage(this, messageBody, legacy);
+    return new IncomingPreKeyBundleMessage(this, messageBody);
   }
 
   @Override
-  public boolean isLegacyPreKeyBundle() {
-    return legacy;
+  public boolean isPreKeyBundle() {
+    return true;
   }
-
-  @Override
-  public boolean isContentPreKeyBundle() {
-    return !legacy;
-  }
-
 }
