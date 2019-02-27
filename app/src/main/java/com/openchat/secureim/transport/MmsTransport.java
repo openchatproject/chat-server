@@ -16,9 +16,10 @@ import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.util.NumberUtil;
+import com.openchat.protocal.SessionCipher;
+import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.crypto.SessionCipher;
-import com.openchat.imservice.crypto.protocol.CiphertextMessage;
+import com.openchat.imservice.crypto.SessionCipherFactory;
 import com.openchat.imservice.storage.RecipientDevice;
 import com.openchat.imservice.storage.Session;
 import com.openchat.imservice.util.Hex;
@@ -160,7 +161,7 @@ public class MmsTransport {
         throw new InsecureFallbackApprovalException("No session exists for this secure message.");
       }
 
-      SessionCipher     sessionCipher     = SessionCipher.createFor(context, masterSecret, recipientDevice);
+      SessionCipher     sessionCipher     = SessionCipherFactory.getInstance(context, masterSecret, recipientDevice);
       CiphertextMessage ciphertextMessage = sessionCipher.encrypt(pduBytes);
 
       return transportDetails.getEncodedMessage(ciphertextMessage.serialize());

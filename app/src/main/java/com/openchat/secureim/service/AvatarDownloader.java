@@ -15,8 +15,8 @@ import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.util.BitmapDecodingException;
 import com.openchat.secureim.util.BitmapUtil;
 import com.openchat.secureim.util.GroupUtil;
+import com.openchat.protocal.InvalidMessageException;
 import com.openchat.imservice.crypto.AttachmentCipherInputStream;
-import com.openchat.imservice.crypto.InvalidMessageException;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.push.PushServiceSocket;
 

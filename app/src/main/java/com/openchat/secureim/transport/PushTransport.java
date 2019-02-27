@@ -18,11 +18,12 @@ import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.Util;
+import com.openchat.protocal.InvalidKeyException;
+import com.openchat.protocal.SessionCipher;
+import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.imservice.crypto.AttachmentCipher;
-import com.openchat.imservice.crypto.InvalidKeyException;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.crypto.SessionCipher;
-import com.openchat.imservice.crypto.protocol.CiphertextMessage;
+import com.openchat.imservice.crypto.SessionCipherFactory;
 import com.openchat.imservice.push.MismatchedDevices;
 import com.openchat.imservice.push.MismatchedDevicesException;
 import com.openchat.imservice.push.OutgoingPushMessage;
@@ -331,9 +332,9 @@ public class PushTransport extends BaseTransport {
       }
     }
 
-    SessionCipher     cipher  = SessionCipher.createFor(context, masterSecret, pushAddress);
-    CiphertextMessage message = cipher.encrypt(plaintext);
-    int remoteRegistrationId  = cipher.getRemoteRegistrationId();
+    SessionCipher     cipher               = SessionCipherFactory.getInstance(context, masterSecret, pushAddress);
+    CiphertextMessage message              = cipher.encrypt(plaintext);
+    int               remoteRegistrationId = cipher.getRemoteRegistrationId();
 
     if (message.getType() == CiphertextMessage.PREKEY_TYPE) {
       return new PushBody(IncomingPushMessageOpenchat.Type.PREKEY_BUNDLE_VALUE, remoteRegistrationId, message.serialize());

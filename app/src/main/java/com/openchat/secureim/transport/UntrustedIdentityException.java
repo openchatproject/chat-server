@@ -1,7 +1,6 @@
 package com.openchat.secureim.transport;
 
-import com.openchat.imservice.crypto.IdentityKey;
-import com.openchat.imservice.push.UnregisteredUserException;
+import com.openchat.protocal.IdentityKey;
 
 public class UntrustedIdentityException extends Exception {
 

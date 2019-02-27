@@ -12,7 +12,7 @@ import com.openchat.secureim.database.model.DisplayRecord;
 import com.openchat.secureim.sms.IncomingTextMessage;
 import com.openchat.secureim.sms.OutgoingTextMessage;
 import com.openchat.secureim.util.LRUCache;
-import com.openchat.imservice.crypto.InvalidMessageException;
+import com.openchat.protocal.InvalidMessageException;
 import com.openchat.imservice.crypto.MasterCipher;
 import com.openchat.imservice.crypto.MasterSecret;
 

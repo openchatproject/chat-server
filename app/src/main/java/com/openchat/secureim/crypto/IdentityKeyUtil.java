@@ -5,14 +5,14 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
-import com.openchat.imservice.crypto.IdentityKey;
-import com.openchat.imservice.crypto.IdentityKeyPair;
-import com.openchat.imservice.crypto.InvalidKeyException;
+import com.openchat.protocal.IdentityKey;
+import com.openchat.protocal.IdentityKeyPair;
+import com.openchat.protocal.InvalidKeyException;
+import com.openchat.protocal.ecc.Curve;
+import com.openchat.protocal.ecc.ECKeyPair;
+import com.openchat.protocal.ecc.ECPrivateKey;
 import com.openchat.imservice.crypto.MasterCipher;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.crypto.ecc.Curve;
-import com.openchat.imservice.crypto.ecc.ECKeyPair;
-import com.openchat.imservice.crypto.ecc.ECPrivateKey;
 import com.openchat.imservice.util.Base64;
 
 import java.io.IOException;

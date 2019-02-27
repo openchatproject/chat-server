@@ -13,9 +13,10 @@ import com.openchat.secureim.sms.OutgoingTextMessage;
 import com.openchat.secureim.sms.SmsTransportDetails;
 import com.openchat.secureim.util.NumberUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.protocal.SessionCipher;
+import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.crypto.SessionCipher;
-import com.openchat.imservice.crypto.protocol.CiphertextMessage;
+import com.openchat.imservice.crypto.SessionCipherFactory;
 import com.openchat.imservice.storage.RecipientDevice;
 import com.openchat.imservice.storage.Session;
 
@@ -152,7 +153,7 @@ public class SmsTransport extends BaseTransport {
 
     String              body              = message.getMessageBody();
     SmsTransportDetails transportDetails  = new SmsTransportDetails();
-    SessionCipher       sessionCipher     = SessionCipher.createFor(context, masterSecret, recipientDevice);
+    SessionCipher       sessionCipher     = SessionCipherFactory.getInstance(context, masterSecret, recipientDevice);
     byte[]              paddedPlaintext   = transportDetails.getPaddedMessageBody(body.getBytes());
     CiphertextMessage   ciphertextMessage = sessionCipher.encrypt(paddedPlaintext);
     String              encodedCiphertext = new String(transportDetails.getEncodedMessage(ciphertextMessage.serialize()));

@@ -18,20 +18,21 @@ import com.openchat.secureim.crypto.DecryptingQueue;
 import com.openchat.secureim.crypto.KeyExchangeProcessor;
 import com.openchat.secureim.crypto.KeyExchangeProcessorV2;
 import com.openchat.secureim.crypto.protocol.KeyExchangeMessage;
-import com.openchat.imservice.crypto.LegacyMessageException;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.service.SendReceiveService;
 import com.openchat.secureim.sms.SmsTransportDetails;
 import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.Util;
-import com.openchat.imservice.crypto.IdentityKey;
-import com.openchat.imservice.crypto.InvalidKeyException;
-import com.openchat.imservice.crypto.InvalidMessageException;
-import com.openchat.imservice.crypto.InvalidVersionException;
+import com.openchat.protocal.IdentityKey;
+import com.openchat.protocal.InvalidKeyException;
+import com.openchat.protocal.InvalidMessageException;
+import com.openchat.protocal.InvalidVersionException;
+import com.openchat.protocal.LegacyMessageException;
+import com.openchat.protocal.protocol.CiphertextMessage;
+import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
+import com.openchat.imservice.crypto.IdentityKeyParcelable;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.crypto.protocol.CiphertextMessage;
-import com.openchat.imservice.crypto.protocol.PreKeyOpenchatMessage;
 import com.openchat.imservice.push.IncomingPushMessage;
 import com.openchat.imservice.storage.InvalidKeyIdException;
 import com.openchat.imservice.storage.RecipientDevice;
@@ -114,7 +115,7 @@ public class ReceiveKeyActivity extends Activity {
         Intent intent = new Intent(ReceiveKeyActivity.this, VerifyIdentityActivity.class);
         intent.putExtra("recipient", recipient);
         intent.putExtra("master_secret", masterSecret);
-        intent.putExtra("remote_identity", remoteIdentity);
+        intent.putExtra("remote_identity", new IdentityKeyParcelable(remoteIdentity));
         startActivity(intent);
       }
     }, getString(R.string.ReceiveKeyActivity_the_signature_on_this_key_exchange_is_different).length() +1,

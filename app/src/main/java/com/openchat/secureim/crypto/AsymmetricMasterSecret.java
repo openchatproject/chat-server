@@ -1,12 +1,11 @@
 package com.openchat.secureim.crypto;
 
-import com.openchat.imservice.crypto.ecc.Curve;
-import com.openchat.imservice.crypto.ecc.ECPrivateKey;
-import com.openchat.imservice.crypto.ecc.ECPublicKey;
+import com.openchat.protocal.ecc.ECPrivateKey;
+import com.openchat.protocal.ecc.ECPublicKey;
 
 public class AsymmetricMasterSecret {
 
-  private final ECPublicKey  djbPublicKey;
+  private final ECPublicKey djbPublicKey;
   private final ECPrivateKey djbPrivateKey;
 
   public AsymmetricMasterSecret(ECPublicKey djbPublicKey, ECPrivateKey djbPrivateKey)

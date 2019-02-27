@@ -1,10 +1,10 @@
 package com.openchat.secureim.crypto.protocol;
 
-import com.openchat.imservice.crypto.IdentityKey;
-import com.openchat.imservice.crypto.InvalidKeyException;
-import com.openchat.imservice.crypto.InvalidMessageException;
-import com.openchat.imservice.crypto.InvalidVersionException;
-import com.openchat.imservice.crypto.LegacyMessageException;
+import com.openchat.protocal.IdentityKey;
+import com.openchat.protocal.InvalidKeyException;
+import com.openchat.protocal.InvalidMessageException;
+import com.openchat.protocal.InvalidVersionException;
+import com.openchat.protocal.LegacyMessageException;
 
 public abstract class KeyExchangeMessage {
   public abstract IdentityKey getIdentityKey();

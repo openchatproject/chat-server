@@ -9,10 +9,9 @@ import android.util.Log;
 import com.openchat.secureim.crypto.IdentityKeyUtil;
 import com.openchat.secureim.push.PushServiceSocketFactory;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.imservice.crypto.IdentityKey;
+import com.openchat.protocal.IdentityKey;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.crypto.PreKeyUtil;
-import com.openchat.imservice.crypto.ecc.Curve;
 import com.openchat.imservice.push.PushServiceSocket;
 import com.openchat.imservice.storage.PreKeyRecord;
 

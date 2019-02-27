@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.openchat.imservice.crypto.InvalidMessageException;
+import com.openchat.protocal.InvalidMessageException;
 import com.openchat.imservice.crypto.MasterCipher;
 
 import java.util.LinkedList;

@@ -10,10 +10,10 @@ import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.sms.MessageSender;
 import com.openchat.secureim.sms.OutgoingKeyExchangeMessage;
 import com.openchat.secureim.util.Dialogs;
-import com.openchat.imservice.crypto.IdentityKeyPair;
+import com.openchat.protocal.IdentityKeyPair;
+import com.openchat.protocal.ecc.Curve;
+import com.openchat.protocal.ecc.ECKeyPair;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.crypto.ecc.Curve;
-import com.openchat.imservice.crypto.ecc.ECKeyPair;
 import com.openchat.imservice.storage.RecipientDevice;
 import com.openchat.imservice.storage.SessionRecordV2;
 

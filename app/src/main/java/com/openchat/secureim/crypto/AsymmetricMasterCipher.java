@@ -1,14 +1,14 @@
 package com.openchat.secureim.crypto;
 
-import com.openchat.imservice.crypto.InvalidKeyException;
-import com.openchat.imservice.crypto.InvalidMessageException;
+import com.openchat.protocal.InvalidKeyException;
+import com.openchat.protocal.InvalidMessageException;
+import com.openchat.protocal.ecc.Curve;
+import com.openchat.protocal.ecc.ECKeyPair;
+import com.openchat.protocal.ecc.ECPrivateKey;
+import com.openchat.protocal.ecc.ECPublicKey;
 import com.openchat.imservice.crypto.MasterCipher;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.crypto.PublicKey;
-import com.openchat.imservice.crypto.ecc.Curve;
-import com.openchat.imservice.crypto.ecc.ECKeyPair;
-import com.openchat.imservice.crypto.ecc.ECPrivateKey;
-import com.openchat.imservice.crypto.ecc.ECPublicKey;
 import com.openchat.imservice.util.Base64;
 import com.openchat.imservice.util.Conversions;
 import com.openchat.imservice.util.Util;

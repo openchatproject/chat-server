@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.openchat.imservice.crypto.InvalidKeyException;
+import com.openchat.protocal.InvalidKeyException;
+import com.openchat.protocal.ecc.Curve;
+import com.openchat.protocal.ecc.ECKeyPair;
+import com.openchat.protocal.ecc.ECPrivateKey;
+import com.openchat.protocal.ecc.ECPublicKey;
 import com.openchat.imservice.crypto.MasterCipher;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.crypto.ecc.Curve;
-import com.openchat.imservice.crypto.ecc.ECKeyPair;
-import com.openchat.imservice.crypto.ecc.ECPrivateKey;
-import com.openchat.imservice.crypto.ecc.ECPublicKey;
 import com.openchat.imservice.util.Base64;
 import com.openchat.imservice.util.Util;
 
@@ -106,8 +106,8 @@ public class MasterSecretUtil {
       byte[] djbPublicBytes   = retrieve(context, ASYMMETRIC_LOCAL_PUBLIC_DJB);
       byte[] djbPrivateBytes  = retrieve(context, ASYMMETRIC_LOCAL_PRIVATE_DJB);
 
-      ECPublicKey  djbPublicKey   = null;
-      ECPrivateKey djbPrivateKey  = null;
+      ECPublicKey  djbPublicKey  = null;
+      ECPrivateKey djbPrivateKey = null;
 
       if (djbPublicBytes != null) {
         djbPublicKey = Curve.decodePoint(djbPublicBytes, 0);

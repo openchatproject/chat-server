@@ -3,8 +3,8 @@ package com.openchat.secureim.sms;
 import android.util.Log;
 
 import com.openchat.secureim.protocol.WirePrefix;
+import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.imservice.crypto.TransportDetails;
-import com.openchat.imservice.crypto.protocol.CiphertextMessage;
 import com.openchat.imservice.util.Base64;
 
 import java.io.IOException;

@@ -9,7 +9,8 @@ import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;
 import com.openchat.secureim.util.MemoryCleaner;
-import com.openchat.imservice.crypto.IdentityKey;
+import com.openchat.protocal.IdentityKey;
+import com.openchat.imservice.crypto.IdentityKeyParcelable;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.storage.Session;
 
@@ -61,7 +62,12 @@ public class VerifyIdentityActivity extends KeyScanningActivity {
   }
 
   private void initializeRemoteIdentityKey() {
-    IdentityKey identityKey = getIntent().getParcelableExtra("remote_identity");
+    IdentityKeyParcelable identityKeyParcelable = getIntent().getParcelableExtra("remote_identity");
+    IdentityKey           identityKey           = null;
+
+    if (identityKeyParcelable != null) {
+      identityKey = identityKeyParcelable.get();
+    }
 
     if (identityKey == null) {
       identityKey = Session.getRemoteIdentityKey(this, masterSecret, recipient);

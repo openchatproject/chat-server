@@ -16,7 +16,7 @@ import com.openchat.secureim.R;
 import com.openchat.secureim.mms.OutgoingGroupMediaMessage;
 import com.openchat.secureim.mms.OutgoingMediaMessage;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.imservice.crypto.InvalidMessageException;
+import com.openchat.protocal.InvalidMessageException;
 import com.openchat.imservice.crypto.MasterCipher;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.secureim.database.model.DisplayRecord;

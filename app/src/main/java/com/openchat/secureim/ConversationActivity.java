@@ -86,7 +86,7 @@ import com.openchat.secureim.util.EncryptedCharacterCalculator;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.imservice.crypto.InvalidMessageException;
+import com.openchat.protocal.InvalidMessageException;
 import com.openchat.imservice.crypto.MasterCipher;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.storage.RecipientDevice;

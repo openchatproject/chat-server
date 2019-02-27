@@ -3,9 +3,13 @@ package com.openchat.secureim;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.openchat.imservice.crypto.IdentityKey;
+import com.openchat.protocal.IdentityKey;
+import com.openchat.imservice.crypto.IdentityKeyParcelable;
 
 public class ViewIdentityActivity extends KeyScanningActivity {
+
+  public static final String IDENTITY_KEY = "identity_key";
+  public static final String TITLE        = "title";
 
   private TextView    identityFingerprint;
   private IdentityKey identityKey;
@@ -33,12 +37,18 @@ public class ViewIdentityActivity extends KeyScanningActivity {
   }
 
   private void initializeResources() {
-    this.identityKey         = (IdentityKey)getIntent().getParcelableExtra("identity_key");
+    IdentityKeyParcelable identityKeyParcelable = getIntent().getParcelableExtra(IDENTITY_KEY);
+
+    if (identityKeyParcelable == null) {
+      throw new AssertionError("No identity key!");
+    }
+
+    this.identityKey         = identityKeyParcelable.get();
     this.identityFingerprint = (TextView)findViewById(R.id.identity_fingerprint);
-    String title             = getIntent().getStringExtra("title");
+    String title             = getIntent().getStringExtra(TITLE);
 
     if (title != null) {
-      getSupportActionBar().setTitle(getIntent().getStringExtra("title"));
+      getSupportActionBar().setTitle(getIntent().getStringExtra(TITLE));
     }
   }
 

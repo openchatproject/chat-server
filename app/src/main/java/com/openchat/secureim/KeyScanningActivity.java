@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.openchat.imservice.crypto.SerializableKey;
+import com.openchat.protocal.IdentityKey;
 import com.openchat.imservice.util.Base64;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.DynamicTheme;
@@ -91,8 +91,8 @@ public abstract class KeyScanningActivity extends PassphraseRequiredSherlockActi
   protected abstract String getNotVerifiedTitle();
   protected abstract String getNotVerifiedMessage();
 
-  protected abstract SerializableKey getIdentityKeyToCompare();
-  protected abstract SerializableKey getIdentityKeyToDisplay();
+  protected abstract IdentityKey getIdentityKeyToCompare();
+  protected abstract IdentityKey getIdentityKeyToDisplay();
 
   protected abstract String getVerifiedTitle();
   protected abstract String getVerifiedMessage();

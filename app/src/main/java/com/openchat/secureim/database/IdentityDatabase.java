@@ -8,14 +8,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.util.Log;
 
-import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.Recipients;
-import com.openchat.imservice.crypto.IdentityKey;
-import com.openchat.imservice.crypto.InvalidKeyException;
+import com.openchat.protocal.IdentityKey;
+import com.openchat.protocal.InvalidKeyException;
 import com.openchat.imservice.crypto.MasterCipher;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.crypto.ecc.Curve;
 import com.openchat.imservice.util.Base64;
 
 import java.io.IOException;

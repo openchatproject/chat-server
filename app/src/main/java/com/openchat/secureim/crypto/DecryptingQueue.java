@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.openchat.secureim.crypto.protocol.KeyExchangeMessage;
-import com.openchat.imservice.crypto.LegacyMessageException;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.MmsDatabase;
@@ -24,13 +23,15 @@ import com.openchat.secureim.service.PushReceiver;
 import com.openchat.secureim.service.SendReceiveService;
 import com.openchat.secureim.sms.SmsTransportDetails;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.imservice.crypto.DuplicateMessageException;
-import com.openchat.imservice.crypto.InvalidKeyException;
-import com.openchat.imservice.crypto.InvalidMessageException;
-import com.openchat.imservice.crypto.InvalidVersionException;
+import com.openchat.protocal.DuplicateMessageException;
+import com.openchat.protocal.InvalidKeyException;
+import com.openchat.protocal.InvalidMessageException;
+import com.openchat.protocal.InvalidVersionException;
+import com.openchat.protocal.LegacyMessageException;
+import com.openchat.protocal.SessionCipher;
+import com.openchat.protocal.protocol.OpenchatMessage;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.crypto.SessionCipher;
-import com.openchat.imservice.crypto.protocol.OpenchatMessage;
+import com.openchat.imservice.crypto.SessionCipherFactory;
 import com.openchat.imservice.push.IncomingPushMessage;
 import com.openchat.imservice.storage.RecipientDevice;
 import com.openchat.imservice.storage.Session;
@@ -182,7 +183,7 @@ public class DecryptingQueue {
           return;
         }
 
-        SessionCipher sessionCipher = SessionCipher.createFor(context, masterSecret, recipientDevice);
+        SessionCipher sessionCipher = SessionCipherFactory.getInstance(context, masterSecret, recipientDevice);
         byte[]        plaintextBody = sessionCipher.decrypt(message.getBody());
 
         message = message.withBody(plaintextBody);
@@ -267,7 +268,7 @@ public class DecryptingQueue {
 
         Log.w("DecryptingQueue", "Decrypting: " + Hex.toString(ciphertextPduBytes));
         TextTransport transportDetails  = new TextTransport();
-        SessionCipher sessionCipher     = SessionCipher.createFor(context, masterSecret, recipientDevice);
+        SessionCipher sessionCipher     = SessionCipherFactory.getInstance(context, masterSecret, recipientDevice);
         byte[]        decodedCiphertext = transportDetails.getDecodedMessage(ciphertextPduBytes);
 
         try {
@@ -358,7 +359,7 @@ public class DecryptingQueue {
           return;
         }
 
-        SessionCipher sessionCipher   = SessionCipher.createFor(context, masterSecret, recipientDevice);
+        SessionCipher sessionCipher   = SessionCipherFactory.getInstance(context, masterSecret, recipientDevice);
         byte[]        paddedPlaintext = sessionCipher.decrypt(decodedCiphertext);
 
         plaintextBody = new String(transportDetails.getStrippedPaddingMessageBody(paddedPlaintext));

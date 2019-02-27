@@ -9,7 +9,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import com.openchat.secureim.service.SendReceiveService;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.imservice.crypto.InvalidVersionException;
+import com.openchat.protocal.InvalidVersionException;
 import com.openchat.imservice.directory.Directory;
 import com.openchat.imservice.directory.NotInDirectoryException;
 import com.openchat.imservice.push.ContactTokenDetails;

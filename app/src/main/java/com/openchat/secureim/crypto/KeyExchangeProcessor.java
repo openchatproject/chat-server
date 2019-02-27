@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.openchat.secureim.crypto.protocol.KeyExchangeMessage;
-import com.openchat.secureim.recipients.Recipient;
-import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.service.KeyCachingService;
-import com.openchat.imservice.crypto.InvalidMessageException;
+import com.openchat.protocal.InvalidMessageException;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.storage.RecipientDevice;
 
