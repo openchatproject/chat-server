@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.openchat.secureim.crypto.DecryptingQueue;
 import com.openchat.secureim.crypto.KeyExchangeProcessor;
-import com.openchat.secureim.crypto.protocol.KeyExchangeMessage;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.service.SendReceiveService;
@@ -29,11 +28,12 @@ import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.InvalidVersionException;
 import com.openchat.protocal.LegacyMessageException;
 import com.openchat.protocal.protocol.CiphertextMessage;
+import com.openchat.protocal.protocol.KeyExchangeMessage;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
 import com.openchat.imservice.crypto.IdentityKeyParcelable;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.push.IncomingPushMessage;
-import com.openchat.imservice.storage.InvalidKeyIdException;
+import com.openchat.protocal.InvalidKeyIdException;
 import com.openchat.imservice.storage.RecipientDevice;
 import com.openchat.imservice.util.Base64;
 import com.openchat.imservice.util.InvalidNumberException;
@@ -156,7 +156,7 @@ public class ReceiveKeyActivity extends Activity {
       } else if (getIntent().getBooleanExtra("is_identity_update", false)) {
         this.identityUpdateMessage = new IdentityKey(Base64.decodeWithoutPadding(messageBody), 0);
       } else {
-        this.keyExchangeMessage = new KeyExchangeMessage(messageBody);
+        this.keyExchangeMessage = new KeyExchangeMessage(Base64.decodeWithoutPadding(messageBody));
       }
     } catch (IOException e) {
       throw new AssertionError(e);
@@ -206,7 +206,7 @@ public class ReceiveKeyActivity extends Activity {
 
               DatabaseFactory.getEncryptingSmsDatabase(ReceiveKeyActivity.this)
                              .markAsProcessedKeyExchange(messageId);
-            } catch (InvalidMessageException e) {
+            } catch (InvalidKeyException e) {
               Log.w("ReceiveKeyActivity", e);
               DatabaseFactory.getEncryptingSmsDatabase(ReceiveKeyActivity.this)
                              .markAsCorruptKeyExchange(messageId);

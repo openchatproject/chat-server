@@ -18,11 +18,11 @@ import com.openchat.secureim.push.PushServiceSocketFactory;
 import com.openchat.secureim.util.DirectoryHelper;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.IdentityKey;
+import com.openchat.protocal.state.PreKeyRecord;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.crypto.PreKeyUtil;
 import com.openchat.imservice.push.ExpectationFailedException;
 import com.openchat.imservice.push.PushServiceSocket;
-import com.openchat.imservice.storage.PreKeyRecord;
 import com.openchat.imservice.util.Util;
 
 import java.io.IOException;

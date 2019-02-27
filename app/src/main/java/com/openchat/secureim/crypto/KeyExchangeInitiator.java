@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 
 import com.openchat.secureim.R;
-import com.openchat.secureim.crypto.protocol.KeyExchangeMessage;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.sms.MessageSender;
 import com.openchat.secureim.sms.OutgoingKeyExchangeMessage;
@@ -13,11 +12,13 @@ import com.openchat.secureim.util.Dialogs;
 import com.openchat.protocal.IdentityKeyPair;
 import com.openchat.protocal.ecc.Curve;
 import com.openchat.protocal.ecc.ECKeyPair;
+import com.openchat.protocal.protocol.KeyExchangeMessage;
 import com.openchat.protocal.state.SessionRecord;
 import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.storage.RecipientDevice;
 import com.openchat.imservice.storage.OpenchatServiceSessionStore;
+import com.openchat.imservice.util.Base64;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -51,11 +52,11 @@ public class KeyExchangeInitiator {
     IdentityKeyPair identityKey  = IdentityKeyUtil.getIdentityKeyPair(context, masterSecret);
 
     KeyExchangeMessage message = new KeyExchangeMessage(sequence, flags,
-                                                            baseKey.getPublicKey(),
-                                                            ephemeralKey.getPublicKey(),
-                                                            identityKey.getPublicKey());
+                                                        baseKey.getPublicKey(),
+                                                        ephemeralKey.getPublicKey(),
+                                                        identityKey.getPublicKey());
 
-    OutgoingKeyExchangeMessage textMessage     = new OutgoingKeyExchangeMessage(recipient, message.serialize());
+    OutgoingKeyExchangeMessage textMessage     = new OutgoingKeyExchangeMessage(recipient, Base64.encodeBytesWithoutPadding(message.serialize()));
     SessionStore               sessionStore    = new OpenchatServiceSessionStore(context, masterSecret);
     SessionRecord              sessionRecord   = sessionStore.get(recipient.getRecipientId(), RecipientDevice.DEFAULT_DEVICE_ID);
 

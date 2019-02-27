@@ -8,7 +8,6 @@ import android.util.Pair;
 import com.openchat.secureim.crypto.DecryptingQueue;
 import com.openchat.secureim.crypto.KeyExchangeProcessor;
 import com.openchat.secureim.crypto.MasterSecretUtil;
-import com.openchat.secureim.crypto.protocol.KeyExchangeMessage;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.SmsDatabase;
@@ -28,11 +27,13 @@ import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.InvalidVersionException;
 import com.openchat.protocal.LegacyMessageException;
+import com.openchat.protocal.protocol.KeyExchangeMessage;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
 import com.openchat.protocal.protocol.OpenchatMessage;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.storage.InvalidKeyIdException;
+import com.openchat.protocal.InvalidKeyIdException;
 import com.openchat.imservice.storage.RecipientDevice;
+import com.openchat.imservice.util.Base64;
 
 import java.io.IOException;
 import java.util.List;
@@ -95,12 +96,12 @@ public class SmsReceiver {
     Log.w("SmsReceiver", "Processing prekey message...");
 
     try {
-      Recipient              recipient        = RecipientFactory.getRecipientsFromString(context, message.getSender(), false).getPrimaryRecipient();
-      RecipientDevice        recipientDevice  = new RecipientDevice(recipient.getRecipientId(), message.getSenderDeviceId());
+      Recipient            recipient        = RecipientFactory.getRecipientsFromString(context, message.getSender(), false).getPrimaryRecipient();
+      RecipientDevice      recipientDevice  = new RecipientDevice(recipient.getRecipientId(), message.getSenderDeviceId());
       KeyExchangeProcessor processor        = new KeyExchangeProcessor(context, masterSecret, recipientDevice);
-      SmsTransportDetails    transportDetails = new SmsTransportDetails();
-      byte[]                 rawMessage       = transportDetails.getDecodedMessage(message.getMessageBody().getBytes());
-      PreKeyOpenchatMessage   preKeyExchange   = new PreKeyOpenchatMessage(rawMessage);
+      SmsTransportDetails  transportDetails = new SmsTransportDetails();
+      byte[]               rawMessage       = transportDetails.getDecodedMessage(message.getMessageBody().getBytes());
+      PreKeyOpenchatMessage preKeyExchange   = new PreKeyOpenchatMessage(rawMessage);
 
       if (processor.isTrusted(preKeyExchange)) {
         processor.processKeyExchangeMessage(preKeyExchange);
@@ -147,7 +148,7 @@ public class SmsReceiver {
       try {
         Recipient            recipient       = RecipientFactory.getRecipientsFromString(context, message.getSender(), false).getPrimaryRecipient();
         RecipientDevice      recipientDevice = new RecipientDevice(recipient.getRecipientId(), message.getSenderDeviceId());
-        KeyExchangeMessage   exchangeMessage = new KeyExchangeMessage(message.getMessageBody());
+        KeyExchangeMessage   exchangeMessage = new KeyExchangeMessage(Base64.decodeWithoutPadding(message.getMessageBody()));
         KeyExchangeProcessor processor       = new KeyExchangeProcessor(context, masterSecret, recipientDevice);
 
         if (processor.isStale(exchangeMessage)) {
@@ -163,7 +164,7 @@ public class SmsReceiver {
       } catch (InvalidVersionException e) {
         Log.w("SmsReceiver", e);
         message.setInvalidVersion(true);
-      } catch (InvalidMessageException | RecipientFormattingException e) {
+      } catch (InvalidMessageException | InvalidKeyException | IOException | RecipientFormattingException e) {
         Log.w("SmsReceiver", e);
         message.setCorrupted(true);
       } catch (LegacyMessageException e) {

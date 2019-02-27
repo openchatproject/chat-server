@@ -32,7 +32,7 @@ import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.push.IncomingPushMessage;
 import com.openchat.imservice.push.PushMessageProtos.PushMessageContent;
-import com.openchat.imservice.storage.InvalidKeyIdException;
+import com.openchat.protocal.InvalidKeyIdException;
 import com.openchat.imservice.storage.RecipientDevice;
 import com.openchat.imservice.storage.OpenchatServiceSessionStore;
 import com.openchat.imservice.util.Base64;

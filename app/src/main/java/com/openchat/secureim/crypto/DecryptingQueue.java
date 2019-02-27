@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
 
-import com.openchat.secureim.crypto.protocol.KeyExchangeMessage;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.MmsDatabase;
@@ -24,10 +23,12 @@ import com.openchat.secureim.service.SendReceiveService;
 import com.openchat.secureim.sms.SmsTransportDetails;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.DuplicateMessageException;
+import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.InvalidVersionException;
 import com.openchat.protocal.LegacyMessageException;
 import com.openchat.protocal.SessionCipher;
+import com.openchat.protocal.protocol.KeyExchangeMessage;
 import com.openchat.protocal.protocol.OpenchatMessage;
 import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.crypto.MasterSecret;
@@ -35,6 +36,7 @@ import com.openchat.imservice.crypto.SessionCipherFactory;
 import com.openchat.imservice.push.IncomingPushMessage;
 import com.openchat.imservice.storage.RecipientDevice;
 import com.openchat.imservice.storage.OpenchatServiceSessionStore;
+import com.openchat.imservice.util.Base64;
 import com.openchat.imservice.util.Hex;
 import com.openchat.imservice.util.Util;
 
@@ -401,7 +403,7 @@ public class DecryptingQueue {
           Recipient            recipient       = RecipientFactory.getRecipientsFromString(context, originator, false)
                                                                  .getPrimaryRecipient();
           RecipientDevice      recipientDevice = new RecipientDevice(recipient.getRecipientId(), deviceId);
-          KeyExchangeMessage   message         = new KeyExchangeMessage(plaintextBody);
+          KeyExchangeMessage   message         = new KeyExchangeMessage(Base64.decodeWithoutPadding(plaintextBody));
           KeyExchangeProcessor processor       = new KeyExchangeProcessor(context, masterSecret, recipientDevice);
 
           if (processor.isStale(message)) {
@@ -413,7 +415,7 @@ public class DecryptingQueue {
         } catch (InvalidVersionException e) {
           Log.w("DecryptingQueue", e);
           DatabaseFactory.getEncryptingSmsDatabase(context).markAsInvalidVersionKeyExchange(messageId);
-        } catch (InvalidMessageException | RecipientFormattingException e) {
+        } catch (InvalidMessageException | IOException | InvalidKeyException | RecipientFormattingException e) {
           Log.w("DecryptingQueue", e);
           DatabaseFactory.getEncryptingSmsDatabase(context).markAsCorruptKeyExchange(messageId);
         } catch (LegacyMessageException e) {
