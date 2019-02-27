@@ -28,6 +28,8 @@ import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.InvalidVersionException;
 import com.openchat.protocal.LegacyMessageException;
 import com.openchat.protocal.SessionCipher;
+import com.openchat.protocal.StaleKeyExchangeException;
+import com.openchat.protocal.UntrustedIdentityException;
 import com.openchat.protocal.protocol.KeyExchangeMessage;
 import com.openchat.protocal.protocol.OpenchatMessage;
 import com.openchat.protocal.state.SessionStore;
@@ -406,12 +408,8 @@ public class DecryptingQueue {
           KeyExchangeMessage   message         = new KeyExchangeMessage(Base64.decodeWithoutPadding(plaintextBody));
           KeyExchangeProcessor processor       = new KeyExchangeProcessor(context, masterSecret, recipientDevice);
 
-          if (processor.isStale(message)) {
-            DatabaseFactory.getEncryptingSmsDatabase(context).markAsStaleKeyExchange(messageId);
-          } else if (processor.isTrusted(message)) {
-            DatabaseFactory.getEncryptingSmsDatabase(context).markAsProcessedKeyExchange(messageId);
-            processor.processKeyExchangeMessage(message, threadId);
-          }
+          processor.processKeyExchangeMessage(message, threadId);
+          DatabaseFactory.getEncryptingSmsDatabase(context).markAsProcessedKeyExchange(messageId);
         } catch (InvalidVersionException e) {
           Log.w("DecryptingQueue", e);
           DatabaseFactory.getEncryptingSmsDatabase(context).markAsInvalidVersionKeyExchange(messageId);
@@ -421,6 +419,11 @@ public class DecryptingQueue {
         } catch (LegacyMessageException e) {
           Log.w("DecryptingQueue", e);
           DatabaseFactory.getEncryptingSmsDatabase(context).markAsLegacyVersion(messageId);
+        } catch (StaleKeyExchangeException e) {
+          Log.w("DecryptingQueue", e);
+          DatabaseFactory.getEncryptingSmsDatabase(context).markAsStaleKeyExchange(messageId);
+        } catch (UntrustedIdentityException e) {
+          Log.w("DecryptingQueue", e);
         }
       }
     }

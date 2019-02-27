@@ -16,17 +16,22 @@ import com.openchat.secureim.protocol.WirePrefix;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
+import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.sms.IncomingEncryptedMessage;
 import com.openchat.secureim.sms.IncomingKeyExchangeMessage;
 import com.openchat.secureim.sms.IncomingPreKeyBundleMessage;
 import com.openchat.secureim.sms.IncomingTextMessage;
+import com.openchat.secureim.sms.MessageSender;
 import com.openchat.secureim.sms.MultipartSmsMessageHandler;
+import com.openchat.secureim.sms.OutgoingKeyExchangeMessage;
 import com.openchat.secureim.sms.SmsTransportDetails;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.InvalidVersionException;
 import com.openchat.protocal.LegacyMessageException;
+import com.openchat.protocal.StaleKeyExchangeException;
+import com.openchat.protocal.UntrustedIdentityException;
 import com.openchat.protocal.protocol.KeyExchangeMessage;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
 import com.openchat.protocal.protocol.OpenchatMessage;
@@ -103,22 +108,20 @@ public class SmsReceiver {
       byte[]               rawMessage       = transportDetails.getDecodedMessage(message.getMessageBody().getBytes());
       PreKeyOpenchatMessage preKeyExchange   = new PreKeyOpenchatMessage(rawMessage);
 
-      if (processor.isTrusted(preKeyExchange)) {
-        processor.processKeyExchangeMessage(preKeyExchange);
+      processor.processKeyExchangeMessage(preKeyExchange);
 
-        OpenchatMessage           ciphertextMessage  = preKeyExchange.getOpenchatMessage();
-        String                   bundledMessageBody = new String(transportDetails.getEncodedMessage(ciphertextMessage.serialize()));
-        IncomingEncryptedMessage bundledMessage     = new IncomingEncryptedMessage(message, bundledMessageBody);
-        Pair<Long, Long>         messageAndThreadId = storeSecureMessage(masterSecret, bundledMessage);
+      OpenchatMessage           ciphertextMessage  = preKeyExchange.getOpenchatMessage();
+      String                   bundledMessageBody = new String(transportDetails.getEncodedMessage(ciphertextMessage.serialize()));
+      IncomingEncryptedMessage bundledMessage     = new IncomingEncryptedMessage(message, bundledMessageBody);
+      Pair<Long, Long>         messageAndThreadId = storeSecureMessage(masterSecret, bundledMessage);
 
-        Intent intent = new Intent(KeyExchangeProcessor.SECURITY_UPDATE_EVENT);
-        intent.putExtra("thread_id", messageAndThreadId.second);
-        intent.setPackage(context.getPackageName());
-        context.sendBroadcast(intent, KeyCachingService.KEY_PERMISSION);
+      Intent intent = new Intent(KeyExchangeProcessor.SECURITY_UPDATE_EVENT);
+      intent.putExtra("thread_id", messageAndThreadId.second);
+      intent.setPackage(context.getPackageName());
+      context.sendBroadcast(intent, KeyCachingService.KEY_PERMISSION);
 
-        return messageAndThreadId;
-      }
-    } catch (InvalidKeyException e) {
+      return messageAndThreadId;
+    } catch (InvalidKeyException | RecipientFormattingException | InvalidMessageException | IOException e) {
       Log.w("SmsReceiver", e);
       message.setCorrupted(true);
     } catch (InvalidVersionException e) {
@@ -127,15 +130,8 @@ public class SmsReceiver {
     } catch (InvalidKeyIdException e) {
       Log.w("SmsReceiver", e);
       message.setStale(true);
-    } catch (IOException e) {
-      Log.w("SmsReceive", e);
-      message.setCorrupted(true);
-    } catch (InvalidMessageException e) {
+    } catch (UntrustedIdentityException e) {
       Log.w("SmsReceiver", e);
-      message.setCorrupted(true);
-    } catch (RecipientFormattingException e) {
-      Log.w("SmsReceiver", e);
-      message.setCorrupted(true);
     }
 
     return storeStandardMessage(masterSecret, message);
@@ -150,17 +146,18 @@ public class SmsReceiver {
         RecipientDevice      recipientDevice = new RecipientDevice(recipient.getRecipientId(), message.getSenderDeviceId());
         KeyExchangeMessage   exchangeMessage = new KeyExchangeMessage(Base64.decodeWithoutPadding(message.getMessageBody()));
         KeyExchangeProcessor processor       = new KeyExchangeProcessor(context, masterSecret, recipientDevice);
+        long                 threadId        = DatabaseFactory.getThreadDatabase(context).getThreadIdFor(new Recipients(recipient));
+        OutgoingKeyExchangeMessage response = processor.processKeyExchangeMessage(exchangeMessage, threadId);
 
-        if (processor.isStale(exchangeMessage)) {
-          message.setStale(true);
-        } else if (processor.isTrusted(exchangeMessage)) {
-          message.setProcessed(true);
+        message.setProcessed(true);
 
-          Pair<Long, Long> messageAndThreadId = storeStandardMessage(masterSecret, message);
-          processor.processKeyExchangeMessage(exchangeMessage, messageAndThreadId.second);
+        Pair<Long, Long> messageAndThreadId = storeStandardMessage(masterSecret, message);
 
-          return messageAndThreadId;
+        if (response != null) {
+          MessageSender.send(context, masterSecret, response, messageAndThreadId.second, true);
         }
+
+        return messageAndThreadId;
       } catch (InvalidVersionException e) {
         Log.w("SmsReceiver", e);
         message.setInvalidVersion(true);
@@ -170,6 +167,11 @@ public class SmsReceiver {
       } catch (LegacyMessageException e) {
         Log.w("SmsReceiver", e);
         message.setLegacyVersion(true);
+      } catch (StaleKeyExchangeException e) {
+        Log.w("SmsReceiver", e);
+        message.setStale(true);
+      } catch (UntrustedIdentityException e) {
+        Log.w("SmsReceiver", e);
       }
     }
 

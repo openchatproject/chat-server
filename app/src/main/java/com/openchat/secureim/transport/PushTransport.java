@@ -196,11 +196,12 @@ public class PushTransport extends BaseTransport {
         PreKeyEntity           preKey    = socket.getPreKey(address);
         KeyExchangeProcessor processor = new KeyExchangeProcessor(context, masterSecret, address);
 
-        if (processor.isTrusted(preKey)) {
+        try {
           processor.processKeyExchangeMessage(preKey, threadId);
-        } else {
+        } catch (com.openchat.protocal.UntrustedIdentityException e) {
           throw new UntrustedIdentityException("Untrusted identity key!", e164number, preKey.getIdentityKey());
         }
+
       }
     } catch (InvalidKeyException e) {
       throw new IOException(e);
@@ -315,9 +316,9 @@ public class PushTransport extends BaseTransport {
           PushAddress            device    = PushAddress.create(context, pushAddress.getRecipientId(), pushAddress.getNumber(), preKey.getDeviceId());
           KeyExchangeProcessor processor = new KeyExchangeProcessor(context, masterSecret, device);
 
-          if (processor.isTrusted(preKey)) {
+          try {
             processor.processKeyExchangeMessage(preKey, threadId);
-          } else {
+          } catch (com.openchat.protocal.UntrustedIdentityException e) {
             throw new UntrustedIdentityException("Untrusted identity key!", pushAddress.getNumber(), preKey.getIdentityKey());
           }
         }

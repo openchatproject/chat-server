@@ -13,9 +13,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.openchat.secureim.crypto.DecryptingQueue;
 import com.openchat.secureim.crypto.KeyExchangeProcessor;
+import com.openchat.secureim.crypto.OpenchatServiceIdentityKeyStore;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.service.SendReceiveService;
@@ -27,9 +29,12 @@ import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.InvalidVersionException;
 import com.openchat.protocal.LegacyMessageException;
+import com.openchat.protocal.StaleKeyExchangeException;
+import com.openchat.protocal.UntrustedIdentityException;
 import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.protocal.protocol.KeyExchangeMessage;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
+import com.openchat.protocal.state.IdentityKeyStore;
 import com.openchat.imservice.crypto.IdentityKeyParcelable;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.push.IncomingPushMessage;
@@ -69,14 +74,8 @@ public class ReceiveKeyActivity extends Activity {
     try {
       initializeKey();
       initializeText();
-    } catch (InvalidKeyException ike) {
+    } catch (InvalidKeyException | InvalidVersionException | InvalidMessageException | LegacyMessageException ike) {
       Log.w("ReceiveKeyActivity", ike);
-    } catch (InvalidVersionException ive) {
-      Log.w("ReceiveKeyActivity", ive);
-    } catch (InvalidMessageException e) {
-      Log.w("ReceiveKeyActivity", e);
-    } catch (LegacyMessageException e) {
-      Log.w("ReceiveKeyActivity", e);
     }
     initializeListeners();
   }
@@ -125,12 +124,12 @@ public class ReceiveKeyActivity extends Activity {
   }
 
   private boolean isTrusted(KeyExchangeMessage message, PreKeyOpenchatMessage messageBundle, IdentityKey identityUpdateMessage) {
-    RecipientDevice      recipientDevice = new RecipientDevice(recipient.getRecipientId(), recipientDeviceId);
-    KeyExchangeProcessor processor       = new KeyExchangeProcessor(this, masterSecret, recipientDevice);
+    long             recipientId      = recipient.getRecipientId();
+    IdentityKeyStore identityKeyStore = new OpenchatServiceIdentityKeyStore(this, masterSecret);
 
-    if      (message != null)                return processor.isTrusted(message);
-    else if (messageBundle != null)          return processor.isTrusted(messageBundle);
-    else if (identityUpdateMessage != null)  return processor.isTrusted(identityUpdateMessage);
+    if      (message != null)                return identityKeyStore.isTrustedIdentity(recipientId, message.getIdentityKey());
+    else if (messageBundle != null)          return identityKeyStore.isTrustedIdentity(recipientId, messageBundle.getIdentityKey());
+    else if (identityUpdateMessage != null)  return identityKeyStore.isTrustedIdentity(recipientId, identityUpdateMessage);
 
     return false;
   }
@@ -202,6 +201,10 @@ public class ReceiveKeyActivity extends Activity {
               KeyExchangeProcessor processor = new KeyExchangeProcessor(ReceiveKeyActivity.this,
                                                                         masterSecret, recipientDevice);
 
+              IdentityKeyStore identityKeyStore = new OpenchatServiceIdentityKeyStore(ReceiveKeyActivity.this,
+                                                                                 masterSecret);
+              identityKeyStore.saveIdentity(recipient.getRecipientId(), keyExchangeMessage.getIdentityKey());
+
               processor.processKeyExchangeMessage(keyExchangeMessage, threadId);
 
               DatabaseFactory.getEncryptingSmsDatabase(ReceiveKeyActivity.this)
@@ -210,12 +213,21 @@ public class ReceiveKeyActivity extends Activity {
               Log.w("ReceiveKeyActivity", e);
               DatabaseFactory.getEncryptingSmsDatabase(ReceiveKeyActivity.this)
                              .markAsCorruptKeyExchange(messageId);
+            } catch (StaleKeyExchangeException e) {
+              DatabaseFactory.getEncryptingSmsDatabase(ReceiveKeyActivity.this)
+                             .markAsStaleKeyExchange(messageId);
+            } catch (UntrustedIdentityException e) {
+              throw new AssertionError(e);
             }
           } else if (keyExchangeMessageBundle != null) {
             try {
               RecipientDevice recipientDevice = new RecipientDevice(recipient.getRecipientId(), recipientDeviceId);
               KeyExchangeProcessor processor = new KeyExchangeProcessor(ReceiveKeyActivity.this,
-                                                                            masterSecret, recipientDevice);
+                                                                        masterSecret, recipientDevice);
+              IdentityKeyStore identityKeyStore = new OpenchatServiceIdentityKeyStore(ReceiveKeyActivity.this,
+                                                                                 masterSecret);
+
+              identityKeyStore.saveIdentity(recipient.getRecipientId(), keyExchangeMessageBundle.getIdentityKey());
               processor.processKeyExchangeMessage(keyExchangeMessageBundle);
 
               CiphertextMessage bundledMessage = keyExchangeMessageBundle.getOpenchatMessage();
@@ -242,18 +254,13 @@ public class ReceiveKeyActivity extends Activity {
                                                    threadId, recipient.getNumber(), recipientDeviceId,
                                                    messageBody, true, false, false);
               }
-            } catch (InvalidKeyIdException e) {
+            } catch (InvalidKeyIdException | InvalidNumberException | InvalidKeyException e) {
               Log.w("ReceiveKeyActivity", e);
               DatabaseFactory.getEncryptingSmsDatabase(ReceiveKeyActivity.this)
                              .markAsCorruptKeyExchange(messageId);
-            } catch (InvalidKeyException e) {
+            } catch (UntrustedIdentityException e) {
               Log.w("ReceiveKeyActivity", e);
-              DatabaseFactory.getEncryptingSmsDatabase(ReceiveKeyActivity.this)
-                             .markAsCorruptKeyExchange(messageId);
-            } catch (InvalidNumberException e) {
-              Log.w("ReceiveKeyActivity", e);
-              DatabaseFactory.getEncryptingSmsDatabase(ReceiveKeyActivity.this)
-                             .markAsCorruptKeyExchange(messageId);
+              Toast.makeText(ReceiveKeyActivity.this, "Untrusted!", Toast.LENGTH_LONG).show();
             }
           } else if (identityUpdateMessage != null) {
             DatabaseFactory.getIdentityDatabase(ReceiveKeyActivity.this)
