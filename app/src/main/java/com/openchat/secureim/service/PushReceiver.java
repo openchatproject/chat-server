@@ -29,12 +29,13 @@ import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.InvalidVersionException;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
+import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.push.IncomingPushMessage;
 import com.openchat.imservice.push.PushMessageProtos.PushMessageContent;
 import com.openchat.imservice.storage.InvalidKeyIdException;
 import com.openchat.imservice.storage.RecipientDevice;
-import com.openchat.imservice.storage.Session;
+import com.openchat.imservice.storage.OpenchatServiceSessionStore;
 import com.openchat.imservice.util.Base64;
 
 import ws.com.google.android.mms.MmsException;
@@ -131,19 +132,12 @@ public class PushReceiver {
 
         MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
       }
-    } catch (InvalidKeyException e) {
-      Log.w("PushReceiver", e);
-      handleReceivedCorruptedKey(masterSecret, message, false);
     } catch (InvalidVersionException e) {
       Log.w("PushReceiver", e);
       handleReceivedCorruptedKey(masterSecret, message, true);
-    } catch (InvalidKeyIdException e) {
-      Log.w("PushReceiver", e);
-      handleReceivedCorruptedKey(masterSecret, message, false);
-    } catch (InvalidMessageException e) {
-      Log.w("PushReceiver", e);
-      handleReceivedCorruptedKey(masterSecret, message, false);
-    } catch (RecipientFormattingException e) {
+    } catch (InvalidKeyException | InvalidKeyIdException | InvalidMessageException |
+             RecipientFormattingException e)
+    {
       Log.w("PushReceiver", e);
       handleReceivedCorruptedKey(masterSecret, message, false);
     }
@@ -189,7 +183,9 @@ public class PushReceiver {
       Pair<Long, Long> messageAndThreadId = database.insertMessageInbox(masterSecret, incomingEndSessionMessage);
       database.updateMessageBody(masterSecret, messageAndThreadId.first, messageContent.getBody());
 
-      Session.abortSessionFor(context, recipient);
+      SessionStore sessionStore = new OpenchatServiceSessionStore(context, masterSecret);
+      sessionStore.deleteAll(recipient.getRecipientId());
+
       KeyExchangeProcessor.broadcastSecurityUpdateEvent(context, messageAndThreadId.second);
     } catch (RecipientFormattingException e) {
       Log.w("PushReceiver", e);

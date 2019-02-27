@@ -15,10 +15,13 @@ import com.openchat.secureim.util.NumberUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.SessionCipher;
 import com.openchat.protocal.protocol.CiphertextMessage;
+import com.openchat.protocal.state.SessionRecord;
+import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.crypto.SessionCipherFactory;
 import com.openchat.imservice.storage.RecipientDevice;
-import com.openchat.imservice.storage.Session;
+import com.openchat.imservice.storage.SessionUtil;
+import com.openchat.imservice.storage.OpenchatServiceSessionStore;
 
 import java.util.ArrayList;
 
@@ -147,7 +150,7 @@ public class SmsTransport extends BaseTransport {
     RecipientDevice     recipientDevice   = new RecipientDevice(recipient.getRecipientId(),
                                                                 RecipientDevice.DEFAULT_DEVICE_ID);
 
-    if (!Session.hasEncryptCapableSession(context, masterSecret, recipient, recipientDevice)) {
+    if (!SessionUtil.hasEncryptCapableSession(context, masterSecret, recipientDevice)) {
       throw new InsecureFallbackApprovalException("No session exists for this secure message.");
     }
 

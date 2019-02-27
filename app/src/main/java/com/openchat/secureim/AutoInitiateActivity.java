@@ -14,10 +14,10 @@ import com.openchat.secureim.protocol.Tag;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.storage.RecipientDevice;
-import com.openchat.imservice.storage.Session;
-import com.openchat.imservice.storage.SessionRecordV2;
+import com.openchat.imservice.storage.OpenchatServiceSessionStore;
 
 public class AutoInitiateActivity extends Activity {
 
@@ -41,8 +41,8 @@ public class AutoInitiateActivity extends Activity {
 
   private void initializeResources() {
     this.threadId     = this.getIntent().getLongExtra("threadId", -1);
-    this.recipient    = (Recipient)this.getIntent().getParcelableExtra("recipient");
-    this.masterSecret = (MasterSecret)this.getIntent().getParcelableExtra("masterSecret");
+    this.recipient    = this.getIntent().getParcelableExtra("recipient");
+    this.masterSecret = this.getIntent().getParcelableExtra("masterSecret");
 
     ((Button)findViewById(R.id.initiate_button)).setOnClickListener(new OkListener());
     ((Button)findViewById(R.id.cancel_button)).setOnClickListener(new CancelListener());
@@ -93,6 +93,7 @@ public class AutoInitiateActivity extends Activity {
                                              MasterSecret masterSecret,
                                              Recipient recipient)
   {
-    return !Session.hasSession(context, masterSecret, recipient);
+    SessionStore sessionStore = new OpenchatServiceSessionStore(context, masterSecret);
+    return sessionStore.contains(recipient.getRecipientId(), RecipientDevice.DEFAULT_DEVICE_ID);
   }
 }

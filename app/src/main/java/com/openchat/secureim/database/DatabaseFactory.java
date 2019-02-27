@@ -17,7 +17,6 @@ import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.imservice.crypto.MasterCipher;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.storage.Session;
 import com.openchat.imservice.util.Base64;
 import com.openchat.imservice.util.Util;
 
@@ -385,8 +384,8 @@ public class DatabaseFactory {
             String name = session.getName();
 
             if (name.matches("[0-9]+")) {
-              long recipientId            = Long.parseLong(name);
-              IdentityKey identityKey     = Session.getRemoteIdentityKey(context, masterSecret, recipientId);
+              long        recipientId = Long.parseLong(name);
+              IdentityKey identityKey = null;
 
               if (identityKey != null) {
                 MasterCipher masterCipher = new MasterCipher(masterSecret);

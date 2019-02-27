@@ -13,9 +13,11 @@ import com.openchat.secureim.util.Dialogs;
 import com.openchat.protocal.IdentityKeyPair;
 import com.openchat.protocal.ecc.Curve;
 import com.openchat.protocal.ecc.ECKeyPair;
+import com.openchat.protocal.state.SessionRecord;
+import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.storage.RecipientDevice;
-import com.openchat.imservice.storage.SessionRecordV2;
+import com.openchat.imservice.storage.OpenchatServiceSessionStore;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -53,12 +55,12 @@ public class KeyExchangeInitiator {
                                                             ephemeralKey.getPublicKey(),
                                                             identityKey.getPublicKey());
 
-    OutgoingKeyExchangeMessage textMessage = new OutgoingKeyExchangeMessage(recipient, message.serialize());
-    RecipientDevice recipientDevice = new RecipientDevice(recipient.getRecipientId(), RecipientDevice.DEFAULT_DEVICE_ID);
+    OutgoingKeyExchangeMessage textMessage     = new OutgoingKeyExchangeMessage(recipient, message.serialize());
+    SessionStore               sessionStore    = new OpenchatServiceSessionStore(context, masterSecret);
+    SessionRecord              sessionRecord   = sessionStore.get(recipient.getRecipientId(), RecipientDevice.DEFAULT_DEVICE_ID);
 
-    SessionRecordV2 sessionRecordV2 = new SessionRecordV2(context, masterSecret, recipientDevice);
-    sessionRecordV2.getSessionState().setPendingKeyExchange(sequence, baseKey, ephemeralKey, identityKey);
-    sessionRecordV2.save();
+    sessionRecord.getSessionState().setPendingKeyExchange(sequence, baseKey, ephemeralKey, identityKey);
+    sessionStore.put(recipient.getRecipientId(), RecipientDevice.DEFAULT_DEVICE_ID, sessionRecord);
 
     MessageSender.send(context, masterSecret, textMessage, -1, false);
   }
@@ -66,11 +68,10 @@ public class KeyExchangeInitiator {
   private static boolean hasInitiatedSession(Context context, MasterSecret masterSecret,
                                              Recipient recipient)
   {
-    RecipientDevice recipientDevice = new RecipientDevice(recipient.getRecipientId(), RecipientDevice.DEFAULT_DEVICE_ID);
-    return
-        new SessionRecordV2(context, masterSecret, recipientDevice)
-            .getSessionState()
-            .hasPendingKeyExchange();
+    SessionStore  sessionStore  = new OpenchatServiceSessionStore(context, masterSecret);
+    SessionRecord sessionRecord = sessionStore.get(recipient.getRecipientId(), RecipientDevice.DEFAULT_DEVICE_ID);
+
+    return sessionRecord.getSessionState().hasPendingPreKey();
   }
 
   private static int getRandomSequence() {

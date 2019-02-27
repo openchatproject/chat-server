@@ -18,6 +18,7 @@ import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.util.VersionTracker;
 
+import java.io.File;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -28,6 +29,7 @@ public class DatabaseUpgradeActivity extends Activity {
   public static final int TOFU_IDENTITIES_VERSION              = 50;
   public static final int CURVE25519_VERSION                   = 63;
   public static final int ASYMMETRIC_MASTER_SECRET_FIX_VERSION = 73;
+  public static final int NO_V1_VERSION                        = 83;
 
   private static final SortedSet<Integer> UPGRADE_VERSIONS = new TreeSet<Integer>() {{
     add(NO_MORE_KEY_EXCHANGE_PREFIX_VERSION);
@@ -117,6 +119,22 @@ public class DatabaseUpgradeActivity extends Activity {
       if (params[0] < CURVE25519_VERSION) {
         if (!IdentityKeyUtil.hasCurve25519IdentityKeys(context)) {
           IdentityKeyUtil.generateCurve25519IdentityKeys(context, masterSecret);
+        }
+      }
+
+      if (params[0] < NO_V1_VERSION) {
+        File v1sessions = new File(context.getFilesDir(), "sessions");
+
+        if (v1sessions.exists() && v1sessions.isDirectory()) {
+          File[] contents = v1sessions.listFiles();
+
+          if (contents != null) {
+            for (File session : contents) {
+              session.delete();
+            }
+          }
+
+          v1sessions.delete();
         }
       }
 

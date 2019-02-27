@@ -30,12 +30,12 @@ import com.openchat.protocal.InvalidVersionException;
 import com.openchat.protocal.LegacyMessageException;
 import com.openchat.protocal.SessionCipher;
 import com.openchat.protocal.protocol.OpenchatMessage;
+import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.crypto.SessionCipherFactory;
 import com.openchat.imservice.push.IncomingPushMessage;
 import com.openchat.imservice.storage.RecipientDevice;
-import com.openchat.imservice.storage.Session;
-import com.openchat.imservice.storage.SessionRecordV2;
+import com.openchat.imservice.storage.OpenchatServiceSessionStore;
 import com.openchat.imservice.util.Hex;
 import com.openchat.imservice.util.Util;
 
@@ -174,11 +174,12 @@ public class DecryptingQueue {
 
     public void run() {
       try {
+        SessionStore    sessionStore    = new OpenchatServiceSessionStore(context, masterSecret);
         Recipients      recipients      = RecipientFactory.getRecipientsFromString(context, message.getSource(), false);
         Recipient       recipient       = recipients.getPrimaryRecipient();
         RecipientDevice recipientDevice = new RecipientDevice(recipient.getRecipientId(), message.getSourceDevice());
 
-        if (!SessionRecordV2.hasSession(context, masterSecret, recipientDevice)) {
+        if (!sessionStore.contains(recipientDevice.getRecipientId(), recipientDevice.getDeviceId())) {
           sendResult(PushReceiver.RESULT_NO_SESSION);
           return;
         }
@@ -188,18 +189,12 @@ public class DecryptingQueue {
 
         message = message.withBody(plaintextBody);
         sendResult(PushReceiver.RESULT_OK);
-      } catch (InvalidMessageException e) {
-        Log.w("DecryptionQueue", e);
-        sendResult(PushReceiver.RESULT_DECRYPT_FAILED);
-      } catch (RecipientFormattingException e) {
+      } catch (InvalidMessageException | LegacyMessageException | RecipientFormattingException e) {
         Log.w("DecryptionQueue", e);
         sendResult(PushReceiver.RESULT_DECRYPT_FAILED);
       } catch (DuplicateMessageException e) {
         Log.w("DecryptingQueue", e);
         sendResult(PushReceiver.RESULT_DECRYPT_DUPLICATE);
-      } catch (LegacyMessageException e) {
-        Log.w("DecryptionQueue", e);
-        sendResult(PushReceiver.RESULT_DECRYPT_FAILED);
       }
     }
 
@@ -247,6 +242,7 @@ public class DecryptingQueue {
 
       try {
         String          messageFrom        = pdu.getFrom().getString();
+        SessionStore    sessionStore       = new OpenchatServiceSessionStore(context, masterSecret);
         Recipients      recipients         = RecipientFactory.getRecipientsFromString(context, messageFrom, false);
         Recipient       recipient          = recipients.getPrimaryRecipient();
         RecipientDevice recipientDevice    = new RecipientDevice(recipient.getRecipientId(), RecipientDevice.DEFAULT_DEVICE_ID);
@@ -258,7 +254,7 @@ public class DecryptingQueue {
           return;
         }
 
-        if (!Session.hasSession(context, masterSecret, recipient)) {
+        if (!sessionStore.contains(recipientDevice.getRecipientId(), recipientDevice.getDeviceId())) {
           Log.w("DecryptingQueue", "No such recipient session for MMS...");
           database.markAsNoSession(messageId, threadId);
           return;
@@ -290,11 +286,8 @@ public class DecryptingQueue {
         Log.w("DecryptingQueue", "Successfully decrypted MMS!");
         database.insertSecureDecryptedMessageInbox(masterSecret, new IncomingMediaMessage(plaintextPdu), threadId);
         database.delete(messageId);
-      } catch (RecipientFormattingException rfe) {
+      } catch (RecipientFormattingException | IOException | MmsException | InvalidMessageException rfe) {
         Log.w("DecryptingQueue", rfe);
-        database.markAsDecryptFailed(messageId, threadId);
-      } catch (InvalidMessageException ime) {
-        Log.w("DecryptingQueue", ime);
         database.markAsDecryptFailed(messageId, threadId);
       } catch (DuplicateMessageException dme) {
         Log.w("DecryptingQueue", dme);
@@ -302,12 +295,6 @@ public class DecryptingQueue {
       } catch (LegacyMessageException lme) {
         Log.w("DecryptingQueue", lme);
         database.markAsLegacyVersion(messageId, threadId);
-      } catch (MmsException mme) {
-        Log.w("DecryptingQueue", mme);
-        database.markAsDecryptFailed(messageId, threadId);
-      } catch (IOException e) {
-        Log.w("DecryptingQueue", e);
-        database.markAsDecryptFailed(messageId, threadId);
       }
     }
   }
@@ -346,6 +333,7 @@ public class DecryptingQueue {
       String plaintextBody;
 
       try {
+        SessionStore    sessionStore    = new OpenchatServiceSessionStore(context, masterSecret);
         Recipients      recipients      = RecipientFactory.getRecipientsFromString(context, originator, false);
         Recipient       recipient       = recipients.getPrimaryRecipient();
         RecipientDevice recipientDevice = new RecipientDevice(recipient.getRecipientId(), deviceId);
@@ -353,7 +341,7 @@ public class DecryptingQueue {
         SmsTransportDetails transportDetails  = new SmsTransportDetails();
         byte[]              decodedCiphertext = transportDetails.getDecodedMessage(body.getBytes());
 
-        if (!Session.hasSession(context, masterSecret, recipient)) {
+        if (!sessionStore.contains(recipientDevice.getRecipientId(), recipientDevice.getDeviceId())) {
           if (OpenchatMessage.isLegacy(decodedCiphertext)) database.markAsLegacyVersion(messageId);
           else                                            database.markAsNoSession(messageId);
           return;
@@ -366,25 +354,17 @@ public class DecryptingQueue {
 
         if (isEndSession &&
             "TERMINATE".equals(plaintextBody) &&
-            SessionRecordV2.hasSession(context, masterSecret, recipientDevice))
+            sessionStore.contains(recipientDevice.getRecipientId(), recipientDevice.getDeviceId()))
         {
-          Session.abortSessionFor(context, recipient);
+          sessionStore.delete(recipientDevice.getRecipientId(), recipientDevice.getDeviceId());
         }
-      } catch (InvalidMessageException e) {
+      } catch (InvalidMessageException | IOException | RecipientFormattingException e) {
         Log.w("DecryptionQueue", e);
         database.markAsDecryptFailed(messageId);
         return;
       } catch (LegacyMessageException lme) {
         Log.w("DecryptionQueue", lme);
         database.markAsLegacyVersion(messageId);
-        return;
-      } catch (RecipientFormattingException e) {
-        Log.w("DecryptionQueue", e);
-        database.markAsDecryptFailed(messageId);
-        return;
-      } catch (IOException e) {
-        Log.w("DecryptionQueue", e);
-        database.markAsDecryptFailed(messageId);
         return;
       } catch (DuplicateMessageException e) {
         Log.w("DecryptionQueue", e);

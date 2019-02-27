@@ -26,8 +26,9 @@ import com.openchat.secureim.transport.SecureFallbackApprovalException;
 import com.openchat.secureim.transport.UndeliverableMessageException;
 import com.openchat.secureim.transport.UniversalTransport;
 import com.openchat.secureim.transport.UntrustedIdentityException;
+import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.storage.Session;
+import com.openchat.imservice.storage.OpenchatServiceSessionStore;
 
 public class SmsSender {
 
@@ -45,7 +46,7 @@ public class SmsSender {
     if (SendReceiveService.SEND_SMS_ACTION.equals(intent.getAction())) {
       handleSendMessage(masterSecret, intent);
     } else if (SendReceiveService.SENT_SMS_ACTION.equals(intent.getAction())) {
-      handleSentMessage(intent);
+      handleSentMessage(masterSecret, intent);
     } else if (SendReceiveService.DELIVERED_SMS_ACTION.equals(intent.getAction())) {
       handleDeliveredMessage(intent);
     }
@@ -100,7 +101,7 @@ public class SmsSender {
     }
   }
 
-  private void handleSentMessage(Intent intent) {
+  private void handleSentMessage(MasterSecret masterSecret, Intent intent) {
     long    messageId = intent.getLongExtra("message_id", -1);
     int     result    = intent.getIntExtra("ResultCode", -31337);
     boolean upgraded  = intent.getBooleanExtra("upgraded", false);
@@ -122,7 +123,8 @@ public class SmsSender {
 
       if (record != null && record.isEndSession()) {
         Log.w("SmsSender", "Ending session...");
-        Session.abortSessionFor(context, record.getIndividualRecipient());
+        SessionStore sessionStore = new OpenchatServiceSessionStore(context, masterSecret);
+        sessionStore.deleteAll(record.getIndividualRecipient().getRecipientId());
         KeyExchangeProcessor.broadcastSecurityUpdateEvent(context, record.getThreadId());
       }
 

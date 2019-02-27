@@ -87,11 +87,11 @@ import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.InvalidMessageException;
+import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.crypto.MasterCipher;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.storage.RecipientDevice;
-import com.openchat.imservice.storage.Session;
-import com.openchat.imservice.storage.SessionRecordV2;
+import com.openchat.imservice.storage.OpenchatServiceSessionStore;
 import com.openchat.imservice.util.Util;
 
 import java.io.IOException;
@@ -293,9 +293,11 @@ public class ConversationActivity extends PassphraseRequiredSherlockFragmentActi
   @Override
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
     if (isEncryptedConversation && isSingleConversation()) {
-      boolean   isPushDestination = DirectoryHelper.isPushDestination(this, getRecipients());
-      Recipient primaryRecipient  = getRecipients() == null ? null : getRecipients().getPrimaryRecipient();
-      boolean   hasSession        = Session.hasSession(this, masterSecret, primaryRecipient);
+      SessionStore sessionStore      = new OpenchatServiceSessionStore(this, masterSecret);
+      Recipient  primaryRecipient    = getRecipients() == null ? null : getRecipients().getPrimaryRecipient();
+      boolean    isPushDestination   = DirectoryHelper.isPushDestination(this, getRecipients());
+      boolean    isSecureDestination = isSingleConversation() && sessionStore.contains(primaryRecipient.getRecipientId(),
+                                                                                       RecipientDevice.DEFAULT_DEVICE_ID);
 
       getMenuInflater().inflate(R.menu.conversation_button_context, menu);
 
@@ -311,7 +313,7 @@ public class ConversationActivity extends PassphraseRequiredSherlockFragmentActi
         menu.removeItem(R.id.menu_context_send_push);
       }
 
-      if (!hasSession) {
+      if (!isSecureDestination) {
         menu.removeItem(R.id.menu_context_send_encrypted_mms);
         menu.removeItem(R.id.menu_context_send_encrypted_sms);
       }
@@ -393,25 +395,14 @@ public class ConversationActivity extends PassphraseRequiredSherlockFragmentActi
       @Override
       public void onClick(DialogInterface dialog, int which) {
         if (isSingleConversation()) {
-          ConversationActivity self      = ConversationActivity.this;
-          Recipient            recipient = getRecipients().getPrimaryRecipient();
+          ConversationActivity self = ConversationActivity.this;
 
-          if (SessionRecordV2.hasSession(self, masterSecret,
-                                         recipient.getRecipientId(),
-                                         RecipientDevice.DEFAULT_DEVICE_ID))
-          {
-            OutgoingEndSessionMessage endSessionMessage =
-                new OutgoingEndSessionMessage(new OutgoingTextMessage(getRecipients(), "TERMINATE"));
+          OutgoingEndSessionMessage endSessionMessage =
+              new OutgoingEndSessionMessage(new OutgoingTextMessage(getRecipients(), "TERMINATE"));
 
-            long allocatedThreadId = MessageSender.send(self, masterSecret,
-                                                        endSessionMessage, threadId, false);
+          long allocatedThreadId = MessageSender.send(self, masterSecret, endSessionMessage, threadId, false);
 
-            sendComplete(recipients, allocatedThreadId, allocatedThreadId != self.threadId);
-          } else {
-            Session.abortSessionFor(self, recipient);
-            initializeSecurity();
-            initializeTitleBar();
-          }
+          sendComplete(recipients, allocatedThreadId, allocatedThreadId != self.threadId);
         }
       }
     });
@@ -672,9 +663,11 @@ public class ConversationActivity extends PassphraseRequiredSherlockFragmentActi
 
   private void initializeSecurity() {
     TypedArray drawables           = obtainStyledAttributes(SEND_ATTRIBUTES);
+    SessionStore sessionStore      = new OpenchatServiceSessionStore(this, masterSecret);
     Recipient  primaryRecipient    = getRecipients() == null ? null : getRecipients().getPrimaryRecipient();
     boolean    isPushDestination   = DirectoryHelper.isPushDestination(this, getRecipients());
-    boolean    isSecureDestination = isSingleConversation() && Session.hasSession(this, masterSecret, primaryRecipient);
+    boolean    isSecureDestination = isSingleConversation() && sessionStore.contains(primaryRecipient.getRecipientId(),
+                                                                                     RecipientDevice.DEFAULT_DEVICE_ID);
 
     if (isPushDestination || isSecureDestination) {
       this.isEncryptedConversation = true;

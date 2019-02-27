@@ -10,9 +10,12 @@ import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;
 import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.protocal.IdentityKey;
+import com.openchat.protocal.state.SessionRecord;
+import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.crypto.IdentityKeyParcelable;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.storage.Session;
+import com.openchat.imservice.storage.RecipientDevice;
+import com.openchat.imservice.storage.OpenchatServiceSessionStore;
 
 public class VerifyIdentityActivity extends KeyScanningActivity {
 
@@ -70,7 +73,7 @@ public class VerifyIdentityActivity extends KeyScanningActivity {
     }
 
     if (identityKey == null) {
-      identityKey = Session.getRemoteIdentityKey(this, masterSecret, recipient);
+      identityKey = getRemoteIdentityKey(masterSecret, recipient);
     }
 
     if (identityKey == null) {
@@ -106,7 +109,7 @@ public class VerifyIdentityActivity extends KeyScanningActivity {
 
   @Override
   protected void initiateScan() {
-    IdentityKey identityKey = Session.getRemoteIdentityKey(this, masterSecret, recipient);
+    IdentityKey identityKey = getRemoteIdentityKey(masterSecret, recipient);
 
     if (identityKey == null) {
       Toast.makeText(this, R.string.VerifyIdentityActivity_recipient_has_no_identity_key_exclamation,
@@ -128,7 +131,7 @@ public class VerifyIdentityActivity extends KeyScanningActivity {
 
   @Override
   protected IdentityKey getIdentityKeyToCompare() {
-    return Session.getRemoteIdentityKey(this, masterSecret, recipient);
+    return getRemoteIdentityKey(masterSecret, recipient);
   }
 
   @Override
@@ -154,5 +157,17 @@ public class VerifyIdentityActivity extends KeyScanningActivity {
   @Override
   protected String getVerifiedTitle() {
     return getString(R.string.VerifyIdentityActivity_verified_exclamation);
+  }
+
+  private IdentityKey getRemoteIdentityKey(MasterSecret masterSecret, Recipient recipient) {
+    SessionStore  sessionStore = new OpenchatServiceSessionStore(this, masterSecret);
+    SessionRecord record       = sessionStore.get(recipient.getRecipientId(),
+                                                  RecipientDevice.DEFAULT_DEVICE_ID);
+
+    if (record == null) {
+      return null;
+    }
+
+    return record.getSessionState().getRemoteIdentityKey();
   }
 }
