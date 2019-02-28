@@ -35,8 +35,11 @@ import com.openchat.protocal.protocol.OpenchatMessage;
 import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.crypto.SessionCipherFactory;
+import com.openchat.imservice.crypto.TransportDetails;
 import com.openchat.imservice.push.IncomingPushMessage;
+import com.openchat.imservice.push.PushTransportDetails;
 import com.openchat.imservice.storage.RecipientDevice;
+import com.openchat.imservice.storage.SessionUtil;
 import com.openchat.imservice.storage.OpenchatServiceSessionStore;
 import com.openchat.imservice.util.Base64;
 import com.openchat.imservice.util.Hex;
@@ -187,10 +190,12 @@ public class DecryptingQueue {
           return;
         }
 
-        SessionCipher sessionCipher = SessionCipherFactory.getInstance(context, masterSecret, recipientDevice);
-        byte[]        plaintextBody = sessionCipher.decrypt(message.getBody());
+        int              sessionVersion = SessionUtil.getSessionVersion(context, masterSecret, recipientDevice);
+        SessionCipher    sessionCipher  = SessionCipherFactory.getInstance(context, masterSecret, recipientDevice);
+        byte[]           plaintextBody  = sessionCipher.decrypt(message.getBody());
+        TransportDetails transport      = new PushTransportDetails(sessionVersion);
 
-        message = message.withBody(plaintextBody);
+        message = message.withBody(transport.getStrippedPaddingMessageBody(plaintextBody));
         sendResult(PushReceiver.RESULT_OK);
       } catch (InvalidMessageException | LegacyMessageException | RecipientFormattingException e) {
         Log.w("DecryptionQueue", e);

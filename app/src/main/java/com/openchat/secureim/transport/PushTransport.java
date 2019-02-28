@@ -35,6 +35,7 @@ import com.openchat.imservice.push.PushAttachmentPointer;
 import com.openchat.imservice.push.PushBody;
 import com.openchat.imservice.push.PushMessageProtos.PushMessageContent;
 import com.openchat.imservice.push.PushServiceSocket;
+import com.openchat.imservice.push.PushTransportDetails;
 import com.openchat.imservice.push.StaleDevices;
 import com.openchat.imservice.push.StaleDevicesException;
 import com.openchat.imservice.push.UnregisteredUserException;
@@ -327,8 +328,10 @@ public class PushTransport extends BaseTransport {
       }
     }
 
+    int               sessionVersion       = SessionUtil.getSessionVersion(context, masterSecret, pushAddress);
     SessionCipher     cipher               = SessionCipherFactory.getInstance(context, masterSecret, pushAddress);
-    CiphertextMessage message              = cipher.encrypt(plaintext);
+    byte[]            paddedPlaintext      = new PushTransportDetails(sessionVersion).getPaddedMessageBody(plaintext);
+    CiphertextMessage message              = cipher.encrypt(paddedPlaintext);
     int               remoteRegistrationId = cipher.getRemoteRegistrationId();
 
     if (message.getType() == CiphertextMessage.PREKEY_TYPE) {
