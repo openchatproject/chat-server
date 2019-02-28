@@ -20,6 +20,7 @@ import com.openchat.secureim.util.Util;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.SessionCipher;
 import com.openchat.protocal.protocol.CiphertextMessage;
+import com.openchat.protocal.state.PreKeyBundle;
 import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.crypto.AttachmentCipher;
 import com.openchat.imservice.crypto.MasterSecret;
@@ -28,7 +29,6 @@ import com.openchat.imservice.push.MismatchedDevices;
 import com.openchat.imservice.push.MismatchedDevicesException;
 import com.openchat.imservice.push.OutgoingPushMessage;
 import com.openchat.imservice.push.OutgoingPushMessageList;
-import com.openchat.imservice.push.PreKeyEntity;
 import com.openchat.imservice.push.PushAddress;
 import com.openchat.imservice.push.PushAttachmentData;
 import com.openchat.imservice.push.PushAttachmentPointer;
@@ -78,7 +78,7 @@ public class PushTransport extends BaseTransport {
 
       if (message.isEndSession()) {
         SessionStore sessionStore = new OpenchatServiceSessionStore(context, masterSecret);
-        sessionStore.deleteAll(recipient.getRecipientId());
+        sessionStore.deleteAllSessions(recipient.getRecipientId());
         KeyExchangeProcessor.broadcastSecurityUpdateEvent(context, threadId);
       }
 
@@ -188,12 +188,12 @@ public class PushTransport extends BaseTransport {
       long         recipientId  = recipient.getRecipientId();
 
       for (int extraDeviceId : mismatchedDevices.getExtraDevices()) {
-        sessionStore.delete(recipientId, extraDeviceId);
+        sessionStore.deleteSession(recipientId, extraDeviceId);
       }
 
       for (int missingDeviceId : mismatchedDevices.getMissingDevices()) {
-        PushAddress            address   = PushAddress.create(context, recipientId, e164number, missingDeviceId);
-        PreKeyEntity           preKey    = socket.getPreKey(address);
+        PushAddress          address   = PushAddress.create(context, recipientId, e164number, missingDeviceId);
+        PreKeyBundle         preKey    = socket.getPreKey(address);
         KeyExchangeProcessor processor = new KeyExchangeProcessor(context, masterSecret, address);
 
         try {
@@ -213,7 +213,7 @@ public class PushTransport extends BaseTransport {
     long         recipientId  = recipient.getRecipientId();
 
     for (int staleDeviceId : staleDevices.getStaleDevices()) {
-      sessionStore.delete(recipientId, staleDeviceId);
+      sessionStore.deleteSession(recipientId, staleDeviceId);
     }
   }
 
@@ -310,10 +310,10 @@ public class PushTransport extends BaseTransport {
   {
     if (!SessionUtil.hasEncryptCapableSession(context, masterSecret, pushAddress)) {
       try {
-        List<PreKeyEntity> preKeys = socket.getPreKeys(pushAddress);
+        List<PreKeyBundle> preKeys = socket.getPreKeys(pushAddress);
 
-        for (PreKeyEntity preKey : preKeys) {
-          PushAddress            device    = PushAddress.create(context, pushAddress.getRecipientId(), pushAddress.getNumber(), preKey.getDeviceId());
+        for (PreKeyBundle preKey : preKeys) {
+          PushAddress          device    = PushAddress.create(context, pushAddress.getRecipientId(), pushAddress.getNumber(), preKey.getDeviceId());
           KeyExchangeProcessor processor = new KeyExchangeProcessor(context, masterSecret, device);
 
           try {

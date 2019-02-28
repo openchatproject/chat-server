@@ -17,7 +17,8 @@ import com.openchat.secureim.crypto.IdentityKeyUtil;
 import com.openchat.secureim.push.PushServiceSocketFactory;
 import com.openchat.secureim.util.DirectoryHelper;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.protocal.IdentityKey;
+import com.openchat.protocal.IdentityKeyPair;
+import com.openchat.protocal.state.DeviceKeyRecord;
 import com.openchat.protocal.state.PreKeyRecord;
 import com.openchat.protocal.util.KeyHelper;
 import com.openchat.imservice.crypto.MasterSecret;
@@ -208,10 +209,11 @@ public class RegistrationService extends Service {
       throws IOException
   {
     setState(new RegistrationState(RegistrationState.STATE_GENERATING_KEYS, number));
-    IdentityKey        identityKey = IdentityKeyUtil.getIdentityKey(this);
+    IdentityKeyPair    identityKey = IdentityKeyUtil.getIdentityKeyPair(this, masterSecret);
     List<PreKeyRecord> records     = PreKeyUtil.generatePreKeys(this, masterSecret);
     PreKeyRecord       lastResort  = PreKeyUtil.generateLastResortKey(this, masterSecret);
-    socket.registerPreKeys(identityKey, lastResort, records);
+    DeviceKeyRecord    deviceKey   = PreKeyUtil.generateDeviceKey(this, masterSecret, identityKey);
+    socket.registerPreKeys(identityKey.getPublicKey(), lastResort, deviceKey, records);
 
     setState(new RegistrationState(RegistrationState.STATE_GCM_REGISTERING, number));
 

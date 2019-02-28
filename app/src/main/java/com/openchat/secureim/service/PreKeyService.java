@@ -10,12 +10,19 @@ import com.openchat.secureim.crypto.IdentityKeyUtil;
 import com.openchat.secureim.push.PushServiceSocketFactory;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.IdentityKey;
+import com.openchat.protocal.IdentityKeyPair;
+import com.openchat.protocal.state.DeviceKeyRecord;
+import com.openchat.protocal.state.DeviceKeyStore;
 import com.openchat.protocal.state.PreKeyRecord;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.crypto.PreKeyUtil;
 import com.openchat.imservice.push.PushServiceSocket;
+import com.openchat.imservice.storage.OpenchatServicePreKeyStore;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -62,6 +69,8 @@ public class PreKeyService extends Service {
     }
 
     public void run() {
+      DeviceKeyRecord deviceKeyRecord = null;
+
       try {
         if (!OpenchatServicePreferences.isPushRegistered(context)) return;
 
@@ -75,13 +84,60 @@ public class PreKeyService extends Service {
 
         List<PreKeyRecord> preKeyRecords       = PreKeyUtil.generatePreKeys(context, masterSecret);
         PreKeyRecord       lastResortKeyRecord = PreKeyUtil.generateLastResortKey(context, masterSecret);
-        IdentityKey        identityKey         = IdentityKeyUtil.getIdentityKey(context);
+        IdentityKeyPair    identityKey         = IdentityKeyUtil.getIdentityKeyPair(context, masterSecret);
+
+        deviceKeyRecord = PreKeyUtil.generateDeviceKey(context, masterSecret, identityKey);
 
         Log.w(TAG, "Registering new prekeys...");
 
-        socket.registerPreKeys(identityKey, lastResortKeyRecord, preKeyRecords);
+        socket.registerPreKeys(identityKey.getPublicKey(), lastResortKeyRecord,
+                               deviceKeyRecord, preKeyRecords);
+
+        removeOldDeviceKeysIfNecessary(deviceKeyRecord);
       } catch (IOException e) {
         Log.w(TAG, e);
+        if (deviceKeyRecord != null) {
+          Log.w(TAG, "Remote store failed, removing generated device key: " + deviceKeyRecord.getId());
+          new OpenchatServicePreKeyStore(context, masterSecret).removeDeviceKey(deviceKeyRecord.getId());
+        }
+      }
+    }
+
+    private void removeOldDeviceKeysIfNecessary(DeviceKeyRecord currentDeviceKey) {
+      DeviceKeyStore            deviceKeyStore = new OpenchatServicePreKeyStore(context, masterSecret);
+      List<DeviceKeyRecord>     records        = deviceKeyStore.loadDeviceKeys();
+      Iterator<DeviceKeyRecord> iterator       = records.iterator();
+
+      while (iterator.hasNext()) {
+        if (iterator.next().getId() == currentDeviceKey.getId()) {
+          iterator.remove();
+        }
+      }
+
+      DeviceKeyRecord[] recordsArray = (DeviceKeyRecord[])records.toArray();
+      Arrays.sort(recordsArray, new Comparator<DeviceKeyRecord>() {
+        @Override
+        public int compare(DeviceKeyRecord lhs, DeviceKeyRecord rhs) {
+          if      (lhs.getTimestamp() < rhs.getTimestamp()) return -1;
+          else if (lhs.getTimestamp() > rhs.getTimestamp()) return 1;
+          else                                              return 0;
+        }
+      });
+
+      Log.w(TAG, "Existing device key record count: " + recordsArray.length);
+
+      if (recordsArray.length > 3) {
+        long              oldTimestamp = System.currentTimeMillis() - (14 * 24 * 60 * 60 * 1000);
+        DeviceKeyRecord[] oldRecords   = Arrays.copyOf(recordsArray, recordsArray.length - 1);
+
+        for (DeviceKeyRecord oldRecord : oldRecords) {
+          Log.w(TAG, "Old device key record timestamp: " + oldRecord.getTimestamp());
+
+          if (oldRecord.getTimestamp() <= oldTimestamp) {
+            Log.w(TAG, "Remove device key record: " + oldRecord.getId());
+            deviceKeyStore.removeDeviceKey(oldRecord.getId());
+          }
+        }
       }
     }
   }

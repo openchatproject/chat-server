@@ -11,6 +11,7 @@ import com.openchat.secureim.sms.OutgoingKeyExchangeMessage;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.protocal.SessionBuilder;
 import com.openchat.protocal.protocol.KeyExchangeMessage;
+import com.openchat.protocal.state.DeviceKeyStore;
 import com.openchat.protocal.state.IdentityKeyStore;
 import com.openchat.protocal.state.PreKeyStore;
 import com.openchat.protocal.state.SessionRecord;
@@ -45,10 +46,11 @@ public class KeyExchangeInitiator {
   private static void initiateKeyExchange(Context context, MasterSecret masterSecret, Recipient recipient) {
     SessionStore     sessionStore     = new OpenchatServiceSessionStore(context, masterSecret);
     PreKeyStore      preKeyStore      = new OpenchatServicePreKeyStore(context, masterSecret);
+    DeviceKeyStore   deviceKeyStore   = new OpenchatServicePreKeyStore(context, masterSecret);
     IdentityKeyStore identityKeyStore = new OpenchatServiceIdentityKeyStore(context, masterSecret);
 
-    SessionBuilder   sessionBuilder   = new SessionBuilder(sessionStore, preKeyStore, identityKeyStore,
-                                                           recipient.getRecipientId(),
+    SessionBuilder   sessionBuilder   = new SessionBuilder(sessionStore, preKeyStore, deviceKeyStore,
+                                                           identityKeyStore, recipient.getRecipientId(),
                                                            RecipientDevice.DEFAULT_DEVICE_ID);
 
     KeyExchangeMessage         keyExchangeMessage = sessionBuilder.process();
@@ -62,7 +64,7 @@ public class KeyExchangeInitiator {
                                              Recipient recipient)
   {
     SessionStore  sessionStore  = new OpenchatServiceSessionStore(context, masterSecret);
-    SessionRecord sessionRecord = sessionStore.load(recipient.getRecipientId(), RecipientDevice.DEFAULT_DEVICE_ID);
+    SessionRecord sessionRecord = sessionStore.loadSession(recipient.getRecipientId(), RecipientDevice.DEFAULT_DEVICE_ID);
 
     return sessionRecord.getSessionState().hasPendingPreKey();
   }

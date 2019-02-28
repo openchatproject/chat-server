@@ -15,7 +15,9 @@ import com.openchat.protocal.StaleKeyExchangeException;
 import com.openchat.protocal.UntrustedIdentityException;
 import com.openchat.protocal.protocol.KeyExchangeMessage;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
+import com.openchat.protocal.state.DeviceKeyStore;
 import com.openchat.protocal.state.IdentityKeyStore;
+import com.openchat.protocal.state.PreKeyBundle;
 import com.openchat.protocal.state.PreKeyStore;
 import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.crypto.MasterSecret;
@@ -42,10 +44,11 @@ public class KeyExchangeProcessor {
 
     IdentityKeyStore identityKeyStore = new OpenchatServiceIdentityKeyStore(context, masterSecret);
     PreKeyStore      preKeyStore      = new OpenchatServicePreKeyStore(context, masterSecret);
+    DeviceKeyStore   deviceKeyStore   = new OpenchatServicePreKeyStore(context, masterSecret);
     SessionStore     sessionStore     = new OpenchatServiceSessionStore(context, masterSecret);
 
-    this.sessionBuilder = new SessionBuilder(sessionStore, preKeyStore, identityKeyStore,
-                                             recipientDevice.getRecipientId(),
+    this.sessionBuilder = new SessionBuilder(sessionStore, preKeyStore, deviceKeyStore,
+                                             identityKeyStore, recipientDevice.getRecipientId(),
                                              recipientDevice.getDeviceId());
   }
 
@@ -56,10 +59,10 @@ public class KeyExchangeProcessor {
     PreKeyService.initiateRefresh(context, masterSecret);
   }
 
-  public void processKeyExchangeMessage(PreKeyEntity message, long threadId)
+  public void processKeyExchangeMessage(PreKeyBundle bundle, long threadId)
       throws InvalidKeyException, UntrustedIdentityException
   {
-    sessionBuilder.process(message);
+    sessionBuilder.process(bundle);
 
     if (threadId != -1) {
       broadcastSecurityUpdateEvent(context, threadId);

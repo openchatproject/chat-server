@@ -296,8 +296,8 @@ public class ConversationActivity extends PassphraseRequiredSherlockFragmentActi
       SessionStore sessionStore      = new OpenchatServiceSessionStore(this, masterSecret);
       Recipient  primaryRecipient    = getRecipients() == null ? null : getRecipients().getPrimaryRecipient();
       boolean    isPushDestination   = DirectoryHelper.isPushDestination(this, getRecipients());
-      boolean    isSecureDestination = isSingleConversation() && sessionStore.contains(primaryRecipient.getRecipientId(),
-                                                                                       RecipientDevice.DEFAULT_DEVICE_ID);
+      boolean    isSecureDestination = isSingleConversation() && sessionStore.containsSession(primaryRecipient.getRecipientId(),
+                                                                                              RecipientDevice.DEFAULT_DEVICE_ID);
 
       getMenuInflater().inflate(R.menu.conversation_button_context, menu);
 
@@ -666,8 +666,8 @@ public class ConversationActivity extends PassphraseRequiredSherlockFragmentActi
     SessionStore sessionStore      = new OpenchatServiceSessionStore(this, masterSecret);
     Recipient  primaryRecipient    = getRecipients() == null ? null : getRecipients().getPrimaryRecipient();
     boolean    isPushDestination   = DirectoryHelper.isPushDestination(this, getRecipients());
-    boolean    isSecureDestination = isSingleConversation() && sessionStore.contains(primaryRecipient.getRecipientId(),
-                                                                                     RecipientDevice.DEFAULT_DEVICE_ID);
+    boolean    isSecureDestination = isSingleConversation() && sessionStore.containsSession(primaryRecipient.getRecipientId(),
+                                                                                            RecipientDevice.DEFAULT_DEVICE_ID);
 
     if (isPushDestination || isSecureDestination) {
       this.isEncryptedConversation = true;
