@@ -10,6 +10,7 @@ import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.service.GcmRegistrationService;
+import com.openchat.secureim.service.PreKeyService;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.imservice.crypto.MasterSecret;
 
@@ -17,9 +18,11 @@ public class RoutingActivity extends PassphraseRequiredSherlockActivity {
 
   private static final int STATE_CREATE_PASSPHRASE        = 1;
   private static final int STATE_PROMPT_PASSPHRASE        = 2;
+
   private static final int STATE_CONVERSATION_OR_LIST     = 3;
   private static final int STATE_UPGRADE_DATABASE         = 4;
   private static final int STATE_PROMPT_PUSH_REGISTRATION = 5;
+  private static final int STATE_CREATE_SIGNED_PREKEY     = 6;
 
   private MasterSecret masterSecret   = null;
   private boolean      isVisible      = false;
@@ -119,14 +122,12 @@ public class RoutingActivity extends PassphraseRequiredSherlockActivity {
     final ConversationParameters parameters = getConversationParameters();
     final Intent intent;
 
-    scheduleRefreshActions();
+    if      (isShareAction())               intent = getShareIntent(parameters);
+    else if (parameters.recipients != null) intent = getConversationIntent(parameters);
+    else                                    intent = getConversationListIntent();
 
-    if (isShareAction()) {
-      intent = getShareIntent(parameters);
-    } else if (parameters.recipients != null) {
-      intent = getConversationIntent(parameters);
-    } else {
-      intent = getConversationListIntent();
+    if (!OpenchatServicePreferences.isSignedPreKeyRegistered(this)) {
+      PreKeyService.initiateCreateSigned(this, masterSecret);
     }
 
     startActivity(intent);
