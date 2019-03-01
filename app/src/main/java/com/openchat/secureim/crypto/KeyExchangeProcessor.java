@@ -15,13 +15,12 @@ import com.openchat.protocal.StaleKeyExchangeException;
 import com.openchat.protocal.UntrustedIdentityException;
 import com.openchat.protocal.protocol.KeyExchangeMessage;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
-import com.openchat.protocal.state.DeviceKeyStore;
+import com.openchat.protocal.state.SignedPreKeyStore;
 import com.openchat.protocal.state.IdentityKeyStore;
 import com.openchat.protocal.state.PreKeyBundle;
 import com.openchat.protocal.state.PreKeyStore;
 import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.push.PreKeyEntity;
 import com.openchat.imservice.storage.RecipientDevice;
 import com.openchat.imservice.storage.OpenchatServicePreKeyStore;
 import com.openchat.imservice.storage.OpenchatServiceSessionStore;
@@ -42,12 +41,12 @@ public class KeyExchangeProcessor {
     this.recipientDevice = recipientDevice;
     this.masterSecret    = masterSecret;
 
-    IdentityKeyStore identityKeyStore = new OpenchatServiceIdentityKeyStore(context, masterSecret);
-    PreKeyStore      preKeyStore      = new OpenchatServicePreKeyStore(context, masterSecret);
-    DeviceKeyStore   deviceKeyStore   = new OpenchatServicePreKeyStore(context, masterSecret);
-    SessionStore     sessionStore     = new OpenchatServiceSessionStore(context, masterSecret);
+    IdentityKeyStore  identityKeyStore  = new OpenchatServiceIdentityKeyStore(context, masterSecret);
+    PreKeyStore       preKeyStore       = new OpenchatServicePreKeyStore(context, masterSecret);
+    SignedPreKeyStore signedPreKeyStore = new OpenchatServicePreKeyStore(context, masterSecret);
+    SessionStore      sessionStore      = new OpenchatServiceSessionStore(context, masterSecret);
 
-    this.sessionBuilder = new SessionBuilder(sessionStore, preKeyStore, deviceKeyStore,
+    this.sessionBuilder = new SessionBuilder(sessionStore, preKeyStore, signedPreKeyStore,
                                              identityKeyStore, recipientDevice.getRecipientId(),
                                              recipientDevice.getDeviceId());
   }

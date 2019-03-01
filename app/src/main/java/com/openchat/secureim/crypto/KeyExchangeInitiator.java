@@ -11,7 +11,7 @@ import com.openchat.secureim.sms.OutgoingKeyExchangeMessage;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.protocal.SessionBuilder;
 import com.openchat.protocal.protocol.KeyExchangeMessage;
-import com.openchat.protocal.state.DeviceKeyStore;
+import com.openchat.protocal.state.SignedPreKeyStore;
 import com.openchat.protocal.state.IdentityKeyStore;
 import com.openchat.protocal.state.PreKeyStore;
 import com.openchat.protocal.state.SessionRecord;
@@ -44,14 +44,14 @@ public class KeyExchangeInitiator {
   }
 
   private static void initiateKeyExchange(Context context, MasterSecret masterSecret, Recipient recipient) {
-    SessionStore     sessionStore     = new OpenchatServiceSessionStore(context, masterSecret);
-    PreKeyStore      preKeyStore      = new OpenchatServicePreKeyStore(context, masterSecret);
-    DeviceKeyStore   deviceKeyStore   = new OpenchatServicePreKeyStore(context, masterSecret);
-    IdentityKeyStore identityKeyStore = new OpenchatServiceIdentityKeyStore(context, masterSecret);
+    SessionStore      sessionStore      = new OpenchatServiceSessionStore(context, masterSecret);
+    PreKeyStore       preKeyStore       = new OpenchatServicePreKeyStore(context, masterSecret);
+    SignedPreKeyStore signedPreKeyStore = new OpenchatServicePreKeyStore(context, masterSecret);
+    IdentityKeyStore  identityKeyStore  = new OpenchatServiceIdentityKeyStore(context, masterSecret);
 
-    SessionBuilder   sessionBuilder   = new SessionBuilder(sessionStore, preKeyStore, deviceKeyStore,
-                                                           identityKeyStore, recipient.getRecipientId(),
-                                                           RecipientDevice.DEFAULT_DEVICE_ID);
+    SessionBuilder    sessionBuilder    = new SessionBuilder(sessionStore, preKeyStore, signedPreKeyStore,
+                                                             identityKeyStore, recipient.getRecipientId(),
+                                                             RecipientDevice.DEFAULT_DEVICE_ID);
 
     KeyExchangeMessage         keyExchangeMessage = sessionBuilder.process();
     String                     serializedMessage  = Base64.encodeBytesWithoutPadding(keyExchangeMessage.serialize());
