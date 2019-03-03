@@ -5,6 +5,7 @@ import android.content.Context;
 import android.telephony.SmsManager;
 import android.util.Log;
 
+import com.openchat.secureim.crypto.OpenchatServiceCipher;
 import com.openchat.secureim.database.model.SmsMessageRecord;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.sms.MultipartSmsMessageHandler;
@@ -13,15 +14,10 @@ import com.openchat.secureim.sms.OutgoingTextMessage;
 import com.openchat.secureim.sms.SmsTransportDetails;
 import com.openchat.secureim.util.NumberUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.protocal.SessionCipher;
 import com.openchat.protocal.protocol.CiphertextMessage;
-import com.openchat.protocal.state.SessionRecord;
-import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.crypto.SessionCipherFactory;
 import com.openchat.imservice.storage.RecipientDevice;
 import com.openchat.imservice.storage.SessionUtil;
-import com.openchat.imservice.storage.OpenchatServiceSessionStore;
 
 import java.util.ArrayList;
 
@@ -156,9 +152,8 @@ public class SmsTransport extends BaseTransport {
 
     String              body              = message.getMessageBody();
     SmsTransportDetails transportDetails  = new SmsTransportDetails();
-    SessionCipher       sessionCipher     = SessionCipherFactory.getInstance(context, masterSecret, recipientDevice);
-    byte[]              paddedPlaintext   = transportDetails.getPaddedMessageBody(body.getBytes());
-    CiphertextMessage   ciphertextMessage = sessionCipher.encrypt(paddedPlaintext);
+    OpenchatServiceCipher    cipher            = new OpenchatServiceCipher(context, masterSecret, recipientDevice, transportDetails);
+    CiphertextMessage   ciphertextMessage = cipher.encrypt(body.getBytes());
     String              encodedCiphertext = new String(transportDetails.getEncodedMessage(ciphertextMessage.serialize()));
 
     if (ciphertextMessage.getType() == CiphertextMessage.PREKEY_TYPE) {

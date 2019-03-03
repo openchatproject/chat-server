@@ -9,6 +9,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 import com.openchat.secureim.crypto.DecryptingQueue;
 import com.openchat.secureim.crypto.KeyExchangeProcessor;
+import com.openchat.secureim.crypto.OpenchatServiceCipher;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.MmsDatabase;
@@ -24,16 +25,21 @@ import com.openchat.secureim.sms.IncomingKeyExchangeMessage;
 import com.openchat.secureim.sms.IncomingPreKeyBundleMessage;
 import com.openchat.secureim.sms.IncomingTextMessage;
 import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.protocal.DuplicateMessageException;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.InvalidVersionException;
+import com.openchat.protocal.LegacyMessageException;
+import com.openchat.protocal.NoSessionException;
 import com.openchat.protocal.UntrustedIdentityException;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
 import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.imservice.crypto.TransportDetails;
 import com.openchat.imservice.push.IncomingPushMessage;
 import com.openchat.imservice.push.PushMessageProtos.PushMessageContent;
 import com.openchat.protocal.InvalidKeyIdException;
+import com.openchat.imservice.push.PushTransportDetails;
 import com.openchat.imservice.storage.RecipientDevice;
 import com.openchat.imservice.storage.OpenchatServiceSessionStore;
 import com.openchat.imservice.util.Base64;
@@ -113,34 +119,39 @@ public class PushReceiver {
     }
 
     try {
-      Recipient              recipient       = RecipientFactory.getRecipientsFromString(context, message.getSource(), false).getPrimaryRecipient();
-      RecipientDevice        recipientDevice = new RecipientDevice(recipient.getRecipientId(), message.getSourceDevice());
-      KeyExchangeProcessor processor       = new KeyExchangeProcessor(context, masterSecret, recipientDevice);
-      PreKeyOpenchatMessage   preKeyExchange  = new PreKeyOpenchatMessage(message.getBody());
+      Recipient            recipient            = RecipientFactory.getRecipientsFromString(context, message.getSource(), false).getPrimaryRecipient();
+      RecipientDevice      recipientDevice      = new RecipientDevice(recipient.getRecipientId(), message.getSourceDevice());
+      PreKeyOpenchatMessage preKeyOpenchatMessage = new PreKeyOpenchatMessage(message.getBody());
+      TransportDetails     transportDetails     = new PushTransportDetails(preKeyOpenchatMessage.getMessageVersion());
+      OpenchatServiceCipher     cipher               = new OpenchatServiceCipher(context, masterSecret, recipientDevice, transportDetails);
+      byte[]               plaintext            = cipher.decrypt(preKeyOpenchatMessage);
 
-      try {
-        processor.processKeyExchangeMessage(preKeyExchange);
+      IncomingPushMessage bundledMessage = message.withBody(plaintext);
+      handleReceivedMessage(masterSecret, bundledMessage, true);
 
-        IncomingPushMessage bundledMessage = message.withBody(preKeyExchange.getOpenchatMessage().serialize());
-        handleReceivedSecureMessage(masterSecret, bundledMessage);
-      } catch (UntrustedIdentityException uie) {
-        Log.w("PushReceiver", uie);
-        String                      encoded       = Base64.encodeBytes(message.getBody());
-        IncomingTextMessage         textMessage   = new IncomingTextMessage(message, encoded, null);
-        IncomingPreKeyBundleMessage bundleMessage = new IncomingPreKeyBundleMessage(textMessage, encoded);
-        EncryptingSmsDatabase       database           = DatabaseFactory.getEncryptingSmsDatabase(context);
-        Pair<Long, Long>            messageAndThreadId = database.insertMessageInbox(masterSecret, bundleMessage);
-
-        MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
-      }
     } catch (InvalidVersionException e) {
       Log.w("PushReceiver", e);
       handleReceivedCorruptedKey(masterSecret, message, true);
     } catch (InvalidKeyException | InvalidKeyIdException | InvalidMessageException |
-             RecipientFormattingException e)
+             RecipientFormattingException | LegacyMessageException e)
     {
       Log.w("PushReceiver", e);
       handleReceivedCorruptedKey(masterSecret, message, false);
+    } catch (DuplicateMessageException e) {
+      Log.w("PushReceiver", e);
+      handleReceivedDuplicateMessage(message);
+    } catch (NoSessionException e) {
+      Log.w("PushReceiver", e);
+      handleReceivedMessageForNoSession(masterSecret, message);
+    } catch (UntrustedIdentityException e) {
+      Log.w("PushReceiver", e);
+      String                      encoded            = Base64.encodeBytes(message.getBody());
+      IncomingTextMessage         textMessage        = new IncomingTextMessage(message, encoded, null);
+      IncomingPreKeyBundleMessage bundleMessage      = new IncomingPreKeyBundleMessage(textMessage, encoded);
+      Pair<Long, Long>            messageAndThreadId = DatabaseFactory.getEncryptingSmsDatabase(context)
+                                                                      .insertMessageInbox(masterSecret, bundleMessage);
+
+      MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
     }
   }
 

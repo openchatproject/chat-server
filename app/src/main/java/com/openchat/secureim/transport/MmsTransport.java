@@ -4,6 +4,7 @@ import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.openchat.secureim.crypto.OpenchatServiceCipher;
 import com.openchat.secureim.database.MmsDatabase;
 import com.openchat.secureim.mms.ApnUnavailableException;
 import com.openchat.secureim.mms.MmsRadio;
@@ -16,10 +17,8 @@ import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.util.NumberUtil;
-import com.openchat.protocal.SessionCipher;
 import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.crypto.SessionCipherFactory;
 import com.openchat.imservice.storage.RecipientDevice;
 import com.openchat.imservice.storage.SessionUtil;
 import com.openchat.imservice.util.Hex;
@@ -163,8 +162,8 @@ public class MmsTransport {
         throw new InsecureFallbackApprovalException("No session exists for this secure message.");
       }
 
-      SessionCipher     sessionCipher     = SessionCipherFactory.getInstance(context, masterSecret, recipientDevice);
-      CiphertextMessage ciphertextMessage = sessionCipher.encrypt(pduBytes);
+      OpenchatServiceCipher  cipher            = new OpenchatServiceCipher(context, masterSecret, recipientDevice, transportDetails);
+      CiphertextMessage ciphertextMessage = cipher.encrypt(pduBytes);
 
       return transportDetails.getEncodedMessage(ciphertextMessage.serialize());
     } catch (RecipientFormattingException e) {

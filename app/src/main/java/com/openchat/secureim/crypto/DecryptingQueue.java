@@ -27,14 +27,13 @@ import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.InvalidVersionException;
 import com.openchat.protocal.LegacyMessageException;
-import com.openchat.protocal.SessionCipher;
+import com.openchat.protocal.NoSessionException;
 import com.openchat.protocal.StaleKeyExchangeException;
 import com.openchat.protocal.UntrustedIdentityException;
 import com.openchat.protocal.protocol.KeyExchangeMessage;
 import com.openchat.protocal.protocol.OpenchatMessage;
 import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.crypto.SessionCipherFactory;
 import com.openchat.imservice.crypto.TransportDetails;
 import com.openchat.imservice.push.IncomingPushMessage;
 import com.openchat.imservice.push.PushTransportDetails;
@@ -190,12 +189,12 @@ public class DecryptingQueue {
           return;
         }
 
-        int              sessionVersion = SessionUtil.getSessionVersion(context, masterSecret, recipientDevice);
-        SessionCipher    sessionCipher  = SessionCipherFactory.getInstance(context, masterSecret, recipientDevice);
-        byte[]           plaintextBody  = sessionCipher.decrypt(message.getBody());
-        TransportDetails transport      = new PushTransportDetails(sessionVersion);
+        int              sessionVersion   = SessionUtil.getSessionVersion(context, masterSecret, recipientDevice);
+        TransportDetails transportDetails = new PushTransportDetails(sessionVersion);
+        OpenchatServiceCipher openchatServiceCipher = new OpenchatServiceCipher(context, masterSecret, recipientDevice, transportDetails);
+        byte[]           plaintextBody    = openchatServiceCipher.decrypt(new OpenchatMessage(message.getBody()));
 
-        message = message.withBody(transport.getStrippedPaddingMessageBody(plaintextBody));
+        message = message.withBody(plaintextBody);
         sendResult(PushReceiver.RESULT_OK);
       } catch (InvalidMessageException | LegacyMessageException | RecipientFormattingException e) {
         Log.w("DecryptionQueue", e);
@@ -203,6 +202,9 @@ public class DecryptingQueue {
       } catch (DuplicateMessageException e) {
         Log.w("DecryptingQueue", e);
         sendResult(PushReceiver.RESULT_DECRYPT_DUPLICATE);
+      } catch (NoSessionException e) {
+        Log.w("DecryptingQueue", e);
+        sendResult(PushReceiver.RESULT_NO_SESSION);
       }
     }
 
@@ -271,18 +273,18 @@ public class DecryptingQueue {
         byte[] plaintextPduBytes;
 
         Log.w("DecryptingQueue", "Decrypting: " + Hex.toString(ciphertextPduBytes));
-        TextTransport transportDetails  = new TextTransport();
-        SessionCipher sessionCipher     = SessionCipherFactory.getInstance(context, masterSecret, recipientDevice);
-        byte[]        decodedCiphertext = transportDetails.getDecodedMessage(ciphertextPduBytes);
+        TextTransport    transportDetails  = new TextTransport();
+        OpenchatServiceCipher cipher            = new OpenchatServiceCipher(context, masterSecret, recipientDevice, transportDetails);
+        byte[]           decodedCiphertext = transportDetails.getDecodedMessage(ciphertextPduBytes);
 
         try {
-          plaintextPduBytes = sessionCipher.decrypt(decodedCiphertext);
+          plaintextPduBytes = cipher.decrypt(new OpenchatMessage(decodedCiphertext));
         } catch (InvalidMessageException ime) {
           if (ciphertextPduBytes.length > 2) {
             Log.w("DecryptingQueue", "Attempting truncated decrypt...");
             byte[] truncated = Util.trim(ciphertextPduBytes, ciphertextPduBytes.length - 1);
             decodedCiphertext = transportDetails.getDecodedMessage(truncated);
-            plaintextPduBytes = sessionCipher.decrypt(decodedCiphertext);
+            plaintextPduBytes = cipher.decrypt(new OpenchatMessage(decodedCiphertext));
           } else {
             throw ime;
           }
@@ -303,6 +305,9 @@ public class DecryptingQueue {
       } catch (LegacyMessageException lme) {
         Log.w("DecryptingQueue", lme);
         database.markAsLegacyVersion(messageId, threadId);
+      } catch (NoSessionException nse) {
+        Log.w("DecryptingQueue", nse);
+        database.markAsNoSession(messageId, threadId);
       }
     }
   }
@@ -355,8 +360,8 @@ public class DecryptingQueue {
           return;
         }
 
-        SessionCipher sessionCipher   = SessionCipherFactory.getInstance(context, masterSecret, recipientDevice);
-        byte[]        paddedPlaintext = sessionCipher.decrypt(decodedCiphertext);
+        OpenchatServiceCipher cipher          = new OpenchatServiceCipher(context, masterSecret, recipientDevice, transportDetails);
+        byte[]           paddedPlaintext = cipher.decrypt(new OpenchatMessage(decodedCiphertext));
 
         plaintextBody = new String(transportDetails.getStrippedPaddingMessageBody(paddedPlaintext));
 
@@ -377,6 +382,10 @@ public class DecryptingQueue {
       } catch (DuplicateMessageException e) {
         Log.w("DecryptionQueue", e);
         database.markAsDecryptDuplicate(messageId);
+        return;
+      } catch (NoSessionException e) {
+        Log.w("DecryptingQueue", e);
+        database.markAsNoSession(messageId);
         return;
       }
 

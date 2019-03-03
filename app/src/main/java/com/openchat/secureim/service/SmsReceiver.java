@@ -8,6 +8,7 @@ import android.util.Pair;
 import com.openchat.secureim.crypto.DecryptingQueue;
 import com.openchat.secureim.crypto.KeyExchangeProcessor;
 import com.openchat.secureim.crypto.MasterSecretUtil;
+import com.openchat.secureim.crypto.OpenchatServiceCipher;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.SmsDatabase;
@@ -26,10 +27,12 @@ import com.openchat.secureim.sms.MultipartSmsMessageHandler;
 import com.openchat.secureim.sms.OutgoingKeyExchangeMessage;
 import com.openchat.secureim.sms.SmsTransportDetails;
 import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.protocal.DuplicateMessageException;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.InvalidVersionException;
 import com.openchat.protocal.LegacyMessageException;
+import com.openchat.protocal.NoSessionException;
 import com.openchat.protocal.StaleKeyExchangeException;
 import com.openchat.protocal.UntrustedIdentityException;
 import com.openchat.protocal.protocol.KeyExchangeMessage;
@@ -99,39 +102,47 @@ public class SmsReceiver {
                                                      IncomingPreKeyBundleMessage message)
   {
     Log.w("SmsReceiver", "Processing prekey message...");
+    EncryptingSmsDatabase database = DatabaseFactory.getEncryptingSmsDatabase(context);
 
-    try {
-      Recipient            recipient        = RecipientFactory.getRecipientsFromString(context, message.getSender(), false).getPrimaryRecipient();
-      RecipientDevice      recipientDevice  = new RecipientDevice(recipient.getRecipientId(), message.getSenderDeviceId());
-      KeyExchangeProcessor processor        = new KeyExchangeProcessor(context, masterSecret, recipientDevice);
-      SmsTransportDetails  transportDetails = new SmsTransportDetails();
-      byte[]               rawMessage       = transportDetails.getDecodedMessage(message.getMessageBody().getBytes());
-      PreKeyOpenchatMessage preKeyExchange   = new PreKeyOpenchatMessage(rawMessage);
+    if (masterSecret != null) {
+      try {
+        Recipient            recipient            = RecipientFactory.getRecipientsFromString(context, message.getSender(), false).getPrimaryRecipient();
+        RecipientDevice      recipientDevice      = new RecipientDevice(recipient.getRecipientId(), message.getSenderDeviceId());
+        SmsTransportDetails  transportDetails     = new SmsTransportDetails();
+        OpenchatServiceCipher     cipher               = new OpenchatServiceCipher(context, masterSecret, recipientDevice, transportDetails);
+        byte[]               rawMessage           = transportDetails.getDecodedMessage(message.getMessageBody().getBytes());
+        PreKeyOpenchatMessage preKeyOpenchatMessage = new PreKeyOpenchatMessage(rawMessage);
+        byte[]               plaintext            = cipher.decrypt(preKeyOpenchatMessage);
 
-      processor.processKeyExchangeMessage(preKeyExchange);
+        IncomingEncryptedMessage bundledMessage     = new IncomingEncryptedMessage(message, new String(transportDetails.getEncodedMessage(preKeyOpenchatMessage.getOpenchatMessage().serialize())));
+        Pair<Long, Long>         messageAndThreadId = database.insertMessageInbox(masterSecret, bundledMessage);
 
-      OpenchatMessage           ciphertextMessage  = preKeyExchange.getOpenchatMessage();
-      String                   bundledMessageBody = new String(transportDetails.getEncodedMessage(ciphertextMessage.serialize()));
-      IncomingEncryptedMessage bundledMessage     = new IncomingEncryptedMessage(message, bundledMessageBody);
-      Pair<Long, Long>         messageAndThreadId = storeSecureMessage(masterSecret, bundledMessage);
+        database.updateMessageBody(masterSecret, messageAndThreadId.first, new String(plaintext));
 
-      Intent intent = new Intent(KeyExchangeProcessor.SECURITY_UPDATE_EVENT);
-      intent.putExtra("thread_id", messageAndThreadId.second);
-      intent.setPackage(context.getPackageName());
-      context.sendBroadcast(intent, KeyCachingService.KEY_PERMISSION);
+        Intent intent = new Intent(KeyExchangeProcessor.SECURITY_UPDATE_EVENT);
+        intent.putExtra("thread_id", messageAndThreadId.second);
+        intent.setPackage(context.getPackageName());
+        context.sendBroadcast(intent, KeyCachingService.KEY_PERMISSION);
 
-      return messageAndThreadId;
-    } catch (InvalidKeyException | RecipientFormattingException | InvalidMessageException | IOException e) {
-      Log.w("SmsReceiver", e);
-      message.setCorrupted(true);
-    } catch (InvalidVersionException e) {
-      Log.w("SmsReceiver", e);
-      message.setInvalidVersion(true);
-    } catch (InvalidKeyIdException e) {
-      Log.w("SmsReceiver", e);
-      message.setStale(true);
-    } catch (UntrustedIdentityException e) {
-      Log.w("SmsReceiver", e);
+        return messageAndThreadId;
+      } catch (InvalidKeyException | RecipientFormattingException | InvalidMessageException | IOException | NoSessionException e) {
+        Log.w("SmsReceiver", e);
+        message.setCorrupted(true);
+      } catch (InvalidVersionException e) {
+        Log.w("SmsReceiver", e);
+        message.setInvalidVersion(true);
+      } catch (InvalidKeyIdException e) {
+        Log.w("SmsReceiver", e);
+        message.setStale(true);
+      } catch (UntrustedIdentityException e) {
+        Log.w("SmsReceiver", e);
+      } catch (DuplicateMessageException e) {
+        Log.w("SmsReceiver", e);
+        message.setDuplicate(true);
+      } catch (LegacyMessageException e) {
+        Log.w("SmsReceiver", e);
+        message.setLegacyVersion(true);
+      }
     }
 
     return storeStandardMessage(masterSecret, message);

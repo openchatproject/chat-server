@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.protobuf.ByteString;
 
 import com.openchat.secureim.crypto.KeyExchangeProcessor;
+import com.openchat.secureim.crypto.OpenchatServiceCipher;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsSmsColumns;
 import com.openchat.secureim.database.model.SmsMessageRecord;
@@ -18,13 +19,12 @@ import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.Util;
 import com.openchat.protocal.InvalidKeyException;
-import com.openchat.protocal.SessionCipher;
 import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.protocal.state.PreKeyBundle;
 import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.crypto.AttachmentCipher;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.crypto.SessionCipherFactory;
+import com.openchat.imservice.crypto.TransportDetails;
 import com.openchat.imservice.push.MismatchedDevices;
 import com.openchat.imservice.push.MismatchedDevicesException;
 import com.openchat.imservice.push.OutgoingPushMessage;
@@ -328,10 +328,9 @@ public class PushTransport extends BaseTransport {
       }
     }
 
-    int               sessionVersion       = SessionUtil.getSessionVersion(context, masterSecret, pushAddress);
-    SessionCipher     cipher               = SessionCipherFactory.getInstance(context, masterSecret, pushAddress);
-    byte[]            paddedPlaintext      = new PushTransportDetails(sessionVersion).getPaddedMessageBody(plaintext);
-    CiphertextMessage message              = cipher.encrypt(paddedPlaintext);
+    TransportDetails  transportDetails     = new PushTransportDetails(SessionUtil.getSessionVersion(context, masterSecret, pushAddress));
+    OpenchatServiceCipher  cipher               = new OpenchatServiceCipher(context, masterSecret, pushAddress, transportDetails);
+    CiphertextMessage message              = cipher.encrypt(plaintext);
     int               remoteRegistrationId = cipher.getRemoteRegistrationId();
 
     if (message.getType() == CiphertextMessage.PREKEY_TYPE) {

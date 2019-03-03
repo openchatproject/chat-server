@@ -51,13 +51,6 @@ public class KeyExchangeProcessor {
                                              recipientDevice.getDeviceId());
   }
 
-  public void processKeyExchangeMessage(PreKeyOpenchatMessage message)
-      throws InvalidKeyIdException, InvalidKeyException, UntrustedIdentityException
-  {
-    sessionBuilder.process(message);
-    PreKeyService.initiateRefresh(context, masterSecret);
-  }
-
   public void processKeyExchangeMessage(PreKeyBundle bundle, long threadId)
       throws InvalidKeyException, UntrustedIdentityException
   {
