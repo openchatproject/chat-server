@@ -161,7 +161,7 @@ public class RegistrationService extends Service {
     int          registrationId = OpenchatServicePreferences.getLocalRegistrationId(this);
 
     if (registrationId == 0) {
-      registrationId = KeyHelper.generateRegistrationId();
+      registrationId = KeyHelper.generateRegistrationId(false);
       OpenchatServicePreferences.setLocalRegistrationId(this, registrationId);
     }
 
