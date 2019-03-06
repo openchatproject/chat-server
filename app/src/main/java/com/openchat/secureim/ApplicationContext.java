@@ -3,14 +3,12 @@ package com.openchat.secureim;
 import android.app.Application;
 import android.content.Context;
 
-import com.path.android.jobqueue.JobManager;
-import com.path.android.jobqueue.config.Configuration;
-
 import com.openchat.secureim.crypto.PRNGFixes;
-import com.openchat.secureim.jobs.ContextInjector;
+import com.openchat.secureim.jobs.EncryptingJobSerializer;
 import com.openchat.secureim.jobs.GcmRefreshJob;
-import com.openchat.secureim.jobs.JobLogger;
 import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.jobqueue.JobManager;
+import com.openchat.jobqueue.requirements.NetworkRequirementProvider;
 
 public class ApplicationContext extends Application {
 
@@ -36,20 +34,16 @@ public class ApplicationContext extends Application {
   }
 
   private void initializeJobManager() {
-    Configuration configuration = new Configuration.Builder(this)
-        .minConsumerCount(1)
-        .injector(new ContextInjector(this))
-        .customLogger(new JobLogger())
-        .build();
-
-    this.jobManager = new JobManager(this, configuration);
+    this.jobManager = new JobManager(this, "OpenchatServiceJobs",
+                                     new NetworkRequirementProvider(this),
+                                     new EncryptingJobSerializer(this), 5);
   }
 
   private void initializeGcmCheck() {
     if (OpenchatServicePreferences.isPushRegistered(this) &&
         OpenchatServicePreferences.getGcmRegistrationId(this) == null)
     {
-      this.jobManager.addJob(new GcmRefreshJob());
+      this.jobManager.add(new GcmRefreshJob(this));
     }
   }
 

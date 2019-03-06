@@ -2,15 +2,17 @@ package com.openchat.secureim.jobs;
 
 import android.content.Context;
 
-import com.path.android.jobqueue.Job;
-import com.path.android.jobqueue.Params;
+import com.openchat.jobqueue.Job;
+import com.openchat.jobqueue.JobParameters;
+import com.openchat.jobqueue.dependencies.ContextDependent;
 
-public abstract class ContextJob extends Job {
+public abstract class ContextJob extends Job implements ContextDependent {
 
-  transient protected Context context;
+  protected transient Context context;
 
-  protected ContextJob(Params params) {
-    super(params);
+  protected ContextJob(Context context, JobParameters parameters) {
+    super(parameters);
+    this.context = context;
   }
 
   public void setContext(Context context) {

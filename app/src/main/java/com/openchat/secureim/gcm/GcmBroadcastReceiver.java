@@ -6,12 +6,12 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.path.android.jobqueue.JobManager;
 
 import com.openchat.secureim.ApplicationContext;
 import com.openchat.secureim.jobs.DeliveryReceiptJob;
 import com.openchat.secureim.service.SendReceiveService;
 import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.jobqueue.JobManager;
 import com.openchat.protocal.InvalidVersionException;
 import com.openchat.imservice.directory.Directory;
 import com.openchat.imservice.directory.NotInDirectoryException;
@@ -68,8 +68,9 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 
       if (!message.isReceipt()) {
         JobManager jobManager = ApplicationContext.getInstance(context).getJobManager();
-        jobManager.addJob(new DeliveryReceiptJob(message.getSource(), message.getTimestampMillis(),
-                                                 message.getRelay()));
+        jobManager.add(new DeliveryReceiptJob(context, message.getSource(),
+                                              message.getTimestampMillis(),
+                                              message.getRelay()));
       }
     } catch (IOException e) {
       Log.w(TAG, e);
