@@ -9,8 +9,6 @@ import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
-import com.openchat.secureim.service.GcmRegistrationService;
-import com.openchat.secureim.service.PreKeyService;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.imservice.crypto.MasterSecret;
 
@@ -122,8 +120,6 @@ public class RoutingActivity extends PassphraseRequiredSherlockActivity {
     final ConversationParameters parameters = getConversationParameters();
     final Intent intent;
 
-    scheduleRefreshActions();
-
     if      (isShareAction())               intent = getShareIntent(parameters);
     else if (parameters.recipients != null) intent = getConversationIntent(parameters);
     else                                    intent = getConversationListIntent();
@@ -171,21 +167,6 @@ public class RoutingActivity extends PassphraseRequiredSherlockActivity {
     intent.putExtra("master_secret", masterSecret);
 
     return intent;
-  }
-
-  private void scheduleRefreshActions() {
-    if (OpenchatServicePreferences.isPushRegistered(this) &&
-        OpenchatServicePreferences.getGcmRegistrationId(this) == null)
-    {
-      Intent intent = new Intent(this, GcmRegistrationService.class);
-      startService(intent);
-    }
-
-    if (OpenchatServicePreferences.isPushRegistered(this) &&
-        !OpenchatServicePreferences.isSignedPreKeyRegistered(this))
-    {
-      PreKeyService.initiateCreateSigned(this, masterSecret);
-    }
   }
 
   private int getApplicationState() {

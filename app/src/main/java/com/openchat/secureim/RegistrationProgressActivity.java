@@ -35,9 +35,9 @@ import com.openchat.secureim.service.RegistrationService;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.push.ExpectationFailedException;
+import com.openchat.imservice.push.exceptions.ExpectationFailedException;
 import com.openchat.imservice.push.PushServiceSocket;
-import com.openchat.imservice.push.RateLimitException;
+import com.openchat.imservice.push.exceptions.RateLimitException;
 import com.openchat.imservice.util.PhoneNumberFormatter;
 import com.openchat.imservice.util.Util;
 

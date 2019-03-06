@@ -37,7 +37,7 @@
                 android:protectionLevel="signature" />
     <uses-permission android:name="com.openchat.secureim.permission.C2D_MESSAGE" />
 
-    <application android:name="com.openchat.secureim.ApplicationListener"
+    <application android:name=".ApplicationContext"
                  android:icon="@drawable/icon"
                  android:label="@string/app_name"
                  android:theme="@style/OpenchatService.LightTheme">

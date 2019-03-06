@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.path.android.jobqueue.JobManager;
 
+import com.openchat.secureim.ApplicationContext;
+import com.openchat.secureim.jobs.DeliveryReceiptJob;
 import com.openchat.secureim.service.SendReceiveService;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.InvalidVersionException;
@@ -31,38 +34,47 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
     if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
       Log.w(TAG, "GCM message...");
 
-      try {
-        String data = intent.getStringExtra("message");
-
-        if (Util.isEmpty(data))
-          return;
-
-        if (!OpenchatServicePreferences.isPushRegistered(context)) {
-          Log.w(TAG, "Not push registered!");
-          return;
-        }
-
-        String                       sessionKey       = OpenchatServicePreferences.getOpenchatingKey(context);
-        IncomingEncryptedPushMessage encryptedMessage = new IncomingEncryptedPushMessage(data, sessionKey);
-        IncomingPushMessage          message          = encryptedMessage.getIncomingPushMessage();
-
-        if (!isActiveNumber(context, message.getSource())) {
-          Directory directory           = Directory.getInstance(context);
-          ContactTokenDetails contactTokenDetails = new ContactTokenDetails();
-          contactTokenDetails.setNumber(message.getSource());
-
-          directory.setNumber(contactTokenDetails, true);
-        }
-
-        Intent service = new Intent(context, SendReceiveService.class);
-        service.setAction(SendReceiveService.RECEIVE_PUSH_ACTION);
-        service.putExtra("message", message);
-        context.startService(service);
-      } catch (IOException e) {
-        Log.w(TAG, e);
-      } catch (InvalidVersionException e) {
-        Log.w(TAG, e);
+      if (!OpenchatServicePreferences.isPushRegistered(context)) {
+        Log.w(TAG, "Not push registered!");
+        return;
       }
+
+      String messageData = intent.getStringExtra("message");
+      String receiptData = intent.getStringExtra("receipt");
+
+      if      (!Util.isEmpty(messageData)) handleReceivedMessage(context, messageData);
+      else if (!Util.isEmpty(receiptData)) handleReceivedMessage(context, receiptData);
+    }
+  }
+
+  private void handleReceivedMessage(Context context, String data) {
+    try {
+      String                       sessionKey = OpenchatServicePreferences.getOpenchatingKey(context);
+      IncomingEncryptedPushMessage encrypted  = new IncomingEncryptedPushMessage(data, sessionKey);
+      IncomingPushMessage          message    = encrypted.getIncomingPushMessage();
+
+      if (!isActiveNumber(context, message.getSource())) {
+        Directory           directory           = Directory.getInstance(context);
+        ContactTokenDetails contactTokenDetails = new ContactTokenDetails();
+        contactTokenDetails.setNumber(message.getSource());
+
+        directory.setNumber(contactTokenDetails, true);
+      }
+
+      Intent receiveService = new Intent(context, SendReceiveService.class);
+      receiveService.setAction(SendReceiveService.RECEIVE_PUSH_ACTION);
+      receiveService.putExtra("message", message);
+      context.startService(receiveService);
+
+      if (!message.isReceipt()) {
+        JobManager jobManager = ApplicationContext.getInstance(context).getJobManager();
+        jobManager.addJob(new DeliveryReceiptJob(message.getSource(), message.getTimestampMillis(),
+                                                 message.getRelay()));
+      }
+    } catch (IOException e) {
+      Log.w(TAG, e);
+    } catch (InvalidVersionException e) {
+      Log.w(TAG, e);
     }
   }
 

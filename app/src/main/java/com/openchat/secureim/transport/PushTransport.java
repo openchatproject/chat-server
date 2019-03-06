@@ -26,7 +26,7 @@ import com.openchat.imservice.crypto.AttachmentCipher;
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.crypto.TransportDetails;
 import com.openchat.imservice.push.MismatchedDevices;
-import com.openchat.imservice.push.MismatchedDevicesException;
+import com.openchat.imservice.push.exceptions.MismatchedDevicesException;
 import com.openchat.imservice.push.OutgoingPushMessage;
 import com.openchat.imservice.push.OutgoingPushMessageList;
 import com.openchat.imservice.push.PushAddress;
@@ -37,7 +37,7 @@ import com.openchat.imservice.push.PushMessageProtos.PushMessageContent;
 import com.openchat.imservice.push.PushServiceSocket;
 import com.openchat.imservice.push.PushTransportDetails;
 import com.openchat.imservice.push.StaleDevices;
-import com.openchat.imservice.push.StaleDevicesException;
+import com.openchat.imservice.push.exceptions.StaleDevicesException;
 import com.openchat.imservice.push.UnregisteredUserException;
 import com.openchat.imservice.storage.SessionUtil;
 import com.openchat.imservice.storage.OpenchatServiceSessionStore;
@@ -75,7 +75,7 @@ public class PushTransport extends BaseTransport {
       PushServiceSocket socket    = PushServiceSocketFactory.create(context);
       byte[]            plaintext = getPlaintextMessage(message);
 
-      deliver(socket, recipient, threadId, plaintext);
+      deliver(socket, recipient, message.getDateSent(), threadId, plaintext);
 
       if (message.isEndSession()) {
         SessionStore sessionStore = new OpenchatServiceSessionStore(context, masterSecret);
@@ -112,7 +112,7 @@ public class PushTransport extends BaseTransport {
 
     for (Recipient recipient : recipients.getRecipientsList()) {
       try {
-        deliver(socket, recipient, threadId, plaintext);
+        deliver(socket, recipient, message.getSentTimestamp(), threadId, plaintext);
       } catch (UntrustedIdentityException e) {
         Log.w("PushTransport", e);
         untrustedIdentities.add(e);
@@ -127,13 +127,14 @@ public class PushTransport extends BaseTransport {
     }
   }
 
-  private void deliver(PushServiceSocket socket, Recipient recipient, long threadId, byte[] plaintext)
+  private void deliver(PushServiceSocket socket, Recipient recipient, long timestamp,
+                       long threadId, byte[] plaintext)
       throws IOException, InvalidNumberException, UntrustedIdentityException
   {
     for (int i=0;i<3;i++) {
       try {
-        OutgoingPushMessageList messages = getEncryptedMessages(socket, threadId,
-                                                                recipient, plaintext);
+        OutgoingPushMessageList messages = getEncryptedMessages(socket, threadId, recipient,
+                                                                timestamp, plaintext);
         socket.sendMessage(messages);
 
         return;
@@ -283,7 +284,8 @@ public class PushTransport extends BaseTransport {
   }
 
   private OutgoingPushMessageList getEncryptedMessages(PushServiceSocket socket, long threadId,
-                                                       Recipient recipient, byte[] plaintext)
+                                                       Recipient recipient, long timestamp,
+                                                       byte[] plaintext)
       throws IOException, InvalidNumberException, UntrustedIdentityException
   {
     SessionStore sessionStore = new OpenchatServiceSessionStore(context, masterSecret);
@@ -302,7 +304,7 @@ public class PushTransport extends BaseTransport {
       messages.add(new OutgoingPushMessage(device, body));
     }
 
-    return new OutgoingPushMessageList(e164number, masterDevice.getRelay(), messages);
+    return new OutgoingPushMessageList(e164number, timestamp, masterDevice.getRelay(), messages);
   }
 
   private PushBody getEncryptedMessage(PushServiceSocket socket, long threadId,

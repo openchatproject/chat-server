@@ -45,7 +45,7 @@ import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Trimmer;
 import com.openchat.secureim.util.Util;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.push.AuthorizationFailedException;
+import com.openchat.imservice.push.exceptions.AuthorizationFailedException;
 import com.openchat.imservice.push.PushServiceSocket;
 
 import java.io.IOException;

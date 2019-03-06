@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.util.Log;
 import android.util.Pair;
 
-import com.openchat.secureim.Release;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingPartDatabase;
 import com.openchat.secureim.database.PartDatabase;
@@ -15,7 +14,7 @@ import com.openchat.protocal.InvalidMessageException;
 import com.openchat.imservice.crypto.AttachmentCipherInputStream;
 import com.openchat.imservice.crypto.MasterCipher;
 import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.push.NotFoundException;
+import com.openchat.imservice.push.exceptions.NotFoundException;
 import com.openchat.imservice.push.PushServiceSocket;
 import com.openchat.imservice.util.Base64;
 

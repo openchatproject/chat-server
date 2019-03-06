@@ -32,6 +32,7 @@ import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.LRUCache;
+import com.openchat.imservice.util.InvalidNumberException;
 import com.openchat.imservice.util.ListenableFutureTask;
 import com.openchat.secureim.util.Trimmer;
 import com.openchat.imservice.util.Util;
@@ -101,13 +102,14 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
     STATUS + " INTEGER, " + TRANSACTION_ID + " TEXT, " + RETRIEVE_STATUS + " INTEGER, "         +
     RETRIEVE_TEXT + " TEXT, " + RETRIEVE_TEXT_CS + " INTEGER, " + READ_STATUS + " INTEGER, "    +
     CONTENT_CLASS + " INTEGER, " + RESPONSE_TEXT + " TEXT, " + DELIVERY_TIME + " INTEGER, "     +
-    DELIVERY_REPORT + " INTEGER);";
+    RECEIPT_COUNT + " INTEGER DEFAULT 0, " + DELIVERY_REPORT + " INTEGER);";
 
   public static final String[] CREATE_INDEXS = {
     "CREATE INDEX IF NOT EXISTS mms_thread_id_index ON " + TABLE_NAME + " (" + THREAD_ID + ");",
     "CREATE INDEX IF NOT EXISTS mms_read_index ON " + TABLE_NAME + " (" + READ + ");",
     "CREATE INDEX IF NOT EXISTS mms_read_and_thread_id_index ON " + TABLE_NAME + "(" + READ + "," + THREAD_ID + ");",
-    "CREATE INDEX IF NOT EXISTS mms_message_box_index ON " + TABLE_NAME + " (" + MESSAGE_BOX + ");"
+    "CREATE INDEX IF NOT EXISTS mms_message_box_index ON " + TABLE_NAME + " (" + MESSAGE_BOX + ");",
+    "CREATE INDEX IF NOT EXISTS mms_date_sent_index ON " + TABLE_NAME + " (" + DATE_SENT + ");"
   };
 
   private static final String[] MMS_PROJECTION = new String[] {
@@ -118,6 +120,7 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
       MESSAGE_SIZE, PRIORITY, REPORT_ALLOWED, STATUS, TRANSACTION_ID, RETRIEVE_STATUS,
       RETRIEVE_TEXT, RETRIEVE_TEXT_CS, READ_STATUS, CONTENT_CLASS, RESPONSE_TEXT,
       DELIVERY_TIME, DELIVERY_REPORT, BODY, PART_COUNT, ADDRESS, ADDRESS_DEVICE_ID,
+      RECEIPT_COUNT
   };
 
   public static final ExecutorService slideResolver = com.openchat.secureim.util.Util.newSingleThreadedLifoExecutor();
@@ -143,6 +146,43 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
     }
 
     return 0;
+  }
+
+  public void incrementDeliveryReceiptCount(String address, long timestamp) {
+    MmsAddressDatabase addressDatabase = DatabaseFactory.getMmsAddressDatabase(context);
+    SQLiteDatabase     database        = databaseHelper.getWritableDatabase();
+    Cursor             cursor          = null;
+
+    try {
+      cursor = database.query(TABLE_NAME, new String[] {ID, THREAD_ID}, DATE_SENT + " = ?", new String[] {String.valueOf(timestamp / 1000)}, null, null, null, null);
+
+      while (cursor.moveToNext()) {
+        List<String> addresses = addressDatabase.getAddressesForId(cursor.getLong(cursor.getColumnIndexOrThrow(ID)));
+
+        for (String storedAddress : addresses) {
+          try {
+            String ourAddress   = com.openchat.secureim.util.Util.canonicalizeNumber(context, address);
+            String theirAddress = com.openchat.secureim.util.Util.canonicalizeNumber(context, storedAddress);
+
+            if (ourAddress.equals(theirAddress)) {
+              long id       = cursor.getLong(cursor.getColumnIndexOrThrow(ID));
+              long threadId = cursor.getLong(cursor.getColumnIndexOrThrow(THREAD_ID));
+
+              database.execSQL("UPDATE " + TABLE_NAME + " SET " +
+                               RECEIPT_COUNT + " = " + RECEIPT_COUNT + " + 1 WHERE " + ID + " = ?",
+                               new String[] {String.valueOf(id)});
+
+              notifyConversationListeners(threadId);
+            }
+          } catch (InvalidNumberException e) {
+            Log.w("MmsDatabase", e);
+          }
+        }
+      }
+    } finally {
+      if (cursor != null)
+        cursor.close();
+    }
   }
 
   public long getThreadIdForMessage(long id) {
@@ -396,6 +436,7 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
 
         long       outboxType  = cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_BOX));
         String     messageText = cursor.getString(cursor.getColumnIndexOrThrow(BODY));
+        long       timestamp   = cursor.getLong(cursor.getColumnIndexOrThrow(NORMALIZED_DATE_SENT));
         PduHeaders headers     = getHeadersFromCursor(cursor);
         addr.getAddressesForId(messageId, headers);
 
@@ -411,7 +452,7 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
           Log.w("MmsDatabase", e);
         }
 
-        requests[i++] = new SendReq(headers, body, messageId, outboxType);
+        requests[i++] = new SendReq(headers, body, messageId, outboxType, timestamp);
       }
 
       return requests;
@@ -870,6 +911,7 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
       long messageSize           = cursor.getLong(cursor.getColumnIndexOrThrow(MmsDatabase.MESSAGE_SIZE));
       long expiry                = cursor.getLong(cursor.getColumnIndexOrThrow(MmsDatabase.EXPIRY));
       int status                 = cursor.getInt(cursor.getColumnIndexOrThrow(MmsDatabase.STATUS));
+      int receiptCount           = cursor.getInt(cursor.getColumnIndexOrThrow(MmsDatabase.RECEIPT_COUNT));
 
       byte[]contentLocationBytes = null;
       byte[]transactionIdBytes   = null;
@@ -881,7 +923,7 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
         transactionIdBytes = com.openchat.secureim.util.Util.toIsoBytes(transactionId);
 
       return new NotificationMmsMessageRecord(context, id, recipients, recipients.getPrimaryRecipient(),
-                                              addressDeviceId, dateSent, dateReceived, threadId,
+                                              addressDeviceId, dateSent, dateReceived, receiptCount, threadId,
                                               contentLocationBytes, messageSize, expiry, status,
                                               transactionIdBytes, mailbox);
     }
@@ -894,6 +936,7 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
       long threadId           = cursor.getLong(cursor.getColumnIndexOrThrow(MmsDatabase.THREAD_ID));
       String address          = cursor.getString(cursor.getColumnIndexOrThrow(MmsDatabase.ADDRESS));
       int addressDeviceId     = cursor.getInt(cursor.getColumnIndexOrThrow(MmsDatabase.ADDRESS_DEVICE_ID));
+      int receiptCount        = cursor.getInt(cursor.getColumnIndexOrThrow(MmsDatabase.RECEIPT_COUNT));
       DisplayRecord.Body body = getBody(cursor);
       int partCount           = cursor.getInt(cursor.getColumnIndexOrThrow(MmsDatabase.PART_COUNT));
       Recipients recipients   = getRecipientsFor(address);
@@ -901,8 +944,8 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
       ListenableFutureTask<SlideDeck> slideDeck = getSlideDeck(masterSecret, id);
 
       return new MediaMmsMessageRecord(context, id, recipients, recipients.getPrimaryRecipient(),
-                                       addressDeviceId, dateSent, dateReceived, threadId, body,
-                                       slideDeck, partCount, box);
+                                       addressDeviceId, dateSent, dateReceived, receiptCount,
+                                       threadId, body, slideDeck, partCount, box);
     }
 
     private Recipients getRecipientsFor(String address) {
