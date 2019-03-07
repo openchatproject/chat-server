@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 
 import com.openchat.secureim.crypto.DecryptingQueue;
 import com.openchat.secureim.crypto.IdentityKeyUtil;
+import com.openchat.secureim.jobs.CreateSignedPreKeyJob;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.util.Util;
 import com.openchat.imservice.crypto.MasterSecret;
@@ -30,12 +31,15 @@ public class DatabaseUpgradeActivity extends Activity {
   public static final int CURVE25519_VERSION                   = 63;
   public static final int ASYMMETRIC_MASTER_SECRET_FIX_VERSION = 73;
   public static final int NO_V1_VERSION                        = 83;
+  public static final int SIGNED_PREKEY_VERSION                = 83;
 
   private static final SortedSet<Integer> UPGRADE_VERSIONS = new TreeSet<Integer>() {{
     add(NO_MORE_KEY_EXCHANGE_PREFIX_VERSION);
     add(TOFU_IDENTITIES_VERSION);
     add(CURVE25519_VERSION);
     add(ASYMMETRIC_MASTER_SECRET_FIX_VERSION);
+    add(NO_V1_VERSION);
+    add(SIGNED_PREKEY_VERSION);
   }};
 
   private MasterSecret masterSecret;
@@ -136,6 +140,12 @@ public class DatabaseUpgradeActivity extends Activity {
 
           v1sessions.delete();
         }
+      }
+
+      if (params[0] < SIGNED_PREKEY_VERSION) {
+        ApplicationContext.getInstance(getApplicationContext())
+                          .getJobManager()
+                          .add(new CreateSignedPreKeyJob(context, masterSecret));
       }
 
       return null;

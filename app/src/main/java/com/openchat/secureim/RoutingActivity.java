@@ -20,7 +20,6 @@ public class RoutingActivity extends PassphraseRequiredSherlockActivity {
   private static final int STATE_CONVERSATION_OR_LIST     = 3;
   private static final int STATE_UPGRADE_DATABASE         = 4;
   private static final int STATE_PROMPT_PUSH_REGISTRATION = 5;
-  private static final int STATE_CREATE_SIGNED_PREKEY     = 6;
 
   private MasterSecret masterSecret   = null;
   private boolean      isVisible      = false;
