@@ -15,6 +15,7 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.openchat.secureim.R;
 import com.openchat.secureim.mms.OutgoingGroupMediaMessage;
 import com.openchat.secureim.mms.OutgoingMediaMessage;
+import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.imservice.crypto.MasterCipher;
@@ -57,6 +58,9 @@ import ws.com.google.android.mms.pdu.PduBody;
 import ws.com.google.android.mms.pdu.PduHeaders;
 import ws.com.google.android.mms.pdu.PduPart;
 import ws.com.google.android.mms.pdu.SendReq;
+
+import static com.openchat.secureim.util.Util.canonicalizeNumber;
+import static com.openchat.secureim.util.Util.canonicalizeNumberOrGroup;
 
 public class MmsDatabase extends Database implements MmsSmsColumns {
 
@@ -154,28 +158,30 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
     Cursor             cursor          = null;
 
     try {
-      cursor = database.query(TABLE_NAME, new String[] {ID, THREAD_ID}, DATE_SENT + " = ?", new String[] {String.valueOf(timestamp / 1000)}, null, null, null, null);
+      cursor = database.query(TABLE_NAME, new String[] {ID, THREAD_ID, MESSAGE_BOX}, DATE_SENT + " = ?", new String[] {String.valueOf(timestamp / 1000)}, null, null, null, null);
 
       while (cursor.moveToNext()) {
-        List<String> addresses = addressDatabase.getAddressesForId(cursor.getLong(cursor.getColumnIndexOrThrow(ID)));
+        if (Types.isOutgoingMessageType(cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_BOX)))) {
+          List<String> addresses = addressDatabase.getAddressesForId(cursor.getLong(cursor.getColumnIndexOrThrow(ID)));
 
-        for (String storedAddress : addresses) {
-          try {
-            String ourAddress   = com.openchat.secureim.util.Util.canonicalizeNumber(context, address);
-            String theirAddress = com.openchat.secureim.util.Util.canonicalizeNumber(context, storedAddress);
+          for (String storedAddress : addresses) {
+            try {
+              String ourAddress   = canonicalizeNumber(context, address);
+              String theirAddress = canonicalizeNumberOrGroup(context, storedAddress);
 
-            if (ourAddress.equals(theirAddress)) {
-              long id       = cursor.getLong(cursor.getColumnIndexOrThrow(ID));
-              long threadId = cursor.getLong(cursor.getColumnIndexOrThrow(THREAD_ID));
+              if (ourAddress.equals(theirAddress) || GroupUtil.isEncodedGroup(theirAddress)) {
+                long id       = cursor.getLong(cursor.getColumnIndexOrThrow(ID));
+                long threadId = cursor.getLong(cursor.getColumnIndexOrThrow(THREAD_ID));
 
-              database.execSQL("UPDATE " + TABLE_NAME + " SET " +
-                               RECEIPT_COUNT + " = " + RECEIPT_COUNT + " + 1 WHERE " + ID + " = ?",
-                               new String[] {String.valueOf(id)});
+                database.execSQL("UPDATE " + TABLE_NAME + " SET " +
+                                 RECEIPT_COUNT + " = " + RECEIPT_COUNT + " + 1 WHERE " + ID + " = ?",
+                                 new String[] {String.valueOf(id)});
 
-              notifyConversationListeners(threadId);
+                notifyConversationListeners(threadId);
+              }
+            } catch (InvalidNumberException e) {
+              Log.w("MmsDatabase", e);
             }
-          } catch (InvalidNumberException e) {
-            Log.w("MmsDatabase", e);
           }
         }
       }

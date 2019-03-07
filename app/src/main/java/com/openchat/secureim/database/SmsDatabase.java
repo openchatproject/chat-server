@@ -20,9 +20,7 @@ import com.openchat.secureim.sms.IncomingGroupMessage;
 import com.openchat.secureim.sms.IncomingKeyExchangeMessage;
 import com.openchat.secureim.sms.IncomingTextMessage;
 import com.openchat.secureim.sms.OutgoingTextMessage;
-import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Trimmer;
-import com.openchat.imservice.util.Base64;
 import com.openchat.imservice.util.InvalidNumberException;
 import com.openchat.imservice.util.Util;
 
@@ -230,25 +228,27 @@ public class SmsDatabase extends Database implements MmsSmsColumns {
     Cursor         cursor   = null;
 
     try {
-      cursor = database.query(TABLE_NAME, new String[] {ID, THREAD_ID, ADDRESS},
+      cursor = database.query(TABLE_NAME, new String[] {ID, THREAD_ID, ADDRESS, TYPE},
                               DATE_SENT + " = ?", new String[] {String.valueOf(timestamp)},
                               null, null, null, null);
 
       while (cursor.moveToNext()) {
-        try {
-          String theirAddress = canonicalizeNumber(context, address);
-          String ourAddress   = canonicalizeNumber(context, cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS)));
+        if (Types.isOutgoingMessageType(cursor.getLong(cursor.getColumnIndexOrThrow(TYPE)))) {
+          try {
+            String theirAddress = canonicalizeNumber(context, address);
+            String ourAddress   = canonicalizeNumber(context, cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS)));
 
-          if (ourAddress.equals(theirAddress)) {
-            database.execSQL("UPDATE " + TABLE_NAME +
-                             " SET " + RECEIPT_COUNT + " = " + RECEIPT_COUNT + " + 1 WHERE " +
-                             ID + " = ?",
-                             new String[] {String.valueOf(cursor.getLong(cursor.getColumnIndexOrThrow(ID)))});
+            if (ourAddress.equals(theirAddress)) {
+              database.execSQL("UPDATE " + TABLE_NAME +
+                               " SET " + RECEIPT_COUNT + " = " + RECEIPT_COUNT + " + 1 WHERE " +
+                               ID + " = ?",
+                               new String[] {String.valueOf(cursor.getLong(cursor.getColumnIndexOrThrow(ID)))});
 
-            notifyConversationListeners(cursor.getLong(cursor.getColumnIndexOrThrow(THREAD_ID)));
+              notifyConversationListeners(cursor.getLong(cursor.getColumnIndexOrThrow(THREAD_ID)));
+            }
+          } catch (InvalidNumberException e) {
+            Log.w("SmsDatabase", e);
           }
-        } catch (InvalidNumberException e) {
-          Log.w("SmsDatabase", e);
         }
       }
     } finally {
