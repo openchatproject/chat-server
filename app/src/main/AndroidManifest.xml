@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           package="com.openchat.secureim"
-      android:versionCode="82"
-      android:versionName="2.1.10">
+      android:versionCode="83"
+      android:versionName="2.2.0">
 
     <permission android:name="com.openchat.secureim.ACCESS_SECRETS"
                 android:label="Access to OpenchatService Secrets"
@@ -189,6 +189,12 @@
 
     <activity android:name=".LogSubmitActivity"
               android:label="@string/AndroidManifest__log_submit"
+              android:windowSoftInputMode="stateHidden"
+              android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize"/>
+
+    <activity android:name=".MediaPreviewActivity"
+              android:label="@string/AndroidManifest__media_preview"
+              android:theme="@style/OpenchatService.DarkTheme"
               android:windowSoftInputMode="stateHidden"
               android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize"/>
 

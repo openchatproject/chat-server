@@ -2,20 +2,25 @@ package com.openchat.secureim.database.model;
 
 import android.content.Context;
 import android.text.SpannableString;
+import android.util.Log;
 
 import com.openchat.secureim.R;
 import com.openchat.secureim.database.MmsDatabase;
-import com.openchat.secureim.database.SmsDatabase;
+import com.openchat.secureim.mms.Slide;
 import com.openchat.secureim.mms.SlideDeck;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.imservice.util.ListenableFutureTask;
 
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 public class MediaMmsMessageRecord extends MessageRecord {
+  private final static String TAG = MediaMmsMessageRecord.class.getSimpleName();
 
   private final Context context;
   private final int partCount;
-  private final ListenableFutureTask<SlideDeck> slideDeck;
+  private final ListenableFutureTask<SlideDeck> slideDeckFutureTask;
 
   public MediaMmsMessageRecord(Context context, long id, Recipients recipients,
                                Recipient individualRecipient, int recipientDeviceId,
@@ -27,13 +32,45 @@ public class MediaMmsMessageRecord extends MessageRecord {
     super(context, id, body, recipients, individualRecipient, recipientDeviceId,
           dateSent, dateReceived, threadId, deliveredCount, DELIVERY_STATUS_NONE, mailbox);
 
-    this.context   = context.getApplicationContext();
-    this.partCount = partCount;
-    this.slideDeck = slideDeck;
+    this.context             = context.getApplicationContext();
+    this.partCount           = partCount;
+    this.slideDeckFutureTask = slideDeck;
   }
 
-  public ListenableFutureTask<SlideDeck> getSlideDeck() {
-    return slideDeck;
+  public ListenableFutureTask<SlideDeck> getSlideDeckFuture() {
+    return slideDeckFutureTask;
+  }
+
+  private SlideDeck getSlideDeckSync() {
+    try {
+      return slideDeckFutureTask.get();
+    } catch (InterruptedException e) {
+      Log.w(TAG, e);
+      return null;
+    } catch (ExecutionException e) {
+      Log.w(TAG, e);
+      return null;
+    }
+  }
+
+  public boolean containsMediaSlide() {
+    SlideDeck deck = getSlideDeckSync();
+    return deck != null && deck.containsMediaSlide();
+  }
+
+  public Slide getMediaSlideSync() {
+    SlideDeck deck = getSlideDeckSync();
+    if (deck == null) {
+      return null;
+    }
+    List<Slide> slides = deck.getSlides();
+
+    for (Slide slide : slides) {
+      if (slide.hasImage() || slide.hasVideo() || slide.hasAudio()) {
+        return slide;
+      }
+    }
+    return null;
   }
 
   public int getPartCount() {
