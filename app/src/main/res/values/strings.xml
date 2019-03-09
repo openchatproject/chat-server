@@ -493,8 +493,7 @@
     <string name="receive_key_activity__complete">Complete</string>
 
     <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
-        OpenchatService can use instant messages to increase privacy and avoid SMS charges when communicating with other
-        OpenchatService users. To enable this feature, please verify your country code and phone number.
+        Registering is free and increases privacy when messaging other OpenchatService users. Please verify your phone number.
     </string>
     <string name="registration_activity__your_country">YOUR COUNTRY</string>
     <string name="registration_activity__your_country_code_and_phone_number">YOUR COUNTRY CODE AND
@@ -502,7 +501,7 @@
     </string>
     <string name="registration_activity__phone_number">PHONE NUMBER</string>
     <string name="registration_activity__register">Register</string>
-    <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">Registration will transmit some contact information to the server temporarily.</string>
+    <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">Registration transmits some contact information to the server. It is not stored.</string>
     <string name="registration_activity__skip">Skip</string>
 
     <string name="registration_problems__some_possible_problems_include">Some possible problems
