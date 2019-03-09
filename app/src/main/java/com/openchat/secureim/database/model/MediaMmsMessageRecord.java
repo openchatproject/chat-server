@@ -6,10 +6,13 @@ import android.util.Log;
 
 import com.openchat.secureim.R;
 import com.openchat.secureim.database.MmsDatabase;
+import com.openchat.secureim.mms.MediaNotFoundException;
 import com.openchat.secureim.mms.Slide;
 import com.openchat.secureim.mms.SlideDeck;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
+import com.openchat.imservice.push.exceptions.NotFoundException;
+import com.openchat.imservice.util.FutureTaskListener;
 import com.openchat.imservice.util.ListenableFutureTask;
 
 import java.util.List;
@@ -58,19 +61,24 @@ public class MediaMmsMessageRecord extends MessageRecord {
     return deck != null && deck.containsMediaSlide();
   }
 
-  public Slide getMediaSlideSync() {
-    SlideDeck deck = getSlideDeckSync();
-    if (deck == null) {
-      return null;
-    }
-    List<Slide> slides = deck.getSlides();
-
-    for (Slide slide : slides) {
-      if (slide.hasImage() || slide.hasVideo() || slide.hasAudio()) {
-        return slide;
+  public void fetchMediaSlide(final FutureTaskListener<Slide> listener) {
+    slideDeckFutureTask.addListener(new FutureTaskListener<SlideDeck>() {
+      @Override
+      public void onSuccess(SlideDeck deck) {
+        for (Slide slide : deck.getSlides()) {
+          if (slide.hasImage() || slide.hasVideo() || slide.hasAudio()) {
+            listener.onSuccess(slide);
+            return;
+          }
+        }
+        listener.onFailure(new MediaNotFoundException("no media slide found"));
       }
-    }
-    return null;
+
+      @Override
+      public void onFailure(Throwable error) {
+        listener.onFailure(error);
+      }
+    });
   }
 
   public int getPartCount() {

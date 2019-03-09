@@ -89,7 +89,7 @@ public class RecipientProvider {
       }
     };
 
-    ListenableFutureTask<RecipientDetails> future = new ListenableFutureTask<RecipientDetails>(task, null);
+    ListenableFutureTask<RecipientDetails> future = new ListenableFutureTask<RecipientDetails>(task);
 
     asyncRecipientResolver.submit(future);
 

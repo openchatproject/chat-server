@@ -39,6 +39,7 @@ import com.openchat.secureim.util.DirectoryHelper;
 import com.openchat.secureim.util.SaveAttachmentTask;
 import com.openchat.secureim.util.SaveAttachmentTask.Attachment;
 import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.imservice.util.FutureTaskListener;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -242,14 +243,20 @@ public class ConversationFragment extends SherlockListFragment
     SaveAttachmentTask.showWarningDialog(getActivity(), new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int which) {
 
-        final Slide slide = message.getMediaSlideSync();
-        if (slide == null) {
-          Log.w(TAG, "No slide with attachable media found, failing nicely.");
-          Toast.makeText(getActivity(), R.string.ConversationFragment_error_while_saving_attachment_to_sd_card, Toast.LENGTH_LONG).show();
-          return;
-        }
-        SaveAttachmentTask saveTask = new SaveAttachmentTask(getActivity(), masterSecret);
-        saveTask.execute(new Attachment(slide.getUri(), slide.getContentType(), message.getDateReceived()));
+        message.fetchMediaSlide(new FutureTaskListener<Slide>() {
+          @Override
+          public void onSuccess(Slide slide) {
+            SaveAttachmentTask saveTask = new SaveAttachmentTask(getActivity(), masterSecret);
+            saveTask.execute(new Attachment(slide.getUri(), slide.getContentType(), message.getDateReceived()));
+          }
+
+          @Override
+          public void onFailure(Throwable error) {
+            Log.w(TAG, "No slide with attachable media found, failing nicely.");
+            Log.w(TAG, error);
+            Toast.makeText(getActivity(), R.string.ConversationFragment_error_while_saving_attachment_to_sd_card, Toast.LENGTH_LONG).show();
+          }
+        });
       }
     });
   }
