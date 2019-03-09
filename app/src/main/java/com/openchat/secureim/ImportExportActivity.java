@@ -6,13 +6,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
+import android.support.v7.app.ActionBar;
+import android.view.MenuItem;
 
 import com.openchat.imservice.crypto.MasterSecret;
 
-public class ImportExportActivity extends PassphraseRequiredSherlockFragmentActivity {
+public class ImportExportActivity extends PassphraseRequiredActionBarActivity {
 
   private TabPagerAdapter tabPagerAdapter;
   private ViewPager viewPager;

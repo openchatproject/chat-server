@@ -20,7 +20,7 @@ import com.openchat.secureim.database.SmsMigrator.ProgressDescription;
 import com.openchat.secureim.service.ApplicationMigrationService;
 import com.openchat.secureim.service.ApplicationMigrationService.ImportState;
 
-public class DatabaseMigrationActivity extends PassphraseRequiredSherlockActivity {
+public class DatabaseMigrationActivity extends PassphraseRequiredActionBarActivity {
 
   private final ImportServiceConnection serviceConnection  = new ImportServiceConnection();
   private final ImportStateHandler      importStateHandler = new ImportStateHandler();

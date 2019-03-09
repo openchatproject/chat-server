@@ -1,12 +1,11 @@
 package com.openchat.secureim;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 
 import com.openchat.imservice.crypto.MasterSecret;
 
-import com.actionbarsherlock.app.SherlockActivity;
-
-public class PassphraseRequiredSherlockActivity extends SherlockActivity implements PassphraseRequiredActivity {
+public class PassphraseRequiredActionBarActivity extends ActionBarActivity implements PassphraseRequiredActivity {
 
   private final PassphraseRequiredMixin delegate = new PassphraseRequiredMixin();
 

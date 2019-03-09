@@ -31,13 +31,7 @@ public class DynamicTheme {
   private static int getSelectedTheme(Activity activity) {
     String theme = OpenchatServicePreferences.getTheme(activity);
 
-    if (theme.equals("light")) {
-      if (activity instanceof ConversationActivity) return R.style.OpenchatService_LightTheme_ConversationActivity;
-      else                                          return R.style.OpenchatService_LightTheme;
-    } else if (theme.equals("dark")) {
-      if (activity instanceof ConversationActivity) return R.style.OpenchatService_DarkTheme_ConversationActivity;
-      else                                          return R.style.OpenchatService_DarkTheme;
-    }
+    if (theme.equals("dark")) return R.style.OpenchatService_DarkTheme;
 
     return R.style.OpenchatService_LightTheme;
   }

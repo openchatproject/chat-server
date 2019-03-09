@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.v7.app.ActionBarActivity;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -27,8 +28,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.actionbarsherlock.app.SherlockActivity;
 
 import com.openchat.secureim.push.PushServiceSocketFactory;
 import com.openchat.secureim.service.RegistrationService;
@@ -45,7 +44,7 @@ import java.io.IOException;
 
 import static com.openchat.secureim.service.RegistrationService.RegistrationState;
 
-public class RegistrationProgressActivity extends SherlockActivity {
+public class RegistrationProgressActivity extends ActionBarActivity {
 
   private static final int FOCUSED_COLOR   = Color.parseColor("#ff333333");
   private static final int UNFOCUSED_COLOR = Color.parseColor("#ff808080");

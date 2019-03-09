@@ -6,13 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.ActionBar.TabListener;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.Tab;
+import android.support.v7.app.ActionBar.TabListener;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.openchat.secureim.util.DynamicTheme;
 
@@ -21,7 +20,7 @@ import java.util.List;
 
 import static com.openchat.secureim.contacts.ContactAccessor.ContactData;
 
-public class ContactSelectionActivity extends PassphraseRequiredSherlockFragmentActivity {
+public class ContactSelectionActivity extends PassphraseRequiredActionBarActivity {
 
   private final DynamicTheme dynamicTheme = new DynamicTheme();
 
@@ -54,7 +53,7 @@ public class ContactSelectionActivity extends PassphraseRequiredSherlockFragment
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    MenuInflater inflater = this.getSupportMenuInflater();
+    MenuInflater inflater = this.getMenuInflater();
     inflater.inflate(R.menu.contact_selection, menu);
 
     return true;

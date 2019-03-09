@@ -12,7 +12,7 @@ import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.imservice.crypto.MasterSecret;
 
-public class RoutingActivity extends PassphraseRequiredSherlockActivity {
+public class RoutingActivity extends PassphraseRequiredActionBarActivity {
 
   private static final int STATE_CREATE_PASSPHRASE        = 1;
   private static final int STATE_PROMPT_PASSPHRASE        = 2;

@@ -1,10 +1,10 @@
 package com.openchat.secureim;
 
 import android.os.Bundle;
-
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.openchat.secureim.crypto.IdentityKeyUtil;
 import com.openchat.imservice.crypto.IdentityKeyParcelable;
@@ -23,7 +23,7 @@ public class ViewLocalIdentityActivity extends ViewIdentityActivity {
   public boolean onPrepareOptionsMenu(Menu menu) {
     super.onPrepareOptionsMenu(menu);
 
-    MenuInflater inflater = this.getSupportMenuInflater();
+    MenuInflater inflater = this.getMenuInflater();
     inflater.inflate(R.menu.local_identity, menu);
 
     return true;

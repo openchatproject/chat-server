@@ -2,6 +2,9 @@ package com.openchat.secureim;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.openchat.protocal.IdentityKey;
@@ -9,13 +12,10 @@ import com.openchat.imservice.util.Base64;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.DynamicTheme;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.openchat.imservice.zxing.integration.IntentIntegrator;
 import com.openchat.imservice.zxing.integration.IntentResult;
 
-public abstract class KeyScanningActivity extends PassphraseRequiredSherlockActivity {
+public abstract class KeyScanningActivity extends PassphraseRequiredActionBarActivity {
 
   private final DynamicTheme dynamicTheme = new DynamicTheme();
 
@@ -35,7 +35,7 @@ public abstract class KeyScanningActivity extends PassphraseRequiredSherlockActi
   public boolean onPrepareOptionsMenu(Menu menu) {
     super.onPrepareOptionsMenu(menu);
 
-    MenuInflater inflater = this.getSupportMenuInflater();
+    MenuInflater inflater = this.getMenuInflater();
     menu.clear();
 
     inflater.inflate(R.menu.key_scanning, menu);

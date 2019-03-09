@@ -4,13 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Toast;
-
-import com.actionbarsherlock.app.ActionBar;
+import android.support.v7.app.ActionBar;
 
 import com.openchat.secureim.crypto.IdentityKeyUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;

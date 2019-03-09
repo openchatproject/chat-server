@@ -5,14 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.support.v7.app.ActionBarActivity;
 
 import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.secureim.service.KeyCachingService;
 import com.openchat.secureim.util.MemoryCleaner;
 
-import com.actionbarsherlock.app.SherlockActivity;
-
-public abstract class PassphraseActivity extends SherlockActivity {
+public abstract class PassphraseActivity extends ActionBarActivity {
 
   private KeyCachingService keyCachingService;
   private MasterSecret masterSecret;

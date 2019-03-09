@@ -1,6 +1,7 @@
 package com.openchat.secureim;
 
 import android.app.AlertDialog;
+import android.support.v7.app.ActionBarActivity;
 import android.text.ClipboardManager;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -8,14 +9,13 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.thoughtcrimegson.Gson;
 import com.google.thoughtcrimegson.JsonIOException;
 import com.google.thoughtcrimegson.JsonSyntaxException;
@@ -35,7 +35,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
-public class LogSubmitActivity extends SherlockActivity {
+public class LogSubmitActivity extends ActionBarActivity {
   private static final String TAG = LogSubmitActivity.class.getSimpleName();
 
   private static final String HASTEBIN_ENDPOINT = "http://hastebin.com/documents";

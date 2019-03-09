@@ -3,6 +3,7 @@ package com.openchat.secureim;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
@@ -13,8 +14,6 @@ import android.widget.CheckedTextView;
 import android.widget.CursorAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-
-import com.actionbarsherlock.app.SherlockListFragment;
 
 import com.openchat.secureim.contacts.ContactAccessor;
 import com.openchat.secureim.contacts.ContactAccessor.ContactData;
@@ -27,7 +26,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ContactSelectionGroupsFragment extends SherlockListFragment
+public class ContactSelectionGroupsFragment extends ListFragment
     implements LoaderManager.LoaderCallbacks<Cursor>
 {
 

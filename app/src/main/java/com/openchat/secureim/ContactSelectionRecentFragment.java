@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.CallLog.Calls;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -18,8 +19,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockListFragment;
-
 import com.openchat.secureim.contacts.ContactAccessor;
 import com.openchat.secureim.contacts.ContactAccessor.ContactData;
 import com.openchat.secureim.contacts.ContactAccessor.NumberData;
@@ -31,7 +30,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ContactSelectionRecentFragment extends SherlockListFragment
+public class ContactSelectionRecentFragment extends ListFragment
     implements LoaderManager.LoaderCallbacks<Cursor>
 {
 

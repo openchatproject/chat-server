@@ -3,22 +3,21 @@ package com.openchat.secureim;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.openchat.secureim.util.DirectoryHelper;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.openchat.secureim.contacts.ContactAccessor.ContactData;
 
-public class PushContactSelectionActivity extends PassphraseRequiredSherlockFragmentActivity {
+public class PushContactSelectionActivity extends PassphraseRequiredActionBarActivity {
   private final static String TAG             = "ContactSelectActivity";
   public  final static String PUSH_ONLY_EXTRA = "push_only";
 
@@ -49,7 +48,7 @@ public class PushContactSelectionActivity extends PassphraseRequiredSherlockFrag
 
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
-    MenuInflater inflater = this.getSupportMenuInflater();
+    MenuInflater inflater = this.getMenuInflater();
     menu.clear();
 
     if (OpenchatServicePreferences.isPushRegistered(this)) inflater.inflate(R.menu.push_directory, menu);
