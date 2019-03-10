@@ -11,7 +11,7 @@ import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.NoSuchMessageException;
 import com.openchat.secureim.database.model.SmsMessageRecord;
 import com.openchat.secureim.notifications.MessageNotifier;
-import com.openchat.secureim.push.OpenchatServiceMessageSenderFactory;
+import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.sms.IncomingIdentityUpdateMessage;
@@ -85,7 +85,7 @@ public class PushTextSendJob extends PushSendJob {
 
     try {
       PushAddress             address       = getPushAddress(message.getIndividualRecipient());
-      OpenchatServiceMessageSender messageSender = OpenchatServiceMessageSenderFactory.create(context, masterSecret);
+      OpenchatServiceMessageSender messageSender = OpenchatServiceCommunicationFactory.createSender(context, masterSecret);
 
       if (message.isEndSession()) {
         messageSender.sendMessage(address, new OpenchatServiceMessage(message.getDateSent(), null,

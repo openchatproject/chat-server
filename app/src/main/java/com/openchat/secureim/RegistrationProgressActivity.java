@@ -29,13 +29,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.openchat.secureim.push.PushServiceSocketFactory;
+import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.service.RegistrationService;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.imservice.api.OpenchatServiceAccountManager;
 import com.openchat.imservice.push.exceptions.ExpectationFailedException;
-import com.openchat.imservice.push.PushServiceSocket;
 import com.openchat.imservice.push.exceptions.RateLimitException;
 import com.openchat.imservice.util.PhoneNumberFormatter;
 import com.openchat.imservice.util.Util;
@@ -512,9 +512,11 @@ public class RegistrationProgressActivity extends ActionBarActivity {
         @Override
         protected Integer doInBackground(Void... params) {
           try {
-            PushServiceSocket socket = PushServiceSocketFactory.create(context, e164number, password);
+            OpenchatServiceAccountManager accountManager = OpenchatServiceCommunicationFactory.createManager(context);
             int registrationId = OpenchatServicePreferences.getLocalRegistrationId(context);
-            socket.verifyAccount(code, openchatingKey, true, registrationId);
+
+            accountManager.verifyAccount(code, openchatingKey, true, registrationId);
+
             return SUCCESS;
           } catch (ExpectationFailedException e) {
             Log.w("RegistrationProgressActivity", e);
@@ -603,8 +605,8 @@ public class RegistrationProgressActivity extends ActionBarActivity {
         @Override
         protected Integer doInBackground(Void... params) {
           try {
-            PushServiceSocket socket = PushServiceSocketFactory.create(context, e164number, password);
-            socket.createAccount(true);
+            OpenchatServiceAccountManager accountManager = OpenchatServiceCommunicationFactory.createManager(context);
+            accountManager.requestVoiceVerificationCode();
 
             return SUCCESS;
           } catch (RateLimitException e) {

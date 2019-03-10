@@ -16,7 +16,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.telephony.PhoneNumberUtils;
 
-import com.openchat.imservice.directory.Directory;
+import com.openchat.secureim.database.OpenchatServiceDirectory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,7 +66,7 @@ public class ContactAccessor {
     final ContentResolver resolver = context.getContentResolver();
     final String[] inProjection    = new String[]{PhoneLookup._ID, PhoneLookup.DISPLAY_NAME};
 
-    List<String> pushNumbers = Directory.getInstance(context).getActiveNumbers();
+    List<String> pushNumbers = OpenchatServiceDirectory.getInstance(context).getActiveNumbers();
     final Collection<ContactData> lookupData = new ArrayList<ContactData>(pushNumbers.size());
 
     for (String pushNumber : pushNumbers) {

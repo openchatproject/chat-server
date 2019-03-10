@@ -10,7 +10,7 @@ import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsDatabase;
 import com.openchat.secureim.database.NoSuchMessageException;
 import com.openchat.secureim.mms.PartParser;
-import com.openchat.secureim.push.OpenchatServiceMessageSenderFactory;
+import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
@@ -98,7 +98,7 @@ public class PushMediaSendJob extends PushSendJob {
              InsecureFallbackApprovalException, UntrustedIdentityException
   {
     MmsDatabase             database               = DatabaseFactory.getMmsDatabase(context);
-    OpenchatServiceMessageSender messageSender          = OpenchatServiceMessageSenderFactory.create(context, masterSecret);
+    OpenchatServiceMessageSender messageSender          = OpenchatServiceCommunicationFactory.createSender(context, masterSecret);
     String                  destination            = message.getTo()[0].getString();
     boolean                 isSmsFallbackSupported = isSmsFallbackSupported(context, destination);
 

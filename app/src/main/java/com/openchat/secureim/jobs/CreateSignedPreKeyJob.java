@@ -4,7 +4,9 @@ import android.content.Context;
 import android.util.Log;
 
 import com.openchat.secureim.crypto.IdentityKeyUtil;
-import com.openchat.secureim.push.PushServiceSocketFactory;
+import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.crypto.PreKeyUtil;
+import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.util.ParcelUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.EncryptionKeys;
@@ -12,9 +14,7 @@ import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.protocal.IdentityKeyPair;
 import com.openchat.protocal.state.SignedPreKeyRecord;
-import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.secureim.crypto.PreKeyUtil;
-import com.openchat.imservice.push.PushServiceSocket;
+import com.openchat.imservice.api.OpenchatServiceAccountManager;
 
 import java.io.IOException;
 
@@ -43,11 +43,11 @@ public class CreateSignedPreKeyJob extends ContextJob {
       return;
     }
 
-    IdentityKeyPair    identityKeyPair    = IdentityKeyUtil.getIdentityKeyPair(context, masterSecret);
-    SignedPreKeyRecord signedPreKeyRecord = PreKeyUtil.generateSignedPreKey(context, masterSecret, identityKeyPair);
-    PushServiceSocket  socket             = PushServiceSocketFactory.create(context);
+    IdentityKeyPair          identityKeyPair    = IdentityKeyUtil.getIdentityKeyPair(context, masterSecret);
+    SignedPreKeyRecord       signedPreKeyRecord = PreKeyUtil.generateSignedPreKey(context, masterSecret, identityKeyPair);
+    OpenchatServiceAccountManager accountManager     = OpenchatServiceCommunicationFactory.createManager(context);
 
-    socket.setCurrentSignedPreKey(signedPreKeyRecord);
+    accountManager.setSignedPreKey(signedPreKeyRecord);
     OpenchatServicePreferences.setSignedPreKeyRegistered(context, true);
   }
 

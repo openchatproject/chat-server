@@ -38,8 +38,9 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.openchat.secureim.components.OutgoingSmsPreference;
 import com.openchat.secureim.contacts.ContactAccessor;
 import com.openchat.secureim.contacts.ContactIdentityManager;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.MasterSecretUtil;
-import com.openchat.secureim.push.PushServiceSocketFactory;
+import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.service.KeyCachingService;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.DynamicLanguage;
@@ -48,9 +49,9 @@ import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Trimmer;
 import com.openchat.secureim.util.Util;
-import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.protocal.util.guava.Optional;
+import com.openchat.imservice.api.OpenchatServiceAccountManager;
 import com.openchat.imservice.push.exceptions.AuthorizationFailedException;
-import com.openchat.imservice.push.PushServiceSocket;
 
 import java.io.IOException;
 
@@ -339,10 +340,10 @@ public class ApplicationPreferencesActivity extends PassphraseRequiredActionBarA
       @Override
       protected Integer doInBackground(Void... params) {
         try {
-          Context           context = getActivity();
-          PushServiceSocket socket  = PushServiceSocketFactory.create(context);
+          Context                  context        = getActivity();
+          OpenchatServiceAccountManager accountManager = OpenchatServiceCommunicationFactory.createManager(context);
 
-          socket.unregisterGcmId();
+          accountManager.setGcmId(Optional.<String>absent());
           GoogleCloudMessaging.getInstance(context).unregister();
 
           return SUCCESS;

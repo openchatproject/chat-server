@@ -3,12 +3,18 @@ package com.openchat.secureim.jobs;
 import android.content.Context;
 import android.util.Log;
 
-import com.openchat.secureim.push.PushServiceSocketFactory;
+import com.openchat.secureim.Release;
+import com.openchat.secureim.push.OpenchatServicePushTrustStore;
+import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
-import com.openchat.imservice.push.PushServiceSocket;
+import com.openchat.protocal.util.guava.Optional;
+import com.openchat.imservice.api.OpenchatServiceMessageSender;
+import com.openchat.imservice.push.PushAddress;
 import com.openchat.imservice.push.exceptions.NonSuccessfulResponseCodeException;
 import com.openchat.imservice.push.exceptions.PushNetworkException;
+
+import java.io.IOException;
 
 public class DeliveryReceiptJob extends ContextJob {
 
@@ -34,10 +40,17 @@ public class DeliveryReceiptJob extends ContextJob {
   public void onAdded() {}
 
   @Override
-  public void onRun() throws Throwable {
+  public void onRun() throws IOException {
     Log.w("DeliveryReceiptJob", "Sending delivery receipt...");
-    PushServiceSocket socket = PushServiceSocketFactory.create(context);
-    socket.sendReceipt(destination, timestamp, relay);
+    OpenchatServiceMessageSender messageSender =
+        new OpenchatServiceMessageSender(Release.PUSH_URL,
+                                    new OpenchatServicePushTrustStore(context),
+                                    OpenchatServicePreferences.getLocalNumber(context),
+                                    OpenchatServicePreferences.getPushServerPassword(context),
+                                    null, Optional.<OpenchatServiceMessageSender.EventListener>absent());
+
+    PushAddress pushAddress = new PushAddress(-1, destination, 1, relay);
+    messageSender.sendDeliveryReceipt(pushAddress, timestamp);
   }
 
   @Override

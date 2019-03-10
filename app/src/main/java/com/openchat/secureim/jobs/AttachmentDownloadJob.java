@@ -10,7 +10,7 @@ import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingPartDatabase;
 import com.openchat.secureim.database.PartDatabase;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
-import com.openchat.secureim.push.OpenchatServiceMessageReceiverFactory;
+import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.util.Util;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
@@ -89,12 +89,13 @@ public class AttachmentDownloadJob extends MasterSecretJob {
   private void retrievePart(MasterSecret masterSecret, PduPart part, long messageId, long partId)
       throws IOException
   {
-    OpenchatServiceMessageReceiver receiver       = OpenchatServiceMessageReceiverFactory.create(context, masterSecret);
+    OpenchatServiceMessageReceiver receiver       = OpenchatServiceCommunicationFactory.createReceiver(context, masterSecret);
     EncryptingPartDatabase    database       = DatabaseFactory.getEncryptingPartDatabase(context, masterSecret);
     File                      attachmentFile = null;
 
     try {
       attachmentFile = createTempFile();
+
       OpenchatServiceAttachmentPointer pointer    = createAttachmentPointer(masterSecret, part);
       InputStream                 attachment = receiver.retrieveAttachment(pointer, attachmentFile);
 

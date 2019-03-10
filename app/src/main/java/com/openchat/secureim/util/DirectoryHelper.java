@@ -5,13 +5,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.openchat.secureim.R;
-import com.openchat.secureim.push.PushServiceSocketFactory;
-import com.openchat.secureim.recipients.Recipient;
+import com.openchat.secureim.database.NotInDirectoryException;
+import com.openchat.secureim.database.OpenchatServiceDirectory;
+import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.recipients.Recipients;
-import com.openchat.imservice.directory.Directory;
-import com.openchat.imservice.directory.NotInDirectoryException;
+import com.openchat.imservice.api.OpenchatServiceAccountManager;
 import com.openchat.imservice.push.ContactTokenDetails;
-import com.openchat.imservice.push.PushServiceSocket;
 import com.openchat.imservice.util.DirectoryUtil;
 import com.openchat.imservice.util.InvalidNumberException;
 
@@ -54,18 +53,18 @@ public class DirectoryHelper {
   }
 
   public static void refreshDirectory(final Context context) {
-    refreshDirectory(context, PushServiceSocketFactory.create(context));
+    refreshDirectory(context, OpenchatServiceCommunicationFactory.createManager(context));
   }
 
-  public static void refreshDirectory(final Context context, final PushServiceSocket socket) {
-    refreshDirectory(context, socket, OpenchatServicePreferences.getLocalNumber(context));
+  public static void refreshDirectory(final Context context, final OpenchatServiceAccountManager accountManager) {
+    refreshDirectory(context, accountManager, OpenchatServicePreferences.getLocalNumber(context));
   }
 
-  public static void refreshDirectory(final Context context, final PushServiceSocket socket, final String localNumber) {
-    Directory                 directory              = Directory.getInstance(context);
+  public static void refreshDirectory(final Context context, final OpenchatServiceAccountManager accountManager, final String localNumber) {
+    OpenchatServiceDirectory       directory              = OpenchatServiceDirectory.getInstance(context);
     Set<String>               eligibleContactNumbers = directory.getPushEligibleContactNumbers(localNumber);
     Map<String, String>       tokenMap               = DirectoryUtil.getDirectoryServerTokenMap(eligibleContactNumbers);
-    List<ContactTokenDetails> activeTokens           = socket.retrieveDirectory(tokenMap.keySet());
+    List<ContactTokenDetails> activeTokens           = accountManager.getContacts(tokenMap.keySet());
 
     if (activeTokens != null) {
       for (ContactTokenDetails activeToken : activeTokens) {
@@ -103,7 +102,7 @@ public class DirectoryHelper {
 
       final String e164number = Util.canonicalizeNumber(context, number);
 
-      return Directory.getInstance(context).isActiveNumber(e164number);
+      return OpenchatServiceDirectory.getInstance(context).isActiveNumber(e164number);
     } catch (InvalidNumberException e) {
       Log.w(TAG, e);
       return false;

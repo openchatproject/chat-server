@@ -15,7 +15,7 @@ import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentStream;
-import com.openchat.imservice.directory.Directory;
+import com.openchat.secureim.database.OpenchatServiceDirectory;
 import com.openchat.imservice.push.PushAddress;
 import com.openchat.imservice.util.InvalidNumberException;
 
@@ -57,13 +57,13 @@ public abstract class PushSendJob extends MasterSecretJob {
       return false;
     }
 
-    Directory directory = Directory.getInstance(context);
+    OpenchatServiceDirectory directory = OpenchatServiceDirectory.getInstance(context);
     return directory.isSmsFallbackSupported(destination);
   }
 
   protected PushAddress getPushAddress(Recipient recipient) throws InvalidNumberException {
     String e164number = Util.canonicalizeNumber(context, recipient.getNumber());
-    String relay      = Directory.getInstance(context).getRelay(e164number);
+    String relay      = OpenchatServiceDirectory.getInstance(context).getRelay(e164number);
     return new PushAddress(recipient.getRecipientId(), e164number, 1, relay);
   }
 

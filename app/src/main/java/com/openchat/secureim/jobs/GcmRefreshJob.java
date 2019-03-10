@@ -8,11 +8,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import com.openchat.secureim.push.PushServiceSocketFactory;
+import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
-import com.openchat.imservice.push.PushServiceSocket;
+import com.openchat.protocal.util.guava.Optional;
+import com.openchat.imservice.api.OpenchatServiceAccountManager;
 import com.openchat.imservice.push.exceptions.NonSuccessfulResponseCodeException;
 
 public class GcmRefreshJob extends ContextJob {
@@ -40,10 +41,11 @@ public class GcmRefreshJob extends ContextJob {
         Toast.makeText(context, "Unable to register with GCM!", Toast.LENGTH_LONG).show();
       }
 
-      String            gcmId  = GoogleCloudMessaging.getInstance(context).register(REGISTRATION_ID);
-      PushServiceSocket socket = PushServiceSocketFactory.create(context);
+      String                   gcmId          = GoogleCloudMessaging.getInstance(context).register(REGISTRATION_ID);
+      OpenchatServiceAccountManager accountManager = OpenchatServiceCommunicationFactory.createManager(context);
 
-      socket.registerGcmId(gcmId);
+      accountManager.setGcmId(Optional.of(gcmId));
+
       OpenchatServicePreferences.setGcmRegistrationId(context, gcmId);
     }
   }

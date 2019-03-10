@@ -14,17 +14,18 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.IdentityKeyUtil;
-import com.openchat.secureim.push.PushServiceSocketFactory;
+import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.crypto.PreKeyUtil;
+import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.util.DirectoryHelper;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.IdentityKeyPair;
-import com.openchat.protocal.state.SignedPreKeyRecord;
 import com.openchat.protocal.state.PreKeyRecord;
+import com.openchat.protocal.state.SignedPreKeyRecord;
 import com.openchat.protocal.util.KeyHelper;
-import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.secureim.crypto.PreKeyUtil;
+import com.openchat.protocal.util.guava.Optional;
+import com.openchat.imservice.api.OpenchatServiceAccountManager;
 import com.openchat.imservice.push.exceptions.ExpectationFailedException;
-import com.openchat.imservice.push.PushServiceSocket;
 import com.openchat.imservice.util.Util;
 
 import java.io.IOException;
@@ -134,9 +135,9 @@ public class RegistrationService extends Service {
     MasterSecret masterSecret = intent.getParcelableExtra("master_secret");
 
     try {
-      PushServiceSocket socket = PushServiceSocketFactory.create(this, number, password);
+      OpenchatServiceAccountManager accountManager = OpenchatServiceCommunicationFactory.createManager(this, number, password);
 
-      handleCommonRegistration(masterSecret, socket, number);
+      handleCommonRegistration(masterSecret, accountManager, number);
 
       markAsVerified(number, password, openchatingKey);
 
@@ -172,14 +173,14 @@ public class RegistrationService extends Service {
       initializeChallengeListener();
 
       setState(new RegistrationState(RegistrationState.STATE_CONNECTING, number));
-      PushServiceSocket socket = PushServiceSocketFactory.create(this, number, password);
-      socket.createAccount(false);
+      OpenchatServiceAccountManager accountManager = OpenchatServiceCommunicationFactory.createManager(this, number, password);
+      accountManager.requestSmsVerificationCode();
 
       setState(new RegistrationState(RegistrationState.STATE_VERIFYING, number));
       String challenge = waitForChallenge();
-      socket.verifyAccount(challenge, openchatingKey, true, registrationId);
+      accountManager.verifyAccount(challenge, openchatingKey, true, registrationId);
 
-      handleCommonRegistration(masterSecret, socket, number);
+      handleCommonRegistration(masterSecret, accountManager, number);
       markAsVerified(number, password, openchatingKey);
 
       setState(new RegistrationState(RegistrationState.STATE_COMPLETE, number));
@@ -205,7 +206,7 @@ public class RegistrationService extends Service {
     }
   }
 
-  private void handleCommonRegistration(MasterSecret masterSecret, PushServiceSocket socket, String number)
+  private void handleCommonRegistration(MasterSecret masterSecret, OpenchatServiceAccountManager accountManager, String number)
       throws IOException
   {
     setState(new RegistrationState(RegistrationState.STATE_GENERATING_KEYS, number));
@@ -213,15 +214,15 @@ public class RegistrationService extends Service {
     List<PreKeyRecord> records      = PreKeyUtil.generatePreKeys(this, masterSecret);
     PreKeyRecord       lastResort   = PreKeyUtil.generateLastResortKey(this, masterSecret);
     SignedPreKeyRecord signedPreKey = PreKeyUtil.generateSignedPreKey(this, masterSecret, identityKey);
-    socket.registerPreKeys(identityKey.getPublicKey(), lastResort, signedPreKey, records);
+    accountManager.setPreKeys(identityKey.getPublicKey(),lastResort, signedPreKey, records);
 
     setState(new RegistrationState(RegistrationState.STATE_GCM_REGISTERING, number));
 
     String gcmRegistrationId = GoogleCloudMessaging.getInstance(this).register("312334754206");
     OpenchatServicePreferences.setGcmRegistrationId(this, gcmRegistrationId);
-    socket.registerGcmId(gcmRegistrationId);
+    accountManager.setGcmId(Optional.of(gcmRegistrationId));
 
-    DirectoryHelper.refreshDirectory(this, socket, number);
+    DirectoryHelper.refreshDirectory(this, accountManager, number);
 
     DirectoryRefreshListener.schedule(this);
   }

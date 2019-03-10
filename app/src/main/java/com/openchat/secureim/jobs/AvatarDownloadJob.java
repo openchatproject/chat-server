@@ -4,16 +4,18 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.openchat.secureim.Release;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.GroupDatabase;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
-import com.openchat.secureim.push.PushServiceSocketFactory;
+import com.openchat.secureim.push.OpenchatServicePushTrustStore;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.util.BitmapDecodingException;
 import com.openchat.secureim.util.BitmapUtil;
 import com.openchat.secureim.util.GroupUtil;
+import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.protocal.InvalidMessageException;
@@ -94,8 +96,12 @@ public class AvatarDownloadJob extends MasterSecretJob {
   }
 
   private File downloadAttachment(String relay, long contentLocation) throws IOException {
-    PushServiceSocket socket      = PushServiceSocketFactory.create(context);
-    File              destination = File.createTempFile("avatar", "tmp");
+    PushServiceSocket socket = new PushServiceSocket(Release.PUSH_URL,
+                                                     new OpenchatServicePushTrustStore(context),
+                                                     OpenchatServicePreferences.getLocalNumber(context),
+                                                     OpenchatServicePreferences.getPushServerPassword(context));
+
+    File destination = File.createTempFile("avatar", "tmp");
 
     destination.deleteOnExit();
 

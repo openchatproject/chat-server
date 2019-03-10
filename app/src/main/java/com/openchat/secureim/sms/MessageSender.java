@@ -9,6 +9,8 @@ import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.MmsDatabase;
+import com.openchat.secureim.database.NotInDirectoryException;
+import com.openchat.secureim.database.OpenchatServiceDirectory;
 import com.openchat.secureim.database.ThreadDatabase;
 import com.openchat.secureim.database.model.MessageRecord;
 import com.openchat.secureim.jobs.MmsSendJob;
@@ -17,17 +19,16 @@ import com.openchat.secureim.jobs.PushMediaSendJob;
 import com.openchat.secureim.jobs.PushTextSendJob;
 import com.openchat.secureim.jobs.SmsSendJob;
 import com.openchat.secureim.mms.OutgoingMediaMessage;
-import com.openchat.secureim.push.PushServiceSocketFactory;
+import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
 import com.openchat.jobqueue.JobManager;
-import com.openchat.imservice.directory.Directory;
-import com.openchat.imservice.directory.NotInDirectoryException;
+import com.openchat.protocal.util.guava.Optional;
+import com.openchat.imservice.api.OpenchatServiceAccountManager;
 import com.openchat.imservice.push.ContactTokenDetails;
-import com.openchat.imservice.push.PushServiceSocket;
 import com.openchat.imservice.util.DirectoryUtil;
 import com.openchat.imservice.util.InvalidNumberException;
 
@@ -247,24 +248,24 @@ public class MessageSender {
   }
 
   private static boolean isPushDestination(Context context, String destination) {
-    Directory directory = Directory.getInstance(context);
+    OpenchatServiceDirectory directory = OpenchatServiceDirectory.getInstance(context);
 
     try {
       return directory.isActiveNumber(destination);
     } catch (NotInDirectoryException e) {
       try {
-        PushServiceSocket socket         = PushServiceSocketFactory.create(context);
-        String              contactToken   = DirectoryUtil.getDirectoryServerToken(destination);
-        ContactTokenDetails registeredUser = socket.getContactTokenDetails(contactToken);
+        OpenchatServiceAccountManager      accountManager = OpenchatServiceCommunicationFactory.createManager(context);
+        String                        contactToken   = DirectoryUtil.getDirectoryServerToken(destination);
+        Optional<ContactTokenDetails> registeredUser = accountManager.getContact(contactToken);
 
-        if (registeredUser == null) {
-          registeredUser = new ContactTokenDetails();
-          registeredUser.setNumber(destination);
-          directory.setNumber(registeredUser, false);
+        if (!registeredUser.isPresent()) {
+          registeredUser = Optional.of(new ContactTokenDetails());
+          registeredUser.get().setNumber(destination);
+          directory.setNumber(registeredUser.get(), false);
           return false;
         } else {
-          registeredUser.setNumber(destination);
-          directory.setNumber(registeredUser, true);
+          registeredUser.get().setNumber(destination);
+          directory.setNumber(registeredUser.get(), true);
           return true;
         }
       } catch (IOException e1) {

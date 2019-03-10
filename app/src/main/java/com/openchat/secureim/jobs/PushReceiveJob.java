@@ -10,8 +10,8 @@ import com.openchat.jobqueue.JobManager;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.protocal.InvalidVersionException;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
-import com.openchat.imservice.directory.Directory;
-import com.openchat.imservice.directory.NotInDirectoryException;
+import com.openchat.secureim.database.OpenchatServiceDirectory;
+import com.openchat.secureim.database.NotInDirectoryException;
 import com.openchat.imservice.push.ContactTokenDetails;
 
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class PushReceiveJob extends ContextJob {
       OpenchatServiceEnvelope envelope   = new OpenchatServiceEnvelope(data, sessionKey);
 
       if (!isActiveNumber(context, envelope.getSource())) {
-        Directory           directory           = Directory.getInstance(context);
+        OpenchatServiceDirectory directory           = OpenchatServiceDirectory.getInstance(context);
         ContactTokenDetails contactTokenDetails = new ContactTokenDetails();
         contactTokenDetails.setNumber(envelope.getSource());
 
@@ -85,7 +85,7 @@ public class PushReceiveJob extends ContextJob {
     boolean isActiveNumber;
 
     try {
-      isActiveNumber = Directory.getInstance(context).isActiveNumber(e164number);
+      isActiveNumber = OpenchatServiceDirectory.getInstance(context).isActiveNumber(e164number);
     } catch (NotInDirectoryException e) {
       isActiveNumber = false;
     }

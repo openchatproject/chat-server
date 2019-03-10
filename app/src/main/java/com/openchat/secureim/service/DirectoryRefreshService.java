@@ -7,7 +7,6 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
 
-import com.openchat.secureim.push.PushServiceSocketFactory;
 import com.openchat.secureim.util.DirectoryHelper;
 
 import java.util.concurrent.Executor;

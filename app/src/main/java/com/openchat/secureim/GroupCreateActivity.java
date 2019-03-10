@@ -45,10 +45,9 @@ import com.openchat.secureim.util.SelectedRecipientsAdapter;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
 import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.imservice.directory.Directory;
-import com.openchat.imservice.directory.NotInDirectoryException;
+import com.openchat.secureim.database.OpenchatServiceDirectory;
+import com.openchat.secureim.database.NotInDirectoryException;
 import com.openchat.imservice.util.InvalidNumberException;
-import com.openchat.imservice.util.ListenableFutureTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -60,7 +59,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import ws.com.google.android.mms.MmsException;
 
@@ -149,7 +147,7 @@ public class GroupCreateActivity extends PassphraseRequiredActionBarActivity {
 
   private static boolean isActiveInDirectory(Context context, Recipient recipient) {
     try {
-      if (!Directory.getInstance(context).isActiveNumber(Util.canonicalizeNumber(context, recipient.getNumber()))) {
+      if (!OpenchatServiceDirectory.getInstance(context).isActiveNumber(Util.canonicalizeNumber(context, recipient.getNumber()))) {
         return false;
       }
     } catch (NotInDirectoryException e) {

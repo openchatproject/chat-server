@@ -10,7 +10,7 @@ import com.openchat.secureim.database.MmsSmsColumns;
 import com.openchat.secureim.database.NoSuchMessageException;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
 import com.openchat.secureim.mms.PartParser;
-import com.openchat.secureim.push.OpenchatServiceMessageSenderFactory;
+import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
@@ -106,7 +106,7 @@ public class PushGroupSendJob extends PushSendJob {
   private void deliver(MasterSecret masterSecret, SendReq message)
       throws IOException, RecipientFormattingException, InvalidNumberException, EncapsulatedExceptions
   {
-    OpenchatServiceMessageSender    messageSender = OpenchatServiceMessageSenderFactory.create(context, masterSecret);
+    OpenchatServiceMessageSender    messageSender = OpenchatServiceCommunicationFactory.createSender(context, masterSecret);
     byte[]                     groupId       = GroupUtil.getDecodedId(message.getTo()[0].getString());
     Recipients                 recipients    = DatabaseFactory.getGroupDatabase(context).getGroupMembers(groupId, false);
     List<PushAddress>          addresses     = getPushAddresses(recipients);
