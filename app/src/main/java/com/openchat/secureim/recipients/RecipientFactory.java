@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.openchat.secureim.contacts.ContactPhotoFactory;
 import com.openchat.secureim.database.CanonicalAddressDatabase;
-import com.openchat.imservice.push.IncomingPushMessage;
 import com.openchat.imservice.util.Util;
 
 import java.util.LinkedList;
@@ -55,18 +54,6 @@ public class RecipientFactory {
     }
 
     return new Recipients(results);
-  }
-
-  public static Recipients getRecipientsFromMessage(Context context,
-                                                    IncomingPushMessage message,
-                                                    boolean asynchronous)
-  {
-    try {
-      return getRecipientsFromString(context, message.getSource(), asynchronous);
-    } catch (RecipientFormattingException e) {
-      Log.w("RecipientFactory", e);
-      return new Recipients(Recipient.getUnknownRecipient(context));
-    }
   }
 
   private static Recipient getRecipientFromProviderId(Context context, String recipientId, boolean asynchronous) {

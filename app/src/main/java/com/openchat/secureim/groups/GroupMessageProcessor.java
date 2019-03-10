@@ -17,9 +17,9 @@ import com.openchat.secureim.sms.IncomingGroupMessage;
 import com.openchat.secureim.sms.IncomingTextMessage;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
+import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
-import com.openchat.imservice.push.IncomingPushMessage;
 import com.openchat.imservice.util.Base64;
 
 import java.util.HashSet;
@@ -37,7 +37,7 @@ public class GroupMessageProcessor {
 
   public static void process(Context context,
                              MasterSecret masterSecret,
-                             IncomingPushMessage push,
+                             OpenchatServiceEnvelope envelope,
                              OpenchatServiceMessage message)
   {
     if (!message.getGroupInfo().isPresent() || message.getGroupInfo().get().getGroupId() == null) {
@@ -56,11 +56,11 @@ public class GroupMessageProcessor {
     GroupRecord   record   = database.getGroup(id);
 
     if (record != null && group.getType() == OpenchatServiceGroup.Type.UPDATE) {
-      handleGroupUpdate(context, masterSecret, push, group, record);
+      handleGroupUpdate(context, masterSecret, envelope, group, record);
     } else if (record == null && group.getType() == OpenchatServiceGroup.Type.UPDATE) {
-      handleGroupCreate(context, masterSecret, push, group);
+      handleGroupCreate(context, masterSecret, envelope, group);
     } else if (record != null && group.getType() == OpenchatServiceGroup.Type.QUIT) {
-      handleGroupLeave(context, masterSecret, push, group, record);
+      handleGroupLeave(context, masterSecret, envelope, group, record);
     } else {
       Log.w(TAG, "Received unknown type, ignoring...");
     }
@@ -68,7 +68,7 @@ public class GroupMessageProcessor {
 
   private static void handleGroupCreate(Context context,
                                         MasterSecret masterSecret,
-                                        IncomingPushMessage message,
+                                        OpenchatServiceEnvelope envelope,
                                         OpenchatServiceGroup group)
   {
     GroupDatabase        database = DatabaseFactory.getGroupDatabase(context);
@@ -80,14 +80,14 @@ public class GroupMessageProcessor {
 
     database.create(id, group.getName().orNull(), group.getMembers().orNull(),
                     avatar != null && avatar.isPointer() ? avatar.asPointer() : null,
-                    message.getRelay());
+                    envelope.getRelay());
 
-    storeMessage(context, masterSecret, message, group, builder.build());
+    storeMessage(context, masterSecret, envelope, group, builder.build());
   }
 
   private static void handleGroupUpdate(Context context,
                                         MasterSecret masterSecret,
-                                        IncomingPushMessage push,
+                                        OpenchatServiceEnvelope envelope,
                                         OpenchatServiceGroup group,
                                         GroupRecord groupRecord)
   {
@@ -131,12 +131,12 @@ public class GroupMessageProcessor {
 
     if (!groupRecord.isActive()) database.setActive(id, true);
 
-    storeMessage(context, masterSecret, push, group, builder.build());
+    storeMessage(context, masterSecret, envelope, group, builder.build());
   }
 
   private static void handleGroupLeave(Context             context,
                                        MasterSecret        masterSecret,
-                                       IncomingPushMessage message,
+                                       OpenchatServiceEnvelope envelope,
                                        OpenchatServiceGroup     group,
                                        GroupRecord         record)
   {
@@ -147,15 +147,15 @@ public class GroupMessageProcessor {
     GroupContext.Builder builder = createGroupContext(group);
     builder.setType(GroupContext.Type.QUIT);
 
-    if (members.contains(message.getSource())) {
-      database.remove(id, message.getSource());
+    if (members.contains(envelope.getSource())) {
+      database.remove(id, envelope.getSource());
 
-      storeMessage(context, masterSecret, message, group, builder.build());
+      storeMessage(context, masterSecret, envelope, group, builder.build());
     }
   }
 
   private static void storeMessage(Context context, MasterSecret masterSecret,
-                                   IncomingPushMessage push, OpenchatServiceGroup group,
+                                   OpenchatServiceEnvelope envelope, OpenchatServiceGroup group,
                                    GroupContext storage)
   {
     if (group.getAvatar().isPresent()) {
@@ -165,7 +165,7 @@ public class GroupMessageProcessor {
 
     EncryptingSmsDatabase smsDatabase  = DatabaseFactory.getEncryptingSmsDatabase(context);
     String                body         = Base64.encodeBytes(storage.toByteArray());
-    IncomingTextMessage   incoming     = new IncomingTextMessage(push.getSource(), push.getSourceDevice(), push.getTimestampMillis(), body, Optional.of(group));
+    IncomingTextMessage   incoming     = new IncomingTextMessage(envelope.getSource(), envelope.getSourceDevice(), envelope.getTimestamp(), body, Optional.of(group));
     IncomingGroupMessage  groupMessage = new IncomingGroupMessage(incoming, storage, body);
 
     Pair<Long, Long> messageAndThreadId = smsDatabase.insertMessageInbox(masterSecret, groupMessage);

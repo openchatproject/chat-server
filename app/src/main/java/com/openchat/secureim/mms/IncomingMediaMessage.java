@@ -1,14 +1,12 @@
 package com.openchat.secureim.mms;
 
-import com.openchat.secureim.util.GroupUtil;
-import com.openchat.secureim.util.Util;
 import com.openchat.secureim.crypto.MasterCipher;
 import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.util.GroupUtil;
+import com.openchat.secureim.util.Util;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
-import com.openchat.imservice.push.IncomingPushMessage;
-import com.openchat.imservice.push.PushMessageProtos.PushMessageContent;
 import com.openchat.imservice.util.Base64;
 
 import java.util.List;

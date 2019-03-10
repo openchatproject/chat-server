@@ -9,11 +9,10 @@ import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.JobManager;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.protocal.InvalidVersionException;
+import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.directory.Directory;
 import com.openchat.imservice.directory.NotInDirectoryException;
 import com.openchat.imservice.push.ContactTokenDetails;
-import com.openchat.imservice.push.IncomingEncryptedPushMessage;
-import com.openchat.imservice.push.IncomingPushMessage;
 
 import java.io.IOException;
 
@@ -37,20 +36,19 @@ public class PushReceiveJob extends ContextJob {
   @Override
   public void onRun() {
     try {
-      String                       sessionKey = OpenchatServicePreferences.getOpenchatingKey(context);
-      IncomingEncryptedPushMessage encrypted  = new IncomingEncryptedPushMessage(data, sessionKey);
-      IncomingPushMessage          message    = encrypted.getIncomingPushMessage();
+      String             sessionKey = OpenchatServicePreferences.getOpenchatingKey(context);
+      OpenchatServiceEnvelope envelope   = new OpenchatServiceEnvelope(data, sessionKey);
 
-      if (!isActiveNumber(context, message.getSource())) {
+      if (!isActiveNumber(context, envelope.getSource())) {
         Directory           directory           = Directory.getInstance(context);
         ContactTokenDetails contactTokenDetails = new ContactTokenDetails();
-        contactTokenDetails.setNumber(message.getSource());
+        contactTokenDetails.setNumber(envelope.getSource());
 
         directory.setNumber(contactTokenDetails, true);
       }
 
-      if (message.isReceipt()) handleReceipt(message);
-      else                     handleMessage(message);
+      if (envelope.isReceipt()) handleReceipt(envelope);
+      else                     handleMessage(envelope);
     } catch (IOException | InvalidVersionException e) {
       Log.w(TAG, e);
     }
@@ -66,21 +64,21 @@ public class PushReceiveJob extends ContextJob {
     return false;
   }
 
-  private void handleMessage(IncomingPushMessage message) {
+  private void handleMessage(OpenchatServiceEnvelope envelope) {
     JobManager jobManager = ApplicationContext.getInstance(context).getJobManager();
-    long       messageId  = DatabaseFactory.getPushDatabase(context).insert(message);
+    long       messageId  = DatabaseFactory.getPushDatabase(context).insert(envelope);
 
-    jobManager.add(new DeliveryReceiptJob(context, message.getSource(),
-                                          message.getTimestampMillis(),
-                                          message.getRelay()));
+    jobManager.add(new DeliveryReceiptJob(context, envelope.getSource(),
+                                          envelope.getTimestamp(),
+                                          envelope.getRelay()));
 
     jobManager.add(new PushDecryptJob(context, messageId));
   }
 
-  private void handleReceipt(IncomingPushMessage message) {
-    Log.w(TAG, String.format("Received receipt: (XXXXX, %d)", message.getTimestampMillis()));
-    DatabaseFactory.getMmsSmsDatabase(context).incrementDeliveryReceiptCount(message.getSource(),
-                                                                             message.getTimestampMillis());
+  private void handleReceipt(OpenchatServiceEnvelope envelope) {
+    Log.w(TAG, String.format("Received receipt: (XXXXX, %d)", envelope.getTimestamp()));
+    DatabaseFactory.getMmsSmsDatabase(context).incrementDeliveryReceiptCount(envelope.getSource(),
+                                                                             envelope.getTimestamp());
   }
 
   private boolean isActiveNumber(Context context, String e164number) {

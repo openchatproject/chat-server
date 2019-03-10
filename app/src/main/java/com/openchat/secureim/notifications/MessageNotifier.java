@@ -23,17 +23,17 @@ import android.util.Log;
 
 import com.openchat.secureim.R;
 import com.openchat.secureim.RoutingActivity;
-import com.openchat.secureim.database.PushDatabase;
-import com.openchat.secureim.recipients.RecipientFactory;
-import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsSmsDatabase;
+import com.openchat.secureim.database.PushDatabase;
 import com.openchat.secureim.database.model.MessageRecord;
 import com.openchat.secureim.recipients.Recipient;
+import com.openchat.secureim.recipients.RecipientFactory;
+import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.imservice.push.IncomingPushMessage;
+import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 
 import java.io.IOException;
 import java.util.List;
@@ -261,24 +261,24 @@ public class MessageNotifier {
     if (masterSecret != null) return;
 
     PushDatabase.Reader reader = null;
-    IncomingPushMessage message;
+    OpenchatServiceEnvelope envelope;
 
     try {
       reader = DatabaseFactory.getPushDatabase(context).readerFor(cursor);
 
-      while ((message = reader.getNext()) != null) {
-        Recipient recipient;
+      while ((envelope = reader.getNext()) != null) {
+        Recipients recipients;
 
         try {
-          recipient = RecipientFactory.getRecipientsFromString(context, message.getSource(), false).getPrimaryRecipient();
+          recipients = RecipientFactory.getRecipientsFromString(context, envelope.getSource(), false);
         } catch (RecipientFormattingException e) {
           Log.w("MessageNotifier", e);
-          recipient = Recipient.getUnknownRecipient(context);
+          recipients = new Recipients(Recipient.getUnknownRecipient(context));
         }
 
-        Recipients      recipients = RecipientFactory.getRecipientsFromMessage(context, message, false);
-        long            threadId   = DatabaseFactory.getThreadDatabase(context).getThreadIdFor(recipients);
-        SpannableString body       = new SpannableString(context.getString(R.string.MessageNotifier_encrypted_message));
+        Recipient       recipient = recipients.getPrimaryRecipient();
+        long            threadId  = DatabaseFactory.getThreadDatabase(context).getThreadIdFor(recipients);
+        SpannableString body      = new SpannableString(context.getString(R.string.MessageNotifier_encrypted_message));
         body.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), 0, body.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         notificationState.addNotification(new NotificationItem(recipient, recipients, null, threadId, body, null));

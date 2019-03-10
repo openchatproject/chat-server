@@ -72,7 +72,7 @@ public class PushTransport extends BaseTransport {
     }
   }
 
-  public void deliverGroupMessage(SendReq message, long threadId)
+  public void deliverGroupMessage(SendReq message)
       throws IOException, RecipientFormattingException, InvalidNumberException, EncapsulatedExceptions
   {
     OpenchatServiceMessageSender    messageSender = OpenchatServiceMessageSenderFactory.create(context, masterSecret);
@@ -104,7 +104,7 @@ public class PushTransport extends BaseTransport {
     }
   }
 
-  public void deliver(SendReq message, long threadId)
+  public void deliver(SendReq message)
       throws IOException, RecipientFormattingException, InvalidNumberException, EncapsulatedExceptions
   {
     OpenchatServiceMessageSender messageSender = OpenchatServiceMessageSenderFactory.create(context, masterSecret);
@@ -114,7 +114,7 @@ public class PushTransport extends BaseTransport {
     List<UnregisteredUserException>  unregisteredUsers   = new LinkedList<>();
 
     if (GroupUtil.isEncodedGroup(destination)) {
-      deliverGroupMessage(message, threadId);
+      deliverGroupMessage(message);
       return;
     }
 
@@ -165,6 +165,7 @@ public class PushTransport extends BaseTransport {
           ContentType.isVideoType(contentType))
       {
         byte[] data = message.getBody().getPart(i).getData();
+        Log.w(TAG, "Adding attachment...");
         attachments.add(new OpenchatServiceAttachmentStream(new ByteArrayInputStream(data), contentType, data.length));
       }
     }

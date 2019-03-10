@@ -7,12 +7,9 @@ import android.telephony.SmsMessage;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
-import com.openchat.imservice.push.IncomingPushMessage;
 import com.openchat.imservice.storage.RecipientDevice;
 
 import java.util.List;
-
-import static com.openchat.imservice.push.PushMessageProtos.PushMessageContent.GroupContext;
 
 public class IncomingTextMessage implements Parcelable {
 
