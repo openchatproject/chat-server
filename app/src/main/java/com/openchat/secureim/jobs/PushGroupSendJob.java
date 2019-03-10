@@ -8,9 +8,9 @@ import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsDatabase;
 import com.openchat.secureim.database.MmsSmsColumns;
 import com.openchat.secureim.database.NoSuchMessageException;
+import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
 import com.openchat.secureim.mms.PartParser;
-import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
@@ -19,10 +19,10 @@ import com.openchat.secureim.util.GroupUtil;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.imservice.api.OpenchatServiceMessageSender;
+import com.openchat.imservice.api.crypto.UntrustedIdentityException;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
-import com.openchat.imservice.api.crypto.UntrustedIdentityException;
 import com.openchat.imservice.push.PushAddress;
 import com.openchat.imservice.push.PushMessageProtos;
 import com.openchat.imservice.push.exceptions.EncapsulatedExceptions;
@@ -33,12 +33,18 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import ws.com.google.android.mms.MmsException;
 import ws.com.google.android.mms.pdu.SendReq;
 
-public class PushGroupSendJob extends PushSendJob {
+import static com.openchat.secureim.dependencies.OpenchatServiceCommunicationModule.OpenchatServiceMessageSenderFactory;
+
+public class PushGroupSendJob extends PushSendJob implements InjectableType {
 
   private static final String TAG = PushGroupSendJob.class.getSimpleName();
+
+  @Inject transient OpenchatServiceMessageSenderFactory messageSenderFactory;
 
   private final long messageId;
 
@@ -60,10 +66,9 @@ public class PushGroupSendJob extends PushSendJob {
   }
 
   @Override
-  public void onRun() throws RequirementNotMetException, MmsException, IOException, NoSuchMessageException {
-    MasterSecret masterSecret = getMasterSecret();
-    MmsDatabase  database     = DatabaseFactory.getMmsDatabase(context);
-    SendReq      message      = database.getOutgoingMessage(masterSecret, messageId);
+  public void onRun(MasterSecret masterSecret) throws MmsException, IOException, NoSuchMessageException {
+    MmsDatabase database = DatabaseFactory.getMmsDatabase(context);
+    SendReq     message  = database.getOutgoingMessage(masterSecret, messageId);
 
     try {
       deliver(masterSecret, message);
@@ -92,21 +97,20 @@ public class PushGroupSendJob extends PushSendJob {
   }
 
   @Override
-  public void onCanceled() {
-    DatabaseFactory.getMmsDatabase(context).markAsSentFailed(messageId);
+  public boolean onShouldRetryThrowable(Throwable throwable) {
+    if (throwable instanceof IOException) return true;
+    return false;
   }
 
   @Override
-  public boolean onShouldRetry(Throwable throwable) {
-    if (throwable instanceof RequirementNotMetException) return true;
-    if (throwable instanceof IOException)                return true;
-    return false;
+  public void onCanceled() {
+    DatabaseFactory.getMmsDatabase(context).markAsSentFailed(messageId);
   }
 
   private void deliver(MasterSecret masterSecret, SendReq message)
       throws IOException, RecipientFormattingException, InvalidNumberException, EncapsulatedExceptions
   {
-    OpenchatServiceMessageSender    messageSender = OpenchatServiceCommunicationFactory.createSender(context, masterSecret);
+    OpenchatServiceMessageSender    messageSender = messageSenderFactory.create(masterSecret);
     byte[]                     groupId       = GroupUtil.getDecodedId(message.getTo()[0].getString());
     Recipients                 recipients    = DatabaseFactory.getGroupDatabase(context).getGroupMembers(groupId, false);
     List<PushAddress>          addresses     = getPushAddresses(recipients);

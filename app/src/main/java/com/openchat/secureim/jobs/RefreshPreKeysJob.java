@@ -3,9 +3,11 @@ package com.openchat.secureim.jobs;
 import android.content.Context;
 import android.util.Log;
 
+import com.openchat.secureim.ApplicationContext;
 import com.openchat.secureim.crypto.IdentityKeyUtil;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.PreKeyUtil;
+import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
 import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.util.OpenchatServicePreferences;
@@ -22,11 +24,15 @@ import com.openchat.imservice.push.exceptions.PushNetworkException;
 import java.io.IOException;
 import java.util.List;
 
-public class RefreshPreKeysJob extends MasterSecretJob {
+import javax.inject.Inject;
+
+public class RefreshPreKeysJob extends MasterSecretJob implements InjectableType {
 
   private static final String TAG = RefreshPreKeysJob.class.getSimpleName();
 
   private static final int PREKEY_MINIMUM = 10;
+
+  @Inject transient OpenchatServiceAccountManager accountManager;
 
   public RefreshPreKeysJob(Context context) {
     super(context, JobParameters.newBuilder()
@@ -43,12 +49,10 @@ public class RefreshPreKeysJob extends MasterSecretJob {
   }
 
   @Override
-  public void onRun() throws RequirementNotMetException, IOException {
+  public void onRun(MasterSecret masterSecret) throws IOException {
     if (!OpenchatServicePreferences.isPushRegistered(context)) return;
 
-    MasterSecret             masterSecret   = getMasterSecret();
-    OpenchatServiceAccountManager accountManager = OpenchatServiceCommunicationFactory.createManager(context);
-    int                      availableKeys  = accountManager.getPreKeysCount();
+    int availableKeys = accountManager.getPreKeysCount();
 
     if (availableKeys >= PREKEY_MINIMUM && OpenchatServicePreferences.isSignedPreKeyRegistered(context)) {
       Log.w(TAG, "Available keys sufficient: " + availableKeys);
@@ -65,11 +69,14 @@ public class RefreshPreKeysJob extends MasterSecretJob {
     accountManager.setPreKeys(identityKey.getPublicKey(), lastResortKeyRecord, signedPreKeyRecord, preKeyRecords);
 
     OpenchatServicePreferences.setSignedPreKeyRegistered(context, true);
+
+    ApplicationContext.getInstance(context)
+                      .getJobManager()
+                      .add(new CleanPreKeysJob(context));
   }
 
   @Override
-  public boolean onShouldRetry(Throwable throwable) {
-    if (throwable instanceof RequirementNotMetException)         return true;
+  public boolean onShouldRetryThrowable(Throwable throwable) {
     if (throwable instanceof NonSuccessfulResponseCodeException) return false;
     if (throwable instanceof PushNetworkException)               return true;
 

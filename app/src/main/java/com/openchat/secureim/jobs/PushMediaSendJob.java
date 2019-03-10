@@ -9,8 +9,8 @@ import com.openchat.secureim.crypto.storage.OpenchatServiceOpenchatStore;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsDatabase;
 import com.openchat.secureim.database.NoSuchMessageException;
+import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.secureim.mms.PartParser;
-import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
@@ -21,9 +21,9 @@ import com.openchat.secureim.transport.RetryLaterException;
 import com.openchat.secureim.transport.SecureFallbackApprovalException;
 import com.openchat.protocal.state.OpenchatStore;
 import com.openchat.imservice.api.OpenchatServiceMessageSender;
+import com.openchat.imservice.api.crypto.UntrustedIdentityException;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
-import com.openchat.imservice.api.crypto.UntrustedIdentityException;
 import com.openchat.imservice.push.PushAddress;
 import com.openchat.imservice.push.UnregisteredUserException;
 import com.openchat.imservice.storage.RecipientDevice;
@@ -32,12 +32,18 @@ import com.openchat.imservice.util.InvalidNumberException;
 import java.io.IOException;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import ws.com.google.android.mms.MmsException;
 import ws.com.google.android.mms.pdu.SendReq;
 
-public class PushMediaSendJob extends PushSendJob {
+import static com.openchat.secureim.dependencies.OpenchatServiceCommunicationModule.OpenchatServiceMessageSenderFactory;
+
+public class PushMediaSendJob extends PushSendJob implements InjectableType {
 
   private static final String TAG = PushMediaSendJob.class.getSimpleName();
+
+  @Inject transient OpenchatServiceMessageSenderFactory messageSenderFactory;
 
   private final long messageId;
 
@@ -52,12 +58,11 @@ public class PushMediaSendJob extends PushSendJob {
   }
 
   @Override
-  public void onRun()
-      throws RequirementNotMetException, RetryLaterException, MmsException, NoSuchMessageException
+  public void onRun(MasterSecret masterSecret)
+      throws RetryLaterException, MmsException, NoSuchMessageException
   {
-    MasterSecret masterSecret = getMasterSecret();
-    MmsDatabase  database     = DatabaseFactory.getMmsDatabase(context);
-    SendReq      message      = database.getOutgoingMessage(masterSecret, messageId);
+    MmsDatabase database = DatabaseFactory.getMmsDatabase(context);
+    SendReq     message  = database.getOutgoingMessage(masterSecret, messageId);
 
     try {
       deliver(masterSecret, message);
@@ -81,16 +86,15 @@ public class PushMediaSendJob extends PushSendJob {
   }
 
   @Override
-  public void onCanceled() {
-    DatabaseFactory.getMmsDatabase(context).markAsSentFailed(messageId);
-    notifyMediaMessageDeliveryFailed(context, messageId);
+  public boolean onShouldRetryThrowable(Throwable throwable) {
+    if (throwable instanceof RequirementNotMetException) return true;
+    return false;
   }
 
   @Override
-  public boolean onShouldRetry(Throwable throwable) {
-    if (throwable instanceof RetryLaterException)        return true;
-    if (throwable instanceof RequirementNotMetException) return true;
-    return false;
+  public void onCanceled() {
+    DatabaseFactory.getMmsDatabase(context).markAsSentFailed(messageId);
+    notifyMediaMessageDeliveryFailed(context, messageId);
   }
 
   private void deliver(MasterSecret masterSecret, SendReq message)
@@ -98,7 +102,7 @@ public class PushMediaSendJob extends PushSendJob {
              InsecureFallbackApprovalException, UntrustedIdentityException
   {
     MmsDatabase             database               = DatabaseFactory.getMmsDatabase(context);
-    OpenchatServiceMessageSender messageSender          = OpenchatServiceCommunicationFactory.createSender(context, masterSecret);
+    OpenchatServiceMessageSender messageSender          = messageSenderFactory.create(masterSecret);
     String                  destination            = message.getTo()[0].getString();
     boolean                 isSmsFallbackSupported = isSmsFallbackSupported(context, destination);
 

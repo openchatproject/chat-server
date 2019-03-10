@@ -10,8 +10,8 @@ import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.NoSuchMessageException;
 import com.openchat.secureim.database.model.SmsMessageRecord;
+import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.secureim.notifications.MessageNotifier;
-import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.sms.IncomingIdentityUpdateMessage;
@@ -20,8 +20,8 @@ import com.openchat.secureim.transport.RetryLaterException;
 import com.openchat.secureim.transport.SecureFallbackApprovalException;
 import com.openchat.protocal.state.OpenchatStore;
 import com.openchat.imservice.api.OpenchatServiceMessageSender;
-import com.openchat.imservice.api.messages.OpenchatServiceMessage;
 import com.openchat.imservice.api.crypto.UntrustedIdentityException;
+import com.openchat.imservice.api.messages.OpenchatServiceMessage;
 import com.openchat.imservice.push.PushAddress;
 import com.openchat.imservice.push.UnregisteredUserException;
 import com.openchat.imservice.storage.RecipientDevice;
@@ -29,9 +29,15 @@ import com.openchat.imservice.util.InvalidNumberException;
 
 import java.io.IOException;
 
-public class PushTextSendJob extends PushSendJob {
+import javax.inject.Inject;
+
+import static com.openchat.secureim.dependencies.OpenchatServiceCommunicationModule.OpenchatServiceMessageSenderFactory;
+
+public class PushTextSendJob extends PushSendJob implements InjectableType {
 
   private static final String TAG = PushTextSendJob.class.getSimpleName();
+
+  @Inject transient OpenchatServiceMessageSenderFactory messageSenderFactory;
 
   private final long messageId;
 
@@ -46,9 +52,7 @@ public class PushTextSendJob extends PushSendJob {
   }
 
   @Override
-  public void onRun() throws RequirementNotMetException, NoSuchMessageException, RetryLaterException
-  {
-    MasterSecret          masterSecret = getMasterSecret();
+  public void onRun(MasterSecret masterSecret) throws NoSuchMessageException, RetryLaterException {
     EncryptingSmsDatabase database     = DatabaseFactory.getEncryptingSmsDatabase(context);
     SmsMessageRecord      record       = database.getMessage(masterSecret, messageId);
     String                destination  = record.getIndividualRecipient().getNumber();
@@ -77,7 +81,24 @@ public class PushTextSendJob extends PushSendJob {
     }
   }
 
-  public void deliver(MasterSecret masterSecret, SmsMessageRecord message, String destination)
+  @Override
+  public boolean onShouldRetryThrowable(Throwable throwable) {
+    if (throwable instanceof RetryLaterException) return true;
+
+    return false;
+  }
+
+  @Override
+  public void onCanceled() {
+    DatabaseFactory.getSmsDatabase(context).markAsSentFailed(messageId);
+
+    long       threadId   = DatabaseFactory.getSmsDatabase(context).getThreadIdForMessage(messageId);
+    Recipients recipients = DatabaseFactory.getThreadDatabase(context).getRecipientsForThreadId(threadId);
+
+    MessageNotifier.notifyMessageDeliveryFailed(context, recipients, threadId);
+  }
+
+  private void deliver(MasterSecret masterSecret, SmsMessageRecord message, String destination)
       throws UntrustedIdentityException, SecureFallbackApprovalException,
              InsecureFallbackApprovalException, RetryLaterException
   {
@@ -85,7 +106,7 @@ public class PushTextSendJob extends PushSendJob {
 
     try {
       PushAddress             address       = getPushAddress(message.getIndividualRecipient());
-      OpenchatServiceMessageSender messageSender = OpenchatServiceCommunicationFactory.createSender(context, masterSecret);
+      OpenchatServiceMessageSender messageSender = messageSenderFactory.create(masterSecret);
 
       if (message.isEndSession()) {
         messageSender.sendMessage(address, new OpenchatServiceMessage(message.getDateSent(), null,
@@ -103,24 +124,6 @@ public class PushTextSendJob extends PushSendJob {
       if (isSmsFallbackSupported) fallbackOrAskApproval(masterSecret, message, destination);
       else                        throw new RetryLaterException(e);
     }
-  }
-
-  @Override
-  public boolean onShouldRetry(Throwable throwable) {
-    if (throwable instanceof RequirementNotMetException) return true;
-    if (throwable instanceof RetryLaterException)        return true;
-
-    return false;
-  }
-
-  @Override
-  public void onCanceled() {
-    DatabaseFactory.getSmsDatabase(context).markAsSentFailed(messageId);
-
-    long       threadId   = DatabaseFactory.getSmsDatabase(context).getThreadIdForMessage(messageId);
-    Recipients recipients = DatabaseFactory.getThreadDatabase(context).getRecipientsForThreadId(threadId);
-
-    MessageNotifier.notifyMessageDeliveryFailed(context, recipients, threadId);
   }
 
   private void fallbackOrAskApproval(MasterSecret masterSecret, SmsMessageRecord smsMessage, String destination)

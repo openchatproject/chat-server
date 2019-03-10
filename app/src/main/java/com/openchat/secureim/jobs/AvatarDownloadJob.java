@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.openchat.secureim.Release;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.GroupDatabase;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
@@ -47,7 +48,7 @@ public class AvatarDownloadJob extends MasterSecretJob {
   public void onAdded() {}
 
   @Override
-  public void onRun() throws IOException {
+  public void onRun(MasterSecret masterSecret) throws IOException {
     GroupDatabase             database   = DatabaseFactory.getGroupDatabase(context);
     GroupDatabase.GroupRecord record     = database.getGroup(groupId);
     File                      attachment = null;
@@ -90,7 +91,7 @@ public class AvatarDownloadJob extends MasterSecretJob {
   public void onCanceled() {}
 
   @Override
-  public boolean onShouldRetry(Throwable throwable) {
+  public boolean onShouldRetryThrowable(Throwable throwable) {
     if (throwable instanceof IOException) return true;
     return false;
   }

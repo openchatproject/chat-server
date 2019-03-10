@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.openchat.secureim.Release;
+import com.openchat.secureim.dependencies.InjectableType;
+import com.openchat.secureim.dependencies.OpenchatServiceCommunicationModule;
 import com.openchat.secureim.push.OpenchatServicePushTrustStore;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.JobParameters;
@@ -16,9 +18,15 @@ import com.openchat.imservice.push.exceptions.PushNetworkException;
 
 import java.io.IOException;
 
-public class DeliveryReceiptJob extends ContextJob {
+import javax.inject.Inject;
+
+import static com.openchat.secureim.dependencies.OpenchatServiceCommunicationModule.OpenchatServiceMessageSenderFactory;
+
+public class DeliveryReceiptJob extends ContextJob implements InjectableType {
 
   private static final String TAG = DeliveryReceiptJob.class.getSimpleName();
+
+  @Inject transient OpenchatServiceMessageSenderFactory messageSenderFactory;
 
   private final String destination;
   private final long   timestamp;
@@ -42,14 +50,9 @@ public class DeliveryReceiptJob extends ContextJob {
   @Override
   public void onRun() throws IOException {
     Log.w("DeliveryReceiptJob", "Sending delivery receipt...");
-    OpenchatServiceMessageSender messageSender =
-        new OpenchatServiceMessageSender(Release.PUSH_URL,
-                                    new OpenchatServicePushTrustStore(context),
-                                    OpenchatServicePreferences.getLocalNumber(context),
-                                    OpenchatServicePreferences.getPushServerPassword(context),
-                                    null, Optional.<OpenchatServiceMessageSender.EventListener>absent());
+    OpenchatServiceMessageSender messageSender = messageSenderFactory.create(null);
+    PushAddress             pushAddress   = new PushAddress(-1, destination, 1, relay);
 
-    PushAddress pushAddress = new PushAddress(-1, destination, 1, relay);
     messageSender.sendDeliveryReceipt(pushAddress, timestamp);
   }
 
