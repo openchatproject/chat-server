@@ -30,10 +30,11 @@ import com.openchat.secureim.database.model.MediaMmsMessageRecord;
 import com.openchat.secureim.database.model.MessageRecord;
 import com.openchat.secureim.database.model.NotificationMmsMessageRecord;
 import com.openchat.secureim.jobs.MmsDownloadJob;
+import com.openchat.secureim.jobs.MmsSendJob;
+import com.openchat.secureim.jobs.SmsSendJob;
 import com.openchat.secureim.mms.Slide;
 import com.openchat.secureim.mms.SlideDeck;
 import com.openchat.secureim.recipients.Recipient;
-import com.openchat.secureim.service.SendReceiveService;
 import com.openchat.secureim.util.DateUtils;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.Emoji;
@@ -531,6 +532,10 @@ public class ConversationItem extends LinearLayout {
           }
           database.markAsOutbox(messageRecord.getId());
           database.markAsForcedSms(messageRecord.getId());
+
+          ApplicationContext.getInstance(context)
+                            .getJobManager()
+                            .add(new MmsSendJob(context, messageRecord.getId()));
         } else {
           SmsDatabase database = DatabaseFactory.getSmsDatabase(context);
           if (messageRecord.isPendingInsecureSmsFallback()) {
@@ -538,15 +543,12 @@ public class ConversationItem extends LinearLayout {
           }
           database.markAsOutbox(messageRecord.getId());
           database.markAsForcedSms(messageRecord.getId());
+
+          ApplicationContext.getInstance(context)
+                            .getJobManager()
+                            .add(new SmsSendJob(context, messageRecord.getId(),
+                                                messageRecord.getIndividualRecipient().getNumber()));
         }
-
-        Intent intent = new Intent(context, SendReceiveService.class);
-        intent.setAction(messageRecord.isMms() ?
-                             SendReceiveService.SEND_MMS_ACTION :
-                             SendReceiveService.SEND_SMS_ACTION);
-        intent.putExtra(SendReceiveService.MASTER_SECRET_EXTRA, masterSecret);
-
-        context.startService(intent);
       }
     });
 

@@ -12,6 +12,7 @@ import com.openchat.secureim.crypto.SmsCipher;
 import com.openchat.secureim.crypto.storage.OpenchatServiceOpenchatStore;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
+import com.openchat.secureim.database.NoSuchMessageException;
 import com.openchat.secureim.database.SmsDatabase;
 import com.openchat.secureim.database.model.SmsMessageRecord;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
@@ -61,18 +62,15 @@ public class SmsDecryptJob extends MasterSecretJob {
   }
 
   @Override
-  public void onRun() throws RequirementNotMetException {
+  public void onRun() throws RequirementNotMetException, NoSuchMessageException {
     MasterSecret          masterSecret = getMasterSecret();
     EncryptingSmsDatabase database     = DatabaseFactory.getEncryptingSmsDatabase(context);
-    SmsDatabase.Reader    reader       = null;
 
     try {
-      reader = database.getMessage(masterSecret, messageId);
-
-      SmsMessageRecord    record     = reader.getNext();
-      IncomingTextMessage message    = createIncomingTextMessage(masterSecret, record);
-      long                messageId  = record.getId();
-      long                threadId   = record.getThreadId();
+      SmsMessageRecord    record    = database.getMessage(masterSecret, messageId);
+      IncomingTextMessage message   = createIncomingTextMessage(masterSecret, record);
+      long                messageId = record.getId();
+      long                threadId  = record.getThreadId();
 
       if      (message.isSecureMessage()) handleSecureMessage(masterSecret, messageId, message);
       else if (message.isPreKeyBundle())  handlePreKeyOpenchatMessage(masterSecret, messageId, threadId, (IncomingPreKeyBundleMessage) message);
@@ -93,9 +91,6 @@ public class SmsDecryptJob extends MasterSecretJob {
     } catch (NoSessionException e) {
       Log.w(TAG, e);
       database.markAsNoSession(messageId);
-    } finally {
-      if (reader != null)
-        reader.close();
     }
   }
 

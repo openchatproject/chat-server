@@ -22,18 +22,17 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
-import com.openchat.secureim.service.DirectoryRefreshListener;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.Recipients;
+import com.openchat.secureim.service.DirectoryRefreshListener;
 import com.openchat.secureim.service.KeyCachingService;
-import com.openchat.secureim.service.SendReceiveService;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;
 import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.secureim.crypto.MasterSecret;
 
 public class ConversationListActivity extends PassphraseRequiredActionBarActivity
     implements ConversationListFragment.ConversationSelectedListener
@@ -55,7 +54,6 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
 
     getSupportActionBar().setTitle(R.string.app_name);
 
-    initializeSenderReceiverService();
     initializeResources();
     initializeContactUpdatesReceiver();
 
@@ -226,15 +224,6 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
 
     getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI,
                                                  true, observer);
-  }
-
-  private void initializeSenderReceiverService() {
-    Intent smsSenderIntent = new Intent(SendReceiveService.SEND_SMS_ACTION, null, this,
-                                        SendReceiveService.class);
-    Intent mmsSenderIntent = new Intent(SendReceiveService.SEND_MMS_ACTION, null, this,
-                                        SendReceiveService.class);
-    startService(smsSenderIntent);
-    startService(mmsSenderIntent);
   }
 
   private void initializeResources() {

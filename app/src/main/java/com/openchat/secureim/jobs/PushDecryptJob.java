@@ -12,6 +12,7 @@ import com.openchat.secureim.crypto.storage.OpenchatServiceSessionStore;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.MmsDatabase;
+import com.openchat.secureim.database.NoSuchMessageException;
 import com.openchat.secureim.database.PushDatabase;
 import com.openchat.secureim.groups.GroupMessageProcessor;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
@@ -68,18 +69,13 @@ public class PushDecryptJob extends MasterSecretJob {
   }
 
   @Override
-  public void onRun() throws RequirementNotMetException {
-    try {
-      MasterSecret       masterSecret = getMasterSecret();
-      PushDatabase       database     = DatabaseFactory.getPushDatabase(context);
-      OpenchatServiceEnvelope envelope     = database.get(messageId);
+  public void onRun() throws RequirementNotMetException, NoSuchMessageException {
+    MasterSecret       masterSecret = getMasterSecret();
+    PushDatabase       database     = DatabaseFactory.getPushDatabase(context);
+    OpenchatServiceEnvelope envelope     = database.get(messageId);
 
-      handleMessage(masterSecret, envelope);
-      database.delete(messageId);
-
-    } catch (PushDatabase.NoSuchMessageException e) {
-      Log.w(TAG, e);
-    }
+    handleMessage(masterSecret, envelope);
+    database.delete(messageId);
   }
 
   @Override
