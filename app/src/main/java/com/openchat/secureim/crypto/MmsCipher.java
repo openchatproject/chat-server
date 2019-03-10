@@ -3,14 +3,11 @@ package com.openchat.secureim.crypto;
 import android.content.Context;
 import android.util.Log;
 
-import com.openchat.secureim.crypto.storage.OpenchatServiceSessionStore;
 import com.openchat.secureim.mms.TextTransport;
 import com.openchat.secureim.protocol.WirePrefix;
-import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
-import com.openchat.secureim.transport.InsecureFallbackApprovalException;
 import com.openchat.protocal.DuplicateMessageException;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.LegacyMessageException;
@@ -20,7 +17,6 @@ import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.protocal.protocol.OpenchatMessage;
 import com.openchat.protocal.state.OpenchatStore;
 import com.openchat.protocal.util.guava.Optional;
-import com.openchat.imservice.crypto.OpenchatServiceCipher;
 import com.openchat.imservice.storage.RecipientDevice;
 import com.openchat.imservice.util.Util;
 
@@ -98,7 +94,7 @@ public class MmsCipher {
     }
 
     SessionCipher     cipher            = new SessionCipher(axolotlStore, recipientId, RecipientDevice.DEFAULT_DEVICE_ID);
-    CiphertextMessage ciphertextMessage = cipher.encrypt(textTransport.getPaddedMessageBody(pduBytes));
+    CiphertextMessage ciphertextMessage = cipher.encrypt(pduBytes);
     byte[]            encryptedPduBytes = textTransport.getEncodedMessage(ciphertextMessage.serialize());
 
     PduBody body         = new PduBody();

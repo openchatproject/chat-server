@@ -17,7 +17,7 @@ import com.openchat.secureim.util.GroupUtil;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.protocal.InvalidMessageException;
-import com.openchat.imservice.crypto.AttachmentCipherInputStream;
+import com.openchat.imservice.api.crypto.AttachmentCipherInputStream;
 import com.openchat.imservice.push.PushServiceSocket;
 import com.openchat.imservice.push.exceptions.NonSuccessfulResponseCodeException;
 

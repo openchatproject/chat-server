@@ -42,7 +42,7 @@ import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
-import com.openchat.imservice.crypto.OpenchatServiceCipher;
+import com.openchat.imservice.api.crypto.OpenchatServiceCipher;
 import com.openchat.imservice.util.Base64;
 
 import ws.com.google.android.mms.MmsException;
