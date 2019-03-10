@@ -7,7 +7,6 @@ import com.openchat.secureim.crypto.IdentityKeyUtil;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.PreKeyUtil;
 import com.openchat.secureim.dependencies.InjectableType;
-import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.util.ParcelUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.EncryptionKeys;
@@ -60,8 +59,8 @@ public class CreateSignedPreKeyJob extends ContextJob implements InjectableType 
   public void onCanceled() {}
 
   @Override
-  public boolean onShouldRetry(Throwable throwable) {
-    if (throwable instanceof PushNetworkException) return true;
+  public boolean onShouldRetry(Exception exception) {
+    if (exception instanceof PushNetworkException) return true;
     return false;
   }
 }

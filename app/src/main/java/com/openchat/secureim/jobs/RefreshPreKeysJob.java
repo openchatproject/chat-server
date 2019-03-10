@@ -9,7 +9,6 @@ import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.PreKeyUtil;
 import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
-import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
@@ -17,7 +16,6 @@ import com.openchat.protocal.IdentityKeyPair;
 import com.openchat.protocal.state.PreKeyRecord;
 import com.openchat.protocal.state.SignedPreKeyRecord;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
-import com.openchat.imservice.push.PushServiceSocket;
 import com.openchat.imservice.push.exceptions.NonSuccessfulResponseCodeException;
 import com.openchat.imservice.push.exceptions.PushNetworkException;
 
@@ -76,9 +74,9 @@ public class RefreshPreKeysJob extends MasterSecretJob implements InjectableType
   }
 
   @Override
-  public boolean onShouldRetryThrowable(Throwable throwable) {
-    if (throwable instanceof NonSuccessfulResponseCodeException) return false;
-    if (throwable instanceof PushNetworkException)               return true;
+  public boolean onShouldRetryThrowable(Exception exception) {
+    if (exception instanceof NonSuccessfulResponseCodeException) return false;
+    if (exception instanceof PushNetworkException)               return true;
 
     return false;
   }

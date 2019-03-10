@@ -6,18 +6,12 @@ import android.content.Context;
 import com.openchat.secureim.crypto.PRNGFixes;
 import com.openchat.secureim.dependencies.OpenchatStorageModule;
 import com.openchat.secureim.dependencies.InjectableType;
-import com.openchat.secureim.jobs.persistence.EncryptingJobSerializer;
-import com.openchat.secureim.jobs.GcmRefreshJob;
-import com.openchat.secureim.jobs.requirements.MasterSecretRequirementProvider;
 import com.openchat.secureim.dependencies.OpenchatServiceCommunicationModule;
+import com.openchat.secureim.jobs.GcmRefreshJob;
+import com.openchat.secureim.jobs.persistence.EncryptingJobSerializer;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.JobManager;
 import com.openchat.jobqueue.dependencies.DependencyInjector;
-import com.openchat.jobqueue.requirements.NetworkRequirementProvider;
-import com.openchat.jobqueue.requirements.RequirementProvider;
-
-import java.util.LinkedList;
-import java.util.List;
 
 import dagger.ObjectGraph;
 
@@ -54,13 +48,12 @@ public class ApplicationContext extends Application implements DependencyInjecto
   }
 
   private void initializeJobManager() {
-    List<RequirementProvider> providers = new LinkedList<RequirementProvider>() {{
-      add(new NetworkRequirementProvider(ApplicationContext.this));
-      add(new MasterSecretRequirementProvider(ApplicationContext.this));
-    }};
-
-    this.jobManager = new JobManager(this, "OpenchatServiceJobs", providers, this,
-                                     new EncryptingJobSerializer(this), 5);
+    this.jobManager = JobManager.newBuilder(this)
+                                .withName("OpenchatServiceJobs")
+                                .withDependencyInjector(this)
+                                .withJobSerializer(new EncryptingJobSerializer(this))
+                                .withConsumerThreads(5)
+                                .build();
   }
 
   private void initializeDependencyInjection() {

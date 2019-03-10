@@ -5,15 +5,14 @@ import android.util.Log;
 
 import com.openchat.secureim.crypto.AsymmetricMasterCipher;
 import com.openchat.secureim.crypto.AsymmetricMasterSecret;
-import com.openchat.secureim.crypto.SecurityEvent;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.MasterSecretUtil;
+import com.openchat.secureim.crypto.SecurityEvent;
 import com.openchat.secureim.crypto.SmsCipher;
 import com.openchat.secureim.crypto.storage.OpenchatServiceOpenchatStore;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.NoSuchMessageException;
-import com.openchat.secureim.database.SmsDatabase;
 import com.openchat.secureim.database.model.SmsMessageRecord;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
 import com.openchat.secureim.notifications.MessageNotifier;
@@ -94,7 +93,7 @@ public class SmsDecryptJob extends MasterSecretJob {
   }
 
   @Override
-  public boolean onShouldRetryThrowable(Throwable throwable) {
+  public boolean onShouldRetryThrowable(Exception exception) {
     return false;
   }
 
