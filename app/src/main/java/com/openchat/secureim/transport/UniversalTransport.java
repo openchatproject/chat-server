@@ -3,6 +3,8 @@ package com.openchat.secureim.transport;
 import android.content.Context;
 import android.util.Log;
 
+import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.crypto.storage.OpenchatServiceOpenchatStore;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsDatabase;
 import com.openchat.secureim.database.model.SmsMessageRecord;
@@ -16,13 +18,15 @@ import com.openchat.secureim.sms.IncomingIdentityUpdateMessage;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.protocal.state.OpenchatStore;
+import com.openchat.imservice.crypto.UntrustedIdentityException;
 import com.openchat.imservice.directory.Directory;
 import com.openchat.imservice.directory.NotInDirectoryException;
 import com.openchat.imservice.push.ContactTokenDetails;
 import com.openchat.imservice.push.PushServiceSocket;
 import com.openchat.imservice.push.UnregisteredUserException;
-import com.openchat.imservice.storage.SessionUtil;
+import com.openchat.imservice.push.exceptions.EncapsulatedExceptions;
+import com.openchat.imservice.storage.RecipientDevice;
 import com.openchat.imservice.util.DirectoryUtil;
 import com.openchat.imservice.util.InvalidNumberException;
 
@@ -31,6 +35,8 @@ import java.io.IOException;
 import ws.com.google.android.mms.pdu.SendReq;
 
 public class UniversalTransport {
+
+  private static final String TAG = UniversalTransport.class.getSimpleName();
 
   private final Context       context;
   private final MasterSecret  masterSecret;
@@ -68,23 +74,23 @@ public class UniversalTransport {
         boolean isSmsFallbackSupported = isSmsFallbackSupported(number);
 
         try {
-          Log.w("UniversalTransport", "Using GCM as transport...");
+          Log.w(TAG, "Using PUSH as transport...");
           pushTransport.deliver(message);
         } catch (UnregisteredUserException uue) {
-          Log.w("UniversalTransport", uue);
+          Log.w(TAG, uue);
           if (isSmsFallbackSupported) fallbackOrAskApproval(message, number);
           else                        throw new UndeliverableMessageException(uue);
         } catch (IOException ioe) {
-          Log.w("UniversalTransport", ioe);
+          Log.w(TAG, ioe);
           if (isSmsFallbackSupported) fallbackOrAskApproval(message, number);
           else                        throw new RetryLaterException(ioe);
         }
       } else {
-        Log.w("UniversalTransport", "Using SMS as transport...");
+        Log.w(TAG, "Using SMS as transport...");
         deliverDirectSms(message);
       }
     } catch (InvalidNumberException e) {
-      Log.w("UniversalTransport", e);
+      Log.w(TAG, e);
       deliverDirectSms(message);
     }
   }
@@ -120,19 +126,19 @@ public class UniversalTransport {
         boolean isSmsFallbackSupported = isSmsFallbackSupported(destination);
 
         try {
-          Log.w("UniversalTransport", "Using GCM as transport...");
+          Log.w(TAG, "Using GCM as transport...");
           pushTransport.deliver(mediaMessage, threadId);
           return new MmsSendResult("push".getBytes("UTF-8"), 0, true, true);
         } catch (IOException ioe) {
-          Log.w("UniversalTransport", ioe);
+          Log.w(TAG, ioe);
           if (isSmsFallbackSupported) return fallbackOrAskApproval(mediaMessage, destination);
           else                        throw new RetryLaterException(ioe);
         } catch (RecipientFormattingException e) {
-          Log.w("UniversalTransport", e);
+          Log.w(TAG, e);
           if (isSmsFallbackSupported) return fallbackOrAskApproval(mediaMessage, destination);
           else                        throw new UndeliverableMessageException(e);
         } catch (EncapsulatedExceptions ee) {
-          Log.w("UniversalTransport", ee);
+          Log.w(TAG, ee);
           if (!ee.getUnregisteredUserExceptions().isEmpty()) {
             if (isSmsFallbackSupported) return mmsTransport.deliver(mediaMessage);
             else                        throw new UndeliverableMessageException(ee);
@@ -141,11 +147,11 @@ public class UniversalTransport {
           }
         }
       } else {
-        Log.w("UniversalTransport", "Delivering media message with MMS...");
+        Log.w(TAG, "Delivering media message with MMS...");
         return deliverDirectMms(mediaMessage);
       }
     } catch (InvalidNumberException ine) {
-      Log.w("UniversalTransport", ine);
+      Log.w(TAG, ine);
       return deliverDirectMms(mediaMessage);
     }
   }
@@ -154,18 +160,19 @@ public class UniversalTransport {
       throws SecureFallbackApprovalException, UndeliverableMessageException, InsecureFallbackApprovalException
   {
     try {
-      Recipient recipient                     = RecipientFactory.getRecipientsFromString(context, destination, false).getPrimaryRecipient();
-      boolean   isSmsFallbackApprovalRequired = isSmsFallbackApprovalRequired(destination);
+      Recipient    recipient                     = RecipientFactory.getRecipientsFromString(context, destination, false).getPrimaryRecipient();
+      boolean      isSmsFallbackApprovalRequired = isSmsFallbackApprovalRequired(destination);
+      OpenchatStore axolotlStore                  = new OpenchatServiceOpenchatStore(context, masterSecret);
 
       if (!isSmsFallbackApprovalRequired) {
-        Log.w("UniversalTransport", "Falling back to MMS");
+        Log.w(TAG, "Falling back to MMS");
         DatabaseFactory.getMmsDatabase(context).markAsForcedSms(mediaMessage.getDatabaseMessageId());
         return mmsTransport.deliver(mediaMessage);
-      } else if (!SessionUtil.hasEncryptCapableSession(context, masterSecret, recipient)) {
-        Log.w("UniversalTransport", "Marking message as pending insecure SMS fallback");
+      } else if (!axolotlStore.containsSession(recipient.getRecipientId(), RecipientDevice.DEFAULT_DEVICE_ID)) {
+        Log.w(TAG, "Marking message as pending insecure SMS fallback");
         throw new InsecureFallbackApprovalException("Pending user approval for fallback to insecure SMS");
       } else {
-        Log.w("UniversalTransport", "Marking message as pending secure SMS fallback");
+        Log.w(TAG, "Marking message as pending secure SMS fallback");
         throw new SecureFallbackApprovalException("Pending user approval for fallback secure to SMS");
       }
     } catch (RecipientFormattingException rfe) {
@@ -176,18 +183,19 @@ public class UniversalTransport {
   private void fallbackOrAskApproval(SmsMessageRecord smsMessage, String destination)
       throws SecureFallbackApprovalException, UndeliverableMessageException, InsecureFallbackApprovalException
   {
-    Recipient recipient                     = smsMessage.getIndividualRecipient();
-    boolean   isSmsFallbackApprovalRequired = isSmsFallbackApprovalRequired(destination);
+    Recipient    recipient                     = smsMessage.getIndividualRecipient();
+    boolean      isSmsFallbackApprovalRequired = isSmsFallbackApprovalRequired(destination);
+    OpenchatStore axolotlStore                  = new OpenchatServiceOpenchatStore(context, masterSecret);
 
     if (!isSmsFallbackApprovalRequired) {
-      Log.w("UniversalTransport", "Falling back to SMS");
+      Log.w(TAG, "Falling back to SMS");
       DatabaseFactory.getSmsDatabase(context).markAsForcedSms(smsMessage.getId());
       smsTransport.deliver(smsMessage);
-    } else if (!SessionUtil.hasEncryptCapableSession(context, masterSecret, recipient)) {
-      Log.w("UniversalTransport", "Marking message as pending insecure fallback.");
+    } else if (!axolotlStore.containsSession(recipient.getRecipientId(), RecipientDevice.DEFAULT_DEVICE_ID)) {
+      Log.w(TAG, "Marking message as pending insecure fallback.");
       throw new InsecureFallbackApprovalException("Pending user approval for fallback to insecure SMS");
     } else {
-      Log.w("UniversalTransport", "Marking message as pending secure fallback.");
+      Log.w(TAG, "Marking message as pending secure fallback.");
       throw new SecureFallbackApprovalException("Pending user approval for fallback to secure SMS");
     }
   }
@@ -203,14 +211,12 @@ public class UniversalTransport {
       pushTransport.deliver(mediaMessage, threadId);
       return new MmsSendResult("push".getBytes("UTF-8"), 0, true, true);
     } catch (IOException e) {
-      Log.w("UniversalTransport", e);
+      Log.w(TAG, e);
       throw new RetryLaterException(e);
-    } catch (RecipientFormattingException e) {
-      throw new UndeliverableMessageException(e);
-    } catch (InvalidNumberException e) {
+    } catch (RecipientFormattingException | InvalidNumberException e) {
       throw new UndeliverableMessageException(e);
     } catch (EncapsulatedExceptions ee) {
-      Log.w("UniversalTransport", ee);
+      Log.w(TAG, ee);
       try {
         for (UnregisteredUserException unregistered : ee.getUnregisteredUserExceptions()) {
           IncomingGroupMessage quitMessage = IncomingGroupMessage.createForQuit(mediaMessage.getTo()[0].getString(), unregistered.getE164Number());
@@ -313,7 +319,7 @@ public class UniversalTransport {
           return true;
         }
       } catch (IOException e1) {
-        Log.w("UniversalTransport", e1);
+        Log.w(TAG, e1);
         return false;
       }
     }

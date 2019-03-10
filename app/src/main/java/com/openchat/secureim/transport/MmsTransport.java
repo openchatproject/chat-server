@@ -4,38 +4,32 @@ import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.openchat.secureim.crypto.OpenchatServiceCipher;
+import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MmsCipher;
+import com.openchat.secureim.crypto.storage.OpenchatServiceOpenchatStore;
 import com.openchat.secureim.database.MmsDatabase;
 import com.openchat.secureim.mms.ApnUnavailableException;
 import com.openchat.secureim.mms.MmsRadio;
 import com.openchat.secureim.mms.MmsRadioException;
 import com.openchat.secureim.mms.MmsSendResult;
 import com.openchat.secureim.mms.OutgoingMmsConnection;
-import com.openchat.secureim.mms.TextTransport;
-import com.openchat.secureim.protocol.WirePrefix;
-import com.openchat.secureim.recipients.Recipient;
-import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.util.NumberUtil;
-import com.openchat.protocal.protocol.CiphertextMessage;
-import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.storage.RecipientDevice;
-import com.openchat.imservice.storage.SessionUtil;
+import com.openchat.protocal.NoSessionException;
 import com.openchat.imservice.util.Hex;
 
 import java.io.IOException;
 import java.util.Arrays;
 
-import ws.com.google.android.mms.ContentType;
 import ws.com.google.android.mms.pdu.EncodedStringValue;
-import ws.com.google.android.mms.pdu.PduBody;
 import ws.com.google.android.mms.pdu.PduComposer;
 import ws.com.google.android.mms.pdu.PduHeaders;
-import ws.com.google.android.mms.pdu.PduPart;
 import ws.com.google.android.mms.pdu.SendConf;
 import ws.com.google.android.mms.pdu.SendReq;
 
 public class MmsTransport {
+
+  private static final String TAG = MmsTransport.class.getSimpleName();
 
   private final Context      context;
   private final MasterSecret masterSecret;
@@ -55,15 +49,15 @@ public class MmsTransport {
 
     try {
       if (isCdmaDevice()) {
-        Log.w("MmsTransport", "Sending MMS directly without radio change...");
+        Log.w(TAG, "Sending MMS directly without radio change...");
         try {
           return sendMms(message, false, false);
         } catch (IOException e) {
-          Log.w("MmsTransport", e);
+          Log.w(TAG, e);
         }
       }
 
-      Log.w("MmsTransport", "Sending MMS with radio change and proxy...");
+      Log.w(TAG, "Sending MMS with radio change and proxy...");
       radio.connect();
 
       try {
@@ -71,23 +65,23 @@ public class MmsTransport {
         radio.disconnect();
         return result;
       } catch (IOException e) {
-        Log.w("MmsTransport", e);
+        Log.w(TAG, e);
       }
 
-      Log.w("MmsTransport", "Sending MMS with radio change and without proxy...");
+      Log.w(TAG, "Sending MMS with radio change and without proxy...");
 
       try {
         MmsSendResult result = sendMms(message, true, false);
         radio.disconnect();
         return result;
       } catch (IOException ioe) {
-        Log.w("MmsTransport", ioe);
+        Log.w(TAG, ioe);
         radio.disconnect();
         throw new UndeliverableMessageException(ioe);
       }
 
     } catch (MmsRadioException mre) {
-      Log.w("MmsTransport", mre);
+      Log.w(TAG, mre);
       throw new UndeliverableMessageException(mre);
     }
   }
@@ -112,7 +106,7 @@ public class MmsTransport {
       SendConf conf = connection.send(usingMmsRadio, useProxy);
 
       for (int i=0;i<message.getBody().getPartsNum();i++) {
-        Log.w("MmsSender", "Sent MMS part of content-type: " + new String(message.getBody().getPart(i).getContentType()));
+        Log.w(TAG, "Sent MMS part of content-type: " + new String(message.getBody().getPart(i).getContentType()));
       }
 
       if (conf == null) {
@@ -130,51 +124,19 @@ public class MmsTransport {
   }
 
   private SendReq getEncryptedMessage(SendReq pdu) throws InsecureFallbackApprovalException {
-    EncodedStringValue[] encodedRecipient = pdu.getTo();
-    String recipient                      = encodedRecipient[0].getString();
-    byte[] pduBytes                       = new PduComposer(context, pdu).make();
-    byte[] encryptedPduBytes              = getEncryptedPdu(masterSecret, recipient, pduBytes);
-
-    PduBody body         = new PduBody();
-    PduPart part         = new PduPart();
-    SendReq encryptedPdu = new SendReq(pdu.getPduHeaders(), body);
-
-    part.setContentId((System.currentTimeMillis()+"").getBytes());
-    part.setContentType(ContentType.TEXT_PLAIN.getBytes());
-    part.setName((System.currentTimeMillis()+"").getBytes());
-    part.setData(encryptedPduBytes);
-    body.addPart(part);
-    encryptedPdu.setSubject(new EncodedStringValue(WirePrefix.calculateEncryptedMmsSubject()));
-    encryptedPdu.setBody(body);
-
-    return encryptedPdu;
-  }
-
-  private byte[] getEncryptedPdu(MasterSecret masterSecret, String recipientString, byte[] pduBytes)
-      throws InsecureFallbackApprovalException
-  {
     try {
-      TextTransport     transportDetails  = new TextTransport();
-      Recipient         recipient         = RecipientFactory.getRecipientsFromString(context, recipientString, false).getPrimaryRecipient();
-      RecipientDevice   recipientDevice   = new RecipientDevice(recipient.getRecipientId(), RecipientDevice.DEFAULT_DEVICE_ID);
-
-      if (!SessionUtil.hasEncryptCapableSession(context, masterSecret, recipientDevice)) {
-        throw new InsecureFallbackApprovalException("No session exists for this secure message.");
-      }
-
-      OpenchatServiceCipher  cipher            = new OpenchatServiceCipher(context, masterSecret, recipientDevice, transportDetails);
-      CiphertextMessage ciphertextMessage = cipher.encrypt(pduBytes);
-
-      return transportDetails.getEncodedMessage(ciphertextMessage.serialize());
+      MmsCipher cipher = new MmsCipher(new OpenchatServiceOpenchatStore(context, masterSecret));
+      return cipher.encrypt(context, pdu);
+    } catch (NoSessionException e) {
+      throw new InsecureFallbackApprovalException(e);
     } catch (RecipientFormattingException e) {
-      Log.w("MmsTransport", e);
       throw new AssertionError(e);
     }
   }
 
   private boolean isInconsistentResponse(SendReq message, SendConf response) {
-    Log.w("MmsTransport", "Comparing: " + Hex.toString(message.getTransactionId()));
-    Log.w("MmsTransport", "With:      " + Hex.toString(response.getTransactionId()));
+    Log.w(TAG, "Comparing: " + Hex.toString(message.getTransactionId()));
+    Log.w(TAG, "With:      " + Hex.toString(response.getTransactionId()));
     return !Arrays.equals(message.getTransactionId(), response.getTransactionId());
   }
 

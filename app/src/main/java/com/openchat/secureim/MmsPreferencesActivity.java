@@ -1,17 +1,15 @@
 package com.openchat.secureim;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
-import com.openchat.secureim.service.SendReceiveService;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;
 import com.openchat.secureim.util.MemoryCleaner;
-import com.openchat.imservice.crypto.MasterSecret;
 
 public class MmsPreferencesActivity extends PassphraseRequiredActionBarActivity {
 
@@ -56,7 +54,6 @@ public class MmsPreferencesActivity extends PassphraseRequiredActionBarActivity 
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case android.R.id.home:
-        handleDownloadMmsPendingApn();
         finish();
         return true;
     }
@@ -66,13 +63,7 @@ public class MmsPreferencesActivity extends PassphraseRequiredActionBarActivity 
 
   @Override
   public void onBackPressed() {
-    handleDownloadMmsPendingApn();
     super.onBackPressed();
   }
 
-  private void handleDownloadMmsPendingApn() {
-    Intent intent = new Intent(this, SendReceiveService.class);
-    intent.setAction(SendReceiveService.DOWNLOAD_MMS_PENDING_APN_ACTION);
-    startService(intent);
-  }
 }

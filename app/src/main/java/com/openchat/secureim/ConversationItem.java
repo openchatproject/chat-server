@@ -22,12 +22,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsDatabase;
 import com.openchat.secureim.database.SmsDatabase;
 import com.openchat.secureim.database.model.MediaMmsMessageRecord;
 import com.openchat.secureim.database.model.MessageRecord;
 import com.openchat.secureim.database.model.NotificationMmsMessageRecord;
+import com.openchat.secureim.jobs.MmsDownloadJob;
 import com.openchat.secureim.mms.Slide;
 import com.openchat.secureim.mms.SlideDeck;
 import com.openchat.secureim.recipients.Recipient;
@@ -35,7 +37,6 @@ import com.openchat.secureim.service.SendReceiveService;
 import com.openchat.secureim.util.DateUtils;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.Emoji;
-import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.util.FutureTaskListener;
 import com.openchat.imservice.util.ListenableFutureTask;
 
@@ -460,13 +461,10 @@ public class ConversationItem extends LinearLayout {
       mmsDownloadButton.setVisibility(View.GONE);
       mmsDownloadingLabel.setVisibility(View.VISIBLE);
 
-      Intent intent = new Intent(context, SendReceiveService.class);
-      intent.putExtra("content_location", new String(notificationRecord.getContentLocation()));
-      intent.putExtra("message_id", notificationRecord.getId());
-      intent.putExtra("transaction_id", notificationRecord.getTransactionId());
-      intent.putExtra("thread_id", notificationRecord.getThreadId());
-      intent.setAction(SendReceiveService.DOWNLOAD_MMS_ACTION);
-      context.startService(intent);
+      ApplicationContext.getInstance(context)
+                        .getJobManager()
+                        .add(new MmsDownloadJob(context, messageRecord.getId(),
+                                                messageRecord.getThreadId(), false));
     }
   }
 

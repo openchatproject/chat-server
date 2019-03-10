@@ -1,4 +1,4 @@
-package com.openchat.secureim.jobs;
+package com.openchat.secureim.jobs.persistence;
 
 import android.content.Context;
 
@@ -8,8 +8,8 @@ import com.openchat.jobqueue.Job;
 import com.openchat.jobqueue.persistence.JavaJobSerializer;
 import com.openchat.jobqueue.persistence.JobSerializer;
 import com.openchat.protocal.InvalidMessageException;
-import com.openchat.imservice.crypto.MasterCipher;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterCipher;
+import com.openchat.secureim.crypto.MasterSecret;
 
 import java.io.IOException;
 

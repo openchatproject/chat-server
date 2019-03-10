@@ -9,7 +9,7 @@ import com.openchat.secureim.ConversationListActivity;
 import com.openchat.secureim.DatabaseMigrationActivity;
 import com.openchat.secureim.R;
 import com.openchat.secureim.service.ApplicationMigrationService;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecret;
 
 public class SystemSmsImportReminder extends Reminder {
 

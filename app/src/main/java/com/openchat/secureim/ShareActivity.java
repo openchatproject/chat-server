@@ -2,19 +2,16 @@ package com.openchat.secureim;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.WindowManager;
 
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;
 import com.openchat.secureim.util.MemoryCleaner;
-import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.imservice.crypto.MasterSecret;
 
 public class ShareActivity extends PassphraseRequiredActionBarActivity
     implements ShareFragment.ConversationSelectedListener

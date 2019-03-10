@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.openchat.protocal.IdentityKey;
-import com.openchat.imservice.crypto.IdentityKeyParcelable;
+import com.openchat.secureim.crypto.IdentityKeyParcelable;
 
 public class ViewIdentityActivity extends KeyScanningActivity {
 

@@ -5,6 +5,8 @@ import android.os.Parcelable;
 import android.telephony.SmsMessage;
 
 import com.openchat.secureim.util.GroupUtil;
+import com.openchat.protocal.util.guava.Optional;
+import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 import com.openchat.imservice.push.IncomingPushMessage;
 import com.openchat.imservice.storage.RecipientDevice;
 
@@ -50,19 +52,21 @@ public class IncomingTextMessage implements Parcelable {
     this.push                 = false;
   }
 
-  public IncomingTextMessage(IncomingPushMessage message, String encodedBody, GroupContext group) {
+  public IncomingTextMessage(String sender, int senderDeviceId, long sentTimestampMillis,
+                             String encodedBody, Optional<OpenchatServiceGroup> group)
+  {
     this.message              = encodedBody;
-    this.sender               = message.getSource();
-    this.senderDeviceId       = message.getSourceDevice();
+    this.sender               = sender;
+    this.senderDeviceId       = senderDeviceId;
     this.protocol             = 31337;
     this.serviceCenterAddress = "GCM";
     this.replyPathPresent     = true;
     this.pseudoSubject        = "";
-    this.sentTimestampMillis  = message.getTimestampMillis();
+    this.sentTimestampMillis  = sentTimestampMillis;
     this.push                 = true;
 
-    if (group != null && group.hasId()) {
-      this.groupId = GroupUtil.getEncodedId(group.getId().toByteArray());
+    if (group.isPresent()) {
+      this.groupId = GroupUtil.getEncodedId(group.get().getGroupId());
     } else {
       this.groupId = null;
     }

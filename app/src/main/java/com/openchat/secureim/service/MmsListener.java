@@ -7,6 +7,8 @@ import android.os.Build;
 import android.provider.Telephony;
 import android.util.Log;
 
+import com.openchat.secureim.ApplicationContext;
+import com.openchat.secureim.jobs.MmsReceiveJob;
 import com.openchat.secureim.protocol.WirePrefix;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
@@ -64,11 +66,10 @@ public class MmsListener extends BroadcastReceiver {
          isRelevant(context, intent)))
     {
       Log.w("MmsListener", "Relevant!");
-      intent.setAction(SendReceiveService.RECEIVE_MMS_ACTION);
-      intent.putExtra("ResultCode", this.getResultCode());
-      intent.setClass(context, SendReceiveService.class);
+      ApplicationContext.getInstance(context)
+                        .getJobManager()
+                        .add(new MmsReceiveJob(context, intent.getByteArrayExtra("data")));
 
-      context.startService(intent);
       abortBroadcast();
     }
   }

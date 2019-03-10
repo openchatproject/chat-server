@@ -12,10 +12,10 @@ import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.state.SessionRecord;
 import com.openchat.protocal.state.SessionStore;
-import com.openchat.imservice.crypto.IdentityKeyParcelable;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.IdentityKeyParcelable;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.imservice.storage.RecipientDevice;
-import com.openchat.imservice.storage.OpenchatServiceSessionStore;
+import com.openchat.secureim.crypto.storage.OpenchatServiceSessionStore;
 
 public class VerifyIdentityActivity extends KeyScanningActivity {
 

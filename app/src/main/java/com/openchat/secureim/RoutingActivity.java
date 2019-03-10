@@ -10,7 +10,7 @@ import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecret;
 
 public class RoutingActivity extends PassphraseRequiredActionBarActivity {
 

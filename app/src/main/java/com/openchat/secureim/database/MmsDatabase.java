@@ -18,8 +18,8 @@ import com.openchat.secureim.mms.OutgoingMediaMessage;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.InvalidMessageException;
-import com.openchat.imservice.crypto.MasterCipher;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterCipher;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.model.DisplayRecord;
 import com.openchat.secureim.database.model.MediaMmsMessageRecord;
 import com.openchat.secureim.database.model.MessageRecord;
@@ -33,6 +33,7 @@ import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.LRUCache;
+import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.util.InvalidNumberException;
 import com.openchat.imservice.util.ListenableFutureTask;
 import com.openchat.secureim.util.Trimmer;
@@ -406,6 +407,32 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
     contentValues.put(READ, 1);
 
     database.update(TABLE_NAME, contentValues, null, null);
+  }
+
+  public Optional<NotificationInd> getNotification(long messageId) {
+    SQLiteDatabase     db              = databaseHelper.getReadableDatabase();
+    MmsAddressDatabase addressDatabase = DatabaseFactory.getMmsAddressDatabase(context);
+
+    Cursor cursor = null;
+
+    try {
+      cursor = db.query(TABLE_NAME, MMS_PROJECTION, ID_WHERE, new String[] {String.valueOf(messageId)}, null, null, null);
+
+      if (cursor != null && cursor.moveToNext()) {
+        PduHeaders headers = getHeadersFromCursor(cursor);
+        addressDatabase.getAddressesForId(messageId, headers);
+
+        return Optional.of(new NotificationInd(headers));
+      } else {
+        return Optional.absent();
+      }
+    } catch (InvalidHeaderValueException e) {
+      Log.w("MmsDatabase", e);
+      return Optional.absent();
+    } finally {
+      if (cursor != null)
+        cursor.close();
+    }
   }
 
   public SendReq[] getOutgoingMessages(MasterSecret masterSecret, long messageId)

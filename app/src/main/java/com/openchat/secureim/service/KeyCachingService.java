@@ -16,16 +16,18 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.openchat.secureim.ApplicationContext;
 import com.openchat.secureim.DatabaseUpgradeActivity;
 import com.openchat.secureim.DummyActivity;
 import com.openchat.secureim.R;
 import com.openchat.secureim.RoutingActivity;
-import com.openchat.secureim.crypto.DecryptingQueue;
 import com.openchat.secureim.crypto.InvalidPassphraseException;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.MasterSecretUtil;
 import com.openchat.secureim.notifications.MessageNotifier;
+import com.openchat.secureim.util.ParcelUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.jobqueue.EncryptionKeys;
 
 public class KeyCachingService extends Service {
 
@@ -42,33 +44,50 @@ public class KeyCachingService extends Service {
 
   private PendingIntent pending;
   private int activitiesRunning = 0;
-  private final IBinder binder  = new KeyCachingBinder();
+  private final IBinder binder  = new KeySetBinder();
 
-  private MasterSecret masterSecret;
+  private static MasterSecret masterSecret;
 
   public KeyCachingService() {}
 
-  public synchronized MasterSecret getMasterSecret() {
+  public static synchronized MasterSecret getMasterSecret(Context context) {
+    if (masterSecret == null && OpenchatServicePreferences.isPasswordDisabled(context)) {
+      try {
+        MasterSecret masterSecret = MasterSecretUtil.getMasterSecret(context, MasterSecretUtil.UNENCRYPTED_PASSPHRASE);
+        Intent       intent       = new Intent(context, KeyCachingService.class);
+
+        context.startService(intent);
+
+        return masterSecret;
+      } catch (InvalidPassphraseException e) {
+        Log.w("KeyCachingService", e);
+      }
+    }
+
     return masterSecret;
   }
 
-  public synchronized void setMasterSecret(final MasterSecret masterSecret) {
-    this.masterSecret = masterSecret;
+  public void setMasterSecret(final MasterSecret masterSecret) {
+    synchronized (KeyCachingService.class) {
+      KeyCachingService.masterSecret = masterSecret;
 
-    foregroundService();
-    broadcastNewSecret();
-    startTimeoutIfAppropriate();
+      foregroundService();
+      broadcastNewSecret();
+      startTimeoutIfAppropriate();
 
-    new AsyncTask<Void, Void, Void>() {
-      @Override
-      protected Void doInBackground(Void... params) {
-        if (!DatabaseUpgradeActivity.isUpdate(KeyCachingService.this)) {
-          DecryptingQueue.schedulePendingDecrypts(KeyCachingService.this, masterSecret);
-          MessageNotifier.updateNotification(KeyCachingService.this, masterSecret);
+      new AsyncTask<Void, Void, Void>() {
+        @Override
+        protected Void doInBackground(Void... params) {
+          if (!DatabaseUpgradeActivity.isUpdate(KeyCachingService.this)) {
+            ApplicationContext.getInstance(KeyCachingService.this)
+                              .getJobManager()
+                              .setEncryptionKeys(new EncryptionKeys(ParcelUtil.serialize(masterSecret)));
+            MessageNotifier.updateNotification(KeyCachingService.this, masterSecret);
+          }
+          return null;
         }
-        return null;
-      }
-    }.execute();
+      }.execute();
+    }
   }
 
   @Override
@@ -262,7 +281,7 @@ public class KeyCachingService extends Service {
     return binder;
   }
 
-  public class KeyCachingBinder extends Binder {
+  public class KeySetBinder extends Binder {
     public KeyCachingService getService() {
       return KeyCachingService.this;
     }

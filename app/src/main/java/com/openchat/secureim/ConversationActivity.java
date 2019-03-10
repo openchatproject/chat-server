@@ -48,7 +48,7 @@ import com.openchat.secureim.components.EmojiToggle;
 import com.openchat.secureim.contacts.ContactAccessor;
 import com.openchat.secureim.contacts.ContactAccessor.ContactData;
 import com.openchat.secureim.crypto.KeyExchangeInitiator;
-import com.openchat.secureim.crypto.KeyExchangeProcessor;
+import com.openchat.secureim.crypto.SecurityEvent;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.DraftDatabase;
 import com.openchat.secureim.database.DraftDatabase.Draft;
@@ -88,10 +88,10 @@ import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.state.SessionStore;
-import com.openchat.imservice.crypto.MasterCipher;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterCipher;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.imservice.storage.RecipientDevice;
-import com.openchat.imservice.storage.OpenchatServiceSessionStore;
+import com.openchat.secureim.crypto.storage.OpenchatServiceSessionStore;
 import com.openchat.imservice.util.Util;
 
 import java.io.IOException;
@@ -790,7 +790,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     };
 
     registerReceiver(securityUpdateReceiver,
-                     new IntentFilter(KeyExchangeProcessor.SECURITY_UPDATE_EVENT),
+                     new IntentFilter(SecurityEvent.SECURITY_UPDATE_EVENT),
                      KeyCachingService.KEY_PERMISSION, null);
 
     registerReceiver(groupUpdateReceiver,

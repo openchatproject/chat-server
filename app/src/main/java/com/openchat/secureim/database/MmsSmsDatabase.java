@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
 import com.openchat.secureim.database.model.MessageRecord;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecret;
 
 import java.util.HashSet;
 import java.util.Set;

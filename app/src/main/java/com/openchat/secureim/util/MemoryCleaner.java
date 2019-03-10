@@ -1,11 +1,6 @@
 package com.openchat.secureim.util;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-
-import com.openchat.imservice.crypto.MasterSecret;
-
-import android.util.Log;
+import com.openchat.secureim.crypto.MasterSecret;
 
 public class MemoryCleaner {
 

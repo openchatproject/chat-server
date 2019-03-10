@@ -11,8 +11,8 @@ import android.widget.AbsListView;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.ThreadDatabase;
 import com.openchat.secureim.database.model.ThreadRecord;
-import com.openchat.imservice.crypto.MasterCipher;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterCipher;
+import com.openchat.secureim.crypto.MasterSecret;
 
 public class ShareListAdapter extends CursorAdapter implements AbsListView.RecyclerListener {
 

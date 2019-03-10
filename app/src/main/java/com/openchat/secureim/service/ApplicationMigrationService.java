@@ -19,7 +19,7 @@ import android.util.Log;
 
 import com.openchat.secureim.R;
 import com.openchat.secureim.RoutingActivity;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.SmsMigrator;
 import com.openchat.secureim.database.SmsMigrator.ProgressDescription;
 

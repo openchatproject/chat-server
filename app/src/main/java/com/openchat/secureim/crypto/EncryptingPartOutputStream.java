@@ -16,8 +16,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import android.util.Log;
 
-import com.openchat.imservice.crypto.MasterSecret;
-
 public class EncryptingPartOutputStream extends FileOutputStream {
 
   private Cipher cipher;

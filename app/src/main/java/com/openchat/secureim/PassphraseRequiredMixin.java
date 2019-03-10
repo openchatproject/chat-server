@@ -2,22 +2,18 @@ package com.openchat.secureim;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Build;
-import android.os.IBinder;
 import android.view.WindowManager;
 
-import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.service.KeyCachingService;
+import com.openchat.secureim.util.OpenchatServicePreferences;
 
 public class PassphraseRequiredMixin {
 
-  private KeyCachingServiceConnection serviceConnection;
   private BroadcastReceiver clearKeyReceiver;
   private BroadcastReceiver newKeyReceiver;
 
@@ -28,13 +24,12 @@ public class PassphraseRequiredMixin {
   public <T extends Activity & PassphraseRequiredActivity> void onResume(T activity) {
     initializeScreenshotSecurity(activity);
     initializeNewKeyReceiver(activity);
-    initializeServiceConnection(activity);
+    initializeFromMasterSecret(activity);
     KeyCachingService.registerPassphraseActivityStarted(activity);
   }
 
   public <T extends Activity & PassphraseRequiredActivity> void onPause(T activity) {
     removeNewKeyReceiver(activity);
-    removeServiceConnection(activity);
     KeyCachingService.registerPassphraseActivityStopped(activity);
   }
 
@@ -77,14 +72,14 @@ public class PassphraseRequiredMixin {
     activity.registerReceiver(newKeyReceiver, filter, KeyCachingService.KEY_PERMISSION, null);
   }
 
-  private <T extends Activity & PassphraseRequiredActivity> void initializeServiceConnection(T activity) {
-    Intent cachingIntent = new Intent(activity, KeyCachingService.class);
-    activity.startService(cachingIntent);
+  private <T extends Activity & PassphraseRequiredActivity> void initializeFromMasterSecret(T activity) {
+    MasterSecret masterSecret = KeyCachingService.getMasterSecret(activity);
 
-    this.serviceConnection = new KeyCachingServiceConnection(activity);
-
-    Intent bindIntent = new Intent(activity, KeyCachingService.class);
-    activity.bindService(bindIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+    if (masterSecret == null) {
+      activity.onMasterSecretCleared();
+    } else {
+      activity.onNewMasterSecret(masterSecret);
+    }
   }
 
   private void removeClearKeyReceiver(Context context) {
@@ -100,36 +95,4 @@ public class PassphraseRequiredMixin {
       newKeyReceiver = null;
     }
   }
-
-  private void removeServiceConnection(Context context) {
-    if (this.serviceConnection != null) {
-      context.unbindService(this.serviceConnection);
-    }
-  }
-
-  private static class KeyCachingServiceConnection implements ServiceConnection {
-    private final PassphraseRequiredActivity activity;
-
-    public KeyCachingServiceConnection(PassphraseRequiredActivity activity) {
-      this.activity = activity;
-    }
-
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-      KeyCachingService keyCachingService  = ((KeyCachingService.KeyCachingBinder)service).getService();
-      MasterSecret masterSecret            = keyCachingService.getMasterSecret();
-
-      if (masterSecret == null) {
-        activity.onMasterSecretCleared();
-      } else {
-        activity.onNewMasterSecret(masterSecret);
-      }
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-    }
-
-  }
-
 }

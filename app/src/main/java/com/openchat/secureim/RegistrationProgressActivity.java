@@ -33,7 +33,7 @@ import com.openchat.secureim.push.PushServiceSocketFactory;
 import com.openchat.secureim.service.RegistrationService;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.imservice.push.exceptions.ExpectationFailedException;
 import com.openchat.imservice.push.PushServiceSocket;
 import com.openchat.imservice.push.exceptions.RateLimitException;

@@ -17,6 +17,7 @@ import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.BitmapUtil;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.imservice.api.messages.OpenchatServiceAttachmentPointer;
 import com.openchat.imservice.util.Util;
 
 import java.io.IOException;
@@ -102,7 +103,7 @@ public class GroupDatabase extends Database {
   }
 
   public void create(byte[] groupId, String title, List<String> members,
-                     AttachmentPointer avatar, String relay)
+                     OpenchatServiceAttachmentPointer avatar, String relay)
   {
     ContentValues contentValues = new ContentValues();
     contentValues.put(GROUP_ID, GroupUtil.getEncodedId(groupId));
@@ -111,7 +112,7 @@ public class GroupDatabase extends Database {
 
     if (avatar != null) {
       contentValues.put(AVATAR_ID, avatar.getId());
-      contentValues.put(AVATAR_KEY, avatar.getKey().toByteArray());
+      contentValues.put(AVATAR_KEY, avatar.getKey());
       contentValues.put(AVATAR_CONTENT_TYPE, avatar.getContentType());
     }
 
@@ -122,14 +123,14 @@ public class GroupDatabase extends Database {
     databaseHelper.getWritableDatabase().insert(TABLE_NAME, null, contentValues);
   }
 
-  public void update(byte[] groupId, String title, AttachmentPointer avatar) {
+  public void update(byte[] groupId, String title, OpenchatServiceAttachmentPointer avatar) {
     ContentValues contentValues = new ContentValues();
     if (title != null) contentValues.put(TITLE, title);
 
     if (avatar != null) {
       contentValues.put(AVATAR_ID, avatar.getId());
       contentValues.put(AVATAR_CONTENT_TYPE, avatar.getContentType());
-      contentValues.put(AVATAR_KEY, avatar.getKey().toByteArray());
+      contentValues.put(AVATAR_KEY, avatar.getKey());
     }
 
     databaseHelper.getWritableDatabase().update(TABLE_NAME, contentValues,

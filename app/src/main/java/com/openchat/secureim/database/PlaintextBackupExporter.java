@@ -3,7 +3,7 @@ package com.openchat.secureim.database;
 import android.content.Context;
 import android.os.Environment;
 
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.model.SmsMessageRecord;
 
 import java.io.File;

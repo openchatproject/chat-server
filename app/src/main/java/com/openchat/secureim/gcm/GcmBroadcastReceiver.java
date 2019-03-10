@@ -8,19 +8,9 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import com.openchat.secureim.ApplicationContext;
-import com.openchat.secureim.jobs.DeliveryReceiptJob;
-import com.openchat.secureim.service.SendReceiveService;
+import com.openchat.secureim.jobs.PushReceiveJob;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.jobqueue.JobManager;
-import com.openchat.protocal.InvalidVersionException;
-import com.openchat.imservice.directory.Directory;
-import com.openchat.imservice.directory.NotInDirectoryException;
-import com.openchat.imservice.push.ContactTokenDetails;
-import com.openchat.imservice.push.IncomingEncryptedPushMessage;
-import com.openchat.imservice.push.IncomingPushMessage;
 import com.openchat.imservice.util.Util;
-
-import java.io.IOException;
 
 public class GcmBroadcastReceiver extends BroadcastReceiver {
 
@@ -48,44 +38,8 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
   }
 
   private void handleReceivedMessage(Context context, String data) {
-    try {
-      String                       sessionKey = OpenchatServicePreferences.getOpenchatingKey(context);
-      IncomingEncryptedPushMessage encrypted  = new IncomingEncryptedPushMessage(data, sessionKey);
-      IncomingPushMessage          message    = encrypted.getIncomingPushMessage();
-
-      if (!isActiveNumber(context, message.getSource())) {
-        Directory           directory           = Directory.getInstance(context);
-        ContactTokenDetails contactTokenDetails = new ContactTokenDetails();
-        contactTokenDetails.setNumber(message.getSource());
-
-        directory.setNumber(contactTokenDetails, true);
-      }
-
-      Intent receiveService = new Intent(context, SendReceiveService.class);
-      receiveService.setAction(SendReceiveService.RECEIVE_PUSH_ACTION);
-      receiveService.putExtra("message", message);
-      context.startService(receiveService);
-
-      if (!message.isReceipt()) {
-        JobManager jobManager = ApplicationContext.getInstance(context).getJobManager();
-        jobManager.add(new DeliveryReceiptJob(context, message.getSource(),
-                                              message.getTimestampMillis(),
-                                              message.getRelay()));
-      }
-    } catch (IOException | InvalidVersionException e) {
-      Log.w(TAG, e);
-    }
-  }
-
-  private boolean isActiveNumber(Context context, String e164number) {
-    boolean isActiveNumber;
-
-    try {
-      isActiveNumber = Directory.getInstance(context).isActiveNumber(e164number);
-    } catch (NotInDirectoryException e) {
-      isActiveNumber = false;
-    }
-
-    return isActiveNumber;
+    ApplicationContext.getInstance(context)
+                      .getJobManager()
+                      .add(new PushReceiveJob(context, data));
   }
 }

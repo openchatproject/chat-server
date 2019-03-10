@@ -27,7 +27,7 @@ import com.google.i18n.phonenumbers.Phonenumber;
 
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.imservice.util.PhoneNumberFormatter;
 import com.openchat.imservice.util.Util;
 

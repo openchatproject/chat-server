@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.CursorAdapter;
 
-import com.openchat.imservice.crypto.MasterCipher;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterCipher;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.ThreadDatabase;
 import com.openchat.secureim.database.model.ThreadRecord;

@@ -13,8 +13,8 @@ import com.openchat.secureim.sms.IncomingTextMessage;
 import com.openchat.secureim.sms.OutgoingTextMessage;
 import com.openchat.secureim.util.LRUCache;
 import com.openchat.protocal.InvalidMessageException;
-import com.openchat.imservice.crypto.MasterCipher;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterCipher;
+import com.openchat.secureim.crypto.MasterSecret;
 
 import java.lang.ref.SoftReference;
 import java.util.Collections;
@@ -57,7 +57,9 @@ public class EncryptingSmsDatabase extends SmsDatabase {
   {
     long type = Types.BASE_INBOX_TYPE;
 
-    if (!message.isSecureMessage() && !message.isEndSession()) {
+    if (masterSecret == null && message.isSecureMessage()) {
+      type |= Types.ENCRYPTION_REMOTE_BIT;
+    } else {
       type |= Types.ENCRYPTION_SYMMETRIC_BIT;
       message = message.withMessageBody(getEncryptedBody(masterSecret, message.getMessageBody()));
     }
@@ -81,8 +83,9 @@ public class EncryptingSmsDatabase extends SmsDatabase {
   }
 
   public void updateBundleMessageBody(MasterSecret masterSecret, long messageId, String body) {
-    updateMessageBodyAndType(messageId, body, Types.TOTAL_MASK,
-                             Types.BASE_INBOX_TYPE | Types.ENCRYPTION_REMOTE_BIT | Types.SECURE_MESSAGE_BIT);
+    String encryptedBody = getEncryptedBody(masterSecret, body);
+    updateMessageBodyAndType(messageId, encryptedBody, Types.TOTAL_MASK,
+                             Types.BASE_INBOX_TYPE | Types.SECURE_MESSAGE_BIT);
   }
 
   public void updateMessageBody(MasterSecret masterSecret, long messageId, String body) {

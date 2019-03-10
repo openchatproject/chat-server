@@ -11,7 +11,7 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 
 import com.openchat.secureim.R;
-import com.openchat.secureim.crypto.KeyExchangeProcessor;
+import com.openchat.secureim.crypto.SecurityEvent;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.SmsDatabase;
@@ -25,10 +25,10 @@ import com.openchat.secureim.transport.RetryLaterException;
 import com.openchat.secureim.transport.SecureFallbackApprovalException;
 import com.openchat.secureim.transport.UndeliverableMessageException;
 import com.openchat.secureim.transport.UniversalTransport;
-import com.openchat.secureim.transport.UntrustedIdentityException;
+import com.openchat.imservice.crypto.UntrustedIdentityException;
 import com.openchat.protocal.state.SessionStore;
-import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.storage.OpenchatServiceSessionStore;
+import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.crypto.storage.OpenchatServiceSessionStore;
 
 public class SmsSender {
 
@@ -125,7 +125,7 @@ public class SmsSender {
         Log.w("SmsSender", "Ending session...");
         SessionStore sessionStore = new OpenchatServiceSessionStore(context, masterSecret);
         sessionStore.deleteAllSessions(record.getIndividualRecipient().getRecipientId());
-        KeyExchangeProcessor.broadcastSecurityUpdateEvent(context, record.getThreadId());
+        SecurityEvent.broadcastSecurityUpdateEvent(context, record.getThreadId());
       }
 
       unregisterForRadioChanges();

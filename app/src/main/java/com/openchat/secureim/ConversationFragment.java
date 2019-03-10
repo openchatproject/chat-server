@@ -38,9 +38,17 @@ import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.DirectoryHelper;
 import com.openchat.secureim.util.SaveAttachmentTask;
 import com.openchat.secureim.util.SaveAttachmentTask.Attachment;
-import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.util.FutureTaskListener;
 
+import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.imservice.util.FutureTaskListener;
+import com.openchat.imservice.util.Util;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 

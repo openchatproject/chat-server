@@ -14,7 +14,7 @@ import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.protocal.InvalidMessageException;
-import com.openchat.imservice.crypto.MasterCipher;
+import com.openchat.secureim.crypto.MasterCipher;
 import com.openchat.imservice.util.Util;
 
 import java.util.Arrays;

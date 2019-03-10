@@ -23,11 +23,10 @@ import android.util.Log;
 
 import com.openchat.secureim.R;
 import com.openchat.secureim.RoutingActivity;
-import com.openchat.secureim.contacts.ContactPhotoFactory;
 import com.openchat.secureim.database.PushDatabase;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsSmsDatabase;
 import com.openchat.secureim.database.model.MessageRecord;

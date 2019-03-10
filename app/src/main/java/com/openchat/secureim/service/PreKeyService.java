@@ -14,11 +14,11 @@ import com.openchat.protocal.InvalidKeyIdException;
 import com.openchat.protocal.state.PreKeyRecord;
 import com.openchat.protocal.state.SignedPreKeyRecord;
 import com.openchat.protocal.state.SignedPreKeyStore;
-import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.crypto.PreKeyUtil;
+import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.crypto.PreKeyUtil;
 import com.openchat.imservice.push.PushServiceSocket;
 import com.openchat.imservice.push.SignedPreKeyEntity;
-import com.openchat.imservice.storage.OpenchatServicePreKeyStore;
+import com.openchat.secureim.crypto.storage.OpenchatServicePreKeyStore;
 
 import java.io.IOException;
 import java.util.Arrays;

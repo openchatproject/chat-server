@@ -4,11 +4,16 @@ import android.app.Application;
 import android.content.Context;
 
 import com.openchat.secureim.crypto.PRNGFixes;
-import com.openchat.secureim.jobs.EncryptingJobSerializer;
+import com.openchat.secureim.jobs.persistence.EncryptingJobSerializer;
 import com.openchat.secureim.jobs.GcmRefreshJob;
+import com.openchat.secureim.jobs.requirements.MasterSecretRequirementProvider;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.JobManager;
 import com.openchat.jobqueue.requirements.NetworkRequirementProvider;
+import com.openchat.jobqueue.requirements.RequirementProvider;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class ApplicationContext extends Application {
 
@@ -34,8 +39,12 @@ public class ApplicationContext extends Application {
   }
 
   private void initializeJobManager() {
-    this.jobManager = new JobManager(this, "OpenchatServiceJobs",
-                                     new NetworkRequirementProvider(this),
+    List<RequirementProvider> providers = new LinkedList<RequirementProvider>() {{
+      add(new NetworkRequirementProvider(ApplicationContext.this));
+      add(new MasterSecretRequirementProvider(ApplicationContext.this));
+    }};
+
+    this.jobManager = new JobManager(this, "OpenchatServiceJobs", providers,
                                      new EncryptingJobSerializer(this), 5);
   }
 

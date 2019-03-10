@@ -14,10 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.secureim.util.Dialogs;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.NoExternalStorageException;
 import com.openchat.secureim.database.PlaintextBackupExporter;
+import com.openchat.secureim.util.Dialogs;
 
 import java.io.IOException;
 

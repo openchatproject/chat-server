@@ -10,13 +10,12 @@ import android.util.Log;
 
 import com.openchat.secureim.DatabaseUpgradeActivity;
 import com.openchat.secureim.crypto.DecryptingPartInputStream;
-import com.openchat.secureim.crypto.DecryptingQueue;
+import com.openchat.secureim.crypto.MasterCipher;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.MasterSecretUtil;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.InvalidMessageException;
-import com.openchat.imservice.crypto.MasterCipher;
-import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.util.Base64;
 import com.openchat.imservice.util.Util;
 
@@ -441,7 +440,6 @@ public class DatabaseFactory {
     db.setTransactionSuccessful();
     db.endTransaction();
 
-    DecryptingQueue.schedulePendingDecrypts(context, masterSecret);
     MessageNotifier.updateNotification(context, masterSecret);
   }
 

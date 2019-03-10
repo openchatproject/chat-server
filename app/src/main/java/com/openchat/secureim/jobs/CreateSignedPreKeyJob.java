@@ -12,8 +12,8 @@ import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.protocal.IdentityKeyPair;
 import com.openchat.protocal.state.SignedPreKeyRecord;
-import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.crypto.PreKeyUtil;
+import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.crypto.PreKeyUtil;
 import com.openchat.imservice.push.PushServiceSocket;
 
 import java.io.IOException;

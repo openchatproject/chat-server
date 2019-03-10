@@ -7,7 +7,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.openchat.secureim.crypto.IdentityKeyUtil;
-import com.openchat.imservice.crypto.IdentityKeyParcelable;
+import com.openchat.secureim.crypto.IdentityKeyParcelable;
 
 public class ViewLocalIdentityActivity extends ViewIdentityActivity {
 

@@ -8,7 +8,7 @@ import android.view.View.OnClickListener;
 import com.openchat.secureim.R;
 import com.openchat.secureim.RegistrationActivity;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecret;
 
 public class PushRegistrationReminder extends Reminder {
   public static final long REMINDER_INTERVAL_MS = 3 * 24 * 60 * 60 * 1000;

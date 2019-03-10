@@ -14,7 +14,7 @@ import android.widget.ListView;
 
 import com.openchat.secureim.database.loaders.ConversationListLoader;
 import com.openchat.secureim.recipients.Recipients;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecret;
 
 public class ShareFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 

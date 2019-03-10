@@ -10,14 +10,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.openchat.secureim.crypto.DecryptingQueue;
 import com.openchat.secureim.crypto.IdentityKeyUtil;
-import com.openchat.secureim.jobs.CreateSignedPreKeyJob;
-import com.openchat.secureim.notifications.MessageNotifier;
-import com.openchat.secureim.util.Util;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
+import com.openchat.secureim.database.SmsDatabase;
+import com.openchat.secureim.database.model.SmsMessageRecord;
+import com.openchat.secureim.jobs.CreateSignedPreKeyJob;
+import com.openchat.secureim.jobs.SmsDecryptJob;
+import com.openchat.secureim.notifications.MessageNotifier;
+import com.openchat.secureim.util.ParcelUtil;
+import com.openchat.secureim.util.Util;
 import com.openchat.secureim.util.VersionTracker;
+import com.openchat.jobqueue.EncryptionKeys;
 
 import java.io.File;
 import java.util.SortedSet;
@@ -32,6 +36,7 @@ public class DatabaseUpgradeActivity extends Activity {
   public static final int ASYMMETRIC_MASTER_SECRET_FIX_VERSION = 73;
   public static final int NO_V1_VERSION                        = 83;
   public static final int SIGNED_PREKEY_VERSION                = 83;
+  public static final int NO_DECRYPT_QUEUE_VERSION             = 84;
 
   private static final SortedSet<Integer> UPGRADE_VERSIONS = new TreeSet<Integer>() {{
     add(NO_MORE_KEY_EXCHANGE_PREFIX_VERSION);
@@ -40,6 +45,7 @@ public class DatabaseUpgradeActivity extends Activity {
     add(ASYMMETRIC_MASTER_SECRET_FIX_VERSION);
     add(NO_V1_VERSION);
     add(SIGNED_PREKEY_VERSION);
+    add(NO_DECRYPT_QUEUE_VERSION);
   }};
 
   private MasterSecret masterSecret;
@@ -60,7 +66,9 @@ public class DatabaseUpgradeActivity extends Activity {
           .execute(VersionTracker.getLastSeenVersion(this));
     } else {
       VersionTracker.updateLastSeenVersion(this);
-      DecryptingQueue.schedulePendingDecrypts(DatabaseUpgradeActivity.this, masterSecret);
+      ApplicationContext.getInstance(this)
+                        .getJobManager()
+                        .setEncryptionKeys(new EncryptionKeys(ParcelUtil.serialize(masterSecret)));
       MessageNotifier.updateNotification(DatabaseUpgradeActivity.this, masterSecret);
       startActivity((Intent)getIntent().getParcelableExtra("next_intent"));
       finish();
@@ -148,6 +156,25 @@ public class DatabaseUpgradeActivity extends Activity {
                           .add(new CreateSignedPreKeyJob(context, masterSecret));
       }
 
+      if (params[0] < NO_DECRYPT_QUEUE_VERSION) {
+        SmsDatabase.Reader reader = null;
+        SmsMessageRecord record;
+
+        try {
+          reader = DatabaseFactory.getEncryptingSmsDatabase(getApplicationContext())
+                                  .getDecryptInProgressMessages(masterSecret);
+
+          while ((record = reader.getNext()) != null) {
+            ApplicationContext.getInstance(getApplicationContext())
+                              .getJobManager()
+                              .add(new SmsDecryptJob(getApplicationContext(), record.getId()));
+          }
+        } finally {
+          if (reader != null)
+            reader.close();
+        }
+      }
+
       return null;
     }
 
@@ -163,7 +190,10 @@ public class DatabaseUpgradeActivity extends Activity {
     @Override
     protected void onPostExecute(Void result) {
       VersionTracker.updateLastSeenVersion(DatabaseUpgradeActivity.this);
-      DecryptingQueue.schedulePendingDecrypts(DatabaseUpgradeActivity.this, masterSecret);
+      ApplicationContext.getInstance(DatabaseUpgradeActivity.this)
+                        .getJobManager()
+                        .setEncryptionKeys(new EncryptionKeys(ParcelUtil.serialize(masterSecret)));
+
       MessageNotifier.updateNotification(DatabaseUpgradeActivity.this, masterSecret);
 
       startActivity((Intent)getIntent().getParcelableExtra("next_intent"));

@@ -9,6 +9,8 @@ import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
+import com.openchat.secureim.ApplicationContext;
+import com.openchat.secureim.jobs.SmsReceiveJob;
 import com.openchat.secureim.protocol.WirePrefix;
 import com.openchat.secureim.sms.IncomingTextMessage;
 import com.openchat.secureim.util.OpenchatServicePreferences;
@@ -58,16 +60,6 @@ public class SmsListener extends BroadcastReceiver {
       bodyBuilder.append(SmsMessage.createFromPdu((byte[])pdu).getDisplayMessageBody());
 
     return bodyBuilder.toString();
-  }
-
-  private ArrayList<IncomingTextMessage> getAsTextMessages(Intent intent) {
-    Object[] pdus                   = (Object[])intent.getExtras().get("pdus");
-    ArrayList<IncomingTextMessage> messages = new ArrayList<IncomingTextMessage>(pdus.length);
-
-    for (int i=0;i<pdus.length;i++)
-      messages.add(new IncomingTextMessage(SmsMessage.createFromPdu((byte[])pdus[i])));
-
-    return messages;
   }
 
   private boolean isRelevant(Context context, Intent intent) {
@@ -139,11 +131,8 @@ public class SmsListener extends BroadcastReceiver {
     } else if ((intent.getAction().equals(SMS_DELIVERED_ACTION)) ||
                (intent.getAction().equals(SMS_RECEIVED_ACTION)) && isRelevant(context, intent))
     {
-      Intent receivedIntent = new Intent(context, SendReceiveService.class);
-      receivedIntent.setAction(SendReceiveService.RECEIVE_SMS_ACTION);
-      receivedIntent.putExtra("ResultCode", this.getResultCode());
-      receivedIntent.putParcelableArrayListExtra("text_messages",getAsTextMessages(intent));
-      context.startService(receivedIntent);
+      Object[] pdus = (Object[])intent.getExtras().get("pdus");
+      ApplicationContext.getInstance(context).getJobManager().add(new SmsReceiveJob(context, pdus));
 
       abortBroadcast();
     }

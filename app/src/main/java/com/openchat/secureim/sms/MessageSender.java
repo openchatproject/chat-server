@@ -5,25 +5,20 @@ import android.content.Intent;
 import android.util.Log;
 import android.util.Pair;
 
+import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.MmsDatabase;
-import com.openchat.secureim.database.MmsSmsColumns;
-import com.openchat.secureim.mms.IncomingMediaMessage;
 import com.openchat.secureim.mms.OutgoingMediaMessage;
 import com.openchat.secureim.recipients.Recipients;
+import com.openchat.secureim.service.SendReceiveService;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
-import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.secureim.database.DatabaseFactory;
-import com.openchat.secureim.service.SendReceiveService;
-import com.openchat.imservice.push.IncomingPushMessage;
-import com.openchat.imservice.push.PushMessageProtos;
 import com.openchat.imservice.util.InvalidNumberException;
 
 import java.util.List;
 
 import ws.com.google.android.mms.MmsException;
-import ws.com.google.android.mms.pdu.RetrieveConf;
 
 public class MessageSender {
 

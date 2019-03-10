@@ -11,8 +11,6 @@ import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.ecc.Curve;
 import com.openchat.protocal.ecc.ECKeyPair;
 import com.openchat.protocal.ecc.ECPrivateKey;
-import com.openchat.imservice.crypto.MasterCipher;
-import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.util.Base64;
 
 import java.io.IOException;

@@ -7,10 +7,10 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 
 import com.openchat.secureim.crypto.IdentityKeyUtil;
-import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.MasterSecretUtil;
 import com.openchat.secureim.util.MemoryCleaner;
+import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.VersionTracker;
 import com.openchat.imservice.util.Util;
 

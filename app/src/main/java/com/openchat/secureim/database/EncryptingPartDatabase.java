@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.openchat.secureim.crypto.DecryptingPartInputStream;
 import com.openchat.secureim.crypto.EncryptingPartOutputStream;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecret;
 
 import ws.com.google.android.mms.pdu.PduPart;
 

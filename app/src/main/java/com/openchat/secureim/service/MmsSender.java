@@ -20,8 +20,8 @@ import com.openchat.secureim.transport.RetryLaterException;
 import com.openchat.secureim.transport.SecureFallbackApprovalException;
 import com.openchat.secureim.transport.UndeliverableMessageException;
 import com.openchat.secureim.transport.UniversalTransport;
-import com.openchat.secureim.transport.UntrustedIdentityException;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.imservice.crypto.UntrustedIdentityException;
+import com.openchat.secureim.crypto.MasterSecret;
 
 import ws.com.google.android.mms.MmsException;
 import ws.com.google.android.mms.pdu.SendReq;

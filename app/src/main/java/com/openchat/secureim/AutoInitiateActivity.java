@@ -15,9 +15,9 @@ import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.state.SessionStore;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.imservice.storage.RecipientDevice;
-import com.openchat.imservice.storage.OpenchatServiceSessionStore;
+import com.openchat.secureim.crypto.storage.OpenchatServiceSessionStore;
 
 public class AutoInitiateActivity extends Activity {
 

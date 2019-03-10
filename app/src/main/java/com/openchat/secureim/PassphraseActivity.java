@@ -7,7 +7,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
 
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.service.KeyCachingService;
 import com.openchat.secureim.util.MemoryCleaner;
 
@@ -31,7 +31,7 @@ public abstract class PassphraseActivity extends ActionBarActivity {
   private ServiceConnection serviceConnection = new ServiceConnection() {
       @Override
       public void onServiceConnected(ComponentName className, IBinder service) {
-        keyCachingService = ((KeyCachingService.KeyCachingBinder)service).getService();
+        keyCachingService = ((KeyCachingService.KeySetBinder)service).getService();
         keyCachingService.setMasterSecret(masterSecret);
 
         PassphraseActivity.this.unbindService(PassphraseActivity.this.serviceConnection);

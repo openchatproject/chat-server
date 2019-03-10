@@ -12,9 +12,9 @@ import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import com.openchat.secureim.R;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.providers.PartProvider;
-import com.openchat.imservice.crypto.MasterSecret;
 
 import java.io.File;
 import java.io.FileOutputStream;

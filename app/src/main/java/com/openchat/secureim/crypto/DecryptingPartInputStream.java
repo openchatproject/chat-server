@@ -21,8 +21,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import android.util.Log;
 
-import com.openchat.imservice.crypto.MasterSecret;
-
 public class DecryptingPartInputStream extends FileInputStream {
 	
   private static final int IV_LENGTH  = 16;

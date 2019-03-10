@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 
 import com.openchat.secureim.R;
+import com.openchat.secureim.crypto.storage.OpenchatServiceIdentityKeyStore;
+import com.openchat.secureim.crypto.storage.OpenchatServicePreKeyStore;
+import com.openchat.secureim.crypto.storage.OpenchatServiceSessionStore;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.sms.MessageSender;
 import com.openchat.secureim.sms.OutgoingKeyExchangeMessage;
@@ -16,10 +19,7 @@ import com.openchat.protocal.state.IdentityKeyStore;
 import com.openchat.protocal.state.PreKeyStore;
 import com.openchat.protocal.state.SessionRecord;
 import com.openchat.protocal.state.SessionStore;
-import com.openchat.imservice.crypto.MasterSecret;
 import com.openchat.imservice.storage.RecipientDevice;
-import com.openchat.imservice.storage.OpenchatServicePreKeyStore;
-import com.openchat.imservice.storage.OpenchatServiceSessionStore;
 import com.openchat.imservice.util.Base64;
 
 public class KeyExchangeInitiator {

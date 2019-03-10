@@ -5,19 +5,15 @@ import android.content.Context;
 import android.telephony.SmsManager;
 import android.util.Log;
 
-import com.openchat.secureim.crypto.OpenchatServiceCipher;
+import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.crypto.SmsCipher;
+import com.openchat.secureim.crypto.storage.OpenchatServiceOpenchatStore;
 import com.openchat.secureim.database.model.SmsMessageRecord;
-import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.sms.MultipartSmsMessageHandler;
-import com.openchat.secureim.sms.OutgoingPrekeyBundleMessage;
 import com.openchat.secureim.sms.OutgoingTextMessage;
-import com.openchat.secureim.sms.SmsTransportDetails;
 import com.openchat.secureim.util.NumberUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.protocal.protocol.CiphertextMessage;
-import com.openchat.imservice.crypto.MasterSecret;
-import com.openchat.imservice.storage.RecipientDevice;
-import com.openchat.imservice.storage.SessionUtil;
+import com.openchat.protocal.NoSessionException;
 
 import java.util.ArrayList;
 
@@ -111,7 +107,7 @@ public class SmsTransport extends BaseTransport {
   private ArrayList<PendingIntent> constructSentIntents(long messageId, long type,
                                                         ArrayList<String> messages, boolean secure)
   {
-    ArrayList<PendingIntent> sentIntents = new ArrayList<PendingIntent>(messages.size());
+    ArrayList<PendingIntent> sentIntents = new ArrayList<>(messages.size());
 
     for (String ignored : messages) {
       sentIntents.add(PendingIntent.getBroadcast(context, 0,
@@ -127,7 +123,7 @@ public class SmsTransport extends BaseTransport {
       return null;
     }
 
-    ArrayList<PendingIntent> deliveredIntents = new ArrayList<PendingIntent>(messages.size());
+    ArrayList<PendingIntent> deliveredIntents = new ArrayList<>(messages.size());
 
     for (String ignored : messages) {
       deliveredIntents.add(PendingIntent.getBroadcast(context, 0,
@@ -142,26 +138,10 @@ public class SmsTransport extends BaseTransport {
                                                    OutgoingTextMessage message)
       throws InsecureFallbackApprovalException
   {
-    Recipient           recipient         = message.getRecipients().getPrimaryRecipient();
-    RecipientDevice     recipientDevice   = new RecipientDevice(recipient.getRecipientId(),
-                                                                RecipientDevice.DEFAULT_DEVICE_ID);
-
-    if (!SessionUtil.hasEncryptCapableSession(context, masterSecret, recipientDevice)) {
-      throw new InsecureFallbackApprovalException("No session exists for this secure message.");
+    try {
+      return new SmsCipher(new OpenchatServiceOpenchatStore(context, masterSecret)).encrypt(message);
+    } catch (NoSessionException e) {
+      throw new InsecureFallbackApprovalException(e);
     }
-
-    String              body              = message.getMessageBody();
-    SmsTransportDetails transportDetails  = new SmsTransportDetails();
-    OpenchatServiceCipher    cipher            = new OpenchatServiceCipher(context, masterSecret, recipientDevice, transportDetails);
-    CiphertextMessage   ciphertextMessage = cipher.encrypt(body.getBytes());
-    String              encodedCiphertext = new String(transportDetails.getEncodedMessage(ciphertextMessage.serialize()));
-
-    if (ciphertextMessage.getType() == CiphertextMessage.PREKEY_TYPE) {
-      message = new OutgoingPrekeyBundleMessage(message, encodedCiphertext);
-    } else {
-      message = message.withBody(encodedCiphertext);
-    }
-
-    return message;
   }
 }

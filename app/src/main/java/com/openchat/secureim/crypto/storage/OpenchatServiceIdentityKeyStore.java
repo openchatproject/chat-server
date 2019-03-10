@@ -1,13 +1,14 @@
-package com.openchat.secureim.crypto;
+package com.openchat.secureim.crypto.storage;
 
 import android.content.Context;
 
+import com.openchat.secureim.crypto.IdentityKeyUtil;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.IdentityKeyPair;
 import com.openchat.protocal.state.IdentityKeyStore;
-import com.openchat.imservice.crypto.MasterSecret;
 
 public class OpenchatServiceIdentityKeyStore implements IdentityKeyStore {
 

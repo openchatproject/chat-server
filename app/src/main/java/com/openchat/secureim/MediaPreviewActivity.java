@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.providers.PartProvider;
 import com.openchat.secureim.recipients.Recipient;
@@ -24,7 +25,6 @@ import com.openchat.secureim.util.DateUtils;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.SaveAttachmentTask;
 import com.openchat.secureim.util.SaveAttachmentTask.Attachment;
-import com.openchat.imservice.crypto.MasterSecret;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -8,7 +8,7 @@ import com.openchat.secureim.util.SmilUtil;
 import org.w3c.dom.smil.SMILDocument;
 import org.w3c.dom.smil.SMILMediaElement;
 import org.w3c.dom.smil.SMILRegionElement;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.util.LRUCache;
 
 import java.io.UnsupportedEncodingException;

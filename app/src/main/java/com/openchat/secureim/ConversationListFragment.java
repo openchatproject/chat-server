@@ -35,7 +35,7 @@ import com.openchat.secureim.database.loaders.ConversationListLoader;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.Dialogs;
-import com.openchat.imservice.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecret;
 
 import java.util.Set;
 
