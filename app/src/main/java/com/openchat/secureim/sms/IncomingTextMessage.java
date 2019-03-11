@@ -7,7 +7,7 @@ import android.telephony.SmsMessage;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
-import com.openchat.imservice.storage.RecipientDevice;
+import com.openchat.imservice.push.PushAddress;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class IncomingTextMessage implements Parcelable {
   public IncomingTextMessage(SmsMessage message) {
     this.message              = message.getDisplayMessageBody();
     this.sender               = message.getDisplayOriginatingAddress();
-    this.senderDeviceId       = RecipientDevice.DEFAULT_DEVICE_ID;
+    this.senderDeviceId       = PushAddress.DEFAULT_DEVICE_ID;
     this.protocol             = message.getProtocolIdentifier();
     this.serviceCenterAddress = message.getServiceCenterAddress();
     this.replyPathPresent     = message.isReplyPathPresent();
@@ -118,7 +118,7 @@ public class IncomingTextMessage implements Parcelable {
   {
     this.message              = "";
     this.sender               = sender;
-    this.senderDeviceId       = RecipientDevice.DEFAULT_DEVICE_ID;
+    this.senderDeviceId       = PushAddress.DEFAULT_DEVICE_ID;
     this.protocol             = 31338;
     this.serviceCenterAddress = "Outgoing";
     this.replyPathPresent     = true;

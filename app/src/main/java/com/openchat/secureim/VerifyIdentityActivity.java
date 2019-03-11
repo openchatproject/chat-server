@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.openchat.secureim.crypto.IdentityKeyParcelable;
 import com.openchat.secureim.crypto.IdentityKeyUtil;
+import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.crypto.storage.OpenchatServiceSessionStore;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;
@@ -12,10 +15,7 @@ import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.state.SessionRecord;
 import com.openchat.protocal.state.SessionStore;
-import com.openchat.secureim.crypto.IdentityKeyParcelable;
-import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.imservice.storage.RecipientDevice;
-import com.openchat.secureim.crypto.storage.OpenchatServiceSessionStore;
+import com.openchat.imservice.push.PushAddress;
 
 public class VerifyIdentityActivity extends KeyScanningActivity {
 
@@ -162,7 +162,7 @@ public class VerifyIdentityActivity extends KeyScanningActivity {
   private IdentityKey getRemoteIdentityKey(MasterSecret masterSecret, Recipient recipient) {
     SessionStore  sessionStore = new OpenchatServiceSessionStore(this, masterSecret);
     SessionRecord record       = sessionStore.loadSession(recipient.getRecipientId(),
-                                                          RecipientDevice.DEFAULT_DEVICE_ID);
+                                                          PushAddress.DEFAULT_DEVICE_ID);
 
     if (record == null) {
       return null;

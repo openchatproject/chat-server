@@ -91,7 +91,7 @@ import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.state.SessionStore;
-import com.openchat.imservice.storage.RecipientDevice;
+import com.openchat.imservice.push.PushAddress;
 import com.openchat.imservice.util.Util;
 
 import java.io.IOException;
@@ -295,7 +295,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       Recipient  primaryRecipient    = getRecipients() == null ? null : getRecipients().getPrimaryRecipient();
       boolean    isPushDestination   = DirectoryHelper.isPushDestination(this, getRecipients());
       boolean    isSecureDestination = isSingleConversation() && sessionStore.containsSession(primaryRecipient.getRecipientId(),
-                                                                                              RecipientDevice.DEFAULT_DEVICE_ID);
+                                                                                              PushAddress.DEFAULT_DEVICE_ID);
 
       getMenuInflater().inflate(R.menu.conversation_button_context, menu);
 
@@ -670,7 +670,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     Recipient  primaryRecipient    = getRecipients() == null ? null : getRecipients().getPrimaryRecipient();
     boolean    isPushDestination   = DirectoryHelper.isPushDestination(this, getRecipients());
     boolean    isSecureDestination = isSingleConversation() && sessionStore.containsSession(primaryRecipient.getRecipientId(),
-                                                                                            RecipientDevice.DEFAULT_DEVICE_ID);
+                                                                                            PushAddress.DEFAULT_DEVICE_ID);
 
     if (isPushDestination || isSecureDestination) {
       this.isEncryptedConversation = true;

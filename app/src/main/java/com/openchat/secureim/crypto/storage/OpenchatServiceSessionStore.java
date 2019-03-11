@@ -9,7 +9,7 @@ import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.state.SessionRecord;
 import com.openchat.protocal.state.SessionState;
 import com.openchat.protocal.state.SessionStore;
-import com.openchat.imservice.storage.RecipientDevice;
+import com.openchat.imservice.push.PushAddress;
 import com.openchat.imservice.util.Conversions;
 
 import java.io.File;
@@ -108,7 +108,7 @@ public class OpenchatServiceSessionStore implements SessionStore {
   public void deleteAllSessions(long recipientId) {
     List<Integer> devices = getSubDeviceSessions(recipientId);
 
-    deleteSession(recipientId, RecipientDevice.DEFAULT_DEVICE_ID);
+    deleteSession(recipientId, PushAddress.DEFAULT_DEVICE_ID);
 
     for (int device : devices) {
       deleteSession(recipientId, device);
@@ -156,7 +156,7 @@ public class OpenchatServiceSessionStore implements SessionStore {
   }
 
   private String getSessionName(long recipientId, int deviceId) {
-    return recipientId + (deviceId == RecipientDevice.DEFAULT_DEVICE_ID ? "" : "." + deviceId);
+    return recipientId + (deviceId == PushAddress.DEFAULT_DEVICE_ID ? "" : "." + deviceId);
   }
 
   private byte[] readBlob(FileInputStream in) throws IOException {

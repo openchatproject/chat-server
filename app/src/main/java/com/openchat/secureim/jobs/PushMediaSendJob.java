@@ -26,7 +26,6 @@ import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
 import com.openchat.imservice.push.PushAddress;
 import com.openchat.imservice.push.UnregisteredUserException;
-import com.openchat.imservice.storage.RecipientDevice;
 import com.openchat.imservice.util.InvalidNumberException;
 
 import java.io.IOException;
@@ -137,7 +136,7 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
         Log.w(TAG, "Falling back to MMS");
         DatabaseFactory.getMmsDatabase(context).markAsForcedSms(mediaMessage.getDatabaseMessageId());
         ApplicationContext.getInstance(context).getJobManager().add(new MmsSendJob(context, messageId));
-      } else if (!axolotlStore.containsSession(recipient.getRecipientId(), RecipientDevice.DEFAULT_DEVICE_ID)) {
+      } else if (!axolotlStore.containsSession(recipient.getRecipientId(), PushAddress.DEFAULT_DEVICE_ID)) {
         Log.w(TAG, "Marking message as pending insecure SMS fallback");
         throw new InsecureFallbackApprovalException("Pending user approval for fallback to insecure SMS");
       } else {
