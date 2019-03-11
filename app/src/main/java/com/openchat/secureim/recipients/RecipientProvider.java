@@ -1,7 +1,6 @@
 package com.openchat.secureim.recipients;
 
 import android.content.Context;
-import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,7 +17,7 @@ import com.openchat.secureim.util.BitmapUtil;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.LRUCache;
 import com.openchat.secureim.util.Util;
-import com.openchat.imservice.util.ListenableFutureTask;
+import com.openchat.secureim.util.ListenableFutureTask;
 
 import java.io.IOException;
 import java.util.Collections;

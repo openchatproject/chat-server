@@ -35,7 +35,7 @@ import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.LRUCache;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.util.InvalidNumberException;
-import com.openchat.imservice.util.ListenableFutureTask;
+import com.openchat.secureim.util.ListenableFutureTask;
 import com.openchat.secureim.util.Trimmer;
 import com.openchat.imservice.util.Util;
 

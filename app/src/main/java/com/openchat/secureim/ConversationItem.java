@@ -38,8 +38,8 @@ import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.util.DateUtils;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.Emoji;
-import com.openchat.imservice.util.FutureTaskListener;
-import com.openchat.imservice.util.ListenableFutureTask;
+import com.openchat.secureim.util.FutureTaskListener;
+import com.openchat.secureim.util.ListenableFutureTask;
 
 public class ConversationItem extends LinearLayout {
   private final static String TAG = ConversationItem.class.getSimpleName();

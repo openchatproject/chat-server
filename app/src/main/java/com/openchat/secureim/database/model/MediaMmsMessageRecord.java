@@ -11,11 +11,9 @@ import com.openchat.secureim.mms.Slide;
 import com.openchat.secureim.mms.SlideDeck;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
-import com.openchat.imservice.push.exceptions.NotFoundException;
-import com.openchat.imservice.util.FutureTaskListener;
-import com.openchat.imservice.util.ListenableFutureTask;
+import com.openchat.secureim.util.FutureTaskListener;
+import com.openchat.secureim.util.ListenableFutureTask;
 
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class MediaMmsMessageRecord extends MessageRecord {

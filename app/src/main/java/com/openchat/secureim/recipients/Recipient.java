@@ -10,8 +10,8 @@ import android.util.Log;
 import com.openchat.secureim.contacts.ContactPhotoFactory;
 import com.openchat.secureim.recipients.RecipientProvider.RecipientDetails;
 import com.openchat.secureim.util.GroupUtil;
-import com.openchat.imservice.util.FutureTaskListener;
-import com.openchat.imservice.util.ListenableFutureTask;
+import com.openchat.secureim.util.FutureTaskListener;
+import com.openchat.secureim.util.ListenableFutureTask;
 
 import java.util.HashSet;
 
