@@ -11,7 +11,6 @@ import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
 import com.openchat.imservice.push.ContactTokenDetails;
-import com.openchat.imservice.util.DirectoryUtil;
 import com.openchat.imservice.util.InvalidNumberException;
 
 import java.util.List;
