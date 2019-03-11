@@ -11,7 +11,7 @@ import com.openchat.protocal.state.SignedPreKeyRecord;
 import com.openchat.protocal.state.SignedPreKeyStore;
 import com.openchat.protocal.state.PreKeyRecord;
 import com.openchat.protocal.state.PreKeyStore;
-import com.openchat.imservice.util.Conversions;
+import com.openchat.secureim.util.Conversions;
 
 import java.io.File;
 import java.io.FileInputStream;

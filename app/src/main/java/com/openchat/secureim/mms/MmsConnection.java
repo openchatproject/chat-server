@@ -15,7 +15,7 @@ import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import com.openchat.secureim.database.ApnDatabase;
 import com.openchat.secureim.util.TelephonyUtil;
-import com.openchat.imservice.util.Conversions;
+import com.openchat.secureim.util.Conversions;
 import com.openchat.imservice.util.Util;
 
 import java.io.BufferedInputStream;

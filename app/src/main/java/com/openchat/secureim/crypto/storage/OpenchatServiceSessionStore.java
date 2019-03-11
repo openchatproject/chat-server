@@ -10,7 +10,7 @@ import com.openchat.protocal.state.SessionRecord;
 import com.openchat.protocal.state.SessionState;
 import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.push.PushAddress;
-import com.openchat.imservice.util.Conversions;
+import com.openchat.secureim.util.Conversions;
 
 import java.io.File;
 import java.io.FileInputStream;

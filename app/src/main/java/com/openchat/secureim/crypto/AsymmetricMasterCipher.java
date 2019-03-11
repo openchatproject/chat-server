@@ -7,7 +7,7 @@ import com.openchat.protocal.ecc.ECKeyPair;
 import com.openchat.protocal.ecc.ECPrivateKey;
 import com.openchat.protocal.ecc.ECPublicKey;
 import com.openchat.imservice.util.Base64;
-import com.openchat.imservice.util.Conversions;
+import com.openchat.secureim.util.Conversions;
 import com.openchat.imservice.util.Util;
 
 import java.io.IOException;

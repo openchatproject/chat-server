@@ -5,7 +5,7 @@ import android.util.Log;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.ecc.Curve;
 import com.openchat.protocal.ecc.ECPublicKey;
-import com.openchat.imservice.util.Conversions;
+import com.openchat.secureim.util.Conversions;
 import com.openchat.imservice.util.Hex;
 import com.openchat.imservice.util.Util;
 
