@@ -513,7 +513,7 @@ public class RegistrationProgressActivity extends ActionBarActivity {
         @Override
         protected Integer doInBackground(Void... params) {
           try {
-            OpenchatServiceAccountManager accountManager = OpenchatServiceCommunicationFactory.createManager(context);
+            OpenchatServiceAccountManager accountManager = OpenchatServiceCommunicationFactory.createManager(context, e164number, password);
             int registrationId = OpenchatServicePreferences.getLocalRegistrationId(context);
 
             accountManager.verifyAccount(code, openchatingKey, true, registrationId);
@@ -606,7 +606,7 @@ public class RegistrationProgressActivity extends ActionBarActivity {
         @Override
         protected Integer doInBackground(Void... params) {
           try {
-            OpenchatServiceAccountManager accountManager = OpenchatServiceCommunicationFactory.createManager(context);
+            OpenchatServiceAccountManager accountManager = OpenchatServiceCommunicationFactory.createManager(context, e164number, password);
             accountManager.requestVoiceVerificationCode();
 
             return SUCCESS;
