@@ -3,7 +3,7 @@ package com.openchat.secureim.push;
 import android.content.Context;
 
 import com.openchat.secureim.R;
-import com.openchat.imservice.push.PushServiceSocket;
+import com.openchat.imservice.internal.push.PushServiceSocket;
 
 import java.io.InputStream;
 

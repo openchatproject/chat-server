@@ -15,7 +15,7 @@ import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.state.SessionRecord;
 import com.openchat.protocal.state.SessionStore;
-import com.openchat.imservice.push.PushAddress;
+import com.openchat.imservice.api.push.PushAddress;
 
 public class VerifyIdentityActivity extends KeyScanningActivity {
 

@@ -15,7 +15,7 @@ import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.protocal.IdentityKeyPair;
 import com.openchat.protocal.state.SignedPreKeyRecord;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
-import com.openchat.imservice.push.exceptions.PushNetworkException;
+import com.openchat.imservice.api.push.exceptions.PushNetworkException;
 
 import java.io.IOException;
 

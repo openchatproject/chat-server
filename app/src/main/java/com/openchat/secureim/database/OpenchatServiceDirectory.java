@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.util.Log;
 
-import com.openchat.imservice.push.ContactTokenDetails;
+import com.openchat.imservice.api.push.ContactTokenDetails;
 import com.openchat.imservice.api.util.InvalidNumberException;
 import com.openchat.imservice.api.util.PhoneNumberFormatter;
 

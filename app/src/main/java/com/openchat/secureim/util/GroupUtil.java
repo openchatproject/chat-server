@@ -7,7 +7,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import java.io.IOException;
 import java.util.List;
 
-import static com.openchat.imservice.push.PushMessageProtos.PushMessageContent.GroupContext;
+import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.GroupContext;
 
 public class GroupUtil {
 

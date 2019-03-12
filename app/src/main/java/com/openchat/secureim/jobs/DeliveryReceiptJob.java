@@ -3,18 +3,13 @@ package com.openchat.secureim.jobs;
 import android.content.Context;
 import android.util.Log;
 
-import com.openchat.secureim.Release;
 import com.openchat.secureim.dependencies.InjectableType;
-import com.openchat.secureim.dependencies.OpenchatServiceCommunicationModule;
-import com.openchat.secureim.push.OpenchatServicePushTrustStore;
-import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
-import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.OpenchatServiceMessageSender;
-import com.openchat.imservice.push.PushAddress;
-import com.openchat.imservice.push.exceptions.NonSuccessfulResponseCodeException;
-import com.openchat.imservice.push.exceptions.PushNetworkException;
+import com.openchat.imservice.api.push.PushAddress;
+import com.openchat.imservice.api.push.exceptions.NonSuccessfulResponseCodeException;
+import com.openchat.imservice.api.push.exceptions.PushNetworkException;
 
 import java.io.IOException;
 

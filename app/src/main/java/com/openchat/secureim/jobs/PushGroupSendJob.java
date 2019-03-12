@@ -24,9 +24,9 @@ import com.openchat.imservice.api.crypto.UntrustedIdentityException;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
-import com.openchat.imservice.push.PushAddress;
-import com.openchat.imservice.push.PushMessageProtos;
-import com.openchat.imservice.push.exceptions.EncapsulatedExceptions;
+import com.openchat.imservice.api.push.PushAddress;
+import com.openchat.imservice.internal.push.PushMessageProtos;
+import com.openchat.imservice.api.push.exceptions.EncapsulatedExceptions;
 import com.openchat.imservice.api.util.InvalidNumberException;
 
 import java.io.IOException;

@@ -14,7 +14,7 @@ import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
-import com.openchat.imservice.push.exceptions.NonSuccessfulResponseCodeException;
+import com.openchat.imservice.api.push.exceptions.NonSuccessfulResponseCodeException;
 
 public class GcmRefreshJob extends ContextJob {
 

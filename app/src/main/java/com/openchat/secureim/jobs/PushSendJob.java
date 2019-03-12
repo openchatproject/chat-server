@@ -16,7 +16,7 @@ import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentStream;
 import com.openchat.secureim.database.OpenchatServiceDirectory;
-import com.openchat.imservice.push.PushAddress;
+import com.openchat.imservice.api.push.PushAddress;
 import com.openchat.imservice.api.util.InvalidNumberException;
 
 import java.io.ByteArrayInputStream;

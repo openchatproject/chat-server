@@ -28,7 +28,7 @@ import com.openchat.secureim.util.Util;
 import com.openchat.jobqueue.JobManager;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
-import com.openchat.imservice.push.ContactTokenDetails;
+import com.openchat.imservice.api.push.ContactTokenDetails;
 import com.openchat.secureim.util.DirectoryUtil;
 import com.openchat.imservice.api.util.InvalidNumberException;
 

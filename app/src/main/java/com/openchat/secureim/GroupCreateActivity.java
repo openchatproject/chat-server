@@ -63,7 +63,7 @@ import java.util.Set;
 import ws.com.google.android.mms.MmsException;
 
 import static com.openchat.secureim.contacts.ContactAccessor.ContactData;
-import static com.openchat.imservice.push.PushMessageProtos.PushMessageContent.GroupContext;
+import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.GroupContext;
 
 public class GroupCreateActivity extends PassphraseRequiredActionBarActivity {
 

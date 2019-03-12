@@ -22,8 +22,8 @@ import com.openchat.protocal.state.OpenchatStore;
 import com.openchat.imservice.api.OpenchatServiceMessageSender;
 import com.openchat.imservice.api.crypto.UntrustedIdentityException;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
-import com.openchat.imservice.push.PushAddress;
-import com.openchat.imservice.push.UnregisteredUserException;
+import com.openchat.imservice.api.push.PushAddress;
+import com.openchat.imservice.api.push.exceptions.UnregisteredUserException;
 import com.openchat.imservice.api.util.InvalidNumberException;
 
 import java.io.IOException;

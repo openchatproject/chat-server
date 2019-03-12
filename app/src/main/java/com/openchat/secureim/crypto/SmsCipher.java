@@ -30,7 +30,7 @@ import com.openchat.protocal.protocol.KeyExchangeMessage;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
 import com.openchat.protocal.protocol.OpenchatMessage;
 import com.openchat.protocal.state.OpenchatStore;
-import com.openchat.imservice.push.PushAddress;
+import com.openchat.imservice.api.push.PushAddress;
 
 import java.io.IOException;
 

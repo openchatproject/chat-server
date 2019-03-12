@@ -12,7 +12,7 @@ import com.openchat.protocal.InvalidVersionException;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.secureim.database.OpenchatServiceDirectory;
 import com.openchat.secureim.database.NotInDirectoryException;
-import com.openchat.imservice.push.ContactTokenDetails;
+import com.openchat.imservice.api.push.ContactTokenDetails;
 
 import java.io.IOException;
 

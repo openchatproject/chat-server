@@ -20,7 +20,7 @@ import com.openchat.protocal.state.PreKeyStore;
 import com.openchat.protocal.state.SessionRecord;
 import com.openchat.protocal.state.SessionStore;
 import com.openchat.protocal.state.SignedPreKeyStore;
-import com.openchat.imservice.push.PushAddress;
+import com.openchat.imservice.api.push.PushAddress;
 
 public class KeyExchangeInitiator {
 

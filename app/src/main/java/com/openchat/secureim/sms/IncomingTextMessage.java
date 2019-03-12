@@ -7,7 +7,7 @@ import android.telephony.SmsMessage;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
-import com.openchat.imservice.push.PushAddress;
+import com.openchat.imservice.api.push.PushAddress;
 
 import java.util.List;
 

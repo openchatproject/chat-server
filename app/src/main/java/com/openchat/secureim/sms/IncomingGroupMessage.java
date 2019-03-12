@@ -1,12 +1,6 @@
 package com.openchat.secureim.sms;
 
-import com.google.protobuf.ByteString;
-
-import com.openchat.secureim.util.GroupUtil;
-
-import java.io.IOException;
-
-import static com.openchat.imservice.push.PushMessageProtos.PushMessageContent.GroupContext;
+import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.GroupContext;
 
 public class IncomingGroupMessage extends IncomingTextMessage {
 

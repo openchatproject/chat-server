@@ -21,8 +21,8 @@ import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.imservice.api.crypto.AttachmentCipherInputStream;
-import com.openchat.imservice.push.PushServiceSocket;
-import com.openchat.imservice.push.exceptions.NonSuccessfulResponseCodeException;
+import com.openchat.imservice.internal.push.PushServiceSocket;
+import com.openchat.imservice.api.push.exceptions.NonSuccessfulResponseCodeException;
 
 import java.io.File;
 import java.io.IOException;

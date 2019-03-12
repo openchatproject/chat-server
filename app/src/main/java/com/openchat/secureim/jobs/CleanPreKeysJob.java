@@ -11,9 +11,9 @@ import com.openchat.protocal.InvalidKeyIdException;
 import com.openchat.protocal.state.SignedPreKeyRecord;
 import com.openchat.protocal.state.SignedPreKeyStore;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
-import com.openchat.imservice.push.SignedPreKeyEntity;
-import com.openchat.imservice.push.exceptions.NonSuccessfulResponseCodeException;
-import com.openchat.imservice.push.exceptions.PushNetworkException;
+import com.openchat.imservice.api.push.SignedPreKeyEntity;
+import com.openchat.imservice.api.push.exceptions.NonSuccessfulResponseCodeException;
+import com.openchat.imservice.api.push.exceptions.PushNetworkException;
 
 import java.io.IOException;
 import java.util.Collections;

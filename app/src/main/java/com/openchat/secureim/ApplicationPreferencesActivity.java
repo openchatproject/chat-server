@@ -51,7 +51,7 @@ import com.openchat.secureim.util.Trimmer;
 import com.openchat.secureim.util.Util;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
-import com.openchat.imservice.push.exceptions.AuthorizationFailedException;
+import com.openchat.imservice.api.push.exceptions.AuthorizationFailedException;
 
 import java.io.IOException;
 

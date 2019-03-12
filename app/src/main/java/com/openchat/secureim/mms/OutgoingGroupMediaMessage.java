@@ -10,7 +10,7 @@ import ws.com.google.android.mms.ContentType;
 import ws.com.google.android.mms.pdu.PduBody;
 import ws.com.google.android.mms.pdu.PduPart;
 
-import static com.openchat.imservice.push.PushMessageProtos.PushMessageContent.GroupContext;
+import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.GroupContext;
 
 public class OutgoingGroupMediaMessage extends OutgoingSecureMediaMessage {
 

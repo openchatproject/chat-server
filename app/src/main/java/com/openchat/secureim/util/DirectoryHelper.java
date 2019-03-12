@@ -10,7 +10,7 @@ import com.openchat.secureim.database.OpenchatServiceDirectory;
 import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
-import com.openchat.imservice.push.ContactTokenDetails;
+import com.openchat.imservice.api.push.ContactTokenDetails;
 import com.openchat.imservice.api.util.InvalidNumberException;
 
 import java.util.List;

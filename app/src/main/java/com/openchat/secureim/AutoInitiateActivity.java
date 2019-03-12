@@ -17,7 +17,7 @@ import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.state.SessionStore;
-import com.openchat.imservice.push.PushAddress;
+import com.openchat.imservice.api.push.PushAddress;
 
 public class AutoInitiateActivity extends Activity {
 

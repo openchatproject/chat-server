@@ -16,8 +16,8 @@ import com.openchat.protocal.IdentityKeyPair;
 import com.openchat.protocal.state.PreKeyRecord;
 import com.openchat.protocal.state.SignedPreKeyRecord;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
-import com.openchat.imservice.push.exceptions.NonSuccessfulResponseCodeException;
-import com.openchat.imservice.push.exceptions.PushNetworkException;
+import com.openchat.imservice.api.push.exceptions.NonSuccessfulResponseCodeException;
+import com.openchat.imservice.api.push.exceptions.PushNetworkException;
 
 import java.io.IOException;
 import java.util.List;

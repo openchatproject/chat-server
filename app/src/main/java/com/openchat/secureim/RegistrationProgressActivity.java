@@ -37,8 +37,8 @@ import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
-import com.openchat.imservice.push.exceptions.ExpectationFailedException;
-import com.openchat.imservice.push.exceptions.RateLimitException;
+import com.openchat.imservice.api.push.exceptions.ExpectationFailedException;
+import com.openchat.imservice.api.push.exceptions.RateLimitException;
 import com.openchat.imservice.api.util.PhoneNumberFormatter;
 
 import java.io.IOException;

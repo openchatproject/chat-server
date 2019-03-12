@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.Set;
 
 import static com.openchat.secureim.database.GroupDatabase.GroupRecord;
-import static com.openchat.imservice.push.PushMessageProtos.PushMessageContent.AttachmentPointer;
-import static com.openchat.imservice.push.PushMessageProtos.PushMessageContent.GroupContext;
+import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.AttachmentPointer;
+import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.GroupContext;
 
 public class GroupMessageProcessor {
 

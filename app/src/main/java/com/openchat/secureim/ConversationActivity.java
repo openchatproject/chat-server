@@ -92,7 +92,7 @@ import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.state.SessionStore;
-import com.openchat.imservice.push.PushAddress;
+import com.openchat.imservice.api.push.PushAddress;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -100,7 +100,7 @@ import java.util.List;
 
 import static com.openchat.secureim.database.GroupDatabase.GroupRecord;
 import static com.openchat.secureim.recipients.Recipient.RecipientModifiedListener;
-import static com.openchat.imservice.push.PushMessageProtos.PushMessageContent.GroupContext;
+import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.GroupContext;
 
 public class ConversationActivity extends PassphraseRequiredActionBarActivity
     implements ConversationFragment.ConversationFragmentListener,

@@ -26,7 +26,7 @@ import com.openchat.protocal.state.SignedPreKeyRecord;
 import com.openchat.protocal.util.KeyHelper;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
-import com.openchat.imservice.push.exceptions.ExpectationFailedException;
+import com.openchat.imservice.api.push.exceptions.ExpectationFailedException;
 
 import java.io.IOException;
 import java.util.List;
