@@ -21,11 +21,11 @@ import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.transport.InsecureFallbackApprovalException;
 import com.openchat.secureim.transport.UndeliverableMessageException;
+import com.openchat.secureim.util.Hex;
 import com.openchat.secureim.util.NumberUtil;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.protocal.NoSessionException;
-import com.openchat.imservice.util.Hex;
 
 import java.io.IOException;
 import java.util.Arrays;

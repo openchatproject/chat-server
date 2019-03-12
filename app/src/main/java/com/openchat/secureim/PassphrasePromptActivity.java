@@ -27,7 +27,7 @@ import com.openchat.secureim.crypto.InvalidPassphraseException;
 import com.openchat.secureim.crypto.MasterSecretUtil;
 import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.imservice.util.Util;
+import com.openchat.secureim.util.Util;
 
 public class PassphrasePromptActivity extends PassphraseActivity {
 

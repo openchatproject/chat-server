@@ -8,6 +8,7 @@ import com.openchat.secureim.protocol.WirePrefix;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
+import com.openchat.secureim.util.Util;
 import com.openchat.protocal.DuplicateMessageException;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.LegacyMessageException;
@@ -18,7 +19,6 @@ import com.openchat.protocal.protocol.OpenchatMessage;
 import com.openchat.protocal.state.OpenchatStore;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.push.PushAddress;
-import com.openchat.imservice.util.Util;
 
 import java.io.IOException;
 

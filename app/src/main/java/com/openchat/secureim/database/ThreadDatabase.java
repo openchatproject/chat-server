@@ -5,8 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.openchat.secureim.crypto.MasterCipher;
 import com.openchat.secureim.database.model.DisplayRecord;
 import com.openchat.secureim.database.model.MessageRecord;
 import com.openchat.secureim.database.model.ThreadRecord;
@@ -14,8 +16,6 @@ import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.protocal.InvalidMessageException;
-import com.openchat.secureim.crypto.MasterCipher;
-import com.openchat.imservice.util.Util;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -434,9 +434,9 @@ public class ThreadDatabase extends Database {
         long type   = cursor.getLong(cursor.getColumnIndexOrThrow(ThreadDatabase.SNIPPET_TYPE));
         String body = cursor.getString(cursor.getColumnIndexOrThrow(SNIPPET));
 
-        if (!Util.isEmpty(body) && masterCipher != null && MmsSmsColumns.Types.isSymmetricEncryption(type)) {
+        if (!TextUtils.isEmpty(body) && masterCipher != null && MmsSmsColumns.Types.isSymmetricEncryption(type)) {
           return new DisplayRecord.Body(masterCipher.decryptBody(body), true);
-        } else if (!Util.isEmpty(body) && masterCipher == null && MmsSmsColumns.Types.isSymmetricEncryption(type)) {
+        } else if (!TextUtils.isEmpty(body) && masterCipher == null && MmsSmsColumns.Types.isSymmetricEncryption(type)) {
           return new DisplayRecord.Body(body, false);
         } else {
           return new DisplayRecord.Body(body, true);

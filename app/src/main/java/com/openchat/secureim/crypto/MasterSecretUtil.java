@@ -2,15 +2,16 @@ package com.openchat.secureim.crypto;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.openchat.secureim.util.Base64;
+import com.openchat.secureim.util.Util;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.ecc.Curve;
 import com.openchat.protocal.ecc.ECKeyPair;
 import com.openchat.protocal.ecc.ECPrivateKey;
 import com.openchat.protocal.ecc.ECPublicKey;
-import com.openchat.imservice.util.Base64;
-import com.openchat.imservice.util.Util;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -120,10 +121,8 @@ public class MasterSecretUtil {
       }
 
       return new AsymmetricMasterSecret(djbPublicKey, djbPrivateKey);
-    } catch (InvalidKeyException ike) {
+    } catch (InvalidKeyException | IOException ike) {
       throw new AssertionError(ike);
-    } catch (IOException e) {
-      throw new AssertionError(e);
     }
   }
 
@@ -208,8 +207,8 @@ public class MasterSecretUtil {
     SharedPreferences settings = context.getSharedPreferences(PREFERENCES_NAME, 0);
     String encodedValue        = settings.getString(key, "");
 
-    if (Util.isEmpty(encodedValue)) return null;
-    else                            return Base64.decode(encodedValue);
+    if (TextUtils.isEmpty(encodedValue)) return null;
+    else                                 return Base64.decode(encodedValue);
   }
 
   private static int retrieve(Context context, String key, int defaultValue) throws IOException {

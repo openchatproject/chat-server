@@ -26,6 +26,7 @@ import com.openchat.secureim.sms.IncomingEncryptedMessage;
 import com.openchat.secureim.sms.IncomingEndSessionMessage;
 import com.openchat.secureim.sms.IncomingPreKeyBundleMessage;
 import com.openchat.secureim.sms.IncomingTextMessage;
+import com.openchat.secureim.util.Base64;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.protocal.DuplicateMessageException;
@@ -43,7 +44,6 @@ import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
 import com.openchat.imservice.api.crypto.OpenchatServiceCipher;
-import com.openchat.imservice.util.Base64;
 
 import ws.com.google.android.mms.MmsException;
 

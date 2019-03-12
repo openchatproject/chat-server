@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
 import android.text.ClipboardManager;
@@ -22,11 +23,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.CursorAdapter;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.loaders.ConversationLoader;
 import com.openchat.secureim.database.model.MediaMmsMessageRecord;
@@ -37,19 +38,10 @@ import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.sms.MessageSender;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.DirectoryHelper;
+import com.openchat.secureim.util.FutureTaskListener;
 import com.openchat.secureim.util.SaveAttachmentTask;
 import com.openchat.secureim.util.SaveAttachmentTask.Attachment;
 
-import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.imservice.util.FutureTaskListener;
-import com.openchat.imservice.util.Util;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.ref.WeakReference;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 

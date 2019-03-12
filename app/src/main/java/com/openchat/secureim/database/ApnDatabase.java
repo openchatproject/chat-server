@@ -10,7 +10,7 @@ import android.util.Log;
 import com.openchat.secureim.mms.ApnUnavailableException;
 import com.openchat.secureim.mms.MmsConnection.Apn;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.imservice.util.Util;
+import com.openchat.secureim.util.Util;
 
 import java.io.File;
 import java.io.FileOutputStream;

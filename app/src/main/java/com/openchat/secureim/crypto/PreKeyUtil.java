@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.thoughtcrimegson.Gson;
 
 import com.openchat.secureim.crypto.storage.OpenchatServicePreKeyStore;
+import com.openchat.secureim.util.Util;
 import com.openchat.protocal.IdentityKeyPair;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.InvalidKeyIdException;
@@ -17,7 +18,6 @@ import com.openchat.protocal.state.SignedPreKeyStore;
 import com.openchat.protocal.state.PreKeyRecord;
 import com.openchat.protocal.state.PreKeyStore;
 import com.openchat.protocal.util.Medium;
-import com.openchat.imservice.util.Util;
 
 import java.io.File;
 import java.io.FileInputStream;

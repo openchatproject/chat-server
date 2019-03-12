@@ -89,10 +89,10 @@ import com.openchat.secureim.util.EncryptedCharacterCalculator;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.secureim.util.Util;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.push.PushAddress;
-import com.openchat.imservice.util.Util;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -594,7 +594,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     this.getSupportActionBar().setTitle(title);
     getWindow().getDecorView().setContentDescription(getString(R.string.conversation_activity__window_description, title));
 
-    if (subtitle != null && !Util.isEmpty(subtitle))
+    if (subtitle != null && !TextUtils.isEmpty(subtitle))
       this.getSupportActionBar().setSubtitle(PhoneNumberUtils.formatNumber(subtitle));
 
     this.supportInvalidateOptionsMenu();

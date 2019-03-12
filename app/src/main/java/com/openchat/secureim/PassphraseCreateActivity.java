@@ -11,8 +11,8 @@ import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.MasterSecretUtil;
 import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.secureim.util.Util;
 import com.openchat.secureim.util.VersionTracker;
-import com.openchat.imservice.util.Util;
 
 public class PassphraseCreateActivity extends PassphraseActivity {
 

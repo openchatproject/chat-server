@@ -19,6 +19,7 @@ import com.openchat.secureim.crypto.PreKeyUtil;
 import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.util.DirectoryHelper;
 import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.secureim.util.Util;
 import com.openchat.protocal.IdentityKeyPair;
 import com.openchat.protocal.state.PreKeyRecord;
 import com.openchat.protocal.state.SignedPreKeyRecord;
@@ -26,7 +27,6 @@ import com.openchat.protocal.util.KeyHelper;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
 import com.openchat.imservice.push.exceptions.ExpectationFailedException;
-import com.openchat.imservice.util.Util;
 
 import java.io.IOException;
 import java.util.List;

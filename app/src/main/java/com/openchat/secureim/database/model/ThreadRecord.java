@@ -3,6 +3,7 @@ package com.openchat.secureim.database.model;
 import android.content.Context;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.StyleSpan;
 
 import com.openchat.secureim.R;
@@ -10,7 +11,6 @@ import com.openchat.secureim.database.MmsSmsColumns;
 import com.openchat.secureim.database.SmsDatabase;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.GroupUtil;
-import com.openchat.imservice.util.Util;
 
 public class ThreadRecord extends DisplayRecord {
 
@@ -51,7 +51,7 @@ public class ThreadRecord extends DisplayRecord {
     } else if (MmsSmsColumns.Types.isLegacyType(type)) {
       return emphasisAdded(context.getString(R.string.MessageRecord_message_encrypted_with_a_legacy_protocol_version_that_is_no_longer_supported));
     } else {
-      if (Util.isEmpty(getBody().getBody())) {
+      if (TextUtils.isEmpty(getBody().getBody())) {
         return new SpannableString(context.getString(R.string.MessageNotifier_no_subject));
       } else {
         return new SpannableString(getBody().getBody());

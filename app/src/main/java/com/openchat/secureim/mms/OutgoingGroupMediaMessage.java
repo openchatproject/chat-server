@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.openchat.secureim.database.ThreadDatabase;
 import com.openchat.secureim.recipients.Recipients;
-import com.openchat.imservice.util.Base64;
+import com.openchat.secureim.util.Base64;
 
 import ws.com.google.android.mms.ContentType;
 import ws.com.google.android.mms.pdu.PduBody;

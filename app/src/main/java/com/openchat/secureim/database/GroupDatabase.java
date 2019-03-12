@@ -17,8 +17,8 @@ import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.BitmapUtil;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.secureim.util.Util;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentPointer;
-import com.openchat.imservice.util.Util;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -199,7 +199,7 @@ public class GroupDatabase extends Database {
         return Util.split(cursor.getString(cursor.getColumnIndexOrThrow(MEMBERS)), ",");
       }
 
-      return new LinkedList<String>();
+      return new LinkedList<>();
     } finally {
       if (cursor != null)
         cursor.close();

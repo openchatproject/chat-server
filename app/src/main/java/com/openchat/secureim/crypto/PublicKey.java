@@ -2,12 +2,12 @@ package com.openchat.secureim.crypto;
 
 import android.util.Log;
 
+import com.openchat.secureim.util.Hex;
+import com.openchat.secureim.util.Util;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.ecc.Curve;
 import com.openchat.protocal.ecc.ECPublicKey;
 import com.openchat.secureim.util.Conversions;
-import com.openchat.imservice.util.Hex;
-import com.openchat.imservice.util.Util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

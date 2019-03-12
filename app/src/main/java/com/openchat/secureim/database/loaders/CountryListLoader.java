@@ -11,7 +11,7 @@ import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.openchat.imservice.util.PhoneNumberFormatter;
+import com.openchat.imservice.api.util.PhoneNumberFormatter;
 
 public class CountryListLoader extends AsyncTaskLoader<ArrayList<Map<String, String>>> {
 

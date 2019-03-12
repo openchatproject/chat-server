@@ -15,12 +15,12 @@ import com.openchat.secureim.jobs.AvatarDownloadJob;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.sms.IncomingGroupMessage;
 import com.openchat.secureim.sms.IncomingTextMessage;
+import com.openchat.secureim.util.Base64;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
-import com.openchat.imservice.util.Base64;
 
 import java.util.HashSet;
 import java.util.LinkedList;

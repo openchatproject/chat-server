@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -28,8 +29,8 @@ import com.google.i18n.phonenumbers.Phonenumber;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.imservice.util.PhoneNumberFormatter;
-import com.openchat.imservice.util.Util;
+import com.openchat.secureim.util.Util;
+import com.openchat.imservice.api.util.PhoneNumberFormatter;
 
 public class RegistrationActivity extends ActionBarActivity {
 
@@ -81,7 +82,7 @@ public class RegistrationActivity extends ActionBarActivity {
   }
 
   private void initializeSpinner() {
-    this.countrySpinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+    this.countrySpinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
     this.countrySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
     setCountryDisplay(getString(R.string.RegistrationActivity_select_your_country));
@@ -101,10 +102,10 @@ public class RegistrationActivity extends ActionBarActivity {
 
   private void initializeNumber() {
     PhoneNumberUtil numberUtil  = PhoneNumberUtil.getInstance();
-    String          localNumber = com.openchat.imservice.util.Util.getDeviceE164Number(this);
+    String          localNumber = Util.getDeviceE164Number(this);
 
     try {
-      if (!Util.isEmpty(localNumber)) {
+      if (!TextUtils.isEmpty(localNumber)) {
         Phonenumber.PhoneNumber localNumberObject = numberUtil.parse(localNumber, null);
 
         if (localNumberObject != null) {
@@ -114,7 +115,7 @@ public class RegistrationActivity extends ActionBarActivity {
       } else {
         String simCountryIso = ((TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE)).getSimCountryIso();
 
-        if (!Util.isEmpty(simCountryIso)) {
+        if (!TextUtils.isEmpty(simCountryIso)) {
           this.countryCode.setText(numberUtil.getCountryCodeForRegion(simCountryIso.toUpperCase())+"");
         }
       }
@@ -148,14 +149,14 @@ public class RegistrationActivity extends ActionBarActivity {
 
       OpenchatServicePreferences.setPromptedPushRegistration(self, true);
 
-      if (Util.isEmpty(countryCode.getText())) {
+      if (TextUtils.isEmpty(countryCode.getText())) {
         Toast.makeText(self,
                        getString(R.string.RegistrationActivity_you_must_specify_your_country_code),
                        Toast.LENGTH_LONG).show();
         return;
       }
 
-      if (Util.isEmpty(number.getText())) {
+      if (TextUtils.isEmpty(number.getText())) {
         Toast.makeText(self,
                        getString(R.string.RegistrationActivity_you_must_specify_your_phone_number),
                        Toast.LENGTH_LONG).show();
@@ -206,7 +207,7 @@ public class RegistrationActivity extends ActionBarActivity {
   private class CountryCodeChangedListener implements TextWatcher {
     @Override
     public void afterTextChanged(Editable s) {
-      if (Util.isEmpty(s)) {
+      if (TextUtils.isEmpty(s)) {
         setCountryDisplay(getString(R.string.RegistrationActivity_select_your_country));
         countryFormatter = null;
         return;
@@ -218,7 +219,7 @@ public class RegistrationActivity extends ActionBarActivity {
       setCountryFormatter(countryCode);
       setCountryDisplay(PhoneNumberFormatter.getRegionDisplayName(regionCode));
 
-      if (!Util.isEmpty(regionCode) && !regionCode.equals("ZZ")) {
+      if (!TextUtils.isEmpty(regionCode) && !regionCode.equals("ZZ")) {
         number.requestFocus();
       }
     }
@@ -239,7 +240,7 @@ public class RegistrationActivity extends ActionBarActivity {
       if (countryFormatter == null)
         return;
 
-      if (Util.isEmpty(s))
+      if (TextUtils.isEmpty(s))
         return;
 
       countryFormatter.clear();

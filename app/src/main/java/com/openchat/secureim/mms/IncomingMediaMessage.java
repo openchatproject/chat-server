@@ -1,13 +1,15 @@
 package com.openchat.secureim.mms;
 
+import android.text.TextUtils;
+
 import com.openchat.secureim.crypto.MasterCipher;
 import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.util.Base64;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.Util;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
-import com.openchat.imservice.util.Base64;
 
 import java.util.List;
 
@@ -55,7 +57,7 @@ public class IncomingMediaMessage {
     this.headers.appendEncodedStringValue(new EncodedStringValue(to), PduHeaders.TO);
     this.headers.setLongInteger(sentTimeMillis / 1000, PduHeaders.DATE);
 
-    if (body.isPresent() && !com.openchat.imservice.util.Util.isEmpty(body.get())) {
+    if (body.isPresent() && !TextUtils.isEmpty(body.get())) {
       PduPart text = new PduPart();
       text.setData(Util.toUtf8Bytes(body.get()));
       text.setContentType(Util.toIsoBytes("text/plain"));

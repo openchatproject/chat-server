@@ -6,8 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.openchat.secureim.util.Base64;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
-import com.openchat.imservice.util.Base64;
 
 import java.io.IOException;
 

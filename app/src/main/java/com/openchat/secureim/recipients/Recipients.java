@@ -7,7 +7,7 @@ import android.util.Patterns;
 import com.openchat.secureim.recipients.Recipient.RecipientModifiedListener;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.NumberUtil;
-import com.openchat.imservice.util.Util;
+import com.openchat.secureim.util.Util;
 
 import java.util.ArrayList;
 import java.util.Iterator;

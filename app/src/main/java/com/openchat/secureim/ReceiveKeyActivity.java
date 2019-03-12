@@ -27,6 +27,7 @@ import com.openchat.secureim.sms.IncomingIdentityUpdateMessage;
 import com.openchat.secureim.sms.IncomingKeyExchangeMessage;
 import com.openchat.secureim.sms.IncomingPreKeyBundleMessage;
 import com.openchat.secureim.sms.IncomingTextMessage;
+import com.openchat.secureim.util.Base64;
 import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.InvalidKeyException;
@@ -38,7 +39,6 @@ import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
 import com.openchat.protocal.state.IdentityKeyStore;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
-import com.openchat.imservice.util.Base64;
 
 import java.io.IOException;
 

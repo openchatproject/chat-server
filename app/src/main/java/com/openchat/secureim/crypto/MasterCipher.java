@@ -2,11 +2,11 @@ package com.openchat.secureim.crypto;
 
 import android.util.Log;
 
+import com.openchat.secureim.util.Base64;
+import com.openchat.secureim.util.Hex;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.ecc.Curve;
 import com.openchat.protocal.ecc.ECPrivateKey;
-import com.openchat.imservice.util.Base64;
-import com.openchat.imservice.util.Hex;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -36,10 +36,8 @@ public class MasterCipher {
       this.encryptingCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
       this.decryptingCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
       this.hmac             = Mac.getInstance("HmacSHA1");
-    } catch (NoSuchPaddingException nspe) {
+    } catch (NoSuchPaddingException | NoSuchAlgorithmException nspe) {
       throw new AssertionError(nspe);
-    } catch (NoSuchAlgorithmException e) {
-      throw new AssertionError(e);
     }
   }
 

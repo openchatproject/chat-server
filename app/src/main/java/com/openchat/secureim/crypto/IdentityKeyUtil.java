@@ -5,13 +5,13 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
+import com.openchat.secureim.util.Base64;
 import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.IdentityKeyPair;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.ecc.Curve;
 import com.openchat.protocal.ecc.ECKeyPair;
 import com.openchat.protocal.ecc.ECPrivateKey;
-import com.openchat.imservice.util.Base64;
 
 import java.io.IOException;
 
@@ -55,9 +55,7 @@ public class IdentityKeyUtil {
       ECPrivateKey privateKey   = masterCipher.decryptKey(Base64.decode(retrieve(context, IDENTITY_PRIVATE_KEY_DJB_PREF)));
 
       return new IdentityKeyPair(publicKey, privateKey);
-    } catch (IOException e) {
-      throw new AssertionError(e);
-    } catch (InvalidKeyException e) {
+    } catch (IOException | InvalidKeyException e) {
       throw new AssertionError(e);
     }
   }

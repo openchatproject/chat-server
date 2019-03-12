@@ -47,7 +47,7 @@ import com.openchat.secureim.util.Util;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.OpenchatServiceDirectory;
 import com.openchat.secureim.database.NotInDirectoryException;
-import com.openchat.imservice.util.InvalidNumberException;
+import com.openchat.imservice.api.util.InvalidNumberException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;

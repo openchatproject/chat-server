@@ -11,6 +11,7 @@ import com.openchat.secureim.database.EncryptingPartDatabase;
 import com.openchat.secureim.database.PartDatabase;
 import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
+import com.openchat.secureim.util.Base64;
 import com.openchat.secureim.util.Util;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
@@ -19,7 +20,6 @@ import com.openchat.imservice.api.OpenchatServiceMessageReceiver;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentPointer;
 import com.openchat.imservice.push.exceptions.NonSuccessfulResponseCodeException;
 import com.openchat.imservice.push.exceptions.PushNetworkException;
-import com.openchat.imservice.util.Base64;
 
 import java.io.File;
 import java.io.IOException;

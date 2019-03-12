@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.telephony.PhoneNumberUtils;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
@@ -21,11 +22,8 @@ import com.openchat.secureim.sms.IncomingKeyExchangeMessage;
 import com.openchat.secureim.sms.IncomingTextMessage;
 import com.openchat.secureim.sms.OutgoingTextMessage;
 import com.openchat.secureim.util.Trimmer;
-import com.openchat.imservice.util.InvalidNumberException;
-import com.openchat.imservice.util.Util;
+import com.openchat.imservice.api.util.InvalidNumberException;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import static com.openchat.secureim.util.Util.canonicalizeNumber;
@@ -377,7 +375,7 @@ public class SmsDatabase extends Database implements MmsSmsColumns {
     values.put(PROTOCOL, message.getProtocol());
     values.put(READ, unread ? 0 : 1);
 
-    if (!Util.isEmpty(message.getPseudoSubject()))
+    if (!TextUtils.isEmpty(message.getPseudoSubject()))
       values.put(SUBJECT, message.getPseudoSubject());
 
     values.put(REPLY_PATH_PRESENT, message.isReplyPathPresent());

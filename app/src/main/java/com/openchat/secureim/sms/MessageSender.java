@@ -30,7 +30,7 @@ import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
 import com.openchat.imservice.push.ContactTokenDetails;
 import com.openchat.secureim.util.DirectoryUtil;
-import com.openchat.imservice.util.InvalidNumberException;
+import com.openchat.imservice.api.util.InvalidNumberException;
 
 import java.io.IOException;
 

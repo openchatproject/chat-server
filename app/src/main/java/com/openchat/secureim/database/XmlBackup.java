@@ -1,6 +1,7 @@
 package com.openchat.secureim.database;
 
-import com.openchat.imservice.util.Util;
+import android.text.TextUtils;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -198,7 +199,7 @@ public class XmlBackup {
     }
 
     private String escapeXML(String s) {
-      if (Util.isEmpty(s)) return s;
+      if (TextUtils.isEmpty(s)) return s;
 
       Matcher matcher = PATTERN.matcher( s.replace("&",  "&amp;")
                                           .replace("<",  "&lt;")

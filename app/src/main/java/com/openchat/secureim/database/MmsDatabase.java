@@ -7,17 +7,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 
 import com.openchat.secureim.R;
-import com.openchat.secureim.mms.OutgoingGroupMediaMessage;
-import com.openchat.secureim.mms.OutgoingMediaMessage;
-import com.openchat.secureim.util.GroupUtil;
-import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.protocal.InvalidMessageException;
 import com.openchat.secureim.crypto.MasterCipher;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.model.DisplayRecord;
@@ -25,6 +21,8 @@ import com.openchat.secureim.database.model.MediaMmsMessageRecord;
 import com.openchat.secureim.database.model.MessageRecord;
 import com.openchat.secureim.database.model.NotificationMmsMessageRecord;
 import com.openchat.secureim.mms.IncomingMediaMessage;
+import com.openchat.secureim.mms.OutgoingGroupMediaMessage;
+import com.openchat.secureim.mms.OutgoingMediaMessage;
 import com.openchat.secureim.mms.PartParser;
 import com.openchat.secureim.mms.SlideDeck;
 import com.openchat.secureim.mms.TextSlide;
@@ -32,12 +30,15 @@ import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
+import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.LRUCache;
-import com.openchat.protocal.util.guava.Optional;
-import com.openchat.imservice.util.InvalidNumberException;
 import com.openchat.secureim.util.ListenableFutureTask;
+import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Trimmer;
-import com.openchat.imservice.util.Util;
+import com.openchat.secureim.util.Util;
+import com.openchat.protocal.InvalidMessageException;
+import com.openchat.protocal.util.guava.Optional;
+import com.openchat.imservice.api.util.InvalidNumberException;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.SoftReference;
@@ -460,9 +461,9 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
         PduBody body = getPartsAsBody(partDatabase.getParts(messageId, true));
 
         try {
-          if (!Util.isEmpty(messageText) && Types.isSymmetricEncryption(outboxType)) {
+          if (!TextUtils.isEmpty(messageText) && Types.isSymmetricEncryption(outboxType)) {
             body.addPart(new TextSlide(context, masterCipher.decryptBody(messageText)).getPart());
-          } else if (!Util.isEmpty(messageText)) {
+          } else if (!TextUtils.isEmpty(messageText)) {
             body.addPart(new TextSlide(context, messageText).getPart());
           }
         } catch (InvalidMessageException e) {
@@ -682,7 +683,7 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
       String messageText = PartParser.getMessageText(body);
       body               = PartParser.getNonTextParts(body);
 
-      if (!Util.isEmpty(messageText)) {
+      if (!TextUtils.isEmpty(messageText)) {
         contentValues.put(BODY, new MasterCipher(masterSecret).encryptBody(messageText));
       }
     }
@@ -781,8 +782,8 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
 
   public Cursor getCarrierMmsInformation(String apn) {
     Uri uri                = Uri.withAppendedPath(Uri.parse("content://telephony/carriers"), "current");
-    String selection       = Util.isEmpty(apn) ? null : "apn = ?";
-    String[] selectionArgs = Util.isEmpty(apn) ? null : new String[] {apn.trim()};
+    String selection       = TextUtils.isEmpty(apn) ? null : "apn = ?";
+    String[] selectionArgs = TextUtils.isEmpty(apn) ? null : new String[] {apn.trim()};
 
     try {
       return context.getContentResolver().query(uri, null, selection, selectionArgs, null);
@@ -950,10 +951,10 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
       byte[]contentLocationBytes = null;
       byte[]transactionIdBytes   = null;
 
-      if (!Util.isEmpty(contentLocation))
+      if (!TextUtils.isEmpty(contentLocation))
         contentLocationBytes = com.openchat.secureim.util.Util.toIsoBytes(contentLocation);
 
-      if (!Util.isEmpty(transactionId))
+      if (!TextUtils.isEmpty(transactionId))
         transactionIdBytes = com.openchat.secureim.util.Util.toIsoBytes(transactionId);
 
       return new NotificationMmsMessageRecord(context, id, recipients, recipients.getPrimaryRecipient(),
@@ -984,7 +985,7 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
 
     private Recipients getRecipientsFor(String address) {
       try {
-        if (Util.isEmpty(address) || address.equals("insert-address-token")) {
+        if (TextUtils.isEmpty(address) || address.equals("insert-address-token")) {
           return new Recipients(Recipient.getUnknownRecipient(context));
         }
 
@@ -1006,9 +1007,9 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
         String body = cursor.getString(cursor.getColumnIndexOrThrow(MmsDatabase.BODY));
         long box    = cursor.getLong(cursor.getColumnIndexOrThrow(MmsDatabase.MESSAGE_BOX));
 
-        if (!Util.isEmpty(body) && masterCipher != null && Types.isSymmetricEncryption(box)) {
+        if (!TextUtils.isEmpty(body) && masterCipher != null && Types.isSymmetricEncryption(box)) {
           return new DisplayRecord.Body(masterCipher.decryptBody(body), true);
-        } else if (!Util.isEmpty(body) && masterCipher == null && Types.isSymmetricEncryption(box)) {
+        } else if (!TextUtils.isEmpty(body) && masterCipher == null && Types.isSymmetricEncryption(box)) {
           return new DisplayRecord.Body(body, false);
         } else {
           return new DisplayRecord.Body(body == null ? "" : body, true);

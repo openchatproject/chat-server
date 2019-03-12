@@ -9,8 +9,6 @@ import com.openchat.secureim.database.SmsDatabase;
 import com.openchat.secureim.protocol.Tag;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
-import com.openchat.secureim.util.GroupUtil;
-import com.openchat.imservice.util.Util;
 
 public class SmsMessageRecord extends MessageRecord {
 

@@ -1,6 +1,6 @@
 package com.openchat.secureim.protocol;
 
-import com.openchat.imservice.util.Base64;
+import com.openchat.secureim.util.Base64;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

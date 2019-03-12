@@ -11,6 +11,7 @@ import com.openchat.secureim.crypto.storage.OpenchatServiceSessionStore;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.sms.MessageSender;
 import com.openchat.secureim.sms.OutgoingKeyExchangeMessage;
+import com.openchat.secureim.util.Base64;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.protocal.SessionBuilder;
 import com.openchat.protocal.protocol.KeyExchangeMessage;
@@ -20,7 +21,6 @@ import com.openchat.protocal.state.SessionRecord;
 import com.openchat.protocal.state.SessionStore;
 import com.openchat.protocal.state.SignedPreKeyStore;
 import com.openchat.imservice.push.PushAddress;
-import com.openchat.imservice.util.Base64;
 
 public class KeyExchangeInitiator {
 

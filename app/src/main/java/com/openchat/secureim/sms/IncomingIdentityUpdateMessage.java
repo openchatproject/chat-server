@@ -1,7 +1,7 @@
 package com.openchat.secureim.sms;
 
+import com.openchat.secureim.util.Base64;
 import com.openchat.protocal.IdentityKey;
-import com.openchat.imservice.util.Base64;
 
 public class IncomingIdentityUpdateMessage extends IncomingKeyExchangeMessage {
 

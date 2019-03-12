@@ -10,8 +10,8 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.util.Log;
 
 import com.openchat.imservice.push.ContactTokenDetails;
-import com.openchat.imservice.util.InvalidNumberException;
-import com.openchat.imservice.util.PhoneNumberFormatter;
+import com.openchat.imservice.api.util.InvalidNumberException;
+import com.openchat.imservice.api.util.PhoneNumberFormatter;
 
 import java.util.ArrayList;
 import java.util.Collection;

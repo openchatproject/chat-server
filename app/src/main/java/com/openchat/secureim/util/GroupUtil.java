@@ -2,14 +2,9 @@ package com.openchat.secureim.util;
 
 import android.util.Log;
 
-import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import com.openchat.imservice.util.Base64;
-import com.openchat.imservice.util.Hex;
-
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
 import static com.openchat.imservice.push.PushMessageProtos.PushMessageContent.GroupContext;
@@ -46,7 +41,7 @@ public class GroupUtil {
       String       title       = context.getName();
 
       if (!members.isEmpty()) {
-        description += com.openchat.imservice.util.Util.join(members, ", ") + " joined the group.";
+        description += Util.join(members, ", ") + " joined the group.";
       }
 
       if (title != null && !title.trim().isEmpty()) {

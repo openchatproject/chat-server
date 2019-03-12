@@ -16,6 +16,7 @@ import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
@@ -34,11 +35,11 @@ import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.service.RegistrationService;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.secureim.util.Util;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
 import com.openchat.imservice.push.exceptions.ExpectationFailedException;
 import com.openchat.imservice.push.exceptions.RateLimitException;
-import com.openchat.imservice.util.PhoneNumberFormatter;
-import com.openchat.imservice.util.Util;
+import com.openchat.imservice.api.util.PhoneNumberFormatter;
 
 import java.io.IOException;
 
@@ -459,7 +460,7 @@ public class RegistrationProgressActivity extends ActionBarActivity {
     public void onClick(View v) {
       final String code = codeEditText.getText().toString();
 
-      if (Util.isEmpty(code)) {
+      if (TextUtils.isEmpty(code)) {
         Toast.makeText(context,
                        getString(R.string.RegistrationProgressActivity_you_must_enter_the_code_you_received_first),
                        Toast.LENGTH_LONG).show();

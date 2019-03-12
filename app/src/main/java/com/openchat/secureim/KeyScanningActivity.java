@@ -7,8 +7,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.openchat.secureim.util.Base64;
 import com.openchat.protocal.IdentityKey;
-import com.openchat.imservice.util.Base64;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.DynamicTheme;
 

@@ -7,7 +7,7 @@ import com.openchat.secureim.protocol.KeyExchangeWirePrefix;
 import com.openchat.secureim.protocol.PrekeyBundleWirePrefix;
 import com.openchat.secureim.protocol.SecureMessageWirePrefix;
 import com.openchat.secureim.protocol.WirePrefix;
-import com.openchat.imservice.util.Base64;
+import com.openchat.secureim.util.Base64;
 import com.openchat.secureim.util.Conversions;
 
 import java.io.IOException;

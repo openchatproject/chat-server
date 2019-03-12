@@ -1,8 +1,8 @@
 package com.openchat.secureim.mms;
 
-import java.io.IOException;
+import com.openchat.secureim.util.Base64;
 
-import com.openchat.imservice.util.Base64;
+import java.io.IOException;
 
 public class TextTransport {
 

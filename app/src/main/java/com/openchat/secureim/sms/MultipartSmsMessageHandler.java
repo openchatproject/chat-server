@@ -2,7 +2,7 @@ package com.openchat.secureim.sms;
 
 import android.util.Log;
 
-import com.openchat.imservice.util.Base64;
+import com.openchat.secureim.util.Base64;
 
 import java.io.IOException;
 import java.util.ArrayList;

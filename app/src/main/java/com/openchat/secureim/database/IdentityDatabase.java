@@ -10,11 +10,11 @@ import android.util.Log;
 
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.Recipients;
+import com.openchat.secureim.util.Base64;
 import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.secureim.crypto.MasterCipher;
 import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.imservice.util.Base64;
 
 import java.io.IOException;
 

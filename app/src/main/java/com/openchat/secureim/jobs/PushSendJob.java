@@ -17,7 +17,7 @@ import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentStream;
 import com.openchat.secureim.database.OpenchatServiceDirectory;
 import com.openchat.imservice.push.PushAddress;
-import com.openchat.imservice.util.InvalidNumberException;
+import com.openchat.imservice.api.util.InvalidNumberException;
 
 import java.io.ByteArrayInputStream;
 import java.util.LinkedList;
