@@ -239,6 +239,10 @@ public class MessageSender {
         return false;
       }
 
+      if (recipients.isGroupRecipient()) {
+        return false;
+      }
+
       String e164number = Util.canonicalizeNumber(context, recipients.getPrimaryRecipient().getNumber());
       return OpenchatServicePreferences.getLocalNumber(context).equals(e164number);
     } catch (InvalidNumberException e) {
