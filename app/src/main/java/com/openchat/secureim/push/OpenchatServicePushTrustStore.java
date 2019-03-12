@@ -3,11 +3,12 @@ package com.openchat.secureim.push;
 import android.content.Context;
 
 import com.openchat.secureim.R;
+import com.openchat.imservice.api.push.TrustStore;
 import com.openchat.imservice.internal.push.PushServiceSocket;
 
 import java.io.InputStream;
 
-public class OpenchatServicePushTrustStore implements PushServiceSocket.TrustStore {
+public class OpenchatServicePushTrustStore implements TrustStore {
 
   private final Context context;
 
