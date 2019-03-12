@@ -21,6 +21,8 @@ import com.openchat.secureim.crypto.storage.OpenchatServiceIdentityKeyStore;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.IdentityDatabase;
+import com.openchat.secureim.database.PushDatabase;
+import com.openchat.secureim.jobs.PushDecryptJob;
 import com.openchat.secureim.jobs.SmsDecryptJob;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.sms.IncomingIdentityUpdateMessage;
@@ -38,6 +40,7 @@ import com.openchat.protocal.protocol.KeyExchangeMessage;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
 import com.openchat.protocal.state.IdentityKeyStore;
 import com.openchat.protocal.util.guava.Optional;
+import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 
 import java.io.IOException;
@@ -189,18 +192,39 @@ public class ReceiveKeyActivity extends Activity {
 
         @Override
         protected Void doInBackground(Void... params) {
-          IdentityDatabase      identityDatabase = DatabaseFactory.getIdentityDatabase(ReceiveKeyActivity.this);
-          EncryptingSmsDatabase smsDatabase      = DatabaseFactory.getEncryptingSmsDatabase(ReceiveKeyActivity.this);
           Context               context          = ReceiveKeyActivity.this;
+          IdentityDatabase      identityDatabase = DatabaseFactory.getIdentityDatabase(context);
+          EncryptingSmsDatabase smsDatabase      = DatabaseFactory.getEncryptingSmsDatabase(context);
+          PushDatabase          pushDatabase     = DatabaseFactory.getPushDatabase(context);
 
           identityDatabase.saveIdentity(masterSecret, recipient.getRecipientId(), identityKey);
 
           if (message.isIdentityUpdate()) {
             smsDatabase.markAsProcessedKeyExchange(messageId);
           } else {
-            ApplicationContext.getInstance(context)
-                              .getJobManager()
-                              .add(new SmsDecryptJob(context, messageId));
+            if (getIntent().getBooleanExtra("is_push", false)) {
+              try {
+                byte[]             body     = Base64.decode(message.getMessageBody());
+                OpenchatServiceEnvelope envelope = new OpenchatServiceEnvelope(3, message.getSender(),
+                                                                     message.getSenderDeviceId(), "",
+                                                                     message.getSentTimestampMillis(),
+                                                                     body);
+
+                long pushId = pushDatabase.insert(envelope);
+
+                ApplicationContext.getInstance(context)
+                                  .getJobManager()
+                                  .add(new PushDecryptJob(context, pushId));
+
+                smsDatabase.deleteMessage(messageId);
+              } catch (IOException e) {
+                throw new AssertionError(e);
+              }
+            } else {
+              ApplicationContext.getInstance(context)
+                                .getJobManager()
+                                .add(new SmsDecryptJob(context, messageId));
+            }
           }
 
           return null;
