@@ -9,9 +9,12 @@ import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.secureim.dependencies.OpenchatServiceCommunicationModule;
 import com.openchat.secureim.jobs.GcmRefreshJob;
 import com.openchat.secureim.jobs.persistence.EncryptingJobSerializer;
+import com.openchat.secureim.jobs.requirements.MasterSecretRequirementProvider;
+import com.openchat.secureim.jobs.requirements.ServiceRequirementProvider;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.JobManager;
 import com.openchat.jobqueue.dependencies.DependencyInjector;
+import com.openchat.jobqueue.requirements.NetworkRequirementProvider;
 
 import dagger.ObjectGraph;
 
@@ -52,6 +55,9 @@ public class ApplicationContext extends Application implements DependencyInjecto
                                 .withName("OpenchatServiceJobs")
                                 .withDependencyInjector(this)
                                 .withJobSerializer(new EncryptingJobSerializer(this))
+                                .withRequirementProviders(new MasterSecretRequirementProvider(this),
+                                                          new ServiceRequirementProvider(this),
+                                                          new NetworkRequirementProvider(this))
                                 .withConsumerThreads(5)
                                 .build();
   }
