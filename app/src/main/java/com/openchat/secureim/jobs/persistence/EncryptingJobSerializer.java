@@ -1,15 +1,13 @@
 package com.openchat.secureim.jobs.persistence;
 
-import android.content.Context;
-
+import com.openchat.secureim.crypto.MasterCipher;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.util.ParcelUtil;
 import com.openchat.jobqueue.EncryptionKeys;
 import com.openchat.jobqueue.Job;
 import com.openchat.jobqueue.persistence.JavaJobSerializer;
 import com.openchat.jobqueue.persistence.JobSerializer;
 import com.openchat.protocal.InvalidMessageException;
-import com.openchat.secureim.crypto.MasterCipher;
-import com.openchat.secureim.crypto.MasterSecret;
 
 import java.io.IOException;
 
@@ -17,8 +15,8 @@ public class EncryptingJobSerializer implements JobSerializer {
 
   private final JavaJobSerializer delegate;
 
-  public EncryptingJobSerializer(Context context) {
-    this.delegate = new JavaJobSerializer(context);
+  public EncryptingJobSerializer() {
+    this.delegate = new JavaJobSerializer();
   }
 
   @Override
