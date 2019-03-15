@@ -137,6 +137,9 @@
         settings, and messages...
     </string>
 
+    <string name="GcmRefreshJob_Permanent_OpenchatService_communication_failure">Permanent OpenchatService communication failure!</string>
+    <string name="GcmRefreshJob_OpenchatService_was_unable_to_register_with_Google_Play_Services">OpenchatService was unable to register with Google Play Services. Communication over the data channel has been disabled, please try re-registering from the OpenchatService settings menu.</string>
+
     <string name="GroupCreateActivity_actionbar_title">New group</string>
     <string name="GroupCreateActivity_actionbar_update_title">Update group</string>
     <string name="GroupCreateActivity_group_name_hint">Group name</string>

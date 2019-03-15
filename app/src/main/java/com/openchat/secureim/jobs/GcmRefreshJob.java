@@ -1,13 +1,19 @@
 package com.openchat.secureim.jobs;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import com.openchat.secureim.PlayServicesProblemActivity;
+import com.openchat.secureim.R;
 import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.JobParameters;
@@ -31,22 +37,22 @@ public class GcmRefreshJob extends ContextJob {
 
   @Override
   public void onRun() throws Exception {
-    String registrationId = OpenchatServicePreferences.getGcmRegistrationId(context);
+    OpenchatServiceAccountManager accountManager = OpenchatServiceCommunicationFactory.createManager(context);
+    String                   registrationId = OpenchatServicePreferences.getGcmRegistrationId(context);
 
     if (registrationId == null) {
       Log.w(TAG, "GCM registrationId expired, reregistering...");
       int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
 
       if (result != ConnectionResult.SUCCESS) {
-        Toast.makeText(context, "Unable to register with GCM!", Toast.LENGTH_LONG).show();
+        notifyGcmFailure();
+        accountManager.setGcmId(Optional.<String>absent());
+        OpenchatServicePreferences.setPushRegistered(context, false);
+      } else {
+        String gcmId = GoogleCloudMessaging.getInstance(context).register(REGISTRATION_ID);
+        accountManager.setGcmId(Optional.of(gcmId));
+        OpenchatServicePreferences.setGcmRegistrationId(context, gcmId);
       }
-
-      String                   gcmId          = GoogleCloudMessaging.getInstance(context).register(REGISTRATION_ID);
-      OpenchatServiceAccountManager accountManager = OpenchatServiceCommunicationFactory.createManager(context);
-
-      accountManager.setGcmId(Optional.of(gcmId));
-
-      OpenchatServicePreferences.setGcmRegistrationId(context, gcmId);
     }
   }
 
@@ -59,6 +65,23 @@ public class GcmRefreshJob extends ContextJob {
   public boolean onShouldRetry(Exception throwable) {
     if (throwable instanceof NonSuccessfulResponseCodeException) return false;
     return true;
+  }
+
+  private void notifyGcmFailure() {
+    Intent                     intent        = new Intent(context, PlayServicesProblemActivity.class);
+    PendingIntent              pendingIntent = PendingIntent.getActivity(context, 1122, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+    NotificationCompat.Builder builder       = new NotificationCompat.Builder(context);
+
+    builder.setSmallIcon(R.drawable.icon_notification);
+    builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
+                                                      R.drawable.ic_action_warning_red));
+    builder.setContentTitle(context.getString(R.string.GcmRefreshJob_Permanent_OpenchatService_communication_failure));
+    builder.setContentText(context.getString(R.string.GcmRefreshJob_OpenchatService_was_unable_to_register_with_Google_Play_Services));
+    builder.setTicker(context.getString(R.string.GcmRefreshJob_Permanent_OpenchatService_communication_failure));
+    builder.setContentIntent(pendingIntent);
+
+    ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE))
+        .notify(12, builder.build());
   }
 
 }
