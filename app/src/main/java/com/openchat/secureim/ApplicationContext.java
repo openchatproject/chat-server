@@ -16,6 +16,8 @@ import com.openchat.jobqueue.JobManager;
 import com.openchat.jobqueue.dependencies.DependencyInjector;
 import com.openchat.jobqueue.requirements.NetworkRequirementProvider;
 
+import java.security.Security;
+
 import dagger.ObjectGraph;
 
 public class ApplicationContext extends Application implements DependencyInjector {
@@ -47,6 +49,7 @@ public class ApplicationContext extends Application implements DependencyInjecto
   }
 
   private void initializeRandomNumberFix() {
+    Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
     PRNGFixes.apply();
   }
 
