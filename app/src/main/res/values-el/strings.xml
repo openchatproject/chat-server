@@ -84,13 +84,8 @@
   <string name="ConversationFragment_message_details">Στοιχεία μηνύματος</string>
   <string name="ConversationFragment_confirm_message_delete">Επιβεβαίωση Διαγραφής Μηνύματος</string>
   <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">Είστε σίγουροι πως θέλετε να διαγράψετε αυτό το μήνυμα για πάντα;</string>
-  <string name="ConversationFragment_save_to_sd_card">Να αποθηκευτεί στη κάρτα μνήμης;</string>
-  <string name="ConversationFragment_this_media_has_been_stored_in_an_encrypted_database_warning">Αυτό το αρχείο έχει αποθηκευτεί σε μια κρυπτογραφημένη βάση δεδομένων. Το αντίγραφο που θα σωθεί στην κάρτα μνήμης σας δε θα είναι κρυπτογραφημένο. Θέλετε να συνεχίσετε;</string>
-  <string name="ConversationFragment_error_while_saving_attachment_to_sd_card">Σφάλμα κατά την αποθήκευση στην κάρτα μνήμης!</string>
   <string name="ConversationFragment_success_exclamation">Επιτυχία!</string>
-  <string name="ConversationFragment_unable_to_write_to_sd_card_exclamation">Δε μπόρεσα να σώσω στη κάρτα μνήμης!</string>
   <string name="ConversationFragment_saving_attachment">Αποθήκευση συνημμένου</string>
-  <string name="ConversationFragment_saving_attachment_to_sd_card">Αποθηκεύεται το συνημμένο στην κάρτα μνήμης...</string>
   <string name="ConversationListAdapter_key_exchange_message">Μήνυμα ανταλλαγής κλειδιών...</string>
   <string name="ConversationListFragment_delete_threads_question">Διαγραφή συζητήσεων;</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Είστε σίγουροι πως θέλετε να διαγράψετε ΟΛΕΣ τις επιλεγμένες συζητήσεις;</string>
@@ -408,16 +403,11 @@
   <string name="prompt_mms_activity__mms_proxy_host_optional">ΔΙΑΚΟΜΙΣΤΗΣ ΜΕΣΟΛΑΒΗΣΗΣ MMS (ΠΡΟΑΙΡΕΤΙΚΟΣ):</string>
   <string name="prompt_mms_activity__mms_proxy_port_optional">ΘΥΡΑ ΔΙΑΚΟΜΙΣΤΗ ΜΕΣΟΛΑΒΗΣΗΣ MMS (ΠΡΟΑΙΡΕΤΙΚΟ):</string>
   <string name="receive_key_activity__complete">Ολοκληρώθηκε</string>
-  <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
-        Το OpenchatService μπορεί να χρησιμοποιήσει τη σύνδεσή σας στο Διαδίκτυο για να αποφύγει χρεώσεις SMS όταν επικοινωνείτε με άλλους
-        χρήστες OpenchatService. Για να χρησιμοποιήσετε αυτή τη λειτουργία παρακαλώ επιβεβαιώστε τον κωδικό χώρας και το νούμερό σας.
-    </string>
   <string name="registration_activity__your_country">Η ΧΩΡΑ ΣΑΣ</string>
   <string name="registration_activity__your_country_code_and_phone_number">Ο ΚΩΔΙΚΟΣ ΧΩΡΑΣ ΣΑΣ
 ΚΑΙ ΑΡΙΘΜΟΣ ΚΙΝΗΤΟΥ ΤΗΛΕΦΩΝΟΥ</string>
   <string name="registration_activity__phone_number">ΑΡΙΘΜΟΣ ΚΙΝΗΤΟΥ</string>
   <string name="registration_activity__register">Εγγραφή</string>
-  <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">Η εγγραφή θα μεταφέρει προσωρινά μερικά δεδομένα στον διακομιστή.</string>
   <string name="registration_activity__skip">Παράληψη</string>
   <string name="registration_problems__some_possible_problems_include">Μερικά ενδεχόμενα προβλήματα
 συμπεριλαμβάνουν:

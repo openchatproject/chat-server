@@ -90,13 +90,8 @@ Enviado: %3$s
 Recibido:%4$s</string>
   <string name="ConversationFragment_confirm_message_delete">Confirmar borrado de mensaje</string>
   <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">¿Está seguro que desea borrar permanentemente este mensaje?</string>
-  <string name="ConversationFragment_save_to_sd_card">¿Guardar en la tarjeta SD?</string>
-  <string name="ConversationFragment_this_media_has_been_stored_in_an_encrypted_database_warning">Este archivo ha sido guardado en una base de datos cifrada. La versión que usted guardará en la tarjeta SD ya no estará cifrada. ¿Desea continuar?</string>
-  <string name="ConversationFragment_error_while_saving_attachment_to_sd_card">Error al guardar el archivo adjunto en la tarjeta SD</string>
   <string name="ConversationFragment_success_exclamation">¡Completado!</string>
-  <string name="ConversationFragment_unable_to_write_to_sd_card_exclamation">¡No se pudo escribir en la tarjeta SD!</string>
   <string name="ConversationFragment_saving_attachment">Guardando adjunto</string>
-  <string name="ConversationFragment_saving_attachment_to_sd_card">Guardando el archivo adjunto a la tarjeta SD</string>
   <string name="ConversationListAdapter_key_exchange_message">Mensaje de intercambio de claves...</string>
   <string name="ConversationListFragment_delete_threads_question">¿Borrar las conversaciones?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">¿Está seguro de que quiere borrar TODAS las conversaciones seleccionadas?</string>
@@ -425,17 +420,12 @@ Se recibió un mensaje con una clave de identidad desconocida. Haga clic para pr
   <string name="prompt_mms_activity__mms_proxy_host_optional">MMS PROXY HOST (OPCIONAL):</string>
   <string name="prompt_mms_activity__mms_proxy_port_optional">PUERTO PROXY MMS (OPCIONAL):</string>
   <string name="receive_key_activity__complete">Completo</string>
-  <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
-OpenchatService puede usar mensajes instantáneos para incrementar la privacidad y evitar cargos por SMS al comunicarse con otros
-usuarios de OpenchatService. Para habilitar esta característica, por favor verifique su código de país y número de teléfono.
-</string>
   <string name="registration_activity__your_country">SU PAÍS</string>
   <string name="registration_activity__your_country_code_and_phone_number">SU CÓDIGO DE PAÍS Y
 NÚMERO DE TELÉFONO
 </string>
   <string name="registration_activity__phone_number">NÚMERO DE TELÉFONO</string>
   <string name="registration_activity__register">Registro</string>
-  <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">El registro transmitirá temporalmente cierta información de contacto al servidor.</string>
   <string name="registration_activity__skip">Saltar</string>
   <string name="registration_problems__some_possible_problems_include">Algunos posibles problemas
 incluyen:

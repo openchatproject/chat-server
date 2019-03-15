@@ -82,13 +82,8 @@
   <string name="ConversationFragment_sender_s_transport_s_sent_s_received_s">الراسل: %1$s\nنقل: %2$s\nمرسل: %3$s\nوارد: %4$s</string>
   <string name="ConversationFragment_confirm_message_delete">تاكيد حذف الرسال</string>
   <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">هل أنت متأكد من حذف هذه الرسالة نهائياً؟</string>
-  <string name="ConversationFragment_save_to_sd_card">أحفظ في بطاقة الذاكرة الخارجية؟</string>
-  <string name="ConversationFragment_this_media_has_been_stored_in_an_encrypted_database_warning">تم حفظ هذه الوسائط بقاعدة بيانات مشفرة. النسخة التي تريد حفظها بكرت الذاكرة لن تكون مشفرة.هل تريد الاستمرار؟</string>
-  <string name="ConversationFragment_error_while_saving_attachment_to_sd_card">خطأ أثناء حفظ الاضافات على كرت الذاكرة!</string>
   <string name="ConversationFragment_success_exclamation">نجحت!</string>
-  <string name="ConversationFragment_unable_to_write_to_sd_card_exclamation">تعذر الكتابة على بطاقة الذاكرة الخارجية!</string>
   <string name="ConversationFragment_saving_attachment">حفظ المرفق</string>
-  <string name="ConversationFragment_saving_attachment_to_sd_card">حفظ الإضافة على كرت الذاكرة</string>
   <string name="ConversationListAdapter_key_exchange_message">رسالة تبادل المفاتيح</string>
   <string name="ConversationListFragment_delete_threads_question">حذف المحادثة؟</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">هل تريد حذف كل المحادثات المختارة نهائياَ؟</string>
@@ -368,13 +363,10 @@
   <string name="prompt_mms_activity__mms_proxy_host_optional">عنوان بروكسي مركز رسائل الوسائط المتعددة (اختياري):</string>
   <string name="prompt_mms_activity__mms_proxy_port_optional">منفذ بروكسي مركز رسائل الوسائط المتعددة (اختياري):</string>
   <string name="receive_key_activity__complete">انتهاء</string>
-  <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
-يمكن لتيكست سيكيور من استخدام التراسل اللحظي لزيادة الخصوصية وتجنب رسوم الرسائل النصية القصيرة أثناء الاتصال مع مستخدمين تيكست سيكيور آخرين. لتفعيل هذه الميزة يرجى التحقق من رمز دولتك ورقم الهاتف.</string>
   <string name="registration_activity__your_country">بلدك</string>
   <string name="registration_activity__your_country_code_and_phone_number">رمز دولتك ورقم هاتفك</string>
   <string name="registration_activity__phone_number">رقم الهاتف</string>
   <string name="registration_activity__register">سجل</string>
-  <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">عملية التسجيل ستقوم بنقل بعض بيانات الاتصال إلى الخادم مؤقتا.</string>
   <string name="registration_activity__skip">تجاهل</string>
   <string name="registration_problems__some_possible_problems_include">بعض المشاكل المحتملة
 وتشمل:</string>
@@ -397,8 +389,7 @@ OpenchatService لن يعمل مع أرقام Google Voice</string>
 تيكست سيكيور غير قادر على الاتصال بخدمة دفع الوصول إلى الرسائل.</string>
   <string name="registration_progress_activity__some_possible_problems_include">بعض المشاكل 
 المحتملة وتشمل:</string>
-  <string name="registration_progress_activity__no_network_connectivity">لا يوجد شبكة
-توصيل.</string>
+  <string name="registration_progress_activity__no_network_connectivity">لا يوجد شبكة اتصال.</string>
   <string name="registration_progress_activity__your_device_needs_network_connectivity">الجهاز في حاجة إلى اتصال شبكي من أجل استخدام هذه الميزة لتيكست سيكيور. تأكد من الاتصال ببيانات شبكة الجوال أو Wi-Fi.
 </string>
   <string name="registration_progress_activity__restrictive_firewall">جدار حماية مقيَد.</string>

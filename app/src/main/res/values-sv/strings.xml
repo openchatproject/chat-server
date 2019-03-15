@@ -32,6 +32,7 @@ Det här kommer slå av pushmeddelanden genom att avregistrera dig från servern
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Tryck för att ändra din standardapp för SMS</string>
   <string name="ApplicationPreferencesActivity_sms_disabled">Inkommande SMS avslaget</string>
   <string name="ApplicationPreferencesActivity_touch_to_make_openchatservice_your_default_sms_app">Tryck för att göra OpenchatService till din standardapp för SMS</string>
+  <string name="AttachmentManager_cant_open_media_selection">Kan ej hitta app för att välja media.</string>
   <string name="AttachmentTypeSelectorAdapter_picture">Bild</string>
   <string name="AttachmentTypeSelectorAdapter_video">Video</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Ljud</string>
@@ -55,6 +56,7 @@ Det här kommer slå av pushmeddelanden genom att avregistrera dig från servern
   <string name="ConversationItem_click_to_approve_unencrypted_sms_dialog_title">Använd okrypterat SMS istället?</string>
   <string name="ConversationItem_click_to_approve_unencrypted_mms_dialog_title">Använd okrypterat MMS istället?</string>
   <string name="ConversationItem_click_to_approve_unencrypted_dialog_message">Det här meddelandet kommer <b>inte</b> bli krypterat eftersom en säker session inte kunde etableras.\n\nSkicka osäkert meddelande?</string>
+  <string name="ConversationItem_unable_to_open_media">Kan ej hitta app som kan öppna denna media.</string>
   <string name="ConversationActivity_initiate_secure_session_question">Påbörja säker session?</string>
   <string name="ConversationActivity_initiate_secure_session_with_s_question">Upprätta en säker förbindelse med %s?</string>
   <string name="ConversationActivity_abort_secure_session_confirmation">Bekräfta avslutning av säker session</string>
@@ -85,13 +87,13 @@ Det här kommer slå av pushmeddelanden genom att avregistrera dig från servern
   <string name="ConversationFragment_sender_s_transport_s_sent_s_received_s">Avsändare: %1$s\nTransport: %2$s\nSkickat: %3$s\nMottagits: %4$s</string>
   <string name="ConversationFragment_confirm_message_delete">Bekräfta borttagning av meddelande</string>
   <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">Är du säker på att du vill ta bort detta meddelande permanent?</string>
-  <string name="ConversationFragment_save_to_sd_card">Spara till minneskort?</string>
-  <string name="ConversationFragment_this_media_has_been_stored_in_an_encrypted_database_warning">Denna fil har lagrats i en krypterad databas. Versionen du sparar på SD-kortet kommer inte längre vara krypterad. Vill du fortsätta?</string>
-  <string name="ConversationFragment_error_while_saving_attachment_to_sd_card">Ett fel uppstod vid sparandet av bilagan till minneskortet!</string>
+  <string name="ConversationFragment_save_to_sd_card">Spara till lagring?</string>
+  <string name="ConversationFragment_this_media_has_been_stored_in_an_encrypted_database_warning">Att spara denna media till lagring kommer tillåta andra appar på din telefon att få tillgång.\n\nFortsätt?</string>
+  <string name="ConversationFragment_error_while_saving_attachment_to_sd_card">Det blev ett fel när bifogad fil skulle sparas till lagring!</string>
   <string name="ConversationFragment_success_exclamation">Klart!</string>
-  <string name="ConversationFragment_unable_to_write_to_sd_card_exclamation">Kunde inte skriva till minneskort!</string>
+  <string name="ConversationFragment_unable_to_write_to_sd_card_exclamation">Kan inte skriva till lagring!</string>
   <string name="ConversationFragment_saving_attachment">Sparar bilaga</string>
-  <string name="ConversationFragment_saving_attachment_to_sd_card">Sparar bilaga till minneskort ...</string>
+  <string name="ConversationFragment_saving_attachment_to_sd_card">Sparar bifogad fil till lagring...</string>
   <string name="ConversationListAdapter_key_exchange_message">Meddelande för nyckelutbyte ...</string>
   <string name="ConversationListFragment_delete_threads_question">Radera trådar?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Är du säker på att du vill radera ALLA markerade konversationstrådar?</string>
@@ -384,8 +386,8 @@ från systemets standardapp för meddelanden.</string>
   <string name="prompt_mms_activity__mms_proxy_port_optional">MMS PROXY PORT (VALFRITT):</string>
   <string name="receive_key_activity__complete">Klart</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
-OpenchatService kan använda direktmeddelanden för starkare sekretess och för att undvika SMS-kostnader vid kommunikation med andra OpenchatService-användare.
-För att aktivera denna funktion, vänligen verifiera din landskod och telefonnummer.</string>
+        Att regisrera sig är gratis och ökar integriteten när du chattar med andra OpenchatService användare. Var vänlig verifiera ditt telefonnummer.
+    </string>
   <string name="registration_activity__your_country">DITT LAND</string>
   <string name="registration_activity__your_country_code_and_phone_number">DIN LANDSKOD OCH 
 TELEFONNUMMER</string>
@@ -455,6 +457,7 @@ OpenchatService uppnådde tidsgränsen för sms-verifiering.</string>
   <string name="AndroidManifest__manage_identity_keys">Hantera identitetsnycklar</string>
   <string name="AndroidManifest__complete_key_exchange">Slutför nyckelutbyte</string>
   <string name="AndroidManifest__log_submit">Skicka in loggarna</string>
+  <string name="AndroidManifest__media_preview">Förhandsvisning av media</string>
   <string name="arrays__import_export">Importera / exportera</string>
   <string name="arrays__my_identity_key">Min identitetsnyckel</string>
   <string name="preferences__general">Allmänt</string>
@@ -607,4 +610,7 @@ Utöka sekretessen och undvik SMS-kostnader genom att använda datakanalen för 
   <string name="reminder_header_sms_import_text">OpenchatService kan kopiera din telefons SMS-meddelanden till sin krypterade databas.</string>
   <string name="reminder_header_push_title">Aktivera OpenchatService-meddelanden?</string>
   <string name="reminder_header_push_text">Omedelbar leverans, starkare sekretess och inga SMS-avgifter.</string>
+  <string name="MediaPreviewActivity_you">Du</string>
+  <string name="media_preview__save_title">Spara</string>
+  <string name="media_preview_activity__image_content_description">Förhandsvisning av bild</string>
 </resources>

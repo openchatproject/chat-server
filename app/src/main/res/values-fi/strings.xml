@@ -80,13 +80,8 @@ Käyttääksenne push-palvelua tulevaisuudessa teidän täytyy rekisteröityä u
   <string name="ConversationFragment_message_details">Viestin tiedot</string>
   <string name="ConversationFragment_confirm_message_delete">Viestin poiston varmistus</string>
   <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">Haluatteko varmasti poistaa tämän viestin pysyvästi?</string>
-  <string name="ConversationFragment_save_to_sd_card">Tallenna SD-muistikortille?</string>
-  <string name="ConversationFragment_this_media_has_been_stored_in_an_encrypted_database_warning">Valittu media on tallennettuna salattuun tietokantaan. Olette tallentamassa sitä SD-muistikortille salaamattomana. Haluatteko varmasti jatkaa?</string>
-  <string name="ConversationFragment_error_while_saving_attachment_to_sd_card">Virhe SD-muistikorttiin tallennuksessa!</string>
   <string name="ConversationFragment_success_exclamation">Onnistuimme!</string>
-  <string name="ConversationFragment_unable_to_write_to_sd_card_exclamation">SD-muistikortille kirjoittaminen ei onnistunut!</string>
   <string name="ConversationFragment_saving_attachment">Liitettä tallennetaan</string>
-  <string name="ConversationFragment_saving_attachment_to_sd_card">Liitettä tallennetaan SD-muistikortille...</string>
   <string name="ConversationListAdapter_key_exchange_message">Avainvaihtoviesti...</string>
   <string name="ConversationListFragment_delete_threads_question">Poista viestiketjut?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Haluatteko varmasti poistaa KAIKKI valitut viestiketjut?</string>
@@ -373,15 +368,11 @@ Tuo salaamaton varmuuskopiotiedosto. Yhteensopiva \"SMS Backup And Restore\":lla
   <string name="prompt_mms_activity__mms_proxy_host_optional">MMS-välityspalvelimen osoite (valinnainen)</string>
   <string name="prompt_mms_activity__mms_proxy_port_optional">MMS-välityspalvelimen portti (valinnainen)</string>
   <string name="receive_key_activity__complete">Valmis</string>
-  <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
-OpenchatService voi käyttää pikaviestejä yksityisyyden kasvattamiseksi ja tekstiviestilaskujen välttämiseksi
-muiden OpenchatServicen käyttäjien kanssa keskusteltaessa. Ottaaksesi tämän toiminnon käyttöön, olkaa hyvä ja varmistakaa suunta- ja puhelinnumeronne.</string>
   <string name="registration_activity__your_country">MAA</string>
   <string name="registration_activity__your_country_code_and_phone_number">SUUNTA- JA
 PUHELINNUMEROSI</string>
   <string name="registration_activity__phone_number">PUHELINNUMERO</string>
   <string name="registration_activity__register">Rekisteröidy</string>
-  <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">Rekisteröityminen tulee siirtämään joitain hajakoodattuja yhteystietoja palvelimelle väliaikaisesti.</string>
   <string name="registration_activity__skip">Ohita</string>
   <string name="registration_problems__some_possible_problems_include">Mahdollisiin ongelmiin
 sisältyvät:</string>

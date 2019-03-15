@@ -43,10 +43,7 @@
   <string name="ConversationActivity_this_device_does_not_appear_to_support_dial_actions">נראה כי מכשיר זה אינו תומך בפעולות חיוג.</string>
   <string name="ConversationFragment_message_details">פרטי הודעה</string>
   <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">אתה בטוח שאתה רוצה למחוק את ההודעה הזו לתמיד?</string>
-  <string name="ConversationFragment_this_media_has_been_stored_in_an_encrypted_database_warning">המדיה הזאת אוחסנה בבסיס נתונים מוצפן. הגרסה שתשמור בכרטיס ה-SD לא תהיה מוצפנת יותר. אתה בטוח שברצונך להמשיך?</string>
-  <string name="ConversationFragment_error_while_saving_attachment_to_sd_card">שגיאה בשמירת הקובץ המצורף בכרטיס ה-SD!</string>
   <string name="ConversationFragment_success_exclamation">הצליח!</string>
-  <string name="ConversationFragment_saving_attachment_to_sd_card">שומר את הקובץ המצורף בכרטיס ה-SD...</string>
   <string name="ConversationListAdapter_key_exchange_message">הודעת החלפת מפתח...</string>
   <string name="ConversationListFragment_delete_threads_question">למחוק שרשורים?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">אתה בטוח שאתה רוצה למחוק את השרשורים של כל השיחות שנבחרו?</string>

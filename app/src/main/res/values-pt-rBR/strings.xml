@@ -34,6 +34,7 @@
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Toque para mudar seu app padrão de SMS</string>
   <string name="ApplicationPreferencesActivity_sms_disabled">Recebimento de SMS desabilitado</string>
   <string name="ApplicationPreferencesActivity_touch_to_make_openchatservice_your_default_sms_app">Toque para tornar o OpenchatService o seu app padrão de SMS</string>
+  <string name="AttachmentManager_cant_open_media_selection">Não localizei um aplicativo para selecionar o arquivo.</string>
   <string name="AttachmentTypeSelectorAdapter_picture">Imagem</string>
   <string name="AttachmentTypeSelectorAdapter_video">Vídeo</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Áudio</string>
@@ -58,6 +59,7 @@ Tem certeza que deseja fazer isto?</string>
   <string name="ConversationItem_click_to_approve_unencrypted_sms_dialog_title">Contingenciar para SMS não criptografado?</string>
   <string name="ConversationItem_click_to_approve_unencrypted_mms_dialog_title">Contingenciar para MMS não criptografado?</string>
   <string name="ConversationItem_click_to_approve_unencrypted_dialog_message">Esta mensagem <b>não</b> será criptografada pois não foi possível estabelecer uma sessão segura.\n\nEnviar mensagem insegura?</string>
+  <string name="ConversationItem_unable_to_open_media">Não localizei um aplicativo para abrir o arquivo.</string>
   <string name="ConversationActivity_initiate_secure_session_question">Iniciar sessão segura?</string>
   <string name="ConversationActivity_initiate_secure_session_with_s_question">Iniciar sessão segura com %s?</string>
   <string name="ConversationActivity_abort_secure_session_confirmation">Confirmação de término de sessão segura</string>
@@ -89,8 +91,8 @@ Tem certeza que deseja fazer isto?</string>
   <string name="ConversationFragment_confirm_message_delete">Confirmação de exclusão de mensagem</string>
   <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">Tem certeza que deseja apagar permanentemente esta mensagem?</string>
   <string name="ConversationFragment_save_to_sd_card">Salvar no cartão SD?</string>
-  <string name="ConversationFragment_this_media_has_been_stored_in_an_encrypted_database_warning">Este arquivo foi armazenado em uma base de dados criptografada. A versão salva no cartão SD não estará criptografada. Deseja continuar?</string>
-  <string name="ConversationFragment_error_while_saving_attachment_to_sd_card">Erro a gravar anexo para o cartão SD...</string>
+  <string name="ConversationFragment_this_media_has_been_stored_in_an_encrypted_database_warning">Salvando esta mídia no armazenamento permitirá que quaisquer outros aplicativos em seu telefone possam acessá-la.\n\nContinuar?</string>
+  <string name="ConversationFragment_error_while_saving_attachment_to_sd_card">Erro a gravar anexo para o cartão SD!</string>
   <string name="ConversationFragment_success_exclamation">Sucesso!</string>
   <string name="ConversationFragment_unable_to_write_to_sd_card_exclamation">Não foi possível escrever no cartão SD!</string>
   <string name="ConversationFragment_saving_attachment">Salvando anexo</string>
@@ -426,17 +428,14 @@ Tem certeza que deseja fazer isto?</string>
   <string name="prompt_mms_activity__mms_proxy_host_optional">PROXY MMS (OPCIONAL):</string>
   <string name="prompt_mms_activity__mms_proxy_port_optional">PORTA DO PROXY MMS (OPCIONAL):</string>
   <string name="receive_key_activity__complete">Concluído</string>
-  <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
-        O OpenchatService pode usar mensagens instantâneas para aumentar a privacidade e evitar cobranças SMS ao comunicar-se
-        com outros usuários OpenchatService. Para habilitar esta funcionalidade, favor verificar seu código de país e número telefônico.
-    </string>
+  <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">O registo é gratuito e aumenta a privacidade quando você troca mensagens com outros usuários OpenchatService . Por favor, verifique seu número de telefone .</string>
   <string name="registration_activity__your_country">SEU PAÍS</string>
   <string name="registration_activity__your_country_code_and_phone_number">SEU CÓDIGO DE PAÍS E
         NÚMERO TELEFÔNICO
     </string>
   <string name="registration_activity__phone_number">NÚMERO TELEFÔNICO</string>
   <string name="registration_activity__register">Cadastrar</string>
-  <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">O registro irá transmitir algumas informações de contato com o servidor temporariamente.</string>
+  <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">O registro irá transmitir algumas informações de contato para o servidor. Elas não serão gravadas.</string>
   <string name="registration_activity__skip">Pular</string>
   <string name="registration_problems__some_possible_problems_include">Alguns problemas possíveis
         incluem:
@@ -519,6 +518,7 @@ falhou.</string>
   <string name="AndroidManifest__manage_identity_keys">Gerenciar chaves de identidade</string>
   <string name="AndroidManifest__complete_key_exchange">Completar troca de chaves</string>
   <string name="AndroidManifest__log_submit">Enviar logs de depuração</string>
+  <string name="AndroidManifest__media_preview">Visualização rápida</string>
   <string name="arrays__import_export">Importar / exportar</string>
   <string name="arrays__my_identity_key">Minha chave de identidade</string>
   <string name="preferences__general">Geral</string>
@@ -672,4 +672,7 @@ falhou.</string>
   <string name="reminder_header_sms_import_text">O OpenchatService pode copiar as mensagens SMS do seu dispositivo para a base de dados criptografada do OpenchatService.</string>
   <string name="reminder_header_push_title">Habilitar mensagens OpenchatService?</string>
   <string name="reminder_header_push_text">Entrega imediata, maior privacidade e sem despesas de SMS.</string>
+  <string name="MediaPreviewActivity_you">Você</string>
+  <string name="media_preview__save_title">Salvar</string>
+  <string name="media_preview_activity__image_content_description">Visualização rápida.</string>
 </resources>

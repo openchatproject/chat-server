@@ -83,13 +83,8 @@ Du må registrere telefonnummeret ditt på nytt dersom du ønsker å benytte \'p
   <string name="ConversationFragment_sender_s_transport_s_sent_s_received_s">Avsender: %1$s\nTransport: %2$s\nSendt: %3$s\nMottatt:%4$s</string>
   <string name="ConversationFragment_confirm_message_delete">Bekreft sletting av melding</string>
   <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">Er du sikker på at du ønsker å slette denne meldingen?</string>
-  <string name="ConversationFragment_save_to_sd_card">Lagre til SD-kort?</string>
-  <string name="ConversationFragment_this_media_has_been_stored_in_an_encrypted_database_warning">Dette mediet har blitt lagret i en kryptert database. Versjonen du lagrer på SD-kortet vil ikke lenger være kryptert. Vil du fortsette?</string>
-  <string name="ConversationFragment_error_while_saving_attachment_to_sd_card">Kunne ikke lagre vedlegg til SD-kort!</string>
   <string name="ConversationFragment_success_exclamation">Suksess!</string>
-  <string name="ConversationFragment_unable_to_write_to_sd_card_exclamation">Kunne ikke skrive til SD-kort!</string>
   <string name="ConversationFragment_saving_attachment">Lagrer vedlegg</string>
-  <string name="ConversationFragment_saving_attachment_to_sd_card">Lagrer vedlegg til SD-kort...</string>
   <string name="ConversationListAdapter_key_exchange_message">Nøkkelutvekslingsmelding...</string>
   <string name="ConversationListFragment_delete_threads_question">Slette trådene?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Er du sikker på at du vil slette ALLE valgte samtaletråder?</string>
@@ -376,14 +371,11 @@ Importer en klartekst backup kompatibel med \'SMSBackup And Restore\'.</string>
   <string name="prompt_mms_activity__mms_proxy_host_optional">MMS PROXY VERT (IKKE PÅKREVD):</string>
   <string name="prompt_mms_activity__mms_proxy_port_optional">MMS PROXY PORT (IKKE PÅKREVD):</string>
   <string name="receive_key_activity__complete">Complete</string>
-  <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
-OpenchatService can benytte lynmeldinger for å øke personvernet ditt og unngå SMS kostnader når du kommuniserer med andre OpenchatService brukere. For å aktivere denne funksjonen, vær vennlig å verifisere telefonnummeret og landskoden din.</string>
   <string name="registration_activity__your_country">DITT LAND</string>
   <string name="registration_activity__your_country_code_and_phone_number">DIN LANDSKODE OG
 TELEFONNUMMER</string>
   <string name="registration_activity__phone_number">TELEFONNUMMER</string>
   <string name="registration_activity__register">Registrer</string>
-  <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">Registreringen vil midlertidig overføre noe kontaktinformasjon til serveren.</string>
   <string name="registration_activity__skip">Hopp over</string>
   <string name="registration_problems__some_possible_problems_include">Noen mulige problemer
 inkluderer:</string>

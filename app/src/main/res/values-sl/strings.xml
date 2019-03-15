@@ -82,13 +82,8 @@ Za ponovno uporabo potisnih sporočil se boste morali zopet prijaviti s svojo te
   <string name="ConversationFragment_sender_s_transport_s_sent_s_received_s">Pošiljatelj: %1$s\nNačin prenosa: %2$s\nPoslano: %3$s\nPrejeto: %4$s</string>
   <string name="ConversationFragment_confirm_message_delete">Potrdite izbris sporočila</string>
   <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">Ste prepričani, da želite dokonćno izbrisati sporočilo?</string>
-  <string name="ConversationFragment_save_to_sd_card">Shranim na kartico SD?</string>
-  <string name="ConversationFragment_this_media_has_been_stored_in_an_encrypted_database_warning">Datoteka, ki jo želite odpreti, je shranjena v šifrirani zbirki. Različica, ki jo boste shranili na kartico SD ne bo več šifrirana. Želite nadaljevati?</string>
-  <string name="ConversationFragment_error_while_saving_attachment_to_sd_card">Napaka pri shranjevanju priponke na kartico SD!</string>
   <string name="ConversationFragment_success_exclamation">Uspešno opravljeno!</string>
-  <string name="ConversationFragment_unable_to_write_to_sd_card_exclamation">Ne morem pisati na kartico SD!</string>
   <string name="ConversationFragment_saving_attachment">Shranjujem priponko</string>
-  <string name="ConversationFragment_saving_attachment_to_sd_card">Shranjujem priponko na kartico SD...</string>
   <string name="ConversationListAdapter_key_exchange_message">Sporočilo za izmenjavo ključev...</string>
   <string name="ConversationListFragment_delete_threads_question">Izbris pogovorov?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Ste prepričani, da želite izbrisati VSE izbrane pogovore?</string>
@@ -364,15 +359,11 @@ Prejeto sporočilo z neznanim identifikacijskim ključem. Kliknite za obdelavo i
   <string name="prompt_mms_activity__mms_proxy_host_optional">GOSTITELJ POSRED. STREŽNIKA MMS (IZBIRNO):</string>
   <string name="prompt_mms_activity__mms_proxy_port_optional">VRATA POSRED. STREŽNIKA MMS (IZBIRNO):</string>
   <string name="receive_key_activity__complete">Dokončaj</string>
-  <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
-Za večjo zasebnost in v izogib stroškom SMS sporočil lahko OpenchatService pri komunikaciji z drugimi uporabniki aplikacije
-uporablja potisna sporočila. Za aktivacijo te funkcije preverite kodo vaše države in telefonsko številko.</string>
   <string name="registration_activity__your_country">VAŠA DRŽAVA</string>
   <string name="registration_activity__your_country_code_and_phone_number">KODA DRŽAVE IN VAŠA
 TELEFONSKA ŠTEVILKA</string>
   <string name="registration_activity__phone_number">TELEFONSKA ŠTEVILKA</string>
   <string name="registration_activity__register">Registriraj</string>
-  <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">Med registracijo bo nekaj podatkov o stikih začasno posredovano na strežnik.</string>
   <string name="registration_activity__skip">Preskoči</string>
   <string name="registration_problems__some_possible_problems_include">Nekatere možni razlogi
 za težave:</string>

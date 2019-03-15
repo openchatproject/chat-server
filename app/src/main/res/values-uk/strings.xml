@@ -51,10 +51,7 @@
   <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">Ви дійсно хочете покинути цю групу?</string>
   <string name="ConversationFragment_message_details">Деталі повідомлення</string>
   <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">Ви дійсно хочете назавжди вилучити це повідомлення?</string>
-  <string name="ConversationFragment_this_media_has_been_stored_in_an_encrypted_database_warning">Цей медіа-файл зберігається в зашифрованій базі даних. Його копія, яку ви збережете на SD-картку, не буде зашифрована. Бажаєте продовжити?</string>
-  <string name="ConversationFragment_error_while_saving_attachment_to_sd_card">Сталась помилка підчас збереження прикріплення на SD-карту!</string>
   <string name="ConversationFragment_success_exclamation">Успішно!</string>
-  <string name="ConversationFragment_saving_attachment_to_sd_card">Збереження прикріплення на SD-карту\u2026</string>
   <string name="ConversationListAdapter_key_exchange_message">Повідомлення обміну ключами\u2026</string>
   <string name="ConversationListFragment_delete_threads_question">Видалити розмови?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Ви впевнені, що хочете видалити ВСІ вибрані розмови?</string>

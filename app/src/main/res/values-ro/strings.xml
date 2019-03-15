@@ -78,13 +78,8 @@ Atenție, acestă acțiune va dezactiva stocarea criptată a tuturor mesajelor �
   <string name="ConversationFragment_sender_s_transport_s_sent_s_received_s">Expeditor: %1$s\nTransport: %2$s\nTrimis: %3$s\nPrimit: %4$s</string>
   <string name="ConversationFragment_confirm_message_delete">Confirmă ştergerea mesajului</string>
   <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">Eşti sigur că doreşti să ştergi permanent acest mesaj?</string>
-  <string name="ConversationFragment_save_to_sd_card">Salvez pe SD Card?</string>
-  <string name="ConversationFragment_this_media_has_been_stored_in_an_encrypted_database_warning">Aceste date au fost stocate într-o baza de date criptată. Versiunea pe care o salvezi pe SD card nu va mai fi criptată. Dorești să continui?</string>
-  <string name="ConversationFragment_error_while_saving_attachment_to_sd_card">A apărut o eroare în timpul salvării pe SD card!</string>
   <string name="ConversationFragment_success_exclamation">Succes!</string>
-  <string name="ConversationFragment_unable_to_write_to_sd_card_exclamation">Nu pot scrie pe SD Card!</string>
   <string name="ConversationFragment_saving_attachment">Ataşamentul se salvează</string>
-  <string name="ConversationFragment_saving_attachment_to_sd_card">Atasamentul se salveaza pe SD card...</string>
   <string name="ConversationListAdapter_key_exchange_message">Mesaj pentru schimb de chei...</string>
   <string name="ConversationListFragment_delete_threads_question">Şterg conversaţiile?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Eşti sigur că doreşti ştergerea TUTUROR conversaţiilor selectate?</string>
@@ -365,15 +360,11 @@ Importă un fișier de backup text. Compatibil cu \'SMSBackup And Restore.\'</st
   <string name="prompt_mms_activity__mms_proxy_host_optional">GAZDĂ PROXY MMS (OPŢIONAL):</string>
   <string name="prompt_mms_activity__mms_proxy_port_optional">PORT PROXY MMS (OPŢIONAL):</string>
   <string name="receive_key_activity__complete">Complet</string>
-  <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
-OpenchatService poate utiliza mesageria instant pentru a proteja intimitatea și pentru a evita costurile asociate cu SMS-urile atunci când comunică
-cu alți utilizatori OpenchatService. Pentru a activa această opțiune, vă rugăm să verificați codul de țară și numărul de telefon.</string>
   <string name="registration_activity__your_country">TARA DVS.</string>
   <string name="registration_activity__your_country_code_and_phone_number">CODUL ŢĂRII DVS. ŞI 
 NUMĂRUL DE TELEFON</string>
   <string name="registration_activity__phone_number">NUMĂRUL DE TELEFON</string>
   <string name="registration_activity__register">Inregistrare</string>
-  <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">Operațiunea de înregistrare va transmite temporar unele informații de contact către serverul.</string>
   <string name="registration_activity__skip">Treci peste</string>
   <string name="registration_problems__some_possible_problems_include">Unele probleme posibile
 sunt:</string>
