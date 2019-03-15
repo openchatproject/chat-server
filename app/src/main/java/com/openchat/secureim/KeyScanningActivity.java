@@ -7,13 +7,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 import com.openchat.secureim.util.Base64;
-import com.openchat.protocal.IdentityKey;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.DynamicTheme;
-
-import com.openchat.imservice.zxing.integration.IntentIntegrator;
-import com.openchat.imservice.zxing.integration.IntentResult;
+import com.openchat.protocal.IdentityKey;
 
 public abstract class KeyScanningActivity extends PassphraseRequiredActionBarActivity {
 
@@ -78,11 +78,13 @@ public abstract class KeyScanningActivity extends PassphraseRequiredActionBarAct
   }
 
   protected void initiateScan() {
-    IntentIntegrator.initiateScan(this);
+    IntentIntegrator intentIntegrator = new IntentIntegrator(this);
+    intentIntegrator.initiateScan();
   }
 
   protected void initiateDisplay() {
-    IntentIntegrator.shareText(this, Base64.encodeBytes(getIdentityKeyToDisplay().serialize()));
+    IntentIntegrator intentIntegrator = new IntentIntegrator(this);
+    intentIntegrator.shareText(Base64.encodeBytes(getIdentityKeyToDisplay().serialize()));
   }
 
   protected abstract String getScanString();
