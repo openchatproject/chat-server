@@ -4,8 +4,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
+import android.view.KeyEvent;
 
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.service.KeyCachingService;
@@ -48,4 +50,21 @@ public abstract class PassphraseActivity extends ActionBarActivity {
         keyCachingService = null;
       }
   };
+
+  @Override
+  public boolean onKeyDown(int keyCode, KeyEvent event) {
+    if (keyCode == KeyEvent.KEYCODE_MENU && "LGE".equalsIgnoreCase(Build.BRAND)) {
+      return true;
+    }
+    return super.onKeyDown(keyCode, event);
+  }
+
+  @Override
+  public boolean onKeyUp(int keyCode, KeyEvent event) {
+    if (keyCode == KeyEvent.KEYCODE_MENU && "LGE".equalsIgnoreCase(Build.BRAND)) {
+      openOptionsMenu();
+      return true;
+    }
+    return super.onKeyUp(keyCode, event);
+  }
 }
