@@ -46,8 +46,6 @@ public class GcmRefreshJob extends ContextJob {
 
       if (result != ConnectionResult.SUCCESS) {
         notifyGcmFailure();
-        accountManager.setGcmId(Optional.<String>absent());
-        OpenchatServicePreferences.setPushRegistered(context, false);
       } else {
         String gcmId = GoogleCloudMessaging.getInstance(context).register(REGISTRATION_ID);
         accountManager.setGcmId(Optional.of(gcmId));
@@ -78,6 +76,7 @@ public class GcmRefreshJob extends ContextJob {
     builder.setContentTitle(context.getString(R.string.GcmRefreshJob_Permanent_OpenchatService_communication_failure));
     builder.setContentText(context.getString(R.string.GcmRefreshJob_OpenchatService_was_unable_to_register_with_Google_Play_Services));
     builder.setTicker(context.getString(R.string.GcmRefreshJob_Permanent_OpenchatService_communication_failure));
+    builder.setVibrate(new long[] {0, 1000});
     builder.setContentIntent(pendingIntent);
 
     ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE))
