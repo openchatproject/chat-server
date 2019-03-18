@@ -15,16 +15,25 @@
 
     <style name="OpenchatService.DarkActionBar"
            parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:icon">@drawable/actionbar_icon_holo_dark</item>
+        <item name="icon">@drawable/actionbar_icon_holo_dark</item>
         <item name="background">@color/gray95</item>
-        <item name="elevation">2dp</item>
+        <item name="android:logo">@drawable/actionbar_icon_holo_dark</item>
         <item name="logo">@drawable/actionbar_icon_holo_dark</item>
     </style>
 
     <style name="OpenchatService.LightActionBar"
            parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:icon">@drawable/actionbar_icon_holo_light</item>
+        <item name="icon">@drawable/actionbar_icon_holo_light</item>
+        <item name="android:background">@color/gray5</item>
         <item name="background">@color/gray5</item>
-        <item name="elevation">2dp</item>
+        <item name="android:logo">@drawable/actionbar_icon_holo_light</item>
         <item name="logo">@drawable/actionbar_icon_holo_light</item>
+        <item name="android:titleTextStyle">@style/OpenchatService.TitleTextStyle</item>
+        <item name="titleTextStyle">@style/OpenchatService.TitleTextStyle</item>
+        <item name="android:subtitleTextStyle">@style/OpenchatService.SubtitleTextStyle</item>
+        <item name="subtitleTextStyle">@style/OpenchatService.SubtitleTextStyle</item>
     </style>
 
     <style name="OpenchatService.ClearTitleTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
@@ -42,7 +51,8 @@
 
     <style name="OpenchatService.IntroActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid">
         <item name="background">@drawable/background_pattern_repeat</item>
-        <item name="elevation">0dp</item>
+        <item name="titleTextStyle">@style/OpenchatService.ClearTitleTextStyle</item>
+        <item name="icon">@android:color/transparent</item>
     </style>
 
 	<style name="transparent_progress">
