@@ -11,8 +11,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
+import com.openchat.secureim.ApplicationContext;
 import com.openchat.secureim.database.model.DisplayRecord;
 import com.openchat.secureim.database.model.SmsMessageRecord;
+import com.openchat.secureim.jobs.TrimThreadJob;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
@@ -21,7 +23,7 @@ import com.openchat.secureim.sms.IncomingGroupMessage;
 import com.openchat.secureim.sms.IncomingKeyExchangeMessage;
 import com.openchat.secureim.sms.IncomingTextMessage;
 import com.openchat.secureim.sms.OutgoingTextMessage;
-import com.openchat.secureim.util.Trimmer;
+import com.openchat.jobqueue.JobManager;
 import com.openchat.imservice.api.util.InvalidNumberException;
 
 import java.util.Set;
@@ -64,8 +66,11 @@ public class SmsDatabase extends Database implements MmsSmsColumns {
       REPLY_PATH_PRESENT, SUBJECT, BODY, SERVICE_CENTER, RECEIPT_COUNT
   };
 
+  private final JobManager jobManager;
+
   public SmsDatabase(Context context, SQLiteOpenHelper databaseHelper) {
     super(context, databaseHelper);
+    this.jobManager = ApplicationContext.getInstance(context).getJobManager();
   }
 
   private void updateTypeBitmask(long id, long maskOff, long maskOn) {
@@ -307,7 +312,8 @@ public class SmsDatabase extends Database implements MmsSmsColumns {
 
     DatabaseFactory.getThreadDatabase(context).update(record.getThreadId());
     notifyConversationListeners(record.getThreadId());
-    Trimmer.trimThread(context, record.getThreadId());
+
+    jobManager.add(new TrimThreadJob(context, record.getThreadId()));
     reader.close();
     
     return new Pair<>(newMessageId, record.getThreadId());
@@ -393,9 +399,9 @@ public class SmsDatabase extends Database implements MmsSmsColumns {
 
     DatabaseFactory.getThreadDatabase(context).update(threadId);
     notifyConversationListeners(threadId);
-    Trimmer.trimThread(context, threadId);
+    jobManager.add(new TrimThreadJob(context, threadId));
 
-    return new Pair<Long, Long>(messageId, threadId);
+    return new Pair<>(messageId, threadId);
   }
 
   public Pair<Long, Long> insertMessageInbox(IncomingTextMessage message) {
@@ -426,7 +432,7 @@ public class SmsDatabase extends Database implements MmsSmsColumns {
 
     DatabaseFactory.getThreadDatabase(context).update(threadId);
     notifyConversationListeners(threadId);
-    Trimmer.trimThread(context, threadId);
+    jobManager.add(new TrimThreadJob(context, threadId));
 
     return messageId;
   }

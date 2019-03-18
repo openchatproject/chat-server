@@ -13,6 +13,7 @@ import android.util.Pair;
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 
+import com.openchat.secureim.ApplicationContext;
 import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.MasterCipher;
 import com.openchat.secureim.crypto.MasterSecret;
@@ -20,6 +21,7 @@ import com.openchat.secureim.database.model.DisplayRecord;
 import com.openchat.secureim.database.model.MediaMmsMessageRecord;
 import com.openchat.secureim.database.model.MessageRecord;
 import com.openchat.secureim.database.model.NotificationMmsMessageRecord;
+import com.openchat.secureim.jobs.TrimThreadJob;
 import com.openchat.secureim.mms.IncomingMediaMessage;
 import com.openchat.secureim.mms.OutgoingGroupMediaMessage;
 import com.openchat.secureim.mms.OutgoingMediaMessage;
@@ -36,6 +38,7 @@ import com.openchat.secureim.util.ListenableFutureTask;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Trimmer;
 import com.openchat.secureim.util.Util;
+import com.openchat.jobqueue.JobManager;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.util.InvalidNumberException;
@@ -133,8 +136,11 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
   private static final Map<Long, SoftReference<SlideDeck>> slideCache =
       Collections.synchronizedMap(new LRUCache<Long, SoftReference<SlideDeck>>(20));
 
+  private final JobManager jobManager;
+
   public MmsDatabase(Context context, SQLiteOpenHelper databaseHelper) {
     super(context, databaseHelper);
+    this.jobManager = ApplicationContext.getInstance(context).getJobManager();
   }
 
   public int getMessageCountForThread(long threadId) {
@@ -545,9 +551,9 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
 
     DatabaseFactory.getThreadDatabase(context).update(threadId);
     notifyConversationListeners(threadId);
-    Trimmer.trimThread(context, threadId);
+    jobManager.add(new TrimThreadJob(context, threadId));
 
-    return new Pair<Long, Long>(messageId, threadId);
+    return new Pair<>(messageId, threadId);
   }
 
   public Pair<Long, Long> insertMessageInbox(MasterSecret masterSecret,
@@ -618,7 +624,7 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
       DatabaseFactory.getThreadDatabase(context).setUnread(threadId);
     }
 
-    Trimmer.trimThread(context, threadId);
+    jobManager.add(new TrimThreadJob(context, threadId));
   }
 
   public long insertMessageOutbox(MasterSecret masterSecret, OutgoingMediaMessage message,
@@ -664,7 +670,7 @@ public class MmsDatabase extends Database implements MmsSmsColumns {
 
     long messageId = insertMediaMessage(masterSecret, sendRequest.getPduHeaders(),
                                         sendRequest.getBody(), contentValues);
-    Trimmer.trimThread(context, threadId);
+    jobManager.add(new TrimThreadJob(context, threadId));
 
     return messageId;
   }
