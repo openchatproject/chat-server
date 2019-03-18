@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -230,20 +228,4 @@ public class DatabaseUpgradeActivity extends Activity {
     }
   }
 
-  @Override
-  public boolean onKeyDown(int keyCode, KeyEvent event) {
-    if (keyCode == KeyEvent.KEYCODE_MENU && "LGE".equalsIgnoreCase(Build.BRAND)) {
-      return true;
-    }
-    return super.onKeyDown(keyCode, event);
-  }
-
-  @Override
-  public boolean onKeyUp(int keyCode, KeyEvent event) {
-    if (keyCode == KeyEvent.KEYCODE_MENU && "LGE".equalsIgnoreCase(Build.BRAND)) {
-      openOptionsMenu();
-      return true;
-    }
-    return super.onKeyUp(keyCode, event);
-  }
 }

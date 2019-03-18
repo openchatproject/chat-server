@@ -1,10 +1,8 @@
 package com.openchat.secureim;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.KeyEvent;
 
 import com.openchat.secureim.util.DynamicTheme;
 
@@ -27,22 +25,5 @@ public class CountrySelectionActivity extends FragmentActivity
 
     this.setResult(RESULT_OK, result);
     this.finish();
-  }
-
-  @Override
-  public boolean onKeyDown(int keyCode, KeyEvent event) {
-    if (keyCode == KeyEvent.KEYCODE_MENU && "LGE".equalsIgnoreCase(Build.BRAND)) {
-      return true;
-    }
-    return super.onKeyDown(keyCode, event);
-  }
-
-  @Override
-  public boolean onKeyUp(int keyCode, KeyEvent event) {
-    if (keyCode == KeyEvent.KEYCODE_MENU && "LGE".equalsIgnoreCase(Build.BRAND)) {
-      openOptionsMenu();
-      return true;
-    }
-    return super.onKeyUp(keyCode, event);
   }
 }
