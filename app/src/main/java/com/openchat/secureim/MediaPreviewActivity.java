@@ -51,14 +51,17 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity {
 
   @Override
   protected void onCreate(Bundle bundle) {
+    this.setTheme(R.style.OpenchatService_DarkTheme);
+    dynamicLanguage.onCreate(this);
+
+    super.onCreate(bundle);
     setFullscreenIfPossible();
     getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                          WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    dynamicLanguage.onCreate(this);
-    this.setTheme(R.style.OpenchatService_DarkTheme);
-    super.onCreate(bundle);
+
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     setContentView(R.layout.media_preview_activity);
+
     initializeResources();
   }
 
