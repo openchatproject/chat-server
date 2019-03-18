@@ -87,8 +87,13 @@ Trebat ćete ponovno registrirati vaš broj telefona kako biste koristili instan
   <string name="ConversationFragment_sender_s_transport_s_sent_s_received_s">Pošiljatelj: %1$s\nTransport: %2$s\nPoslano: %3$s\nPrimljeno: %4$s</string>
   <string name="ConversationFragment_confirm_message_delete">Potvrda brisanja poruke</string>
   <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">Jeste li sigurni da želite trajno obrisati ovu poruku?</string>
+  <string name="ConversationFragment_save_to_sd_card">Spremi na disk?</string>
+  <string name="ConversationFragment_this_media_has_been_stored_in_an_encrypted_database_warning">Spremanje ovog medija na disk će omogućiti pristup mediju iz drugih aplikacija na vašem telefonu.\n\nNastavi?</string>
+  <string name="ConversationFragment_error_while_saving_attachment_to_sd_card">Greška prilikom spremanja privitka na disk!</string>
   <string name="ConversationFragment_success_exclamation">Uspješno!</string>
+  <string name="ConversationFragment_unable_to_write_to_sd_card_exclamation">Nije moguće pisati na disk!</string>
   <string name="ConversationFragment_saving_attachment">Spremanje privitka</string>
+  <string name="ConversationFragment_saving_attachment_to_sd_card">Spremanje privitka na disk...</string>
   <string name="ConversationListAdapter_key_exchange_message">Poruka za razmjenu ključa...</string>
   <string name="ConversationListFragment_delete_threads_question">Obriši teme?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Jeste li sigurni da želite obrisati SVE odabrane teme?</string>
@@ -394,11 +399,14 @@ Uvezi nekriptiranu kopiju kompatibilnu s \'SMSBackup And Restore\'.</string>
   <string name="prompt_mms_activity__mms_proxy_host_optional">MMS PROXY HOST (NEOBAVEZNO):</string>
   <string name="prompt_mms_activity__mms_proxy_port_optional">MMS PROXY PORT (NEOBAVEZNO):</string>
   <string name="receive_key_activity__complete">Završeno</string>
+  <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
+Registracija je besplatna i povećava privatnost prilikom slanja poruka drugim OpenchatService korisnicima. Provjerite svoj broj telefona.</string>
   <string name="registration_activity__your_country">VAŠA ZEMLJA</string>
   <string name="registration_activity__your_country_code_and_phone_number">POZIVNI BROJ ZEMLJE I
 TELEFONSKI BROJ</string>
   <string name="registration_activity__phone_number">TELEFONSKI BROJ</string>
   <string name="registration_activity__register">Registriraj</string>
+  <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">Registracija šalje neke informacije o kontaktima na poslužitelj. Podaci se ne pohranjuju trajno.</string>
   <string name="registration_activity__skip">Preskoči</string>
   <string name="registration_problems__some_possible_problems_include">Neki mogući problemi
 uključuju:</string>
@@ -470,6 +478,7 @@ neuspješno.</string>
   <string name="AndroidManifest__manage_identity_keys">Upravljajte ključevima identiteta</string>
   <string name="AndroidManifest__complete_key_exchange">Završite razmjenu ključeva</string>
   <string name="AndroidManifest__log_submit">Pošaljite debug zapise</string>
+  <string name="AndroidManifest__media_preview">Prikaz medija</string>
   <string name="arrays__import_export">Uvoz / izvoz</string>
   <string name="arrays__my_identity_key">Moj ključ identiteta</string>
   <string name="preferences__general">Općenito</string>
@@ -622,4 +631,7 @@ Povećajte privatnost i izbjegnite SMS troškove koristeći podatkovni kanal za 
   <string name="reminder_header_sms_import_text">OpenchatService može kopirati SMS poruke sa vašeg telefona u svoju kodiranu bazu podataka.</string>
   <string name="reminder_header_push_title">Omogući OpenchatService poruke?</string>
   <string name="reminder_header_push_text">Instant isporuka, pojačana privatnost i bez SMS troškova.</string>
+  <string name="MediaPreviewActivity_you">Vi</string>
+  <string name="media_preview__save_title">Spremi</string>
+  <string name="media_preview_activity__image_content_description">Prikaz slike</string>
 </resources>
