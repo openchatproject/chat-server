@@ -155,6 +155,8 @@
     <string name="GroupCreateActivity_creating_group">Creating %1$s&#8230;</string>
     <string name="GroupCreateActivity_cannot_add_non_push_to_existing_group">Cannot add non-OpenchatService contacts to an existing OpenchatService group</string>
 
+    <string name="GroupMembersDialog_me">Me</string>
+
     <string name="ImportExportActivity_import">Import</string>
     <string name="ImportExportActivity_export">Export</string>
 
