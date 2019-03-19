@@ -16,6 +16,7 @@ import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.IdentityKeyUtil;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.PreKeyUtil;
+import com.openchat.secureim.jobs.GcmRefreshJob;
 import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.util.DirectoryHelper;
 import com.openchat.secureim.util.OpenchatServicePreferences;
@@ -218,7 +219,7 @@ public class RegistrationService extends Service {
 
     setState(new RegistrationState(RegistrationState.STATE_GCM_REGISTERING, number));
 
-    String gcmRegistrationId = GoogleCloudMessaging.getInstance(this).register("312334754206");
+    String gcmRegistrationId = GoogleCloudMessaging.getInstance(this).register(GcmRefreshJob.REGISTRATION_ID);
     OpenchatServicePreferences.setGcmRegistrationId(this, gcmRegistrationId);
     accountManager.setGcmId(Optional.of(gcmRegistrationId));
 
