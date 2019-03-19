@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.openchat.secureim.ApplicationContext;
+import com.openchat.secureim.jobs.DirectoryRefreshJob;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 
 public class DirectoryRefreshListener extends BroadcastReceiver {
@@ -40,9 +42,9 @@ public class DirectoryRefreshListener extends BroadcastReceiver {
 
     if (time <= System.currentTimeMillis()) {
       if (time != 0) {
-        Intent serviceIntent = new Intent(context, DirectoryRefreshService.class);
-        serviceIntent.setAction(DirectoryRefreshService.REFRESH_ACTION);
-        context.startService(serviceIntent);
+        ApplicationContext.getInstance(context)
+                          .getJobManager()
+                          .add(new DirectoryRefreshJob(context));
       }
 
       time = System.currentTimeMillis() + INTERVAL;

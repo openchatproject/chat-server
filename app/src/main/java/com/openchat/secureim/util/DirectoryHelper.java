@@ -13,16 +13,13 @@ import com.openchat.imservice.api.OpenchatServiceAccountManager;
 import com.openchat.imservice.api.push.ContactTokenDetails;
 import com.openchat.imservice.api.util.InvalidNumberException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class DirectoryHelper {
   private static final String TAG = DirectoryHelper.class.getSimpleName();
-
-  public static void refreshDirectoryWithProgressDialog(final Context context) {
-    refreshDirectoryWithProgressDialog(context, null);
-  }
 
   public static void refreshDirectoryWithProgressDialog(final Context context, final DirectoryUpdateFinishedListener listener) {
     if (!OpenchatServicePreferences.isPushRegistered(context)) {
@@ -38,7 +35,11 @@ public class DirectoryHelper {
     {
       @Override
       protected Void doInBackground(Void... voids) {
-        DirectoryHelper.refreshDirectory(context.getApplicationContext());
+        try {
+          DirectoryHelper.refreshDirectory(context.getApplicationContext());
+        } catch (IOException e) {
+          Log.w(TAG, e);
+        }
         return null;
       }
 
@@ -51,15 +52,19 @@ public class DirectoryHelper {
 
   }
 
-  public static void refreshDirectory(final Context context) {
+  public static void refreshDirectory(final Context context) throws IOException {
     refreshDirectory(context, OpenchatServiceCommunicationFactory.createManager(context));
   }
 
-  public static void refreshDirectory(final Context context, final OpenchatServiceAccountManager accountManager) {
+  public static void refreshDirectory(final Context context, final OpenchatServiceAccountManager accountManager)
+      throws IOException
+  {
     refreshDirectory(context, accountManager, OpenchatServicePreferences.getLocalNumber(context));
   }
 
-  public static void refreshDirectory(final Context context, final OpenchatServiceAccountManager accountManager, final String localNumber) {
+  public static void refreshDirectory(final Context context, final OpenchatServiceAccountManager accountManager, final String localNumber)
+      throws IOException
+  {
     OpenchatServiceDirectory       directory              = OpenchatServiceDirectory.getInstance(context);
     Set<String>               eligibleContactNumbers = directory.getPushEligibleContactNumbers(localNumber);
     Map<String, String>       tokenMap               = DirectoryUtil.getDirectoryServerTokenMap(eligibleContactNumbers);
