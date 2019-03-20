@@ -2,11 +2,11 @@ package com.openchat.secureim;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.CursorAdapter;
 
 import com.openchat.secureim.crypto.MasterCipher;
 import com.openchat.secureim.crypto.MasterSecret;
@@ -29,7 +29,7 @@ public class ConversationListAdapter extends CursorAdapter implements AbsListVie
   private       boolean   batchMode = false;
 
   public ConversationListAdapter(Context context, Cursor cursor, MasterSecret masterSecret) {
-    super(context, cursor);
+    super(context, cursor, 0);
 
     if (masterSecret != null) this.masterCipher = new MasterCipher(masterSecret);
     else                      this.masterCipher = null;
