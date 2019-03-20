@@ -64,11 +64,11 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
     SendReq     message  = database.getOutgoingMessage(masterSecret, messageId);
 
     try {
-      deliver(masterSecret, message);
-
-      database.markAsPush(messageId);
-      database.markAsSecure(messageId);
-      database.markAsSent(messageId, "push".getBytes(), 0);
+      if (deliver(masterSecret, message)) {
+        database.markAsPush(messageId);
+        database.markAsSecure(messageId);
+        database.markAsSent(messageId, "push".getBytes(), 0);
+      }
     } catch (InsecureFallbackApprovalException ifae) {
       Log.w(TAG, ifae);
       database.markAsPendingInsecureSmsFallback(messageId);
@@ -96,7 +96,7 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
     notifyMediaMessageDeliveryFailed(context, messageId);
   }
 
-  private void deliver(MasterSecret masterSecret, SendReq message)
+  private boolean deliver(MasterSecret masterSecret, SendReq message)
       throws RetryLaterException, SecureFallbackApprovalException,
              InsecureFallbackApprovalException, UntrustedIdentityException
   {
@@ -113,6 +113,7 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
       OpenchatServiceMessage          mediaMessage = new OpenchatServiceMessage(message.getSentTimestamp(), attachments, body);
 
       messageSender.sendMessage(address, mediaMessage);
+      return true;
     } catch (InvalidNumberException | UnregisteredUserException e) {
       Log.w(TAG, e);
       if (isSmsFallbackSupported) fallbackOrAskApproval(masterSecret, message, destination);
@@ -122,6 +123,7 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
       if (isSmsFallbackSupported) fallbackOrAskApproval(masterSecret, message, destination);
       else                        throw new RetryLaterException(e);
     }
+    return false;
   }
 
   private void fallbackOrAskApproval(MasterSecret masterSecret, SendReq mediaMessage, String destination)
