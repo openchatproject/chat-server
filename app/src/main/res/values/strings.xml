@@ -4,6 +4,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="delete">Delete</string>
+    <string name="please_wait">Please wait...</string>
 
     <string name="ApplicationPreferencesActivity_currently_s">Currently: %s</string>
     <string name="ApplicationPreferenceActivity_you_havent_set_a_passphrase_yet">You haven\'t set a passphrase yet!</string>
@@ -143,6 +144,8 @@
     <string name="GroupCreateActivity_avatar_content_description">Group avatar</string>
     <string name="GroupCreateActivity_menu_create_title">Create group</string>
     <string name="GroupCreateActivity_creating_group">Creating %1$s&#8230;</string>
+    <string name="GroupCreateActivity_updating_group">Updating %1$s...</string>
+    <string name="GroupCreateActivity_loading_group_details">Loading group details</string>
     <string name="GroupCreateActivity_cannot_add_non_push_to_existing_group">Cannot add non-OpenchatService contacts to an existing OpenchatService group</string>
 
     <string name="GroupMembersDialog_me">Me</string>
