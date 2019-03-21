@@ -25,20 +25,30 @@ import android.widget.Toast;
 
 import com.openchat.secureim.crypto.InvalidPassphraseException;
 import com.openchat.secureim.crypto.MasterSecretUtil;
+import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.util.Util;
 
 public class PassphrasePromptActivity extends PassphraseActivity {
 
+  private DynamicLanguage dynamicLanguage = new DynamicLanguage();
+
   private EditText passphraseText;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
+    dynamicLanguage.onCreate(this);
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.prompt_passphrase_activity);
     initializeResources();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    dynamicLanguage.onResume(this);
   }
 
   @Override

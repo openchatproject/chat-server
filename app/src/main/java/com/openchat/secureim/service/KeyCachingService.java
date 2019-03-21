@@ -25,6 +25,7 @@ import com.openchat.secureim.crypto.InvalidPassphraseException;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.MasterSecretUtil;
 import com.openchat.secureim.notifications.MessageNotifier;
+import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.ParcelUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.EncryptionKeys;
@@ -41,6 +42,9 @@ public class KeyCachingService extends Service {
   public  static final String DISABLE_ACTION           = "com.openchat.secureim.service.action.DISABLE";
   public  static final String ACTIVITY_START_EVENT     = "com.openchat.secureim.service.action.ACTIVITY_START_EVENT";
   public  static final String ACTIVITY_STOP_EVENT      = "com.openchat.secureim.service.action.ACTIVITY_STOP_EVENT";
+  public  static final String LOCALE_CHANGE_EVENT      = "com.openchat.secureim.service.action.LOCALE_CHANGE_EVENT";
+
+  private DynamicLanguage dynamicLanguage = new DynamicLanguage();
 
   private PendingIntent pending;
   private int activitiesRunning = 0;
@@ -94,16 +98,16 @@ public class KeyCachingService extends Service {
   public int onStartCommand(Intent intent, int flags, int startId) {
     if (intent == null) return START_NOT_STICKY;
 
-    if (intent.getAction() != null && intent.getAction().equals(CLEAR_KEY_ACTION))
-      handleClearKey();
-    else if (intent.getAction() != null && intent.getAction().equals(ACTIVITY_START_EVENT))
-      handleActivityStarted();
-    else if (intent.getAction() != null && intent.getAction().equals(ACTIVITY_STOP_EVENT))
-      handleActivityStopped();
-    else if (intent.getAction() != null && intent.getAction().equals(PASSPHRASE_EXPIRED_EVENT))
-      handleClearKey();
-    else if (intent.getAction() != null && intent.getAction().equals(DISABLE_ACTION))
-      handleDisableService();
+    if (intent.getAction() != null) {
+      switch (intent.getAction()) {
+        case CLEAR_KEY_ACTION:         handleClearKey();        break;
+        case ACTIVITY_START_EVENT:     handleActivityStarted(); break;
+        case ACTIVITY_STOP_EVENT:      handleActivityStopped(); break;
+        case PASSPHRASE_EXPIRED_EVENT: handleClearKey();        break;
+        case DISABLE_ACTION:           handleDisableService();  break;
+        case LOCALE_CHANGE_EVENT:      handleLocaleChanged();   break;
+      }
+    }
 
     return START_NOT_STICKY;
   }
@@ -175,6 +179,11 @@ public class KeyCachingService extends Service {
   private void handleDisableService() {
     if (OpenchatServicePreferences.isPasswordDisabled(this))
       stopForeground(true);
+  }
+
+  private void handleLocaleChanged() {
+    dynamicLanguage.updateServiceLocale(this);
+    foregroundService();
   }
 
   private void startTimeoutIfAppropriate() {

@@ -28,6 +28,7 @@ import com.openchat.secureim.preferences.NotificationsPreferenceFragment;
 import com.openchat.secureim.preferences.SmsMmsPreferenceFragment;
 import com.openchat.secureim.preferences.StoragePreferenceFragment;
 import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
+import com.openchat.secureim.service.KeyCachingService;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;
@@ -113,6 +114,10 @@ public class ApplicationPreferencesActivity extends PassphraseRequiredActionBarA
       dynamicTheme.onResume(this);
     } else if (key.equals(OpenchatServicePreferences.LANGUAGE_PREF)) {
       dynamicLanguage.onResume(this);
+
+      Intent intent = new Intent(this, KeyCachingService.class);
+      intent.setAction(KeyCachingService.LOCALE_CHANGE_EVENT);
+      startService(intent);
     }
   }
 
