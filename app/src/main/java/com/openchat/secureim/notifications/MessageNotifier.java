@@ -24,6 +24,7 @@ import android.util.Log;
 import com.openchat.secureim.R;
 import com.openchat.secureim.RoutingActivity;
 import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.database.SmsDatabase;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsSmsDatabase;
 import com.openchat.secureim.database.PushDatabase;
@@ -317,7 +318,7 @@ public class MessageNotifier {
         threadRecipients = DatabaseFactory.getThreadDatabase(context).getRecipientsForThreadId(threadId);
       }
 
-      if (body.toString().equals(context.getString(R.string.MessageDisplayHelper_decrypting_please_wait))) {
+      if (SmsDatabase.Types.isDecryptInProgressType(record.getType()) || !record.getBody().isPlaintext()) {
         body = new SpannableString(context.getString(R.string.MessageNotifier_encrypted_message));
         body.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), 0, body.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
       }
