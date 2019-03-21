@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
+import com.openchat.secureim.contacts.ContactPhotoFactory;
 import com.openchat.secureim.database.MmsDatabase;
 import com.openchat.secureim.database.SmsDatabase;
 import com.openchat.secureim.database.model.MediaMmsMessageRecord;
@@ -377,7 +379,15 @@ public class ConversationItem extends LinearLayout {
   private void setContactPhotoForRecipient(final Recipient recipient) {
     if (contactPhoto == null) return;
 
-    contactPhoto.setImageBitmap(recipient.getCircleCroppedContactPhoto());
+    Bitmap contactPhotoBitmap;
+
+    if ((recipient.getContactPhoto() == ContactPhotoFactory.getDefaultContactPhoto(context)) && (groupThread)) {
+      contactPhotoBitmap = recipient.getGeneratedAvatar(context);
+    } else {
+      contactPhotoBitmap = recipient.getCircleCroppedContactPhoto();
+    }
+
+    contactPhoto.setImageBitmap(contactPhotoBitmap);
 
     contactPhoto.setOnClickListener(new View.OnClickListener() {
       @Override
