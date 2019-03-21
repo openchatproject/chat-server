@@ -5,13 +5,11 @@
   <string name="no">Nie</string>
   <string name="delete">Zmaž</string>
   <string name="ApplicationPreferencesActivity_currently_s">Aktuálne: %s</string>
-  <string name="ApplicationPreferenceActivity_you_need_to_have_entered_your_passphrase_before_managing_keys">Pred spravovaním kľúčov musíte vložiť heslo...</string>
   <string name="ApplicationPreferenceActivity_you_havent_set_a_passphrase_yet">Ešte ste si nenastavili heslo!</string>
   <string name="ApplicationPreferencesActivity_messages_per_conversation">správ na konverzáciu</string>
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Zmazať všetky staré správy?</string>
   <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Ste si istí, že chcete skrátiť všetky vlákna konverzácií na %s najnovších správ?</string>
   <string name="ApplicationPreferencesActivity_delete">Zmaž</string>
-  <string name="ApplicationPreferencesActivity_my">Moja</string>
   <string name="ApplicationPreferencesActivity_disable_storage_encryption">Vypnúť kryptovanie úložiska?</string>
   <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
 Upozornenie, toto vypne kryptovanie úložiska správ a kľúčov. Vaše bezpečné sessions budú naďalej fungovať, ale hocikto s fyzickým prístupom k zariadeniu ich bude schopný čítať.</string>
@@ -28,11 +26,9 @@ Upozornenie, toto vypne kryptovanie úložiska správ a kľúčov. Vaše bezpeč
   <string name="ConversationItem_expires_s">Vyprší: %s</string>
   <string name="ConversationItem_error_sending_message">Chyba pri posielaní správy</string>
   <string name="ConversationItem_view_secure_media_question">Zobraziť kryptované údaje?</string>
-  <string name="ConversationItem_received_and_processed_key_exchange_message">Prijal som správu vzájomnej výmeny kľúčov a spracovávam ju.</string>
   <string name="ConversationItem_error_received_stale_key_exchange_message">Chyba, prijal som zaseknutú správu vzájomnej výmeny kľúčov.</string>
   <string name="ConversationItem_received_key_exchange_message_click_to_process">Prijal som správu vzájomnej výmeny kľúčov, kliknite pre spracovanie.</string>
   <string name="ConversationItem_group_action_left">%1$s opustil/a skupinu.</string>
-  <string name="ConversationItem_group_action_joined">%1$s sa pripojil do skupiny.</string>
   <string name="ConversationActivity_initiate_secure_session_question">Vytvoriť bezpečnú reláciu?</string>
   <string name="ConversationActivity_initiate_secure_session_with_s_question">Vytvoriť bezpečnú session s %s?</string>
   <string name="ConversationActivity_abort_secure_session_confirmation">Potvrdenie ukončenia bezpečnej relácie</string>
@@ -62,16 +58,12 @@ Upozornenie, toto vypne kryptovanie úložiska správ a kľúčov. Vaše bezpeč
   <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">Ste si istí že chcete úplne zmazať túto správu?</string>
   <string name="ConversationFragment_success_exclamation">Úspech!</string>
   <string name="ConversationFragment_saving_attachment">Ukladám prílohu</string>
-  <string name="ConversationListAdapter_key_exchange_message">Správa vzájomnej výmeny kľúčov...</string>
   <string name="ConversationListFragment_delete_threads_question">Zmazať vlákna?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Ste si istí, že chcete zmazať VŠETKY označené vlákna konverzácií?</string>
   <string name="ConversationListFragment_deleting">Mažem</string>
   <string name="ConversationListFragment_deleting_selected_threads">Mažem vybrané konverzácie...</string>
   <string name="ConversationListItem_key_exchange_message">Správa vzájomnej výmeny kľúčov...</string>
   <string name="ShareActivity_share_with">Zdieľaj s</string>
-  <string name="ExportFragment_export_to_sd_card">Exportuj na SD kartu?</string>
-  <string name="ExportFragment_this_will_export_your_encrypted_keys_settings_and_messages">Toto
-exportuje Vaše kryptované kľúče, nastavenia a správy na SD kartu.</string>
   <string name="ExportFragment_export">Export</string>
   <string name="ExportFragment_export_plaintext_to_sd_card">Exportuj čistý text na SD kartu?</string>
   <string name="ExportFragment_warning_this_will_export_the_plaintext_contents">Upozornenie, toto
@@ -83,7 +75,6 @@ exportuje nekryptovaný obsah OpenchatService správy na SD kartu.</string>
 kartu!</string>
   <string name="ExportFragment_error_while_writing_to_sd_card">Chyba pri zápise na SD kartu.</string>
   <string name="ExportFragment_success">Úspech!</string>
-  <string name="ExportFragment_exporting_keys_settings_and_messages">Exportujem zakryptované kľúče, nastavenia a správy...</string>
   <string name="GroupCreateActivity_actionbar_title">Nová skupina</string>
   <string name="GroupCreateActivity_actionbar_update_title">Aktualizuj skupinu</string>
   <string name="GroupCreateActivity_group_name_hint">Názov skupiny</string>
@@ -124,8 +115,6 @@ Obnovenie zakryptovanej zálohy prepíše všetky existujúce kryptovacie kľú�
   <string name="PassphrasePromptActivity_enter_passphrase">Zadaj heslo</string>
   <string name="PassphrasePromptActivity_watermark_content_description">OpenchatService ikonka</string>
   <string name="PassphrasePromptActivity_invalid_passphrase_exclamation">Nesprávne heslo!</string>
-  <string name="PromptMmsActivity_mms_settings_updated">MMS nastavenia obnovené</string>
-  <string name="PromptMmsActivity_you_can_modify_these_values_from_the_openchatservice_settings_menu_at_any_time_">Môžete  tieto hodnoty zmeniť kedykoľvek z menu nastavenie OpenchatService. </string>
   <string name="ReceiveKeyActivity_processing">Spracováva sa</string>
   <string name="ReceiveKeyActivity_processing_key_exchange">Spracovávajú sa kľúče vymeny</string>
   <string name="RegistrationActivity_connect_with_openchatservice">Pripojiť s OpenchatService</string>
@@ -145,7 +134,6 @@ telefónne číslo</string>
   <string name="RegistrationProgressActivity_verifying_number">Overovanie čísla </string>
   <string name="RegistrationProgressActivity_edit_s">Upraviť %s</string>
   <string name="RegistrationProgressActivity_registration_complete">Registrácia dokončená.</string>
-  <string name="RegistrationProgressActivity_possible_problems">Možné problémy.</string>
   <string name="RegistrationProgressActivity_you_must_enter_the_code_you_received_first">Musíš zadať kód ktorý si dostal prvý...</string>
   <string name="RegistrationProgressActivity_connecting">Pripájanie</string>
   <string name="RegistrationProgressActivity_connecting_for_verification">Pripájanie kvôli overovaniu...</string>
@@ -156,7 +144,6 @@ telefónne číslo</string>
   <string name="RegistrationProgressActivity_server_error">Chyba servera</string>
   <string name="RegistrationProgressActivity_the_server_encountered_an_error">Na serveri sa vyskytol problém. Prosím skús to zas.</string>
   <string name="RegistrationProgressActivity_too_many_requests">Príliš veľa požiadaviek!</string>
-  <string name="RegistrationProgressActivity_verifying_voice_code">Overovanie hlasového kódu...</string>
   <string name="RegistrationService_registration_complete">Registrácia dokončená.</string>
   <string name="RegistrationService_openchatservice_registration_has_successfully_completed">OpenchatService registrácia bola úspešne dokončená.</string>
   <string name="RegistrationService_registration_error">Chyba pri registrácii</string>
@@ -175,12 +162,6 @@ telefónne číslo</string>
   <string name="VerifyIdentityActivity_their_key_is_correct_it_is_also_necessary_to_verify_your_key_with_them_as_well">Ich kľúč je v poriadku. Je tiež potrebné dať druhej strane verifikovať váš kľúč.</string>
   <string name="VerifyIdentityActivity_verified_exclamation">Verifikované!</string>
   <string name="VerifyIdentityActivity_you_don_t_have_an_identity_key_exclamation">Nemáte kľúč totožnosti!</string>
-  <string name="VerifyKeysActivity_get_my_fingerprint_scanned">Daj scannovať môj odtlačok</string>
-  <string name="VerifyKeysActivity_scan_their_fingerprint">Scannuj ich odtlačok </string>
-  <string name="VerifyKeysActivity_warning_the_scanned_key_does_not_match_please_check_the_fingerprint_text_carefully2">POZOR, scannovaný kľúč sa NEZHODUJE! Dôsledne skontrolujte text odtlačku.</string>
-  <string name="VerifyKeysActivity_not_verified_exclamation">NIE JE overené!</string>
-  <string name="VerifyKeysActivity_their_key_is_correct_it_is_also_necessary_to_get_your_fingerprint_scanned_as_well">Ich kľúč je správny. Je tiež potrebné dať druhej strane scannovať Váš odtlačok.</string>
-  <string name="VerifyKeysActivity_verified_exclamation">Verifikovaný!</string>
   <string name="ViewIdentityActivity_you_do_not_have_an_identity_key">Nemáte kľúč totožnosti.</string>
   <string name="ViewIdentityActivity_scan_to_compare">Zoscannuj pre porovnanie</string>
   <string name="ViewIdentityActivity_get_scanned_to_compare">Daj scannovať na porovnanie</string>
@@ -188,7 +169,6 @@ telefónne číslo</string>
   <string name="ViewIdentityActivity_not_verified_exclamation">NIE JE overené!</string>
   <string name="ViewIdentityActivity_the_scanned_key_matches_exclamation">Scannovaný kľúč sa zhoduje!</string>
   <string name="ViewIdentityActivity_verified_exclamation">Verifikované!</string>
-  <string name="ViewIdentityActivity_identity_fingerprint">Odtlačok totožnosti</string>
   <string name="KeyExchangeInitiator_youve_already_sent_a_session_initiation_request_to_this_recipient_are_you_sure">Tomuto príjemcovi ste už poslali požiadavku na vytvorenie bezpečnej session. Poslanie ďalšej požiadavky zneplatní predchádzajúcu požiadavku.  Ste si istí že chcete poslať ďalšiu požiadavku?</string>
   <string name="KeyExchangeInitiator_send">Odošli</string>
   <string name="MessageDisplayHelper_bad_encrypted_message">Nesprávne kryptovaná správa...</string>
@@ -201,7 +181,6 @@ telefónne číslo</string>
   <string name="MmsMessageRecord_decrypting_mms_please_wait">Prosím čakaj, dekryptujem MMS...</string>
   <string name="MmsMessageRecord_bad_encrypted_mms_message">Nesprávne kryptovaná MMS správa...</string>
   <string name="MmsMessageRecord_mms_message_encrypted_for_non_existing_session">MMS správa zakryptovaná pre neexistujúcu session...</string>
-  <string name="MmsSender_currently_unable_to_send_your_mms_message">Momentálne nie je možné poslať Vašu MMS správu.</string>
   <string name="ApplicationMigrationService_import_in_progress">Prebieha import</string>
   <string name="ApplicationMigrationService_importing_text_messages">Nahrávanie textových správ</string>
   <string name="KeyCachingService_openchatservice_passphrase_cached">Kliknutím otvor</string>
@@ -216,13 +195,6 @@ telefónne číslo</string>
   <string name="MessageNotifier_error_delivering_message">Chyba doručovania správy.</string>
   <string name="MessageNotifier_mark_all_as_read">Označ všetko ako prečítané</string>
   <string name="MessageNotifier_mark_as_read">Označ ako prečítané</string>
-  <string name="ViewLocalIdentityActivity_regenerating">Pregenerovávam...</string>
-  <string name="ViewLocalIdentityActivity_regenerating_identity_key">Pregenerovávam kľúče
-totožnosti...</string>
-  <string name="ViewLocalIdentityActivity_regenerated">Pregenerované!</string>
-  <string name="ViewLocalIdentityActivity_cancel">Zrušiť</string>
-  <string name="ViewLocalIdentityActivity_continue">Pokračovať</string>
-  <string name="SmsReceiver_currently_unable_to_send_your_sms_message">Momentálne nie je možné poslať Vašu sms správu. Budo odoslaná ihneď pri dostupnosti služby.</string>
   <string name="auto_initiate_activity__you_have_received_a_message_from_someone_who_supports_openchatservice_encrypted_sessions_would_you_like_to_initiate_a_secure_session">Dostali ste správu od klienta podporujúceho OpenchatService bezpečnú session.  Želáte si vytvoriť bezpečnú session?</string>
   <string name="auto_initiate_activity__initiate_exchange">Začni vzájomnú výmenu</string>
   <string name="change_passphrase_activity__old_passphrase">Staré heslo:</string>
@@ -250,21 +222,8 @@ totožnosti...</string>
   <string name="conversation_fragment_cab__batch_selection_amount">%s vybraných</string>
   <string name="country_selection_fragment__loading_countries">Načítavanie krajín...</string>
   <string name="country_selection_fragment__search">Hľadaj</string>
-  <string name="create_passphrase_activity__please_choose_a_passphrase_that_will_be_used_to_locally_encrypt_your_data_this_should_be_a_strong_passphrase">Vyberte si prosím heslo ktoré bude použité na lokálne kryptovanie údajov. Malo by to byť silné heslo.</string>
-  <string name="create_passphrase_activity__passphrase">Heslo:</string>
-  <string name="create_passphrase_activity__repeat">Zopakujte:</string>
-  <string name="create_passphrase_activity__continue">Pokračovať</string>
-  <string name="create_passphrase_activity__generating_secrets">GENEROVANIE TAJOMSTIEV</string>
-  <string name="create_passphrase_activity__skip">Preskoč</string>
-  <string name="create_passphrase_activity__create">Vytvoriť</string>
-  <string name="log_submit_activity__button_cancel">Neodošli</string>
-  <string name="log_submit_activity__button_ok">Odošli</string>
-  <string name="log_submit_activity__log_submit_success_title">Úspech!</string>
-  <string name="log_submit_activity__log_got_it">Mám to</string>
-  <string name="log_submit_activity__copied_to_clipboard">Kopírovať do schránky</string>
   <string name="log_submit_activity__thanks">Ďakujem za tvoju pomoc!</string>
   <string name="log_submit_activity__submitting">Posielanie</string>
-  <string name="log_submit_activity__posting_logs">Ulož logy do pastebin...</string>
   <string name="database_migration_activity__would_you_like_to_import_your_existing_text_messages">Chcete importovať Vaše existujúce textové správy do kryptovanej databázy OpenchatService? </string>
   <string name="database_migration_activity__the_default_system_database_will_not_be_modified">Predvolená systémová databáza nebude modifikovaná alebo nahradenáv žiadnom prípade.</string>
   <string name="database_migration_activity__skip">Preskoč</string>
@@ -272,9 +231,6 @@ totožnosti...</string>
   <string name="database_migration_activity__this_could_take_a_moment_please_be_patient">Toto môže chvíľu trvať. Buďte trpezlivý prosím, dokončenie importu Vám oznámime.</string>
   <string name="database_migration_activity__importing">IMPORTUJEM</string>
   <string name="database_upgrade_activity__updating_database">Aktualizujem databázu...</string>
-  <string name="export_fragment__export_encrypted_backup">Exportovať zakryptovanú zálohu</string>
-  <string name="export_fragment__export_an_encrypted_backup_to_the_sd_card">Exportovať zakryptovanú
-zálohu na SD kartu.</string>
   <string name="export_fragment__export_plaintext_backup">Exportovať nezakryptovanú zálohu</string>
   <string name="export_fragment__export_a_plaintext_backup_compatible_with">
 Exportovať nezakryptovanú zálohu kompatibilnú so \'SMSBackup a Restore\' na SD kartu.</string>
@@ -287,9 +243,7 @@ Obnoviť predtým exportovanú zakryptovanú OpenchatService zálohu.</string>
   <string name="import_fragment__import_plaintext_backup">Importovať nezakryptovanú zálohu</string>
   <string name="import_fragment__import_a_plaintext_backup_file">
 Importovať nezakryptovanú zálohu. Kompatibilné so \'SMSBackup And Restore\'.</string>
-  <string name="local_identity__regenerate_key">Pregeneruj kľúče</string>
   <string name="mms_preferences_activity__manual_mms_settings_are_required">Manuálne MMS nastavenia sú vyžadované pre tvoj telefón.</string>
-  <string name="prompt_passphrase_activity__openchatservice_passphrase">OPENCHAT HESLO</string>
   <string name="prompt_passphrase_activity__unlock">Odomkni</string>
   <string name="receive_key_activity__complete">Dokončené</string>
   <string name="registration_activity__your_country">TVOJA KRAJINA</string>
@@ -326,27 +280,18 @@ zlyhalo.
   <string name="registration_progress_activity__generating_keys">Generovanie kľúčov...</string>
   <string name="recipients_panel__to"><small>Vlož meno alebo číslo</small></string>
   <string name="recipients_panel__add_member">Pridaj člena</string>
-  <string name="review_identities__you_don_t_currently_have_any_identity_keys_in_your_trust_database">V databáze nemáte žiadne kľúče totožnosti.</string>
   <string name="verify_identity_activity__their_identity_they_read">Ich totožnosť (oni vidia):</string>
   <string name="verify_identity_activity__your_identity_you_read">Vaša totožnosť (vy vidíte):</string>
-  <string name="verify_import_identity_activity__verified">Verifikované!</string>
-  <string name="verify_import_identity_activity__compare">Porovnaj</string>
-  <string name="verify_keys_activity__they_read_this">Oni vidia:</string>
-  <string name="verify_keys_activity__you_read_this">Vy vidíte:</string>
   <string name="AndroidManifest__create_passphrase">Vytvor heslo</string>
   <string name="AndroidManifest__enter_passphrase">Zadaj heslo</string>
   <string name="AndroidManifest__select_contacts">Vyber kontakty</string>
-  <string name="AndroidManifest__select_contact">Vyber kontakt</string>
   <string name="AndroidManifest__openchatservice_detected">Detekovaný OpenchatService</string>
   <string name="AndroidManifest__public_identity_key">Kľúč verejnej totožnosti</string>
   <string name="AndroidManifest__change_passphrase">Zmeň heslo</string>
-  <string name="AndroidManifest__verify_session">Over relácia</string>
   <string name="AndroidManifest__verify_identity">Over totožnosť</string>
-  <string name="AndroidManifest__manage_identity_keys">Spravuj kľúče totožnosti</string>
   <string name="AndroidManifest__complete_key_exchange">Dokončiť vzájomnú výmenu kľúčov</string>
   <string name="AndroidManifest__log_submit">Odošli ladiaci log</string>
   <string name="arrays__my_identity_key">Môj kľúč totožnosti</string>
-  <string name="preferences__general">Všeobecné</string>
   <string name="preferences__pref_all_sms_title">Príjmy všetky SMS</string>
   <string name="preferences__pref_all_mms_title">Príjmy všetky MMS</string>
   <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_text_messages">Použi OpenchatService na zobrazenie a uloženie všetkých prichádzajúcich správ</string>
@@ -368,10 +313,6 @@ zlyhalo.
   <string name="preferences__pref_timeout_interval_dialogtitle">Vyber dobu zapamätania hesla</string>
   <string name="preferences__pref_timeout_interval_title">Interval vypršania</string>
   <string name="preferences__the_amount_of_time_to_wait_before_forgetting_passphrase">Časový interval po ktorom sa vymaže heslo z pamäte</string>
-  <string name="preferences__identity_key_settings">Kľúče totožnosti</string>
-  <string name="preferences__view_my_identity_key">Zobraz môj kľúč totožnosti</string>
-  <string name="preferences__manage_identity_keys">Spravuj kľúče totožnosti</string>
-  <string name="preferences__manage_configured_identity_keys">Spravuj konfigurované kľúče totožnosti</string>
   <string name="preferences__notifications">Hlásenia</string>
   <string name="preferences__display_message_notifications_in_status_bar">Zobrazuj hlásenia o správach v stavovom riadku</string>
   <string name="preferences__led_color">LED farba</string>
@@ -451,7 +392,6 @@ zlyhalo.
   <string name="conversation_list_batch__menu_select_all">Označ všetko</string>
   <string name="conversation_list__menu_search">Hľadaj</string>
   <string name="conversation_secure_verified__menu_security">Bezpečnosť</string>
-  <string name="conversation_secure_verified__menu_no_identity">Žiadna identita dostupná</string>
   <string name="conversation_secure_verified__menu_verify_identity">Over totožnosť</string>
   <string name="conversation_secure_verified__menu_abort_secure_session">Ukonči bezpečnú session</string>
   <string name="conversation__menu_add_attachment">Pridaj prílohu</string>
@@ -466,11 +406,9 @@ zlyhalo.
   <string name="key_scanning__menu_compare">Porovnaj</string>
   <string name="key_scanning__menu_get_scanned_to_compare">Nascannuj pre porovnanie</string>
   <string name="key_scanning__menu_scan_to_compare">Zoscannuj pre porovnanie</string>
-  <string name="text_secure_locked__menu_unlock">Odomkni</string>
   <string name="text_secure_normal__menu_new_message">Nová správa</string>
   <string name="text_secure_normal__menu_new_group">Nová skupina</string>
   <string name="text_secure_normal__menu_settings">Nastavenia</string>
   <string name="text_secure_normal__menu_clear_passphrase">Zamkni</string>
   <string name="text_secure_normal__mark_all_as_read">Označ všetky prečítané</string>
-  <string name="verify_keys__menu_verified">Overené</string>
 </resources>
