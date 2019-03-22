@@ -55,7 +55,9 @@ import com.openchat.secureim.crypto.storage.OpenchatServiceSessionStore;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.DraftDatabase;
 import com.openchat.secureim.database.DraftDatabase.Draft;
+import com.openchat.secureim.database.DraftDatabase.Drafts;
 import com.openchat.secureim.database.GroupDatabase;
+import com.openchat.secureim.database.MmsSmsColumns.Types;
 import com.openchat.secureim.database.ThreadDatabase;
 import com.openchat.secureim.mms.AttachmentManager;
 import com.openchat.secureim.mms.AttachmentTypeSelectorAdapter;
@@ -95,7 +97,6 @@ import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.api.push.PushAddress;
 
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
 import static com.openchat.secureim.database.GroupDatabase.GroupRecord;
@@ -884,8 +885,8 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     builder.show();
   }
 
-  private List<Draft> getDraftsForCurrentState() {
-    List<Draft> drafts = new LinkedList<>();
+  private Drafts getDraftsForCurrentState() {
+    Drafts drafts = new Drafts();
 
     if (!Util.isEmpty(composeText)) {
       drafts.add(new Draft(Draft.TEXT, composeText.getText().toString()));
@@ -904,27 +905,22 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     if (this.threadId <= 0 || this.recipients == null || this.recipients.isEmpty())
       return;
 
-    final List<Draft> drafts = getDraftsForCurrentState();
-
-    if (drafts.size() <= 0)
-      return;
+    final Drafts drafts = getDraftsForCurrentState();
 
     final long thisThreadId             = this.threadId;
     final MasterSecret thisMasterSecret = this.masterSecret.parcelClone();
 
     new AsyncTask<Void, Void, Void>() {
       @Override
-      protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-        Toast.makeText(ConversationActivity.this,
-                       R.string.ConversationActivity_saved_draft,
-                       Toast.LENGTH_SHORT).show();
-      }
-
-      @Override
       protected Void doInBackground(Void... params) {
         MasterCipher masterCipher = new MasterCipher(thisMasterSecret);
         DatabaseFactory.getDraftDatabase(ConversationActivity.this).insertDrafts(masterCipher, thisThreadId, drafts);
+        ThreadDatabase threadDatabase = DatabaseFactory.getThreadDatabase(ConversationActivity.this);
+        if (drafts.size() > 0) {
+          threadDatabase.updateSnippet(thisThreadId, drafts.getSnippet(ConversationActivity.this), Types.BASE_DRAFT_TYPE);
+        } else {
+          threadDatabase.update(thisThreadId);
+        }
         MemoryCleaner.clean(thisMasterSecret);
         return null;
       }

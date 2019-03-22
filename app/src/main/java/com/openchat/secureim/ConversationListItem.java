@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.model.ThreadRecord;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
@@ -26,6 +27,7 @@ import com.openchat.secureim.util.DateUtils;
 import com.openchat.secureim.util.Emoji;
 
 import java.util.Set;
+import java.util.concurrent.ThreadFactory;
 
 public class ConversationListItem extends RelativeLayout
                                   implements Recipient.RecipientModifiedListener
@@ -79,10 +81,10 @@ public class ConversationListItem extends RelativeLayout
     this.recipients.addListener(this);
     this.fromView.setText(formatFrom(recipients, count, read));
 
-      this.subjectView.setText(Emoji.getInstance(context).emojify(thread.getDisplayBody(),
-                                                                  Emoji.EMOJI_SMALL,
-                                                                  new Emoji.InvalidatingPageLoadedListener(subjectView)),
-                               TextView.BufferType.SPANNABLE);
+    this.subjectView.setText(Emoji.getInstance(context).emojify(thread.getDisplayBody(),
+                                                                Emoji.EMOJI_SMALL,
+                                                                new Emoji.InvalidatingPageLoadedListener(subjectView)),
+                             TextView.BufferType.SPANNABLE);
 
     if (thread.getDate() > 0)
       this.dateView.setText(DateUtils.getBetterRelativeTimeSpanString(getContext(), thread.getDate()));
