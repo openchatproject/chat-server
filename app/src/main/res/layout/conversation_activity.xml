@@ -96,7 +96,7 @@
                         android:contentDescription="@string/conversation_activity__compose_description"
                         android:textColor="?conversation_editor_text_color" />
 
-                <ImageButton
+                <com.openchat.secureim.components.SendButton
                     android:id="@+id/send_button"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
