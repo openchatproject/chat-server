@@ -47,7 +47,7 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
   private final long messageId;
 
   public PushMediaSendJob(Context context, long messageId, String destination) {
-    super(context, constructParameters(context, destination));
+    super(context, constructParameters(context, destination, true));
     this.messageId = messageId;
   }
 
@@ -103,7 +103,7 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
     MmsDatabase             database               = DatabaseFactory.getMmsDatabase(context);
     OpenchatServiceMessageSender messageSender          = messageSenderFactory.create(masterSecret);
     String                  destination            = message.getTo()[0].getString();
-    boolean                 isSmsFallbackSupported = isSmsFallbackSupported(context, destination);
+    boolean                 isSmsFallbackSupported = isSmsFallbackSupported(context, destination, true);
 
     try {
       Recipients                 recipients   = RecipientFactory.getRecipientsFromString(context, destination, false);
@@ -131,7 +131,7 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
   {
     try {
       Recipient    recipient                     = RecipientFactory.getRecipientsFromString(context, destination, false).getPrimaryRecipient();
-      boolean      isSmsFallbackApprovalRequired = isSmsFallbackApprovalRequired(destination);
+      boolean      isSmsFallbackApprovalRequired = isSmsFallbackApprovalRequired(destination, true);
       OpenchatStore axolotlStore                  = new OpenchatServiceOpenchatStore(context, masterSecret);
 
       if (!isSmsFallbackApprovalRequired) {
