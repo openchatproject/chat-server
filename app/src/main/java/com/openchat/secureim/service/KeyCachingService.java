@@ -30,6 +30,8 @@ import com.openchat.secureim.util.ParcelUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.EncryptionKeys;
 
+import java.util.concurrent.TimeUnit;
+
 public class KeyCachingService extends Service {
 
   public static final int SERVICE_RUNNING_ID = 4141;
@@ -191,7 +193,7 @@ public class KeyCachingService extends Service {
 
     if ((activitiesRunning == 0) && (this.masterSecret != null) && timeoutEnabled && !OpenchatServicePreferences.isPasswordDisabled(this)) {
       long timeoutMinutes = OpenchatServicePreferences.getPassphraseTimeoutInterval(this);
-      long timeoutMillis  = timeoutMinutes * 60 * 1000;
+      long timeoutMillis  = TimeUnit.MINUTES.toMillis(timeoutMinutes);
 
       Log.w("KeyCachingService", "Starting timeout: " + timeoutMillis);
 

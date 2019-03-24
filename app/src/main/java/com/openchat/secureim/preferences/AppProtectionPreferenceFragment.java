@@ -10,7 +10,11 @@ import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 import android.support.v4.preference.PreferenceFragment;
+import android.util.Log;
 import android.widget.Toast;
+
+import com.doomonafireball.betterpickers.hmspicker.HmsPickerBuilder;
+import com.doomonafireball.betterpickers.hmspicker.HmsPickerDialogFragment;
 
 import com.openchat.secureim.ApplicationPreferencesActivity;
 import com.openchat.secureim.PassphraseChangeActivity;
@@ -20,6 +24,8 @@ import com.openchat.secureim.crypto.MasterSecretUtil;
 import com.openchat.secureim.service.KeyCachingService;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.OpenchatServicePreferences;
+
+import java.util.concurrent.TimeUnit;
 
 public class AppProtectionPreferenceFragment extends PreferenceFragment {
   private CheckBoxPreference disablePassphrase;
@@ -32,16 +38,20 @@ public class AppProtectionPreferenceFragment extends PreferenceFragment {
     disablePassphrase = (CheckBoxPreference) this.findPreference("pref_enable_passphrase_temporary");
 
     this.findPreference(OpenchatServicePreferences.CHANGE_PASSPHRASE_PREF)
-      .setOnPreferenceClickListener(new ChangePassphraseClickListener());
+        .setOnPreferenceClickListener(new ChangePassphraseClickListener());
+    this.findPreference(OpenchatServicePreferences.PASSPHRASE_TIMEOUT_INTERVAL_PREF)
+        .setOnPreferenceClickListener(new PassphraseIntervalClickListener());
     disablePassphrase
-      .setOnPreferenceChangeListener(new DisablePassphraseClickListener());
+        .setOnPreferenceChangeListener(new DisablePassphraseClickListener());
   }
 
   @Override
   public void onResume() {
     super.onResume();
     ((ApplicationPreferencesActivity) getActivity()).getSupportActionBar().setTitle(R.string.preferences__app_protection);
+
     initializePlatformSpecificOptions();
+    initializeTimeoutSummary();
 
     disablePassphrase.setChecked(!OpenchatServicePreferences.isPasswordDisabled(getActivity()));
   }
@@ -56,6 +66,12 @@ public class AppProtectionPreferenceFragment extends PreferenceFragment {
     }
   }
 
+  private void initializeTimeoutSummary() {
+    int timeoutMinutes = OpenchatServicePreferences.getPassphraseTimeoutInterval(getActivity());
+    this.findPreference(OpenchatServicePreferences.PASSPHRASE_TIMEOUT_INTERVAL_PREF)
+        .setSummary(String.format("%d minutes", timeoutMinutes));
+  }
+
   private class ChangePassphraseClickListener implements Preference.OnPreferenceClickListener {
     @Override
     public boolean onPreferenceClick(Preference preference) {
@@ -68,6 +84,28 @@ public class AppProtectionPreferenceFragment extends PreferenceFragment {
       }
 
       return true;
+    }
+  }
+
+  private class PassphraseIntervalClickListener implements Preference.OnPreferenceClickListener, HmsPickerDialogFragment.HmsPickerDialogHandler {
+
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+      new HmsPickerBuilder().setFragmentManager(getFragmentManager())
+                            .setStyleResId(R.style.BetterPickersDialogFragment_Light)
+                            .addHmsPickerDialogHandler(this)
+                            .show();
+      return true;
+    }
+
+    @Override
+    public void onDialogHmsSet(int reference, int hours, int minutes, int seconds) {
+      int timeoutMinutes = Math.max((int)TimeUnit.HOURS.toMinutes(hours) +
+                                    minutes                         +
+                                    (int)TimeUnit.SECONDS.toMinutes(seconds), 1);
+
+      OpenchatServicePreferences.setPassphraseTimeoutInterval(getActivity(), timeoutMinutes);
+      initializeTimeoutSummary();
     }
   }
 
