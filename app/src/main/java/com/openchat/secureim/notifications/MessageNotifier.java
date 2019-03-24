@@ -1,8 +1,10 @@
 package com.openchat.secureim.notifications;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -24,23 +26,24 @@ import android.util.Log;
 import com.openchat.secureim.R;
 import com.openchat.secureim.RoutingActivity;
 import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.secureim.database.SmsDatabase;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsSmsDatabase;
 import com.openchat.secureim.database.PushDatabase;
+import com.openchat.secureim.database.SmsDatabase;
 import com.openchat.secureim.database.model.MessageRecord;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
+import com.openchat.secureim.service.KeyCachingService;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.concurrent.TimeUnit;
 
-import me.leolin.shortcutbadger.ShortcutBadgeException;
 import me.leolin.shortcutbadger.ShortcutBadger;
 
 public class MessageNotifier {
@@ -84,7 +87,7 @@ public class MessageNotifier {
       return;
     }
 
-    updateNotification(context, masterSecret, false);
+    updateNotification(context, masterSecret, false, 0);
   }
 
   public static void updateNotification(Context context, MasterSecret masterSecret, long threadId) {
@@ -96,11 +99,11 @@ public class MessageNotifier {
       DatabaseFactory.getThreadDatabase(context).setRead(threadId);
       sendInThreadNotification(context);
     } else {
-      updateNotification(context, masterSecret, true);
+      updateNotification(context, masterSecret, true, 0);
     }
   }
 
-  private static void updateNotification(Context context, MasterSecret masterSecret, boolean openchat) {
+  private static void updateNotification(Context context, MasterSecret masterSecret, boolean openchat, int reminderCount) {
     Cursor telcoCursor = null;
     Cursor pushCursor  = null;
 
@@ -114,6 +117,7 @@ public class MessageNotifier {
         ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE))
           .cancel(NOTIFICATION_ID);
         updateBadge(context, 0);
+        clearReminder(context);
         return;
       }
 
@@ -128,6 +132,7 @@ public class MessageNotifier {
       }
 
       updateBadge(context, notificationState.getMessageCount());
+      scheduleReminder(context, masterSecret, reminderCount);
     } finally {
       if (telcoCursor != null) telcoCursor.close();
       if (pushCursor != null)  pushCursor.close();
@@ -156,6 +161,7 @@ public class MessageNotifier {
     builder.setContentIntent(notifications.get(0).getPendingIntent(context));
     builder.setContentInfo(String.valueOf(notificationState.getMessageCount()));
     builder.setNumber(notificationState.getMessageCount());
+    builder.setDeleteIntent(PendingIntent.getBroadcast(context, 0, new Intent(DeleteReceiver.DELETE_REMINDER_ACTION), 0));
 
     if (masterSecret != null) {
       builder.addAction(R.drawable.check, context.getString(R.string.MessageNotifier_mark_as_read),
@@ -202,6 +208,8 @@ public class MessageNotifier {
     
     builder.setContentInfo(String.valueOf(notificationState.getMessageCount()));
     builder.setNumber(notificationState.getMessageCount());
+
+    builder.setDeleteIntent(PendingIntent.getBroadcast(context, 0, new Intent(DeleteReceiver.DELETE_REMINDER_ACTION), 0));
 
     if (masterSecret != null) {
       builder.addAction(R.drawable.check, context.getString(R.string.MessageNotifier_mark_all_as_read),
@@ -372,6 +380,50 @@ public class MessageNotifier {
       ShortcutBadger.setBadge(context, count);
     } catch (Throwable t) {
       Log.w("MessageNotifier", t);
+    }
+  }
+
+  private static void scheduleReminder(Context context, MasterSecret masterSecret, int count) {
+    if (count >= OpenchatServicePreferences.getRepeatAlertsCount(context)) {
+      return;
+    }
+
+    AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    Intent       alarmIntent  = new Intent(ReminderReceiver.REMINDER_ACTION);
+    alarmIntent.putExtra("reminder_count", count);
+
+    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+    long          timeout       = TimeUnit.SECONDS.toMillis(10);
+
+    alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeout, pendingIntent);
+  }
+
+  private static void clearReminder(Context context) {
+    Intent        alarmIntent   = new Intent(ReminderReceiver.REMINDER_ACTION);
+    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+    AlarmManager  alarmManager  = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    alarmManager.cancel(pendingIntent);
+  }
+
+  public static class ReminderReceiver extends BroadcastReceiver {
+
+    public static final String REMINDER_ACTION = "com.openchat.secureim.MessageNotifier.REMINDER_ACTION";
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      MasterSecret masterSecret  = KeyCachingService.getMasterSecret(context);
+      int          reminderCount = intent.getIntExtra("reminder_count", 0);
+      MessageNotifier.updateNotification(context, masterSecret, true, reminderCount + 1);
+    }
+  }
+
+  public static class DeleteReceiver extends BroadcastReceiver {
+
+    public static final String DELETE_REMINDER_ACTION = "com.openchat.secureim.MessageNotifier.DELETE_REMINDER_ACTION";
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      clearReminder(context);
     }
   }
 }

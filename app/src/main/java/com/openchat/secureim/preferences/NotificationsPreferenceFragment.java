@@ -28,14 +28,17 @@ public class NotificationsPreferenceFragment extends PreferenceFragment {
     addPreferencesFromResource(R.xml.preferences_notifications);
 
     this.findPreference(OpenchatServicePreferences.LED_COLOR_PREF)
-      .setOnPreferenceChangeListener(new ListSummaryListener());
+        .setOnPreferenceChangeListener(new ListSummaryListener());
     this.findPreference(OpenchatServicePreferences.LED_BLINK_PREF)
-      .setOnPreferenceChangeListener(new ListSummaryListener());
+        .setOnPreferenceChangeListener(new ListSummaryListener());
     this.findPreference(OpenchatServicePreferences.RINGTONE_PREF)
-      .setOnPreferenceChangeListener(new RingtoneSummaryListener());
+        .setOnPreferenceChangeListener(new RingtoneSummaryListener());
+    this.findPreference(OpenchatServicePreferences.REPEAT_ALERTS_PREF)
+        .setOnPreferenceChangeListener(new ListSummaryListener());
 
     initializeListSummary((ListPreference) findPreference(OpenchatServicePreferences.LED_COLOR_PREF));
     initializeListSummary((ListPreference) findPreference(OpenchatServicePreferences.LED_BLINK_PREF));
+    initializeListSummary((ListPreference) findPreference(OpenchatServicePreferences.REPEAT_ALERTS_PREF));
     initializeRingtoneSummary((RingtonePreference) findPreference(OpenchatServicePreferences.RINGTONE_PREF));
   }
 
