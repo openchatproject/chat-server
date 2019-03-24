@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.preference.PreferenceFragment;
+import android.text.TextUtils;
 
 import com.openchat.secureim.ApplicationPreferencesActivity;
 import com.openchat.secureim.MmsPreferencesFragment;
@@ -19,6 +20,9 @@ import com.openchat.secureim.R;
 import com.openchat.secureim.components.OutgoingSmsPreference;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class SmsMmsPreferenceFragment extends PreferenceFragment {
   private static final String KITKAT_DEFAULT_PREF = "pref_set_default";
@@ -92,11 +96,21 @@ public class SmsMmsPreferenceFragment extends PreferenceFragment {
     final StringBuilder builder         = new StringBuilder();
     final boolean       dataFallback    = OpenchatServicePreferences.isFallbackSmsAllowed(getActivity());
     final boolean       dataFallbackAsk = OpenchatServicePreferences.isFallbackSmsAskRequired(getActivity());
+    final boolean       mmsFallback     = OpenchatServicePreferences.isFallbackMmsEnabled(getActivity());
     final boolean       nonData         = OpenchatServicePreferences.isDirectSmsAllowed(getActivity());
 
     if (dataFallback) {
       builder.append(getString(R.string.preferences__sms_outgoing_push_users));
-      if (dataFallbackAsk) builder.append(" ").append(getString(R.string.preferences__sms_fallback_push_users_ask));
+
+      List<String> fallbackOptions = new LinkedList<>();
+      if (dataFallbackAsk) fallbackOptions.add(getString(R.string.preferences__sms_fallback_push_users_ask));
+      if (!mmsFallback)    fallbackOptions.add(getString(R.string.preferences__sms_fallback_push_users_no_mms));
+
+      if (fallbackOptions.size() > 0) {
+        builder.append(" (")
+               .append(TextUtils.join(", ", fallbackOptions))
+               .append(")");
+      }
     }
     if (nonData) {
       if (dataFallback) builder.append(", ");
