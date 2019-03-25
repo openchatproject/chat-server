@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
-import com.openchat.secureim.providers.PartProvider;
+import com.openchat.secureim.mms.PartAuthority;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -60,7 +60,7 @@ public class SaveAttachmentTask extends ProgressDialogAsyncTask<SaveAttachmentTa
       }
 
       File mediaFile            = constructOutputFile(attachment.contentType, attachment.date);
-      InputStream inputStream   = DatabaseFactory.getEncryptingPartDatabase(context, masterSecret).getPartStream(ContentUris.parseId(attachment.uri));
+      InputStream inputStream   = PartAuthority.getPartStream(context, masterSecret, attachment.uri);
       OutputStream outputStream = new FileOutputStream(mediaFile);
 
       Util.copy(inputStream, outputStream);
@@ -138,9 +138,6 @@ public class SaveAttachmentTask extends ProgressDialogAsyncTask<SaveAttachmentTa
     public Attachment(Uri uri, String contentType, long date) {
       if (uri == null || contentType == null || date < 0) {
         throw new AssertionError("uri, content type, and date must all be specified");
-      }
-      if (!PartProvider.isAuthority(uri)) {
-        throw new AssertionError("attachment must be a OpenchatService attachment");
       }
       this.uri         = uri;
       this.contentType = contentType;

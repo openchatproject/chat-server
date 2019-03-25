@@ -16,6 +16,7 @@ import com.openchat.secureim.mms.MmsRadio;
 import com.openchat.secureim.mms.MmsRadioException;
 import com.openchat.secureim.mms.MmsSendResult;
 import com.openchat.secureim.mms.OutgoingMmsConnection;
+import com.openchat.secureim.mms.PartAuthority;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
@@ -23,17 +24,22 @@ import com.openchat.secureim.transport.InsecureFallbackApprovalException;
 import com.openchat.secureim.transport.UndeliverableMessageException;
 import com.openchat.secureim.util.Hex;
 import com.openchat.secureim.util.NumberUtil;
+import com.openchat.secureim.util.Util;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.protocal.NoSessionException;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 
 import ws.com.google.android.mms.MmsException;
 import ws.com.google.android.mms.pdu.EncodedStringValue;
+import ws.com.google.android.mms.pdu.PduBody;
 import ws.com.google.android.mms.pdu.PduComposer;
 import ws.com.google.android.mms.pdu.PduHeaders;
+import ws.com.google.android.mms.pdu.PduPart;
 import ws.com.google.android.mms.pdu.SendConf;
 import ws.com.google.android.mms.pdu.SendReq;
 
@@ -60,9 +66,11 @@ public class MmsSendJob extends MasterSecretJob {
   }
 
   @Override
-  public void onRun(MasterSecret masterSecret) throws MmsException, NoSuchMessageException {
+  public void onRun(MasterSecret masterSecret) throws MmsException, NoSuchMessageException, IOException {
     MmsDatabase database = DatabaseFactory.getMmsDatabase(context);
     SendReq     message  = database.getOutgoingMessage(masterSecret, messageId);
+
+    populatePartData(message.getBody(), masterSecret);
 
     try {
       MmsSendResult result = deliver(masterSecret, message);
@@ -92,6 +100,20 @@ public class MmsSendJob extends MasterSecretJob {
   public void onCanceled() {
     DatabaseFactory.getMmsDatabase(context).markAsSentFailed(messageId);
     notifyMediaMessageDeliveryFailed(context, messageId);
+  }
+
+  private void populatePartData(PduPart part, MasterSecret masterSecret) throws IOException {
+    ByteArrayOutputStream os = part.getDataSize() > 0 && part.getDataSize() < Integer.MAX_VALUE
+                             ? new ByteArrayOutputStream((int)part.getDataSize())
+                             : new ByteArrayOutputStream();
+    Util.copy(PartAuthority.getPartStream(context, masterSecret, part.getDataUri()), os);
+    part.setData(os.toByteArray());
+  }
+
+  private void populatePartData(PduBody body, MasterSecret masterSecret) throws IOException {
+    for (int i=body.getPartsNum()-1; i>=0; i--) {
+      populatePartData(body.getPart(i), masterSecret);
+    }
   }
 
   public MmsSendResult deliver(MasterSecret masterSecret, SendReq message)

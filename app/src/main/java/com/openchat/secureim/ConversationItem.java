@@ -35,6 +35,7 @@ import com.openchat.secureim.database.model.NotificationMmsMessageRecord;
 import com.openchat.secureim.jobs.MmsDownloadJob;
 import com.openchat.secureim.jobs.MmsSendJob;
 import com.openchat.secureim.jobs.SmsSendJob;
+import com.openchat.secureim.mms.PartAuthority;
 import com.openchat.secureim.mms.Slide;
 import com.openchat.secureim.mms.SlideDeck;
 import com.openchat.secureim.recipients.Recipient;
@@ -433,7 +434,7 @@ public class ConversationItem extends LinearLayout {
       Log.w(TAG, "Clicked: " + slide.getUri() + " , " + slide.getContentType());
       Intent intent = new Intent(Intent.ACTION_VIEW);
       intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-      intent.setDataAndType(slide.getUri(), slide.getContentType());
+      intent.setDataAndType(PartAuthority.getPublicPartUri(slide.getUri()), slide.getContentType());
       try {
         context.startActivity(intent);
       } catch (ActivityNotFoundException anfe) {

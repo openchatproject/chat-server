@@ -3,8 +3,10 @@ package com.openchat.secureim.jobs;
 import android.content.Context;
 import android.util.Log;
 
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
+import com.openchat.secureim.mms.PartAuthority;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
@@ -20,10 +22,13 @@ import com.openchat.imservice.api.push.PushAddress;
 import com.openchat.imservice.api.util.InvalidNumberException;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
 import ws.com.google.android.mms.ContentType;
+import ws.com.google.android.mms.pdu.PduPart;
 import ws.com.google.android.mms.pdu.SendReq;
 
 public abstract class PushSendJob extends MasterSecretJob {
@@ -82,18 +87,23 @@ public abstract class PushSendJob extends MasterSecretJob {
     return (isSmsFallbackSupported(context, destination, media) && OpenchatServicePreferences.isFallbackSmsAskRequired(context));
   }
 
-  protected List<OpenchatServiceAttachment> getAttachments(SendReq message) {
+  protected List<OpenchatServiceAttachment> getAttachments(final MasterSecret masterSecret, final SendReq message) {
     List<OpenchatServiceAttachment> attachments = new LinkedList<>();
 
     for (int i=0;i<message.getBody().getPartsNum();i++) {
-      String contentType = Util.toIsoString(message.getBody().getPart(i).getContentType());
+      PduPart part = message.getBody().getPart(i);
+      String contentType = Util.toIsoString(part.getContentType());
       if (ContentType.isImageType(contentType) ||
           ContentType.isAudioType(contentType) ||
           ContentType.isVideoType(contentType))
       {
-        byte[] data = message.getBody().getPart(i).getData();
-        Log.w(TAG, "Adding attachment...");
-        attachments.add(new OpenchatServiceAttachmentStream(new ByteArrayInputStream(data), contentType, data.length));
+
+        try {
+          InputStream is = PartAuthority.getPartStream(context, masterSecret, part.getDataUri());
+          attachments.add(new OpenchatServiceAttachmentStream(is, contentType, part.getDataSize()));
+        } catch (IOException ioe) {
+          Log.w(TAG, "Couldn't open attachment", ioe);
+        }
       }
     }
 

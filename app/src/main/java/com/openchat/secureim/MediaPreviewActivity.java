@@ -1,7 +1,6 @@
 package com.openchat.secureim;
 
 import android.annotation.TargetApi;
-import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -21,8 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.secureim.database.DatabaseFactory;
-import com.openchat.secureim.providers.PartProvider;
+import com.openchat.secureim.mms.PartAuthority;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.util.BitmapDecodingException;
 import com.openchat.secureim.util.BitmapUtil;
@@ -114,12 +112,8 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity {
     }
   }
 
-  private InputStream getInputStream(Uri uri, MasterSecret masterSecret) throws IOException {
-    if (PartProvider.isAuthority(uri)) {
-      return DatabaseFactory.getEncryptingPartDatabase(this, masterSecret).getPartStream(ContentUris.parseId(uri));
-    } else {
-      throw new AssertionError("Given a URI that is not handled by our app.");
-    }
+  private InputStream getMediaInputStream() throws IOException {
+    return PartAuthority.getPartStream(this, masterSecret, mediaUri);
   }
 
   @Override
@@ -143,8 +137,8 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity {
           GLES20.glGetIntegerv(GLES20.GL_MAX_TEXTURE_SIZE, maxTextureSizeParams, 0);
           int maxTextureSize = Math.max(maxTextureSizeParams[0], 2048);
           Log.w(TAG, "reported GL_MAX_TEXTURE_SIZE: " + maxTextureSize);
-          return BitmapUtil.createScaledBitmap(getInputStream(mediaUri, masterSecret),
-                                               getInputStream(mediaUri, masterSecret),
+          return BitmapUtil.createScaledBitmap(getMediaInputStream(),
+                                               getMediaInputStream(),
                                                maxTextureSize, maxTextureSize);
         } catch (IOException | BitmapDecodingException e) {
           return null;

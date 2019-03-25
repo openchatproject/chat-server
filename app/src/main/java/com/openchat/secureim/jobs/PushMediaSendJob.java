@@ -108,7 +108,7 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
     try {
       Recipients                 recipients   = RecipientFactory.getRecipientsFromString(context, destination, false);
       PushAddress                address      = getPushAddress(recipients.getPrimaryRecipient());
-      List<OpenchatServiceAttachment> attachments  = getAttachments(message);
+      List<OpenchatServiceAttachment> attachments  = getAttachments(masterSecret, message);
       String                     body         = PartParser.getMessageText(message.getBody());
       OpenchatServiceMessage          mediaMessage = new OpenchatServiceMessage(message.getSentTimestamp(), attachments, body);
 

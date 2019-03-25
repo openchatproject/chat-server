@@ -114,7 +114,7 @@ public class PushGroupSendJob extends PushSendJob implements InjectableType {
     byte[]                     groupId       = GroupUtil.getDecodedId(message.getTo()[0].getString());
     Recipients                 recipients    = DatabaseFactory.getGroupDatabase(context).getGroupMembers(groupId, false);
     List<PushAddress>          addresses     = getPushAddresses(recipients);
-    List<OpenchatServiceAttachment> attachments   = getAttachments(message);
+    List<OpenchatServiceAttachment> attachments   = getAttachments(masterSecret, message);
 
     if (MmsSmsColumns.Types.isGroupUpdate(message.getDatabaseMessageBox()) ||
         MmsSmsColumns.Types.isGroupQuit(message.getDatabaseMessageBox()))
