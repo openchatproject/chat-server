@@ -69,7 +69,7 @@ public class AppProtectionPreferenceFragment extends PreferenceFragment {
   private void initializeTimeoutSummary() {
     int timeoutMinutes = OpenchatServicePreferences.getPassphraseTimeoutInterval(getActivity());
     this.findPreference(OpenchatServicePreferences.PASSPHRASE_TIMEOUT_INTERVAL_PREF)
-        .setSummary(getString(R.string.AppProtectionPreferenceFragment_minutes, timeoutMinutes));
+        .setSummary(String.format("%d minutes", timeoutMinutes));
   }
 
   private class ChangePassphraseClickListener implements Preference.OnPreferenceClickListener {
