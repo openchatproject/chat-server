@@ -31,20 +31,16 @@ public class OutgoingMmsConnection extends MmsConnection {
   protected HttpUriRequest constructRequest(boolean useProxy)
       throws IOException
   {
-    try {
-      HttpPostHC4 request = new HttpPostHC4(apn.getMmsc());
-      request.addHeader("Accept", "*/*, application/vnd.wap.mms-message, application/vnd.wap.sic");
-      request.addHeader("x-wap-profile", "http://www.google.com/oha/rdf/ua-profile-kila.xml");
-      request.addHeader("Content-Type", "application/vnd.wap.mms-message");
-      request.setEntity(new ByteArrayEntityHC4(mms));
-      if (useProxy) {
-        HttpHost proxy = new HttpHost(apn.getProxy(), apn.getPort());
-        request.setConfig(RequestConfig.custom().setProxy(proxy).build());
-      }
-      return request;
-    } catch (IllegalArgumentException iae) {
-      throw new IOException(iae);
+    HttpPostHC4 request = new HttpPostHC4(apn.getMmsc());
+    request.addHeader("Accept", "*/*, application/vnd.wap.mms-message, application/vnd.wap.sic");
+    request.addHeader("x-wap-profile", "http://www.google.com/oha/rdf/ua-profile-kila.xml");
+    request.addHeader("Content-Type", "application/vnd.wap.mms-message");
+    request.setEntity(new ByteArrayEntityHC4(mms));
+    if (useProxy) {
+      HttpHost proxy = new HttpHost(apn.getProxy(), apn.getPort());
+      request.setConfig(RequestConfig.custom().setProxy(proxy).build());
     }
+    return request;
   }
 
   public void sendNotificationReceived(boolean usingMmsRadio, boolean useProxyIfAvailable)
