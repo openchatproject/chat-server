@@ -37,6 +37,7 @@ import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.sms.MessageSender;
+import com.openchat.secureim.util.BitmapDecodingException;
 import com.openchat.secureim.util.BitmapUtil;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;
@@ -489,8 +490,8 @@ public class GroupCreateActivity extends PassphraseRequiredActionBarActivity {
     protected Bitmap doInBackground(Void... voids) {
       if (avatarUri != null) {
         try {
-          avatarBmp = BitmapUtil.getScaledCircleCroppedBitmap(getApplicationContext(), avatarUri, AVATAR_SIZE);
-        } catch (FileNotFoundException e) {
+          avatarBmp = BitmapUtil.getScaledCircleCroppedBitmap(GroupCreateActivity.this, masterSecret, avatarUri, AVATAR_SIZE);
+        } catch (FileNotFoundException | BitmapDecodingException e) {
           Log.w(TAG, e);
           return null;
         }
