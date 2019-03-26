@@ -156,12 +156,18 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
     initializeReceivers();
     initializeResources();
-    initializeDraft();
   }
 
   @Override
   protected void onStart() {
     super.onStart();
+    initializeDraft();
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    saveDraft();
   }
 
   @Override
@@ -193,7 +199,6 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   protected void onDestroy() {
     unregisterReceiver(securityUpdateReceiver);
     unregisterReceiver(groupUpdateReceiver);
-    saveDraft();
     MemoryCleaner.clean(masterSecret);
     super.onDestroy();
   }
