@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.openchat.secureim.R;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.util.BitmapDecodingException;
 
 import java.io.IOException;
@@ -45,8 +46,8 @@ public class AttachmentManager {
     attachmentListener.onAttachmentChanged();
   }
 
-  public void setImage(Uri image) throws IOException, BitmapDecodingException {
-    setMedia(new ImageSlide(context, image), 345, 261);
+  public void setImage(MasterSecret masterSecret, Uri image) throws IOException, BitmapDecodingException {
+    setMedia(new ImageSlide(context, masterSecret, image), 345, 261);
   }
 
   public void setVideo(Uri video) throws IOException, MediaTooLargeException {
