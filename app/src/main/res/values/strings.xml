@@ -201,6 +201,8 @@
     <string name="ImportFragment_restore_complete">Restore complete!</string>
 
     <string name="KeyScanningActivity_no_scanned_key_found_exclamation">No scanned key found!</string>
+    <string name="KeyScanningActivity_install_barcode_Scanner">Install Barcode Scanner?</string>
+    <string name="KeyScanningActivity_this_application_requires_barcode_scanner_would_you_like_to_install_it">OpenchatService needs Barcode Scanner for QR codes.</string>
 
     <string name="MmsDownloader_error_storing_mms">Error storing MMS!</string>
     <string name="MmsDownloader_error_connecting_to_mms_provider">Error connecting to MMS provider...</string>
