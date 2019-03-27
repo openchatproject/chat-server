@@ -3,8 +3,6 @@ package com.openchat.secureim.recipients;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
 
 import com.openchat.secureim.contacts.ContactPhotoFactory;
@@ -15,19 +13,9 @@ import com.openchat.secureim.util.ListenableFutureTask;
 
 import java.util.HashSet;
 
-public class Recipient implements Parcelable {
+public class Recipient {
 
   private final static String TAG = Recipient.class.getSimpleName();
-
-  public static final Parcelable.Creator<Recipient> CREATOR = new Parcelable.Creator<Recipient>() {
-    public Recipient createFromParcel(Parcel in) {
-      return new Recipient(in);
-    }
-
-    public Recipient[] newArray(int size) {
-      return new Recipient[size];
-    }
-  };
 
   private final HashSet<RecipientModifiedListener> listeners = new HashSet<RecipientModifiedListener>();
 
@@ -91,14 +79,6 @@ public class Recipient implements Parcelable {
     this.circleCroppedContactPhoto  = circleCroppedContactPhoto;
   }
 
-  public Recipient(Parcel in) {
-    this.number       = in.readString();
-    this.name         = in.readString();
-    this.recipientId  = in.readLong();
-    this.contactUri   = in.readParcelable(null);
-    this.contactPhoto = in.readParcelable(null);
-  }
-
   public synchronized Uri getContactUri() {
     return this.contactUri;
   }
@@ -119,10 +99,6 @@ public class Recipient implements Parcelable {
 
   public String getNumber() {
     return number;
-  }
-
-  public int describeContents() {
-    return 0;
   }
 
   public long getRecipientId() {
@@ -151,14 +127,6 @@ public class Recipient implements Parcelable {
     for (RecipientModifiedListener listener : localListeners) {
       listener.onModified(this);
     }
-  }
-
-  public synchronized void writeToParcel(Parcel dest, int flags) {
-    dest.writeString(number);
-    dest.writeString(name);
-    dest.writeLong(recipientId);
-    dest.writeParcelable(contactUri, 0);
-    dest.writeParcelable(contactPhoto, 0);
   }
 
   public synchronized String toShortString() {

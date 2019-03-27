@@ -1,7 +1,6 @@
 package com.openchat.secureim;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -53,7 +52,6 @@ import com.openchat.imservice.api.util.InvalidNumberException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -72,8 +70,8 @@ public class GroupCreateActivity extends PassphraseRequiredActionBarActivity {
   private final static String TAG = GroupCreateActivity.class.getSimpleName();
 
   public static final String GROUP_RECIPIENT_EXTRA = "group_recipient";
-  public static final String GROUP_THREAD_EXTRA = "group_thread";
-  public static final String MASTER_SECRET_EXTRA    = "master_secret";
+  public static final String GROUP_THREAD_EXTRA    = "group_thread";
+  public static final String MASTER_SECRET_EXTRA   = "master_secret";
 
   private final DynamicTheme    dynamicTheme    = new DynamicTheme();
   private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
@@ -88,7 +86,7 @@ public class GroupCreateActivity extends PassphraseRequiredActionBarActivity {
   private ImageView           avatar;
   private TextView            creatingText;
 
-  private Recipients     groupRecipient    = null;
+  private Recipient      groupRecipient    = null;
   private long           groupThread       = -1;
   private byte[]         groupId           = null;
   private Set<Recipient> existingContacts  = null;
@@ -195,10 +193,10 @@ public class GroupCreateActivity extends PassphraseRequiredActionBarActivity {
   }
 
   private void initializeResources() {
-    groupRecipient = getIntent().getParcelableExtra(GROUP_RECIPIENT_EXTRA);
+    groupRecipient = RecipientFactory.getRecipientForId(this, getIntent().getLongExtra(GROUP_RECIPIENT_EXTRA, -1), true);
     groupThread = getIntent().getLongExtra(GROUP_THREAD_EXTRA, -1);
     if (groupRecipient != null) {
-      final String encodedGroupId = groupRecipient.getPrimaryRecipient().getNumber();
+      final String encodedGroupId = groupRecipient.getNumber();
       if (encodedGroupId != null) {
         try {
           groupId = GroupUtil.getDecodedId(encodedGroupId);
@@ -521,7 +519,7 @@ public class GroupCreateActivity extends PassphraseRequiredActionBarActivity {
         intent.putExtra(ConversationActivity.DISTRIBUTION_TYPE_EXTRA, ThreadDatabase.DistributionTypes.DEFAULT);
 
         ArrayList<Recipient> selectedContactsList = setToArrayList(selectedContacts);
-        intent.putExtra(ConversationActivity.RECIPIENTS_EXTRA, new Recipients(selectedContactsList).toIdString());
+        intent.putExtra(ConversationActivity.RECIPIENTS_EXTRA, new Recipients(selectedContactsList).getIds());
         startActivity(intent);
         finish();
       } else {
@@ -572,7 +570,7 @@ public class GroupCreateActivity extends PassphraseRequiredActionBarActivity {
       if (threadId > -1) {
         Intent intent = getIntent();
         intent.putExtra(GROUP_THREAD_EXTRA, threadId);
-        intent.putExtra(GROUP_RECIPIENT_EXTRA, recipients);
+        intent.putExtra(GROUP_RECIPIENT_EXTRA, recipients.getIds());
         setResult(RESULT_OK, intent);
         finish();
       } else if (threadId == RES_BAD_NUMBER) {
@@ -620,7 +618,7 @@ public class GroupCreateActivity extends PassphraseRequiredActionBarActivity {
         intent.putExtra(ConversationActivity.MASTER_SECRET_EXTRA, masterSecret);
         intent.putExtra(ConversationActivity.THREAD_ID_EXTRA, threadId);
         intent.putExtra(ConversationActivity.DISTRIBUTION_TYPE_EXTRA, ThreadDatabase.DistributionTypes.DEFAULT);
-        intent.putExtra(ConversationActivity.RECIPIENTS_EXTRA, recipients.toIdString());
+        intent.putExtra(ConversationActivity.RECIPIENTS_EXTRA, recipients.getIds());
         startActivity(intent);
         finish();
       } else if (threadId == RES_BAD_NUMBER) {

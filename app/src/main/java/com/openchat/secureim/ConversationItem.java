@@ -372,7 +372,7 @@ public class ConversationItem extends LinearLayout {
       intent.setClass(context, AutoInitiateActivity.class);
       intent.putExtra("threadId", threadId);
       intent.putExtra("masterSecret", masterSecret);
-      intent.putExtra("recipient", recipient);
+      intent.putExtra("recipient", recipient.getRecipientId());
 
       context.startActivity(intent);
     }
@@ -410,7 +410,7 @@ public class ConversationItem extends LinearLayout {
 
   private void handleKeyExchangeClicked() {
     Intent intent = new Intent(context, ReceiveKeyActivity.class);
-    intent.putExtra("recipient", messageRecord.getIndividualRecipient());
+    intent.putExtra("recipient", messageRecord.getIndividualRecipient().getRecipientId());
     intent.putExtra("recipient_device_id", messageRecord.getRecipientDeviceId());
     intent.putExtra("body", messageRecord.getBody().getBody());
     intent.putExtra("thread_id", messageRecord.getThreadId());
@@ -449,7 +449,7 @@ public class ConversationItem extends LinearLayout {
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.setDataAndType(slide.getUri(), slide.getContentType());
         intent.putExtra(MediaPreviewActivity.MASTER_SECRET_EXTRA, masterSecret);
-        if (!messageRecord.isOutgoing()) intent.putExtra(MediaPreviewActivity.RECIPIENT_EXTRA, messageRecord.getIndividualRecipient());
+        if (!messageRecord.isOutgoing()) intent.putExtra(MediaPreviewActivity.RECIPIENT_EXTRA, messageRecord.getIndividualRecipient().getRecipientId());
         intent.putExtra(MediaPreviewActivity.DATE_EXTRA, messageRecord.getDateReceived());
         context.startActivity(intent);
       } else {

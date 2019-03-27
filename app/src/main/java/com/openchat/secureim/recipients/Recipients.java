@@ -1,7 +1,5 @@
 package com.openchat.secureim.recipients;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Patterns;
 
 import com.openchat.secureim.recipients.Recipient.RecipientModifiedListener;
@@ -14,17 +12,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Recipients implements Parcelable {
-
-  public static final Parcelable.Creator<Recipients> CREATOR = new Parcelable.Creator<Recipients>() {
-    public Recipients createFromParcel(Parcel in) {
-      return new Recipients(in);
-    }
-
-    public Recipients[] newArray(int size) {
-      return new Recipients[size];
-    }
-  };
+public class Recipients {
 
   private List<Recipient> recipients;
 
@@ -36,11 +24,6 @@ public class Recipients implements Parcelable {
     this.recipients = new LinkedList<Recipient>() {{
       add(recipient);
     }};
-  }
-
-  public Recipients(Parcel in) {
-    this.recipients = new ArrayList<Recipient>();
-    in.readTypedList(recipients, Recipient.CREATOR);
   }
 
   public void append(Recipients recipients) {
@@ -91,14 +74,12 @@ public class Recipients implements Parcelable {
     return this.recipients;
   }
 
-  public String toIdString() {
-    List<String> ids = new LinkedList<String>();
-
-    for (Recipient recipient : recipients) {
-      ids.add(String.valueOf(recipient.getRecipientId()));
+  public long[] getIds() {
+    long[] ids = new long[recipients.size()];
+    for (int i=0; i<recipients.size(); i++) {
+      ids[i] = recipients.get(i).getRecipientId();
     }
-
-    return Util.join(ids, " ");
+    return ids;
   }
 
   public String[] toNumberStringArray(boolean scrub) {
@@ -137,9 +118,5 @@ public class Recipients implements Parcelable {
 
   public int describeContents() {
     return 0;
-  }
-
-  public void writeToParcel(Parcel dest, int flags) {
-    dest.writeTypedList(recipients);
   }
 }
