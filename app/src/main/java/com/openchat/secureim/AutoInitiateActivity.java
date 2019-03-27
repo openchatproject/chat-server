@@ -14,6 +14,7 @@ import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.storage.OpenchatServiceSessionStore;
 import com.openchat.secureim.protocol.Tag;
 import com.openchat.secureim.recipients.Recipient;
+import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.state.SessionStore;
@@ -41,7 +42,7 @@ public class AutoInitiateActivity extends Activity {
 
   private void initializeResources() {
     this.threadId     = this.getIntent().getLongExtra("threadId", -1);
-    this.recipient    = this.getIntent().getParcelableExtra("recipient");
+    this.recipient    = RecipientFactory.getRecipientForId(this, this.getIntent().getLongExtra("recipient", -1), true);
     this.masterSecret = this.getIntent().getParcelableExtra("masterSecret");
 
     ((Button)findViewById(R.id.initiate_button)).setOnClickListener(new OkListener());
