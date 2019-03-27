@@ -104,6 +104,7 @@
     <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
     <string name="ConversationActivity_get_with_it">Get with it: %s</string>
     <string name="ConversationActivity_install_openchatservice">Install OpenchatService: %s</string>
+    <string name="ConversationActivity_error_leaving_group">Error leaving group...</string>
 
     <string name="ConversationFragment_message_details">Message details</string>
     <string name="ConversationFragment_transport_s_sent_received_s">Transport: %1$s\nSent/Received: %2$s</string>
@@ -138,13 +139,9 @@
     </string>
     <string name="ExportFragment_cancel">Cancel</string>
     <string name="ExportFragment_exporting">Exporting</string>
-    <string name="ExportFragment_exporting_plaintext_to_sd_card">Exporting plaintext to SD card...
-    </string>
-    <string name="ExportFragment_error_unable_to_write_to_sd_card">Error, unable to write to SD
-        card!
-    </string>
-    <string name="ExportFragment_error_while_writing_to_sd_card">Error while writing to SD card.
-    </string>
+    <string name="ExportFragment_exporting_plaintext_to_sd_card">Exporting plaintext to SD card...</string>
+    <string name="ExportFragment_error_unable_to_write_to_sd_card">Error, unable to write to SD card!</string>
+    <string name="ExportFragment_error_while_writing_to_sd_card">Error while writing to SD card.</string>
     <string name="ExportFragment_success">Success!</string>
 
     <string name="GcmRefreshJob_Permanent_OpenchatService_communication_failure">Permanent OpenchatService communication failure!</string>
@@ -163,10 +160,11 @@
     <string name="GroupCreateActivity_menu_create_title">Create group</string>
     <string name="GroupCreateActivity_creating_group">Creating %1$s&#8230;</string>
     <string name="GroupCreateActivity_updating_group">Updating %1$s...</string>
-    <string name="GroupCreateActivity_loading_group_details">Loading group details</string>
     <string name="GroupCreateActivity_cannot_add_non_push_to_existing_group">Cannot add non-OpenchatService contacts to an existing OpenchatService group</string>
+    <string name="GroupCreateActivity_loading_group_details">Loading group details...</string>
 
     <string name="GroupMembersDialog_me">Me</string>
+    <string name="GroupMembersDialog_members">Members...</string>
 
     <string name="ImportExportActivity_import">Import</string>
     <string name="ImportExportActivity_export">Export</string>
@@ -211,6 +209,8 @@
     <string name="NotificationMmsMessageRecord_multimedia_message">Multimedia message</string>
 
     <string name="MessageRecord_message_encrypted_with_a_legacy_protocol_version_that_is_no_longer_supported">Received a message encrypted using an old version of OpenchatService that is no longer supported. Please ask the sender to upgrade to the most recent version and resend the message.</string>
+    <string name="MessageRecord_left_group">You have left the group.</string>
+    <string name="MessageRecord_updated_group">Updated the group.</string>
 
     <string name="PassphraseChangeActivity_passphrases_dont_match_exclamation">Passphrases don\'t match!</string>
     <string name="PassphraseChangeActivity_incorrect_old_passphrase_exclamation">Incorrect old passphrase!</string>
@@ -453,6 +453,10 @@
     <string name="MmsPreferencesFragment__not_set">Not set</string>
     <string name="MmsPreferencesFragment__invalid_uri">The text entered was not a valid URI</string>
     <string name="MmsPreferencesFragment__invalid_host">The text entered was not a valid host</string>
+
+    <string name="GroupUtil_joined_the_group">%1$s joined the group.</string>
+    <string name="GroupUtil_group_updated">Group updated.</string>
+    <string name="GroupUtil_title_is_now">Title is now \'%1$s\'.</string>
 
     <string name="prompt_passphrase_activity__unlock">Unlock</string>
 
@@ -725,6 +729,7 @@
 
     <string name="MediaPreviewActivity_you">You</string>
     <string name="MediaPreviewActivity_cant_display">Failed to preview this image</string>
+    <string name="MediaPreviewActivity_unssuported_media_type">Unsupported media type</string>
 
     <string name="media_preview__save_title">Save</string>
 
