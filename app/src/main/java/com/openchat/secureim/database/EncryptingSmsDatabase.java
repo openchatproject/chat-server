@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.util.Pair;
 
+import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.AsymmetricMasterCipher;
 import com.openchat.secureim.crypto.AsymmetricMasterSecret;
 import com.openchat.secureim.database.model.DisplayRecord;
@@ -159,7 +160,7 @@ public class EncryptingSmsDatabase extends SmsDatabase {
         }
       } catch (InvalidMessageException e) {
         Log.w("EncryptingSmsDatabase", e);
-        return new DisplayRecord.Body("Error decrypting message.", true);
+        return new DisplayRecord.Body(context.getString(R.string.EncryptingSmsDatabase_error_decrypting_message), true);
       }
     }
   }

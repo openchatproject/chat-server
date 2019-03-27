@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.MasterCipher;
 import com.openchat.secureim.database.model.DisplayRecord;
 import com.openchat.secureim.database.model.MessageRecord;
@@ -452,7 +453,7 @@ public class ThreadDatabase extends Database {
         }
       } catch (InvalidMessageException e) {
         Log.w("ThreadDatabase", e);
-        return new DisplayRecord.Body("Error decrypting message.", true);
+        return new DisplayRecord.Body(context.getString(R.string.ThreadDatabase_error_decrypting_message), true);
       }
     }
 
