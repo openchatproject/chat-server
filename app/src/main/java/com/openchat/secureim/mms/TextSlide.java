@@ -3,6 +3,7 @@ package com.openchat.secureim.mms;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.openchat.secureim.util.SmilUtil;
 import org.w3c.dom.smil.SMILDocument;
