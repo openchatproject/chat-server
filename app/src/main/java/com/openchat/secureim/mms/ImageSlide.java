@@ -46,8 +46,8 @@ public class ImageSlide extends Slide {
     super(context, masterSecret, part);
   }
 
-  public ImageSlide(Context context, MasterSecret masterSecret, Uri uri) throws IOException, BitmapDecodingException {
-    super(context, constructPartFromUri(context, masterSecret, uri));
+  public ImageSlide(Context context, Uri uri) throws IOException, BitmapDecodingException {
+    super(context, constructPartFromUri(uri));
   }
 
   @Override
@@ -174,13 +174,11 @@ public class ImageSlide extends Slide {
     return SmilUtil.createMediaElement("img", document, new String(getPart().getName()));
   }
 
-  private static PduPart constructPartFromUri(Context context, MasterSecret masterSecret, Uri uri)
+  private static PduPart constructPartFromUri(Uri uri)
       throws IOException, BitmapDecodingException
   {
     PduPart part = new PduPart();
-    byte[] data  = BitmapUtil.createScaledBytes(context, masterSecret, uri, 1280, 1280, MAX_MESSAGE_SIZE);
 
-    part.setData(data);
     part.setDataUri(uri);
     part.setContentType(ContentType.IMAGE_JPEG.getBytes());
     part.setContentId((System.currentTimeMillis()+"").getBytes());
