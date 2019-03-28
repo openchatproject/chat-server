@@ -3,6 +3,8 @@ package com.openchat.secureim.database.model;
 import android.content.Context;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.text.style.TextAppearanceSpan;
 
@@ -153,20 +155,9 @@ public abstract class MessageRecord extends DisplayRecord {
 
   protected SpannableString emphasisAdded(String sequence) {
     SpannableString spannable = new SpannableString(sequence);
-    spannable.setSpan(new TextAppearanceSpan(context, android.R.style.TextAppearance_Small), 0, sequence.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    spannable.setSpan(new RelativeSizeSpan(0.9f), 0, sequence.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     spannable.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), 0, sequence.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
     return spannable;
-  }
-
-  public boolean equals(Object other) {
-    return other != null                              &&
-           other instanceof MessageRecord             &&
-           ((MessageRecord) other).getId() == getId() &&
-           ((MessageRecord) other).isMms() == isMms();
-  }
-
-  public int hashCode() {
-    return (int)getId();
   }
 }
