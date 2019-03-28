@@ -15,6 +15,7 @@ import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.NoSuchMessageException;
 import com.openchat.secureim.database.model.SmsMessageRecord;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
+import com.openchat.secureim.jobs.requirements.NetworkOrServiceRequirement;
 import com.openchat.secureim.jobs.requirements.ServiceRequirement;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.recipients.Recipients;
@@ -37,13 +38,7 @@ public class SmsSendJob extends MasterSecretJob {
   private final long messageId;
 
   public SmsSendJob(Context context, long messageId, String name) {
-    super(context, JobParameters.newBuilder()
-                                .withPersistence()
-                                .withRequirement(new MasterSecretRequirement(context))
-                                .withRequirement(new ServiceRequirement(context))
-                                .withGroupId(name)
-                                .create());
-
+    super(context, constructParameters(context, name));
     this.messageId = messageId;
   }
 
@@ -105,7 +100,7 @@ public class SmsSendJob extends MasterSecretJob {
       throws UndeliverableMessageException, InsecureFallbackApprovalException
   {
     MultipartSmsMessageHandler multipartMessageHandler = new MultipartSmsMessageHandler();
-    OutgoingTextMessage transportMessage               = OutgoingTextMessage.from(message);
+    OutgoingTextMessage        transportMessage        = OutgoingTextMessage.from(message);
 
     if (message.isSecure() || message.isEndSession()) {
       transportMessage = getAsymmetricEncrypt(masterSecret, transportMessage);
@@ -219,7 +214,7 @@ public class SmsSendJob extends MasterSecretJob {
     return pending;
   }
 
-  protected Intent constructDeliveredIntent(Context context, long messageId, long type) {
+  private Intent constructDeliveredIntent(Context context, long messageId, long type) {
     Intent pending = new Intent(SmsDeliveryListener.DELIVERED_SMS_ACTION,
                                 Uri.parse("custom://" + messageId + System.currentTimeMillis()),
                                 context, SmsDeliveryListener.class);
@@ -227,6 +222,21 @@ public class SmsSendJob extends MasterSecretJob {
     pending.putExtra("message_id", messageId);
 
     return pending;
+  }
+
+  private static JobParameters constructParameters(Context context, String name) {
+    JobParameters.Builder builder = JobParameters.newBuilder()
+                                                 .withPersistence()
+                                                 .withRequirement(new MasterSecretRequirement(context))
+                                                 .withGroupId(name);
+
+    if (OpenchatServicePreferences.isWifiSmsEnabled(context)) {
+      builder.withRequirement(new NetworkOrServiceRequirement(context));
+    } else {
+      builder.withRequirement(new ServiceRequirement(context));
+    }
+
+    return builder.create();
   }
 
 }
