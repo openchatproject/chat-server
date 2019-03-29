@@ -32,6 +32,7 @@ import com.openchat.secureim.sms.OutgoingKeyExchangeMessage;
 import com.openchat.secureim.util.BitmapDecodingException;
 import com.openchat.secureim.util.BitmapUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.secureim.util.Util;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.protocal.DuplicateMessageException;
 import com.openchat.protocal.InvalidMessageException;
@@ -99,7 +100,7 @@ public class ThumbnailGenerateJob extends MasterSecretJob {
   }
 
   private Bitmap generateThumbnailForPart(MasterSecret masterSecret, PduPart part) {
-    String contentType = new String(part.getContentType());
+    String contentType = Util.toIsoString(part.getContentType());
 
     if      (ContentType.isImageType(contentType)) return generateImageThumbnail(masterSecret, part);
     else                                           return null;
@@ -109,7 +110,7 @@ public class ThumbnailGenerateJob extends MasterSecretJob {
     try {
       int maxSize = context.getResources().getDimensionPixelSize(R.dimen.thumbnail_max_size);
       return BitmapUtil.createScaledBitmap(context, masterSecret, part.getDataUri(), maxSize, maxSize);
-    } catch (FileNotFoundException | BitmapDecodingException e) {
+    } catch (FileNotFoundException | BitmapDecodingException | OutOfMemoryError e) {
       Log.w(TAG, e);
       return null;
     }
