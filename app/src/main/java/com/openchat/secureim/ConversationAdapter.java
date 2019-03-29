@@ -19,7 +19,11 @@ import com.openchat.secureim.util.LRUCache;
 
 import java.lang.ref.SoftReference;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+
+import com.openchat.secureim.ConversationFragment.SelectionClickListener;
 
 public class ConversationAdapter extends CursorAdapter implements AbsListView.RecyclerListener {
 
@@ -31,19 +35,23 @@ public class ConversationAdapter extends CursorAdapter implements AbsListView.Re
   public static final int MESSAGE_TYPE_INCOMING = 1;
   public static final int MESSAGE_TYPE_GROUP_ACTION = 2;
 
-  private final Handler failedIconClickHandler;
-  private final Context context;
-  private final MasterSecret masterSecret;
-  private final boolean groupThread;
-  private final boolean pushDestination;
-  private final LayoutInflater inflater;
+  private final Set<MessageRecord> batchSelected = Collections.synchronizedSet(new HashSet<MessageRecord>());
 
-  public ConversationAdapter(Context context, MasterSecret masterSecret,
+  private final SelectionClickListener selectionClickListener;
+  private final Handler                failedIconClickHandler;
+  private final Context                context;
+  private final MasterSecret           masterSecret;
+  private final boolean                groupThread;
+  private final boolean                pushDestination;
+  private final LayoutInflater         inflater;
+
+  public ConversationAdapter(Context context, MasterSecret masterSecret, SelectionClickListener selectionClickListener,
                              Handler failedIconClickHandler, boolean groupThread, boolean pushDestination)
   {
     super(context, null, 0);
     this.context                = context;
     this.masterSecret           = masterSecret;
+    this.selectionClickListener = selectionClickListener;
     this.failedIconClickHandler = failedIconClickHandler;
     this.groupThread            = groupThread;
     this.pushDestination        = pushDestination;
@@ -57,7 +65,8 @@ public class ConversationAdapter extends CursorAdapter implements AbsListView.Re
     String type                 = cursor.getString(cursor.getColumnIndexOrThrow(MmsSmsDatabase.TRANSPORT));
     MessageRecord messageRecord = getMessageRecord(id, cursor, type);
 
-    item.set(masterSecret, messageRecord, failedIconClickHandler, groupThread, pushDestination);
+    item.set(masterSecret, messageRecord, batchSelected, selectionClickListener,
+             failedIconClickHandler, groupThread, pushDestination);
   }
 
   @Override
@@ -132,6 +141,18 @@ public class ConversationAdapter extends CursorAdapter implements AbsListView.Re
 
   public void close() {
     this.getCursor().close();
+  }
+
+  public void toggleBatchSelected(MessageRecord messageRecord) {
+    if (batchSelected.contains(messageRecord)) {
+      batchSelected.remove(messageRecord);
+    } else {
+      batchSelected.add(messageRecord);
+    }
+  }
+
+  public Set<MessageRecord> getBatchSelected() {
+    return batchSelected;
   }
 
   @Override

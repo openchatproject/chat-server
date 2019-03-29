@@ -70,10 +70,10 @@ public class SmsDecryptJob extends MasterSecretJob {
       long                messageId = record.getId();
       long                threadId  = record.getThreadId();
 
-      if      (message.isSecureMessage()) handleSecureMessage(masterSecret, messageId, message);
+      if      (message.isSecureMessage()) handleSecureMessage(masterSecret, messageId, threadId, message);
       else if (message.isPreKeyBundle())  handlePreKeyOpenchatMessage(masterSecret, messageId, threadId, (IncomingPreKeyBundleMessage) message);
       else if (message.isKeyExchange())   handleKeyExchangeMessage(masterSecret, messageId, threadId, (IncomingKeyExchangeMessage) message);
-      else if (message.isEndSession())    handleSecureMessage(masterSecret, messageId, message);
+      else if (message.isEndSession())    handleSecureMessage(masterSecret, messageId, threadId, message);
       else                                database.updateMessageBody(masterSecret, messageId, message.getMessageBody());
 
       MessageNotifier.updateNotification(context, masterSecret);
@@ -101,7 +101,8 @@ public class SmsDecryptJob extends MasterSecretJob {
   public void onCanceled() {
   }
 
-  private void handleSecureMessage(MasterSecret masterSecret, long messageId, IncomingTextMessage message)
+  private void handleSecureMessage(MasterSecret masterSecret, long messageId, long threadId,
+                                   IncomingTextMessage message)
       throws NoSessionException, DuplicateMessageException,
       InvalidMessageException, LegacyMessageException
   {
@@ -110,6 +111,8 @@ public class SmsDecryptJob extends MasterSecretJob {
     IncomingTextMessage   plaintext = cipher.decrypt(context, message);
 
     database.updateMessageBody(masterSecret, messageId, plaintext.getMessageBody());
+
+    if (message.isEndSession()) SecurityEvent.broadcastSecurityUpdateEvent(context, threadId);
   }
 
   private void handlePreKeyOpenchatMessage(MasterSecret masterSecret, long messageId, long threadId,
@@ -145,6 +148,8 @@ public class SmsDecryptJob extends MasterSecretJob {
         OutgoingKeyExchangeMessage response = cipher.process(context, message);
 
         database.markAsProcessedKeyExchange(messageId);
+
+        SecurityEvent.broadcastSecurityUpdateEvent(context, threadId);
 
         if (response != null) {
           MessageSender.send(context, masterSecret, response, threadId, true);
