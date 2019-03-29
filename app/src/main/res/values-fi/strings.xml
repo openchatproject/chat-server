@@ -6,7 +6,6 @@
   <string name="delete">Poista</string>
   <string name="ApplicationPreferencesActivity_currently_s">Tällä hetkellä: %s</string>
   <string name="ApplicationPreferenceActivity_you_havent_set_a_passphrase_yet">Ette ole vielä määritellyt salasanaa!</string>
-  <string name="ApplicationPreferencesActivity_messages_per_conversation">viestiä yhdessä keskustelussa</string>
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Haluatko poistaa kaikki vanhat viestit?</string>
   <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Oletteko varma, että haluatte rajata kaikki viestiketjut %s viimeisimpään viestiin?</string>
   <string name="ApplicationPreferencesActivity_delete">Poista</string>
@@ -38,7 +37,6 @@ Käyttääksenne push-palvelua tulevaisuudessa teidän täytyy rekisteröityä u
   <string name="ConversationItem_group_action_left">%1$s on lähtenyt ryhmästä.</string>
   <string name="ConversationItem_click_to_approve_sms">Aktivoi SMS varajärjestelmä</string>
   <string name="ConversationItem_click_to_approve_mms">Napsauta aktivoidaksesi MMS varajärjestelmän</string>
-  <string name="ConversationItem_click_to_approve_unencrypted">Aktivoi salaamaton varajärjestelmä</string>
   <string name="ConversationItem_click_to_approve_sms_dialog_title">Käytä SMS varajärjestelmää?</string>
   <string name="ConversationItem_click_to_approve_mms_dialog_title">Käytä MMS varajärjestelmää?</string>
   <string name="ConversationItem_click_to_approve_unencrypted_sms_dialog_title">Käytä salaamattomia SMS -viestejä?</string>
@@ -53,8 +51,6 @@ Käyttääksenne push-palvelua tulevaisuudessa teidän täytyy rekisteröityä u
   <string name="ConversationActivity_select_contact_info">Valitse yhteystieto</string>
   <string name="ConversationActivity_compose_message">Kirjoita viesti</string>
   <string name="ConversationActivity_sorry_there_was_an_error_setting_your_attachment">Virhe liitteen lisäämisessä</string>
-  <string name="ConversationActivity_sorry_the_selected_video_exceeds_message_size_restrictions">Kuvatallenne ylittää viestin kokorajan.</string>
-  <string name="ConversationActivity_sorry_the_selected_audio_exceeds_message_size_restrictions">Äänitallenne ylittää viestin kokorajan.</string>
   <string name="ConversationActivity_recipient_is_not_a_valid_sms_or_email_address_exclamation">Annettu numero tai sähköpostiosoite ei ole kelvollinen!</string>
   <string name="ConversationActivity_message_is_empty_exclamation">Viesti on tyhjä!</string>
   <string name="ConversationActivity_group_conversation_recipients">Ryhmäkeskustelun vastaanottajat</string>
@@ -68,6 +64,7 @@ Käyttääksenne push-palvelua tulevaisuudessa teidän täytyy rekisteröityä u
   <string name="ConversationActivity_this_device_does_not_appear_to_support_dial_actions">Tämä laite ei näytä tukevan valintanäppäintoimintoja.</string>
   <string name="ConversationActivity_leave_group">Poistutaanko ryhmästä?</string>
   <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">Haluatteko varmasti poistua ryhmästä?</string>
+  <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
   <string name="ConversationFragment_message_details">Viestin tiedot</string>
   <string name="ConversationFragment_confirm_message_delete">Viestin poiston varmistus</string>
   <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">Haluatteko varmasti poistaa tämän viestin pysyvästi?</string>
@@ -258,9 +255,7 @@ Vastaanotettiin viesti tuntemattomalla tunnisteavaimella. Napsauta käsitelläks
   <string name="contact_selection_recent_activity__no_recent_calls">Ei uusia soittoja.</string>
   <string name="conversation_activity__type_message_push">Lähetä OpenchatService-viesti</string>
   <string name="conversation_activity__type_message_sms_secure">Lähetä salattu SMS</string>
-  <string name="conversation_activity__type_message_sms_insecure">Lähetä salaamaton SMS</string>
   <string name="conversation_activity__type_message_mms_secure">Lähetä salattu MMS</string>
-  <string name="conversation_activity__type_message_mms_insecure">Lähetä salaamaton MMS</string>
   <string name="conversation_activity__send">Lähetä</string>
   <string name="conversation_activity__remove">Poista</string>
   <string name="conversation_item__mms_image_description">Mediaviesti</string>
@@ -297,7 +292,7 @@ Tuo aiemmin viety salattu OpenchatService-varmuuskopio.</string>
   <string name="import_fragment__import_plaintext_backup">Tuo salaamaton varmuuskopio</string>
   <string name="import_fragment__import_a_plaintext_backup_file">
 Tuo salaamaton varmuuskopiotiedosto. Yhteensopiva \"SMS Backup And Restore\":lla.</string>
-  <string name="mms_preferences_activity__manual_mms_settings_are_required">Puhelimesi edellyttää manuaalista MMS-asetusten säätöä.</string>
+  <string name="MmsPreferencesFragment__manual_mms_settings_are_required">Puhelimesi edellyttää manuaalista MMS-asetusten säätöä.</string>
   <string name="prompt_passphrase_activity__unlock">Avaa</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService edellyttää MMS-asetuksia lähettääkseen mediaa ja ryhmäviestejä verkko-operaattorisi kautta. Laitettasi ei ole konfiguroitu antamaan näitä tietoja itsestään, mikä voi johtua laitteen lukituksesta operaattoriin tai muusta rajoitetusta kokoonpanosta.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Lähettääksenne mediatiedostoja ja ryhmäviestejä, napsauttakaa \"OK\" ja täydentäkää pyydetyt asetukset. Verkko-operaattorinne MMS-asetukset voi yleensä paikantaa etsimällä termiä \"APN\". Teidän tarvitsee tehdä tämän vain kerran.</string>
@@ -363,6 +358,7 @@ epäonnistui.</string>
   <string name="AndroidManifest__complete_key_exchange">Suorita avaimenvaihto</string>
   <string name="AndroidManifest__log_submit">Lähetä virheenkorjausloki</string>
   <string name="arrays__my_identity_key">Oma tunnisteavain</string>
+  <string name="preferences__general">Yleistä</string>
   <string name="preferences__push_sms_category">Push- ja tekstiviestit</string>
   <string name="preferences__pref_all_sms_title">Vastaanota kaikki tekstiviestit</string>
   <string name="preferences__pref_all_mms_title">Vastaanota kaikki multimediaviestit</string>
@@ -379,8 +375,6 @@ epäonnistui.</string>
   <string name="preferences__change_passphrase">Vaihda salasana</string>
   <string name="preferences__change_my_passphrase">Vaihda salasanani</string>
   <string name="preferences__complete_key_exchanges">Suorita avaimenvaihdot</string>
-  <string name="preferences__disable_passphrase">Poista salasana käytöstä</string>
-  <string name="preferences__disable_local_encryption_of_messages_and_keys">Poista viestien ja avainten paikallinen salaus käytöstä</string>
   <string name="preferences__screen_security">Näytön suojaus</string>
   <string name="preferences__automatically_complete_key_exchanges_for_new_sessions_or_for_existing_sessions_with_the_same_identity_key">Käytä samaa tunnisteavainta suorittamaan avaimenvaihdot automaattisesti uusille istunnoille tai jo oleville istunnoille</string>
   <string name="preferences__disable_screen_security_to_allow_screen_shots">Estä kuvakaappaukset hiljattaisten sovellusten näkymässä sekä sovelluksen sisällä</string>
@@ -418,9 +412,6 @@ epäonnistui.</string>
   <string name="preferences__slow">Hidas</string>
   <string name="preferences__custom">Mukautettu</string>
   <string name="preferences__advanced">Lisäasetukset</string>
-  <string name="preferences__passphrase">Salasana</string>
-  <string name="preferences__advanced_mms_access_point_names">MMS-asetukset</string>
-  <string name="preferences__enable_manual_mms">Ota manuaalinen MMS käyttöön</string>
   <string name="preferences__override_system_mms_settings">Korvaa järjestelmän MMS-asetukset alla olevilla tiedoilla.</string>
   <string name="preferences__mmsc_url_required">MMSC URL (vaadittu)</string>
   <string name="preferences__mms_proxy_host_optional">MMS-välityspalvelimen osoite (valinnainen)</string>
@@ -429,12 +420,9 @@ epäonnistui.</string>
   <string name="preferences__request_a_delivery_report_for_each_sms_message_you_send">Pyydä varmistus jokaisen lähetetyn tekstiviestin toimituksesta</string>
   <string name="preferences__automatically_delete_older_messages_once_a_conversation_thread_exceeds_a_specified_length">Poista vanhemmat viestit automaattisesti, kun ketju ylittää määritetyn pituuden</string>
   <string name="preferences__delete_old_messages">Poista vanhat viestit</string>
-  <string name="preferences__storage">Tallennustila</string>
   <string name="preferences__conversation_length_limit">Keskustelun pituuden raja</string>
   <string name="preferences__trim_all_threads_now">Rajaa kaikki viestiketjut nyt</string>
   <string name="preferences__scan_through_all_conversation_threads_and_enforce_conversation_length_limits">Skannaa kaikki viestiketjut ja pakota ketjuihin pituusrajat</string>
-  <string name="preferences__light_theme">Vaalea teema</string>
-  <string name="preferences__dark_theme">Tumma teema</string>
   <string name="preferences__appearance">Ulkonäkö</string>
   <string name="preferences__theme">Teema</string>
   <string name="preferences__default">Oletus</string>
@@ -444,12 +432,9 @@ epäonnistui.</string>
   <string name="preferences__use_data_channel">Push-viestit</string>
   <string name="preferences__use_the_data_channel_for_communication_with_other_openchatservice_users">
 Paranna yksityisyyttäsi ja vältä tekstiviestilaskuja käyttämällä tiedonsiirtokanavaa muiden OpenchatServicen käyttäjien kanssa.</string>
-  <string name="preferences__allow_sms_fallback">Salli lähtevät tekstiviestit</string>
   <string name="preferences__submit_debug_log">Lähetä virheenkorjausloki</string>
   <string name="preferences__sms_outgoing_push_users">OpenchatServicen käyttäjille</string>
-  <string name="preferences__sms_fallback_push_users_ask">(kysy ensin)</string>
   <string name="preferences__sms_outgoing_push_users_description">Lähetä salattuja tekstiviestejä jos verkkoyhteys katkeaa</string>
-  <string name="preferences__sms_fallback_ask_fallback">Kysy ennen tekstiviestien lähettämistä</string>
   <string name="preferences__sms_fallback_non_push_users">Muille</string>
   <string name="preferences__sms_fallback_nobody">Ei kenellekkään</string>
   <string name="contact_selection_list__menu_select_all">Valitse kaikki</string>
@@ -461,9 +446,7 @@ Paranna yksityisyyttäsi ja vältä tekstiviestilaskuja käyttämällä tiedonsi
   <string name="push_directory__menu_refresh">Päivitä yhteystietoluettelo</string>
   <string name="conversation_button_context__send_openchatservice_message">Lähetä OpenchatService-viesti</string>
   <string name="conversation_button_context__send_secure_sms">Lähetä salattu SMS</string>
-  <string name="conversation_button_context__send_insecure_sms">Lähetä salaamaton SMS</string>
   <string name="conversation_button_context__send_secure_mms">Lähetä salattu MMS</string>
-  <string name="conversation_button_context__send_insecure_mms">Lähetä salaamaton MMS</string>
   <string name="conversation_callable__menu_call">Soita</string>
   <string name="conversation_context__menu_message_details">Viestin tiedot</string>
   <string name="conversation_context__menu_copy_text">Kopioi teksti</string>
@@ -481,7 +464,6 @@ Paranna yksityisyyttäsi ja vältä tekstiviestilaskuja käyttämällä tiedonsi
   <string name="conversation__menu_add_attachment">Lisää liite</string>
   <string name="conversation__menu_update_group">Päivitä ryhmää</string>
   <string name="conversation__menu_leave_group">Poistu ryhmästä</string>
-  <string name="conversation__menu_add_contact_info">Lisää yhteystieto</string>
   <string name="conversation__menu_delete_thread">Poista viestiketju</string>
   <string name="convesation_group_options__recipients_list">Vastaanottajalista</string>
   <string name="conversation_group_options__delivery">Toimitus</string>

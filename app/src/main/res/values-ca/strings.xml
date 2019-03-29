@@ -6,7 +6,6 @@
   <string name="delete">Esborra</string>
   <string name="ApplicationPreferencesActivity_currently_s">Actualment: %s</string>
   <string name="ApplicationPreferenceActivity_you_havent_set_a_passphrase_yet">Encara no has establert cap frase contrasenya!</string>
-  <string name="ApplicationPreferencesActivity_messages_per_conversation">missatges per conversa</string>
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Esborrar ara els missatges antics?</string>
   <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Estàs segur que vols retallar immediatament tots els fils de conversa deixant només els %s missatges més recents?</string>
   <string name="ApplicationPreferencesActivity_delete">Esborra</string>
@@ -39,8 +38,6 @@ Necessitaràs tornar a registrar el teu número de telèfon per utilitzar els mi
   <string name="ConversationActivity_add_attachment">Afegeix un adjunt</string>
   <string name="ConversationActivity_select_contact_info">Selecciona info del contacte</string>
   <string name="ConversationActivity_sorry_there_was_an_error_setting_your_attachment">Ho sento, hi ha hagut un error establint el teu adjunt.</string>
-  <string name="ConversationActivity_sorry_the_selected_video_exceeds_message_size_restrictions">Ho sento, el vídeo seleccionat excedeix els límits de mida del missatge.</string>
-  <string name="ConversationActivity_sorry_the_selected_audio_exceeds_message_size_restrictions">Ho sento, el clip de so seleccionat excedeix els límits de mida del missatge.</string>
   <string name="ConversationActivity_recipient_is_not_a_valid_sms_or_email_address_exclamation">El recipient no és una adreça de correu electrònic o SMS vàlid!</string>
   <string name="ConversationActivity_message_is_empty_exclamation">El missatge és buit!</string>
   <string name="ConversationActivity_d_recipients_in_group">%d membres</string>
@@ -49,6 +46,7 @@ Necessitaràs tornar a registrar el teu número de telèfon per utilitzar els mi
   <string name="ConversationActivity_this_device_does_not_appear_to_support_dial_actions">Aquest dispositiu no sembla suportar accions de trucada.</string>
   <string name="ConversationActivity_leave_group">Deixar el grup?</string>
   <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">Estàs segur que vols deixar aquest grup?</string>
+  <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
   <string name="ConversationFragment_message_details">Detalls del missatge</string>
   <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">Estàs segur que vols esborrar permanentment aquest missatge?</string>
   <string name="ConversationFragment_success_exclamation">Èxit!</string>
@@ -200,7 +198,7 @@ Necessitaràs tornar a registrar el teu número de telèfon per utilitzar els mi
 des de l\'app de missatgeria predeterminada del sistema.</string>
   <string name="import_fragment__restore_a_previously_exported_encrypted_openchatservice_backup">Restaura una còpia de seguretat encriptada de OpenchatService prèviament exportada.</string>
   <string name="import_fragment__import_a_plaintext_backup_file">Importa un arxiu de còpia de seguretat en text pla. Compatible amb \'Còpia de seguretat i restauració d\'SMS\'.</string>
-  <string name="mms_preferences_activity__manual_mms_settings_are_required">En el teu telèfon són necessaris els ajustaments MMS manuals.</string>
+  <string name="MmsPreferencesFragment__manual_mms_settings_are_required">En el teu telèfon són necessaris els ajustaments MMS manuals.</string>
   <string name="prompt_passphrase_activity__unlock">Desbloqueja</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService necessita ajustaments MMS per entregar missatges de grup i multimèdia a través de l\'operador inalàmbric. El teu dispositiu no fa que aquesta informació estigui disponible, cosa que és certa ocasionalment en dispositius bloquejats o amb altres configuracions restringides.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Per enviar missatges multimèdia i de grup, clica \'OK\' i completa els ajustaments demanats. Els ajustaments MMS de la teva operadora normalment poden ser trobats buscant \'latevaoperadora APN\'. Només necessitaràs fer això una vegada.</string>
@@ -236,6 +234,7 @@ des de l\'app de missatgeria predeterminada del sistema.</string>
   <string name="verify_identity_activity__their_identity_they_read">La seva identitat (ells llegeixen):</string>
   <string name="verify_identity_activity__your_identity_you_read">La teva identitat (tu llegeixes):</string>
   <string name="AndroidManifest__change_passphrase">Canvia frase contrasenya</string>
+  <string name="preferences__general">General</string>
   <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_text_messages">Utilitza OpenchatService per veure i emmagatzemar tots els missatges de text entrants</string>
   <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_multimedia_messages">Utilitza OpenchatService per veure i emmagatzemar tots els missatges multimèdia entrants</string>
   <string name="preferences__enable_enter_key_title">Habilita la tecla Enter</string>
@@ -243,8 +242,6 @@ des de l\'app de missatgeria predeterminada del sistema.</string>
   <string name="preferences__change_passphrase">Canvia frase contrasenya</string>
   <string name="preferences__change_my_passphrase">Canvia la meva frase contrasenya</string>
   <string name="preferences__complete_key_exchanges">Completa intercanvis de claus</string>
-  <string name="preferences__disable_passphrase">Desactiva frase contrasenya</string>
-  <string name="preferences__disable_local_encryption_of_messages_and_keys">Desactiva l\'encriptació local dels missatges i claus</string>
   <string name="preferences__screen_security">Seguretat de pantalla</string>
   <string name="preferences__automatically_complete_key_exchanges_for_new_sessions_or_for_existing_sessions_with_the_same_identity_key">Completa els intercanvis de claus automàticament en les noves sessions o en les sessions existents amb la mateixa clau d\'identitat</string>
   <string name="preferences__forget_passphrase_from_memory_after_some_interval">Oblida la frase contrasenya de la memòria després d\'un interval de temps</string>
@@ -276,7 +273,6 @@ des de l\'app de missatgeria predeterminada del sistema.</string>
   <string name="preferences__slow">Lent</string>
   <string name="preferences__custom">Personalitzat</string>
   <string name="preferences__advanced">Avançat</string>
-  <string name="preferences__passphrase">Frase contrasenya</string>
   <string name="preferences__override_system_mms_settings">Sobreescriu els ajustaments MMS del sistema amb la informació següent.</string>
   <string name="preferences__mmsc_url_required">MMSC URL (Requerit)</string>
   <string name="preferences__mms_proxy_host_optional">Servidor Proxy MMS (Opcional)</string>
@@ -285,7 +281,6 @@ des de l\'app de missatgeria predeterminada del sistema.</string>
   <string name="preferences__request_a_delivery_report_for_each_sms_message_you_send">Demana un informe de lliurament en cada missatge SMS que enviïs</string>
   <string name="preferences__automatically_delete_older_messages_once_a_conversation_thread_exceeds_a_specified_length">Esborra automàticament els missatges antics una vegada el fil de conversa excedeixi la mida especificada</string>
   <string name="preferences__delete_old_messages">Esborra missatges antics</string>
-  <string name="preferences__storage">Emmagatzematge</string>
   <string name="preferences__conversation_length_limit">Límit de mida de la conversació</string>
   <string name="preferences__trim_all_threads_now">Escapça tots els fils ara</string>
   <string name="preferences__scan_through_all_conversation_threads_and_enforce_conversation_length_limits">Cerca en tots els fils de conversa i fes respectar els límits de mida de la conversació</string>
@@ -309,7 +304,6 @@ Augmenta la privacitat i evita els càrrecs d\'SMS utilitzant el canal de dades 
   <string name="conversation_list__menu_search">Cerca</string>
   <string name="conversation_secure_verified__menu_security">Seguretat</string>
   <string name="conversation__menu_add_attachment">Afegeix un adjunt</string>
-  <string name="conversation__menu_add_contact_info">Afegeix info de contacte</string>
   <string name="conversation__menu_delete_thread">Esborra fil</string>
   <string name="convesation_group_options__recipients_list">Llista de destinataris</string>
   <string name="conversation_group_options__delivery">Lliurament</string>

@@ -6,7 +6,6 @@
   <string name="delete">Hapus</string>
   <string name="ApplicationPreferencesActivity_currently_s">Sekarang: %s</string>
   <string name="ApplicationPreferenceActivity_you_havent_set_a_passphrase_yet">Anda belum mengatur kata kunci!</string>
-  <string name="ApplicationPreferencesActivity_messages_per_conversation">pesan per percakapan</string>
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Hapus seluruh pesan lama?</string>
   <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Apakah anda yakin untuk memangkas seluruh rangkaian percakapan hingga ke %s pesan terakhir?</string>
   <string name="ApplicationPreferencesActivity_delete">Hapus</string>
@@ -39,8 +38,6 @@ dapat mengaksesnya</string>
   <string name="ConversationActivity_add_attachment">Tambahkan lampiran</string>
   <string name="ConversationActivity_select_contact_info">Pilih info kontak</string>
   <string name="ConversationActivity_sorry_there_was_an_error_setting_your_attachment">Maaf, terjadi kesalahan pada pengaturan lampiran anda.</string>
-  <string name="ConversationActivity_sorry_the_selected_video_exceeds_message_size_restrictions">Maaf, video terpilih melebihi batas ukuran pesan.</string>
-  <string name="ConversationActivity_sorry_the_selected_audio_exceeds_message_size_restrictions">Maaf, audio terpilih melebihi batas ukuran pesan.</string>
   <string name="ConversationActivity_recipient_is_not_a_valid_sms_or_email_address_exclamation">Alamat penerima SMS atau email tidak benar!</string>
   <string name="ConversationActivity_message_is_empty_exclamation">Pesan kosong!</string>
   <string name="ConversationActivity_d_recipients_in_group">%d anggota</string>
@@ -49,6 +46,7 @@ dapat mengaksesnya</string>
   <string name="ConversationActivity_this_device_does_not_appear_to_support_dial_actions">Perangkat ini sepertinya tidak mendukung untuk panggilan.</string>
   <string name="ConversationActivity_leave_group">Tinggalkan grup?</string>
   <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">Anda yakin ingin meninggalkan grup ini?</string>
+  <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
   <string name="ConversationFragment_message_details">Rincian pesan</string>
   <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">Apakah anda yakin akan menghapus pesan ini secara permanen?</string>
   <string name="ConversationFragment_success_exclamation">Sukses!</string>
@@ -238,7 +236,7 @@ Pulihkan dari cadangan teracak OpenchatService.
 </string>
   <string name="import_fragment__import_a_plaintext_backup_file">
 Import cadangan dalam texks polos. Kompatibel dengan aplikasi \'SMSBackup And Restore\'.</string>
-  <string name="mms_preferences_activity__manual_mms_settings_are_required">Telepon Anda membutuhkan pengaturan MMS secara manual.</string>
+  <string name="MmsPreferencesFragment__manual_mms_settings_are_required">Telepon Anda membutuhkan pengaturan MMS secara manual.</string>
   <string name="prompt_passphrase_activity__unlock">Buka Kunci</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService memerlukan pengaturan MMS untuk mengantar pesan dan media grup melalui operator anda. Perangkan anda tidak menyediakan informasi tersebut, yang biasanya disebabkan oleh perangkat yang dikunci atau pengaturan yang ketat.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Untuk mengirim pesan dan media grup klik \'OK\' dan selesaikan pengaturan yang diminta. Pengaturan MMS untuk operator anda biasanya dapat ditemukan dengan mencari \'APN operator anda\'. Hal ini hanya diperlukan sekali saja.</string>
@@ -290,6 +288,7 @@ Telah gagal
   <string name="verify_identity_activity__their_identity_they_read">Identitas mereka (terbaca):</string>
   <string name="verify_identity_activity__your_identity_you_read">Identitas anda (terbaca):</string>
   <string name="AndroidManifest__change_passphrase">Ganti Kata Kunci</string>
+  <string name="preferences__general">Umum</string>
   <string name="preferences__pref_all_sms_title">Terima semua SMS</string>
   <string name="preferences__pref_all_mms_title">Terima semua MMS</string>
   <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_text_messages">Gunakan OpenchatService untuk melihat dan menyimpan semua pesan teks yang masuk</string>
@@ -300,8 +299,6 @@ Telah gagal
   <string name="preferences__change_passphrase">Ganti Kata Kunci</string>
   <string name="preferences__change_my_passphrase">Ganti kata kunci saya</string>
   <string name="preferences__complete_key_exchanges">Pertukaran kunci berhasil</string>
-  <string name="preferences__disable_passphrase">Non aktifkan kata sandi</string>
-  <string name="preferences__disable_local_encryption_of_messages_and_keys">Jangan gunakan pengacakan atas pesan-pesan dan kunci-kunci</string>
   <string name="preferences__screen_security">Keamanan Layar</string>
   <string name="preferences__automatically_complete_key_exchanges_for_new_sessions_or_for_existing_sessions_with_the_same_identity_key">Secara otomatis lakukan pertukaran kunci untuk sesi yang baru atau untuk sesi yang sudah ada dengan kunci identitas yang sama</string>
   <string name="preferences__forget_passphrase_from_memory_after_some_interval">Lupakan kata kunci dari memori setelah beberapa saat</string>
@@ -334,7 +331,6 @@ Telah gagal
   <string name="preferences__slow">Lambat</string>
   <string name="preferences__custom">Spesifik</string>
   <string name="preferences__advanced">Lanjutan</string>
-  <string name="preferences__passphrase">Kata kunci</string>
   <string name="preferences__override_system_mms_settings">Ganti pengaturan MMS dengan informasi berikut.</string>
   <string name="preferences__mmsc_url_required">URL MMSC (Diperlukan)</string>
   <string name="preferences__mms_proxy_host_optional">Host Proxy MMS (Opsional)</string>
@@ -343,7 +339,6 @@ Telah gagal
   <string name="preferences__request_a_delivery_report_for_each_sms_message_you_send">Minta laporan pengiriman untuk tiap SMS yang dikirim</string>
   <string name="preferences__automatically_delete_older_messages_once_a_conversation_thread_exceeds_a_specified_length">Secara otomatis hapus pesan yang lebih lama ketika percakapan telah melebihi jumlah yang ditentukan</string>
   <string name="preferences__delete_old_messages">Hapus pesan lama</string>
-  <string name="preferences__storage">Penyimpanan</string>
   <string name="preferences__conversation_length_limit">Batas panjang percakapan</string>
   <string name="preferences__trim_all_threads_now">Pangkas seluruh percakapan sekarang</string>
   <string name="preferences__scan_through_all_conversation_threads_and_enforce_conversation_length_limits">Pindai seluruh rangkaian percakapan dan terapkan batas panjang percakapan</string>
@@ -354,11 +349,8 @@ Telah gagal
   <string name="preferences__make_default_sms_app">Jadikan sebagai aplikasi SMS default</string>
   <string name="preferences__make_openchatservice_the_default_sms_mms_app">Jadikan OpenchatService sebagai palikasi default untuk SMS/MMS.</string>
   <string name="preferences__use_data_channel">Pesan Push</string>
-  <string name="preferences__allow_sms_fallback">Ijinkan SMS keluar ke</string>
   <string name="preferences__submit_debug_log">Kirim debug log</string>
   <string name="preferences__sms_outgoing_push_users">Pengguna OpenchatService</string>
-  <string name="preferences__sms_fallback_push_users_ask">(tanya dulu)</string>
-  <string name="preferences__sms_fallback_ask_fallback">Tanyakan sebelum kirim SMS</string>
   <string name="preferences__sms_fallback_non_push_users">Bukan pengguna OpenchatService</string>
   <string name="preferences__sms_fallback_nobody">Tak seorangpun</string>
   <string name="contact_selection__menu_finished">Selesai</string>
@@ -371,7 +363,6 @@ Telah gagal
   <string name="conversation_list__menu_search">Cari</string>
   <string name="conversation_secure_verified__menu_security">Keamanan</string>
   <string name="conversation__menu_add_attachment">Tambahkan lampiran</string>
-  <string name="conversation__menu_add_contact_info">Tambahkan info kontak</string>
   <string name="conversation__menu_delete_thread">Hapus Percakapan</string>
   <string name="convesation_group_options__recipients_list">Daftar Penerima</string>
   <string name="conversation_group_options__delivery">Pengiriman</string>

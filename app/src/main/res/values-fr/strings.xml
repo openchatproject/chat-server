@@ -4,9 +4,10 @@
   <string name="yes">Oui</string>
   <string name="no">Non</string>
   <string name="delete">Supprimer</string>
+  <string name="please_wait">Veuillez patienter...</string>
   <string name="ApplicationPreferencesActivity_currently_s">Actuellement : %s</string>
   <string name="ApplicationPreferenceActivity_you_havent_set_a_passphrase_yet">Vous n’avez pas encore défini de phrase de passe !</string>
-  <string name="ApplicationPreferencesActivity_messages_per_conversation">Messages par conversation</string>
+  <string name="ApplicationPreferencesActivity_messages_per_conversation">%s messages par conversation</string>
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Supprimer tous les anciens messages maintenant ?</string>
   <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Êtes-vous sûr de vouloir réduire toutes les conversations aux %s messages les plus récents ?</string>
   <string name="ApplicationPreferencesActivity_delete">Supprimer</string>
@@ -27,10 +28,24 @@ Ceci va désactiver les messages push en vous désinscrivant du serveur. Vous de
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Appuyez pour modifier votre application SMS par défaut</string>
   <string name="ApplicationPreferencesActivity_sms_disabled">SMS entrants désactivés</string>
   <string name="ApplicationPreferencesActivity_touch_to_make_openchatservice_your_default_sms_app">Appuyez pour faire de OpenchatService votre application SMS par défaut</string>
+  <string name="ApplicationPreferencesActivity_on">on</string>
+  <string name="ApplicationPreferencesActivity_On">On</string>
+  <string name="ApplicationPreferencesActivity_off">off</string>
+  <string name="ApplicationPreferencesActivity_Off">Off</string>
+  <string name="ApplicationPreferencesActivity_partial">partiel</string>
+  <string name="ApplicationPreferencesActivity_sms">SMS</string>
+  <string name="ApplicationPreferencesActivity_mms">MMS</string>
+  <string name="ApplicationPreferencesActivity_incoming_sms">Entrant</string>
+  <string name="ApplicationPreferencesActivity_outgoing_sms">sortant</string>
+  <string name="AppProtectionPreferenceFragment_minutes">%d minutes</string>
+  <string name="DraftDatabase_Draft_image_snippet">(image)</string>
+  <string name="DraftDatabase_Draft_audio_snippet">(audio)</string>
+  <string name="DraftDatabase_Draft_video_snippet">(video)</string>
   <string name="AttachmentManager_cant_open_media_selection">Impossible de trouver une application pour sélectionner le média.</string>
   <string name="AttachmentTypeSelectorAdapter_picture">Image</string>
   <string name="AttachmentTypeSelectorAdapter_video">Vidéo</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Audio</string>
+  <string name="AttachmentTypeSelectorAdapter_contact">Informations de contact</string>
   <string name="ConversationItem_message_size_d_kb">Taille du message : %d Ko</string>
   <string name="ConversationItem_expires_s">Expire : %s</string>
   <string name="ConversationItem_error_sending_message">Erreur lors de l\'envoi du message</string>
@@ -58,8 +73,8 @@ Ceci va désactiver les messages push en vous désinscrivant du serveur. Vous de
   <string name="ConversationActivity_select_contact_info">Sélectionner les informations du contact</string>
   <string name="ConversationActivity_compose_message">Rédiger un message</string>
   <string name="ConversationActivity_sorry_there_was_an_error_setting_your_attachment">Désolé, il y a eu une erreur lors de l\'ajout de votre pièce jointe.</string>
-  <string name="ConversationActivity_sorry_the_selected_video_exceeds_message_size_restrictions">Désolé, la vidéo sélectionnée dépasse les restrictions de taille du message.</string>
-  <string name="ConversationActivity_sorry_the_selected_audio_exceeds_message_size_restrictions">Désolé, le fichier audio sélectionné dépasse les restrictions de taille du message.</string>
+  <string name="ConversationActivity_sorry_the_selected_video_exceeds_message_size_restrictions">Désolé, la vidéo sélectionnée dépasse les restrictions de taille de message (%1$skB).</string>
+  <string name="ConversationActivity_sorry_the_selected_audio_exceeds_message_size_restrictions">Désolé, le fichier audio sélectionné dépasse les restrictions de taille de message (%1$skB).</string>
   <string name="ConversationActivity_recipient_is_not_a_valid_sms_or_email_address_exclamation">Le destinataire n’est pas une adresse SMS ou e-mail valide !</string>
   <string name="ConversationActivity_message_is_empty_exclamation">Le message est vide !</string>
   <string name="ConversationActivity_group_conversation_recipients">Destinataires de la conversation de groupe</string>
@@ -73,6 +88,12 @@ Ceci va désactiver les messages push en vous désinscrivant du serveur. Vous de
   <string name="ConversationActivity_this_device_does_not_appear_to_support_dial_actions">Cet appareil ne semble pas prendre en charge les actions de numérotation.</string>
   <string name="ConversationActivity_leave_group">Quitter le groupe ?</string>
   <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">Êtes-vous sûr de vouloir quitter ce groupe ?</string>
+  <string name="ConversationActivity_transport_insecure_sms">SMS non-sécurisé</string>
+  <string name="ConversationActivity_transport_insecure_mms">MMS non-sécurisé</string>
+  <string name="ConversationActivity_transport_secure_sms">SMS sécurisé</string>
+  <string name="ConversationActivity_transport_secure_mms">MMS sécurisé</string>
+  <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
+  <string name="ConversationActivity_install_openchatservice">Installez OpenchatService : %s</string>
   <string name="ConversationFragment_message_details">Détails du message</string>
   <string name="ConversationFragment_transport_s_sent_received_s">Transport: %1$s\nEnvoyé/Reçu: %2$s</string>
   <string name="ConversationFragment_sender_s_transport_s_sent_s_received_s">Émetteur: %1$s\nTransport: %2$s\nEnvoyé: %3$s\nReçu: %4$s</string>
@@ -85,6 +106,10 @@ Ceci va désactiver les messages push en vous désinscrivant du serveur. Vous de
   <string name="ConversationFragment_unable_to_write_to_sd_card_exclamation">Impossible d’écrire dans l\'espace de stockage!</string>
   <string name="ConversationFragment_saving_attachment">Enregistrement de la pièce jointe</string>
   <string name="ConversationFragment_saving_attachment_to_sd_card">Enregistrement de la pièce jointe dans l\'espace de stockage…</string>
+  <string name="ConversationFragment_pending">EN ATTENTE</string>
+  <string name="ConversationFragment_push">PUSH</string>
+  <string name="ConversationFragment_mms">MMS</string>
+  <string name="ConversationFragment_sms">SMS</string>
   <string name="ConversationListFragment_delete_threads_question">Supprimer les fils ?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Êtes-vous sûr de vouloir supprimer TOUS les fils de discussion sélectionnés ?</string>
   <string name="ConversationListFragment_deleting">Suppression</string>
@@ -102,7 +127,7 @@ exportera le contenu de vos messages OpenchatService en clair sur la carte SD.</
   <string name="ExportFragment_error_while_writing_to_sd_card">Erreur lors de l\'écriture sur la carte SD !</string>
   <string name="ExportFragment_success">Réussite !</string>
   <string name="GcmRefreshJob_Permanent_OpenchatService_communication_failure">Échec de communication OpenchatService permanente !</string>
-  <string name="GcmRefreshJob_OpenchatService_was_unable_to_register_with_Google_Play_Services">La communication via le canal de données a été désactivée car OpenchatService n\'a pu s\'enregistrer aurpès de Google Play Services. Veuillez essayer de vous enregistrer à nouveau à partir du menu Paramètres de OpenchatService.</string>
+  <string name="GcmRefreshJob_OpenchatService_was_unable_to_register_with_Google_Play_Services">La communication via le canal de données a été désactivée car OpenchatService n\'a pas pu s\'enregistrer aurpès de Google Play Services. Veuillez essayer de vous enregistrer à nouveau à partir du menu Paramètres de OpenchatService.</string>
   <string name="GroupCreateActivity_actionbar_title">Nouveau groupe</string>
   <string name="GroupCreateActivity_actionbar_update_title">Mettre à jour le groupe</string>
   <string name="GroupCreateActivity_group_name_hint">Nom du groupe</string>
@@ -115,14 +140,16 @@ exportera le contenu de vos messages OpenchatService en clair sur la carte SD.</
   <string name="GroupCreateActivity_avatar_content_description">Avatar de groupe</string>
   <string name="GroupCreateActivity_menu_create_title">Créer un groupe</string>
   <string name="GroupCreateActivity_creating_group">Création de %1$s en cours…</string>
+  <string name="GroupCreateActivity_updating_group">Mise à jour %1$s...</string>
+  <string name="GroupCreateActivity_loading_group_details">Chargement des détails du groupe</string>
   <string name="GroupCreateActivity_cannot_add_non_push_to_existing_group">Impossible d’ajouter des contacts n\'utilisant pas OpenchatService à un groupe OpenchatService existant</string>
   <string name="GroupMembersDialog_me">Moi</string>
   <string name="ImportExportActivity_import">Importer</string>
   <string name="ImportExportActivity_export">Exporter</string>
   <string name="ImportFragment_import_system_sms_database">Importer la base de données SMS du système ?</string>
-  <string name="ImportFragment_this_will_import_messages_from_the_system">Cela importera ⏎
-les messages à partir de la base de données SMS par défaut du système vers OpenchatService. Si vous avez déjà ⏎
-importé la base de données SMS du système, l\'importer à nouveau se traduira par des messages dupliqués. ⏎</string>
+  <string name="ImportFragment_this_will_import_messages_from_the_system">Ceci importera 
+les messages à partir de la base de données SMS par défaut du système vers OpenchatService. Si vous avez déjà 
+importé la base de données SMS du système, l\'importer à nouveau se traduira par des messages dupliqués.</string>
   <string name="ImportFragment_import">Importer</string>
   <string name="ImportFragment_cancel">Annuler</string>
   <string name="ImportFragment_restore_encrypted_backup">Restaurer une sauvegarde chiffrée ?</string>
@@ -144,6 +171,8 @@ l\'importer à nouveau se traduira par des messages dupliqués.</string>
   <string name="ImportFragment_no_encrypted_backup_found">Aucune sauvegarde chiffrée trouvée!</string>
   <string name="ImportFragment_restore_complete">Restauration terminée !</string>
   <string name="KeyScanningActivity_no_scanned_key_found_exclamation">Aucune clé scannée n’a été trouvée !</string>
+  <string name="KeyScanningActivity_install_barcode_Scanner">Installer Barcode Scanner?</string>
+  <string name="KeyScanningActivity_this_application_requires_barcode_scanner_would_you_like_to_install_it">OpenchatService a besoin de Barcode Scanner pour les QR codes.</string>
   <string name="MmsDownloader_error_storing_mms">Erreur d’enregistrement du MMS !</string>
   <string name="MmsDownloader_error_connecting_to_mms_provider">Erreur de connexion au fournisseur MMS…</string>
   <string name="MmsDownloader_error_reading_mms_settings">Erreur de lecture des paramètres de fournisseur d’accès MMS…</string>
@@ -222,6 +251,7 @@ Un message avec une clé de chiffrement inconnue a été reçu. Cliquer pour l\'
   <string name="SmsMessageRecord_duplicate_message">Message doublon.</string>
   <string name="ThreadRecord_left_the_group">Groupe quitté…</string>
   <string name="TheadRecord_secure_session_ended">La session sécurisée s’est terminée.</string>
+  <string name="ThreadRecord_draft">Brouillon:</string>
   <string name="VerifyIdentityActivity_you_do_not_have_an_identity_key">Vous n’avez pas de clé d’identité.</string>
   <string name="VerifyIdentityActivity_recipient_has_no_identity_key">Le destinataire n’a pas de clé d’identité.</string>
   <string name="VerifyIdentityActivity_recipient_has_no_identity_key_exclamation">Le destinataire n’a pas de clé d’identité !</string>
@@ -246,11 +276,14 @@ Un message avec une clé de chiffrement inconnue a été reçu. Cliquer pour l\'
   <string name="MessageDisplayHelper_bad_encrypted_message">Message mal chiffré…</string>
   <string name="MessageDisplayHelper_decrypting_please_wait">Déchiffrement, veuillez patienter…</string>
   <string name="MessageDisplayHelper_message_encrypted_for_non_existing_session">Message chiffré pour une session non-existante…</string>
+  <string name="EncryptingSmsDatabase_error_decrypting_message">Erreur lors du déchiffrement du message.</string>
+  <string name="ThreadDatabase_error_decrypting_message">Erreur lors du déchiffrement du message.</string>
   <string name="MmsDatabase_connecting_to_mms_server">Connexion au serveur MMS…</string>
   <string name="MmsDatabase_downloading_mms">Téléchargement du MMS…</string>
   <string name="MmsDatabase_mms_download_failed">Le téléchargement du MMS a échoué !</string>
   <string name="MmsDatabase_downloading">Téléchargement...</string>
   <string name="MmsDatabase_mms_pending_download">Appuyez et configurez les paramètres MMS pour continuer le téléchargement.</string>
+  <string name="MmsDatabase_error_decrypting_message">Erreur lors du déchiffrement du message.</string>
   <string name="MmsMessageRecord_decrypting_mms_please_wait">Déchiffrement du MMS, veuillez patienter…</string>
   <string name="MmsMessageRecord_bad_encrypted_mms_message">Message MMS mal chiffré…</string>
   <string name="MmsMessageRecord_mms_message_encrypted_for_non_existing_session">Message MMS chiffré pour une session non-existante…</string>
@@ -330,7 +363,12 @@ Restaurer une sauvegarde OpenchatService chiffrée précédemment exportée.</st
   <string name="import_fragment__import_plaintext_backup">Importer la sauvegarde en clair</string>
   <string name="import_fragment__import_a_plaintext_backup_file">
 Importer un fichier de sauvegarde en texte clair. Compatible avec «SMSBackup And Restore».</string>
-  <string name="mms_preferences_activity__manual_mms_settings_are_required">Des paramètres MMS manuels sont nécessaires pour votre téléphone.</string>
+  <string name="MmsPreferencesFragment__manual_mms_settings_are_required">Des paramètres MMS manuels sont nécessaires pour votre téléphone.</string>
+  <string name="MmsPreferencesFragment__enabled">Activé</string>
+  <string name="MmsPreferencesFragment__disabled">Désactivé</string>
+  <string name="MmsPreferencesFragment__not_set">Non défini</string>
+  <string name="MmsPreferencesFragment__invalid_uri">Le texte entré n\'était pas une URI valide</string>
+  <string name="MmsPreferencesFragment__invalid_host">Le texte entré n\'était pas un hôte valide.</string>
   <string name="prompt_passphrase_activity__unlock">Déverrouiller</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService nécessite les paramètres MMS pour envoyer des médias et des messages groupés par votre fournisseur sans fil. Votre appareil ne fournit pas ces informations ; cela se produit parfois sur les appareils verrouillés et autres configurations restrictives.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Pour envoyer des médias et messages groupés, cliquez « OK » et renseignez les paramètres demandés. Les paramètres MMS de votre fournisseur peuvent en général être trouvés en recherchant « APN votre fournisseur ». Vous aurez besoin de faire cela seulement une fois.</string>
@@ -409,6 +447,8 @@ par SMS.</string>
   <string name="AndroidManifest__media_preview">Prévisualisation du média.</string>
   <string name="arrays__import_export">Importer / exporter</string>
   <string name="arrays__my_identity_key">Ma clé d\'identité</string>
+  <string name="preferences__general">Général</string>
+  <string name="preferences__sms_mms">SMS et MMS</string>
   <string name="preferences__push_sms_category">Push et SMS</string>
   <string name="preferences__pref_all_sms_title">Recevoir tous les SMS</string>
   <string name="preferences__pref_all_mms_title">Recevoir tous les MMS</string>
@@ -425,8 +465,8 @@ par SMS.</string>
   <string name="preferences__change_passphrase">Modifier la phrase de passe</string>
   <string name="preferences__change_my_passphrase">Modifier ma phrase de passe</string>
   <string name="preferences__complete_key_exchanges">Finaliser l’échange de clés</string>
-  <string name="preferences__disable_passphrase">Désactiver la phrase de passe</string>
-  <string name="preferences__disable_local_encryption_of_messages_and_keys">Désactiver le chiffrement local des messages et des clés</string>
+  <string name="preferences__enable_passphrase">Activer la phrase de passe</string>
+  <string name="preferences__enable_local_encryption_of_messages_and_keys">Activer le chiffrement local des messages et des clés</string>
   <string name="preferences__screen_security">Sécurité d’écran</string>
   <string name="preferences__automatically_complete_key_exchanges_for_new_sessions_or_for_existing_sessions_with_the_same_identity_key">Finaliser automatiquement les échanges de clés pour les sessions, nouvelles ou existantes  avec la même clé d\'identité.</string>
   <string name="preferences__disable_screen_security_to_allow_screen_shots">Désactiver les prises d\'écrans dans la liste des applications récentes et à l\'intérieur de l\'application</string>
@@ -438,6 +478,7 @@ par SMS.</string>
   <string name="preferences__notifications">Notifications</string>
   <string name="preferences__display_message_notifications_in_status_bar">Afficher les notifications dans la barre de statut</string>
   <string name="preferences__led_color">Couleur de la LED</string>
+  <string name="preferences__led_color_unknown">Inconnu</string>
   <string name="preferences__pref_led_blink_title">Rythme de clignotement de la LED</string>
   <string name="preferences__pref_led_blink_custom_pattern_title">Définir le rythme de clignotement de la LED personnalisée</string>
   <string name="preferences__pref_led_blink_custom_pattern_on_for">Allumée pour :</string>
@@ -464,23 +505,24 @@ par SMS.</string>
   <string name="preferences__slow">Lent</string>
   <string name="preferences__custom">Personnalisé</string>
   <string name="preferences__advanced">Avancé</string>
-  <string name="preferences__passphrase">Phrase de passe</string>
-  <string name="preferences__advanced_mms_access_point_names">Préférences MMS</string>
-  <string name="preferences__enable_manual_mms">Activer les MMS manuels</string>
+  <string name="preferences__app_protection">Protection de l\'application</string>
+  <string name="preferences__advanced_mms_access_point_names">Paramètres MMS manuels</string>
+  <string name="preferences__enable_manual_mms">Utiliser les parametres MMS manuels</string>
   <string name="preferences__override_system_mms_settings">Remplacer les paramètres MMS du système avec les informations ci-dessous.</string>
   <string name="preferences__mmsc_url_required">URL MMSC (Obligatoire)</string>
   <string name="preferences__mms_proxy_host_optional">Hôte Proxy MMS (Optionnel)</string>
   <string name="preferences__mms_proxy_port_optional">Port Proxy MMS (Optionnel)</string>
+  <string name="preferences__mmsc_username_optional">Nom d\'utilisateur MMSC (Optionnel)</string>
+  <string name="preferences__mmsc_password_optional">Mot de passe MMSC (Optionnel)</string>
   <string name="preferences__sms_delivery_reports">Accusés de réception SMS</string>
   <string name="preferences__request_a_delivery_report_for_each_sms_message_you_send">Demander un accusé de réception pour chaque SMS envoyé</string>
   <string name="preferences__automatically_delete_older_messages_once_a_conversation_thread_exceeds_a_specified_length">Supprimer automatiquement les anciens messages lorsque la conversation dépasse un certaine taille.</string>
   <string name="preferences__delete_old_messages">Supprimer les anciens messages</string>
-  <string name="preferences__storage">Stockage</string>
   <string name="preferences__conversation_length_limit">Limite de taille de la conversation</string>
   <string name="preferences__trim_all_threads_now">Réduire toutes les conversations maintenant</string>
   <string name="preferences__scan_through_all_conversation_threads_and_enforce_conversation_length_limits">Parcourir toutes les conversations et appliquer la limite de taille de conversation</string>
-  <string name="preferences__light_theme">Thème clair</string>
-  <string name="preferences__dark_theme">Thème sombre</string>
+  <string name="preferences__light_theme">Clair</string>
+  <string name="preferences__dark_theme">Sombre</string>
   <string name="preferences__appearance">Apparence</string>
   <string name="preferences__theme">Thème</string>
   <string name="preferences__default">Par défaut</string>
@@ -490,12 +532,14 @@ par SMS.</string>
   <string name="preferences__use_data_channel">Messages PUSH</string>
   <string name="preferences__use_the_data_channel_for_communication_with_other_openchatservice_users">
 Augmenter la confidentialité et éviter les frais de SMS en utilisant le canal de données pour les communications avec d’autres utilisateurs de OpenchatService</string>
-  <string name="preferences__allow_sms_fallback">Autoriser les SMS sortants à </string>
+  <string name="preferences__sms_fallback">SMS/MMS sortants</string>
   <string name="preferences__submit_debug_log">Envoyer un rapport de débogage</string>
   <string name="preferences__sms_outgoing_push_users">Utilisateurs de OpenchatService</string>
-  <string name="preferences__sms_fallback_push_users_ask">(demander d\'abord)</string>
+  <string name="preferences__sms_fallback_push_users_ask">demander d\'abord</string>
+  <string name="preferences__sms_fallback_push_users_no_mms">pas de MMS</string>
   <string name="preferences__sms_outgoing_push_users_description">Envoyer des SMS sécurisés si aucune connexion de données n\'est disponible</string>
-  <string name="preferences__sms_fallback_ask_fallback">Demander avant d\'envoyer des SMS</string>
+  <string name="preferences__sms_fallback_ask_before_sending_sms_mms">Demander avant d\'envoyer des SMS/MMS</string>
+  <string name="preferences__sms_fallback_never_send_mms">Ne jamais envoyer de MMS</string>
   <string name="preferences__sms_fallback_non_push_users">Utilisateurs sans OpenchatService</string>
   <string name="preferences__sms_fallback_nobody">Personne</string>
   <string name="contact_selection_list__menu_select_all">Tout sélectionner</string>
@@ -527,8 +571,8 @@ Augmenter la confidentialité et éviter les frais de SMS en utilisant le canal 
   <string name="conversation__menu_add_attachment">Ajouter une pièce jointe</string>
   <string name="conversation__menu_update_group">Mettre à jour le groupe</string>
   <string name="conversation__menu_leave_group">Quitter le groupe</string>
-  <string name="conversation__menu_add_contact_info">Ajouter des informations de contact</string>
   <string name="conversation__menu_delete_thread">Supprimer le fil de discussion</string>
+  <string name="conversation_add_to_contacts__menu_add_to_contacts">Ajouter aux contacts</string>
   <string name="convesation_group_options__recipients_list">Liste des destinataires</string>
   <string name="conversation_group_options__delivery">Distribution</string>
   <string name="conversation_group_options__conversation">Conversation</string>
@@ -548,6 +592,7 @@ Augmenter la confidentialité et éviter les frais de SMS en utilisant le canal 
   <string name="reminder_header_push_title">Activer les messages OpenchatService ?</string>
   <string name="reminder_header_push_text">Instantané, sans frais SMS et protège votre vie privé.</string>
   <string name="MediaPreviewActivity_you">Vous</string>
+  <string name="MediaPreviewActivity_cant_display">La prévisualisation de l\'image a échouée</string>
   <string name="media_preview__save_title">Enregistrer</string>
   <string name="media_preview_activity__image_content_description">Prévisualisation de l’image.</string>
   <string name="trimmer__deleting">Suppression...</string>

@@ -6,7 +6,6 @@
   <string name="delete">Удалить</string>
   <string name="ApplicationPreferencesActivity_currently_s">Сейчас: %s</string>
   <string name="ApplicationPreferenceActivity_you_havent_set_a_passphrase_yet">Вы ещё не задали парольную фразу!</string>
-  <string name="ApplicationPreferencesActivity_messages_per_conversation">сообщений в разговоре</string>
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Удалить все старые сообщения?</string>
   <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Вы уверены, что хотите обрезать все разговоры до %s последних сообщений, удалив более старые?</string>
   <string name="ApplicationPreferencesActivity_delete">Удалить</string>
@@ -38,12 +37,10 @@
   <string name="ConversationItem_group_action_left">%1$s покинул группу.</string>
   <string name="ConversationItem_click_to_approve_sms">Отправить как SMS</string>
   <string name="ConversationItem_click_to_approve_mms">Отправить как MMS</string>
-  <string name="ConversationItem_click_to_approve_unencrypted">Отправить незашифрованным</string>
   <string name="ConversationItem_click_to_approve_sms_dialog_title">Отправить как SMS?</string>
   <string name="ConversationItem_click_to_approve_mms_dialog_title">Отправить как MMS?</string>
   <string name="ConversationItem_click_to_approve_unencrypted_sms_dialog_title">Отправить как незашифрованное SMS?</string>
   <string name="ConversationItem_click_to_approve_unencrypted_mms_dialog_title">Отправить как незашифрованное MMS?</string>
-  <string name="ConversationItem_click_to_approve_unencrypted_dialog_message">Это сообщение <b>не будет</b> зашифровано, так как не удалось установить защищённый сеанс.\n\nОтправить сообщение открытым текстом?</string>
   <string name="ConversationActivity_initiate_secure_session_question">Начать защищённый сеанс?</string>
   <string name="ConversationActivity_initiate_secure_session_with_s_question">Начать защищённый сеанс связи с %s?</string>
   <string name="ConversationActivity_abort_secure_session_confirmation">Подтвердите завершение сеанса</string>
@@ -54,8 +51,6 @@
   <string name="ConversationActivity_select_contact_info">Выбрать контакт</string>
   <string name="ConversationActivity_compose_message">Написать сообщение</string>
   <string name="ConversationActivity_sorry_there_was_an_error_setting_your_attachment">Извините, произошла ошибка при обработке вложения.</string>
-  <string name="ConversationActivity_sorry_the_selected_video_exceeds_message_size_restrictions">Извините, выбранный видео-файл больше максимального размера сообщения.</string>
-  <string name="ConversationActivity_sorry_the_selected_audio_exceeds_message_size_restrictions">Извините, выбранный аудио-файл больше максимального размера сообщения.</string>
   <string name="ConversationActivity_recipient_is_not_a_valid_sms_or_email_address_exclamation">Адрес получателя не является ни номером телефона, ни адресом электронной почты.</string>
   <string name="ConversationActivity_message_is_empty_exclamation">Пустое сообщение!</string>
   <string name="ConversationActivity_group_conversation_recipients">Члены группы</string>
@@ -69,6 +64,7 @@
   <string name="ConversationActivity_this_device_does_not_appear_to_support_dial_actions">Ваше устройство, по-видимому, не поддерживает голосовые звонки.</string>
   <string name="ConversationActivity_leave_group">Покинуть группу?</string>
   <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">Вы уверены, что хотите покинуть эту группу?</string>
+  <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
   <string name="ConversationFragment_message_details">Подробности</string>
   <string name="ConversationFragment_transport_s_sent_received_s">Транспорт: %1$s\nОтправлено/Получено: %2$s</string>
   <string name="ConversationFragment_sender_s_transport_s_sent_s_received_s">Отправитель: %1$s\nТранспорт: %2$s\nОтправлено: %3$s\nПолучено: %4$s</string>
@@ -257,9 +253,7 @@
   <string name="contact_selection_recent_activity__no_recent_calls">Нет недавних звонков.</string>
   <string name="conversation_activity__type_message_push">Отправить сообщение OpenchatService</string>
   <string name="conversation_activity__type_message_sms_secure">Отправить защищённое SMS</string>
-  <string name="conversation_activity__type_message_sms_insecure">Отправить незащищённое SMS</string>
   <string name="conversation_activity__type_message_mms_secure">Отправить защищённое MMS</string>
-  <string name="conversation_activity__type_message_mms_insecure">Отправить незащищённое MMS</string>
   <string name="conversation_activity__send">Отправить</string>
   <string name="conversation_activity__remove">Удалить</string>
   <string name="conversation_activity__window_description">Разговор с %1$s</string>
@@ -301,7 +295,7 @@
   <string name="import_fragment__import_plaintext_backup">Импорт простой резервной копии</string>
   <string name="import_fragment__import_a_plaintext_backup_file">
 Импортировать из простой резервной копии. Совместимо с приложением «SMSBackup And Restore».</string>
-  <string name="mms_preferences_activity__manual_mms_settings_are_required">Для вашего телефона необходимо настроить MMS вручную.</string>
+  <string name="MmsPreferencesFragment__manual_mms_settings_are_required">Для вашего телефона необходимо настроить MMS вручную.</string>
   <string name="prompt_passphrase_activity__unlock">Открыть</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">Приложению OpenchatService необходимо знать настройки MMS вашего сотового оператора, чтобы отправлять и получать мультимедийные и групповые сообщения. Ваше устройство не даёт доступа к этой информации — так иногда бывает, если в телефоне запрещена смена SIM-карты и в некоторых иных случаях.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Чтобы отправлять мультимедийные и групповые сообщения, нажмите «ОК» и настройте MMS. Это нужно сделать только один раз. Настройки для вашего оператора можно узнать в службе техподдержки или в интернете по запросу «ваш оператор APN».</string>
@@ -376,6 +370,7 @@ SMS-подтверждения...
   <string name="AndroidManifest__log_submit">Отправлять отладочные логи</string>
   <string name="arrays__import_export">Импорт / экспорт</string>
   <string name="arrays__my_identity_key">Мой личный ключ</string>
+  <string name="preferences__general">Общие</string>
   <string name="preferences__push_sms_category">Push и SMS</string>
   <string name="preferences__pref_all_sms_title">Получать все SMS</string>
   <string name="preferences__pref_all_mms_title">Получать все MMS</string>
@@ -392,8 +387,6 @@ SMS-подтверждения...
   <string name="preferences__change_passphrase">Изменить парольную фразу</string>
   <string name="preferences__change_my_passphrase">Изменить мою парольную фразу</string>
   <string name="preferences__complete_key_exchanges">Выполнять обмены ключами</string>
-  <string name="preferences__disable_passphrase">Отключить парольную фразу</string>
-  <string name="preferences__disable_local_encryption_of_messages_and_keys">Отключить шифрование при хранении сообщений и ключей</string>
   <string name="preferences__screen_security">Защита экрана</string>
   <string name="preferences__automatically_complete_key_exchanges_for_new_sessions_or_for_existing_sessions_with_the_same_identity_key">Автоматически выполнять обмен ключами в новых сеансах, а также в существующих сеансах с не изменившимся личным ключом</string>
   <string name="preferences__disable_screen_security_to_allow_screen_shots">Блокировать снимки экрана внутри приложения</string>
@@ -431,9 +424,6 @@ SMS-подтверждения...
   <string name="preferences__slow">Медленно</string>
   <string name="preferences__custom">Настроить...</string>
   <string name="preferences__advanced">Расширенные</string>
-  <string name="preferences__passphrase">Парольная фраза</string>
-  <string name="preferences__advanced_mms_access_point_names">Настройки MMS</string>
-  <string name="preferences__enable_manual_mms">Настроить MMS вручную</string>
   <string name="preferences__override_system_mms_settings">Использовать вместо системных настроек MMS указанную ниже информацию.</string>
   <string name="preferences__mmsc_url_required">Адрес MMS-центра (обязательно)</string>
   <string name="preferences__mms_proxy_host_optional">Адрес прокси для MMS (необязательно)</string>
@@ -442,12 +432,9 @@ SMS-подтверждения...
   <string name="preferences__request_a_delivery_report_for_each_sms_message_you_send">Запрашивать отчёт о доставке каждого отправленного SMS-сообщения</string>
   <string name="preferences__automatically_delete_older_messages_once_a_conversation_thread_exceeds_a_specified_length">Автоматически удалять старые сообщения, когда длина разговора превышает заданную</string>
   <string name="preferences__delete_old_messages">Удалить старые сообщения</string>
-  <string name="preferences__storage">Память</string>
   <string name="preferences__conversation_length_limit">Ограничение длины разговора</string>
   <string name="preferences__trim_all_threads_now">Обрезать все разговоры</string>
   <string name="preferences__scan_through_all_conversation_threads_and_enforce_conversation_length_limits">Привести длину всех разговоров в соответствие с заданной</string>
-  <string name="preferences__light_theme">Светлая тема</string>
-  <string name="preferences__dark_theme">Тёмная тема</string>
   <string name="preferences__appearance">Внешний вид</string>
   <string name="preferences__theme">Тема</string>
   <string name="preferences__default">По умолчанию</string>
@@ -457,12 +444,9 @@ SMS-подтверждения...
   <string name="preferences__use_data_channel">Push-сообщения</string>
   <string name="preferences__use_the_data_channel_for_communication_with_other_openchatservice_users">
 Повысить безопасность и снизить расходы на SMS, используя передачу данных при общении с другими пользователями OpenchatService</string>
-  <string name="preferences__allow_sms_fallback">Разрешить исходящие SMS для</string>
   <string name="preferences__submit_debug_log">Отправлять лог отладки</string>
   <string name="preferences__sms_outgoing_push_users">Пользователи OpenchatService</string>
-  <string name="preferences__sms_fallback_push_users_ask">(сначала спросить)</string>
   <string name="preferences__sms_outgoing_push_users_description">Отправлять защищённые SMS, если нет интернета</string>
-  <string name="preferences__sms_fallback_ask_fallback">Спросить перед отправкой SMS</string>
   <string name="preferences__sms_fallback_non_push_users">Пользователи без OpenchatService</string>
   <string name="preferences__sms_fallback_nobody">Никто</string>
   <string name="contact_selection_list__menu_select_all">Выбрать все</string>
@@ -474,9 +458,7 @@ SMS-подтверждения...
   <string name="push_directory__menu_refresh">Обновить контакты</string>
   <string name="conversation_button_context__send_openchatservice_message">Отправить сообщение OpenchatService</string>
   <string name="conversation_button_context__send_secure_sms">Отправить защищённое SMS</string>
-  <string name="conversation_button_context__send_insecure_sms">Отправить незащищённое SMS</string>
   <string name="conversation_button_context__send_secure_mms">Отправить защищённое MMS</string>
-  <string name="conversation_button_context__send_insecure_mms">Отправить незащищённое MMS</string>
   <string name="conversation_callable__menu_call">Звонок</string>
   <string name="conversation_context__menu_message_details">Подробности</string>
   <string name="conversation_context__menu_copy_text">Копировать текст</string>
@@ -494,7 +476,6 @@ SMS-подтверждения...
   <string name="conversation__menu_add_attachment">Добавить вложение</string>
   <string name="conversation__menu_update_group">Обновить группу</string>
   <string name="conversation__menu_leave_group">Покинуть группу</string>
-  <string name="conversation__menu_add_contact_info">Добавить контакт</string>
   <string name="conversation__menu_delete_thread">Удалить разговор</string>
   <string name="convesation_group_options__recipients_list">Список получателей</string>
   <string name="conversation_group_options__delivery">Доставка</string>

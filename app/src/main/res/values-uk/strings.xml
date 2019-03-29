@@ -6,7 +6,6 @@
   <string name="delete">Видалити</string>
   <string name="ApplicationPreferencesActivity_currently_s">Зараз: %s</string>
   <string name="ApplicationPreferenceActivity_you_havent_set_a_passphrase_yet">Ви ще не вказали фразу-пароль!</string>
-  <string name="ApplicationPreferencesActivity_messages_per_conversation">повідомлення в розмові</string>
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Вилучити всі старі повідомлення зараз?</string>
   <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Ви впевнені що хочете негайно обрізати всі розмови до %s останніх повідомлень?</string>
   <string name="ApplicationPreferencesActivity_delete">Видалити</string>
@@ -35,8 +34,6 @@
   <string name="ConversationActivity_add_attachment">Додати прикріплення</string>
   <string name="ConversationActivity_select_contact_info">Виберіть контакт</string>
   <string name="ConversationActivity_sorry_there_was_an_error_setting_your_attachment">Вибачте, сталася помилка при обробці вкладення.</string>
-  <string name="ConversationActivity_sorry_the_selected_video_exceeds_message_size_restrictions">Вибачте, вибраний відео-файл більший максимального розміру повідомлення.</string>
-  <string name="ConversationActivity_sorry_the_selected_audio_exceeds_message_size_restrictions">Вибачте, обраний аудіо-файл більший максимального розміру повідомлення.</string>
   <string name="ConversationActivity_recipient_is_not_a_valid_sms_or_email_address_exclamation">Адреса одержувача не є ні номером телефону, ні адресою електронної пошти!</string>
   <string name="ConversationActivity_message_is_empty_exclamation">Повідомлення порожнє!</string>
   <string name="ConversationActivity_d_recipients_in_group">%d отримувачів в групі</string>
@@ -45,6 +42,7 @@
   <string name="ConversationActivity_this_device_does_not_appear_to_support_dial_actions">Ваше пристрій мабуть не підтримує голосові дзвінки.</string>
   <string name="ConversationActivity_leave_group">Покинути групу?</string>
   <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">Ви дійсно хочете покинути цю групу?</string>
+  <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
   <string name="ConversationFragment_message_details">Деталі повідомлення</string>
   <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">Ви дійсно хочете назавжди вилучити це повідомлення?</string>
   <string name="ConversationFragment_success_exclamation">Успішно!</string>
@@ -184,7 +182,7 @@
   <string name="import_fragment__import_the_database_from_the_default_system">Імпортувати базу даних з SMS-додатку, який використовується зараз за замовчуванням.</string>
   <string name="import_fragment__restore_a_previously_exported_encrypted_openchatservice_backup">Відновити з раніше експортованої зашифрованої резервної копії OpenchatService</string>
   <string name="import_fragment__import_a_plaintext_backup_file">Імпортувати з незашифрованої резервної копії. Сумісно з додатком \'SMSBackup And Restore\'.</string>
-  <string name="mms_preferences_activity__manual_mms_settings_are_required">Параметри MMS для вашого телефону потрібно вказати вручну.</string>
+  <string name="MmsPreferencesFragment__manual_mms_settings_are_required">Параметри MMS для вашого телефону потрібно вказати вручну.</string>
   <string name="prompt_passphrase_activity__unlock">Розблокувати</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">Для надсилання MMS-повідомлень OpenchatService необхідно знати настройки APN вашого оператора. Однак ваш пристрій не надає цієї інформації - так іноді буває, якщо воно заблоковане або відповідним чином налаштоване.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Щоб мати можливість відправляти MMS-повідомлення, введіть інформацію про APN нижче. Потрібні значення для вашого оператора можна знайти в інтернеті за запитом \'оператор APN\' або в його службі підтримки. Це потрібно зробити тільки один раз.</string>
@@ -221,14 +219,13 @@
   <string name="verify_identity_activity__their_identity_they_read">Cпіврозмовник (він читає):</string>
   <string name="verify_identity_activity__your_identity_you_read">Ви (ви читаєте):</string>
   <string name="AndroidManifest__change_passphrase">Змінити фразу-ключ</string>
+  <string name="preferences__general">Загальні</string>
   <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_text_messages">Використовувати OpenchatService для перегляду та зберігання всіх вхідних текстових повідомлень</string>
   <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_multimedia_messages">Використовувати OpenchatService для перегляду та зберігання всіх вхідних мультимедійних повідомлень</string>
   <string name="preferences__choose_your_contact_entry_from_the_contacts_list">Виберіть себе із списку контактів.</string>
   <string name="preferences__change_passphrase">Змінити фразу-ключ</string>
   <string name="preferences__change_my_passphrase">Змінити мою фразу-ключ</string>
   <string name="preferences__complete_key_exchanges">Виконувати обміни ключами</string>
-  <string name="preferences__disable_passphrase">Вимкнути фразу-ключ</string>
-  <string name="preferences__disable_local_encryption_of_messages_and_keys">Вимкнути локальне шифрування повідомлень та ключів</string>
   <string name="preferences__automatically_complete_key_exchanges_for_new_sessions_or_for_existing_sessions_with_the_same_identity_key">Автоматично завершувати обмін ключами для нових або ж існуючих сесій з тими ж ключами ідентифікації</string>
   <string name="preferences__forget_passphrase_from_memory_after_some_interval">Стирати з пам’яті фразу-ключ через деякий час</string>
   <string name="preferences__timeout_passphrase">Забувати фразу-ключ</string>
@@ -258,7 +255,6 @@
   <string name="preferences__slow">Повільно</string>
   <string name="preferences__custom">Користувацький</string>
   <string name="preferences__advanced">Додаткові функції</string>
-  <string name="preferences__passphrase">Фраза-ключ</string>
   <string name="preferences__override_system_mms_settings">Перезаписати системні налаштування MMS вказаними нижче.</string>
   <string name="preferences__mmsc_url_required">MMSC URL (обов’язково):</string>
   <string name="preferences__mms_proxy_host_optional">Хост MMS проксі (не обов’язково)</string>
@@ -267,7 +263,6 @@
   <string name="preferences__request_a_delivery_report_for_each_sms_message_you_send">Запитувати звіт про доставку для кожного відісланого вами SMS</string>
   <string name="preferences__automatically_delete_older_messages_once_a_conversation_thread_exceeds_a_specified_length">Автоматично видаляти старі повідомлення, коли довжина розмови перевищує задану</string>
   <string name="preferences__delete_old_messages">Вилучати старі повідомлення</string>
-  <string name="preferences__storage">Сховище</string>
   <string name="preferences__conversation_length_limit">Обмеження довжини розмови</string>
   <string name="preferences__trim_all_threads_now">Обрізати всі розмови</string>
   <string name="preferences__scan_through_all_conversation_threads_and_enforce_conversation_length_limits">Переглянути всі розмови і привести їх довжину у відповідність із заданою</string>
@@ -290,7 +285,6 @@
   <string name="conversation_list__menu_search">Пошук</string>
   <string name="conversation_secure_verified__menu_security">Безпека</string>
   <string name="conversation__menu_add_attachment">Додати вкладення</string>
-  <string name="conversation__menu_add_contact_info">Додати інформацію контакту</string>
   <string name="conversation__menu_delete_thread">Видалити розмову</string>
   <string name="convesation_group_options__recipients_list">Список одержувачів</string>
   <string name="conversation_group_options__delivery">Доставка</string>
