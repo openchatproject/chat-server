@@ -16,6 +16,8 @@ import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.widget.EditText;
 
+import com.openchat.secureim.BuildConfig;
+import com.openchat.secureim.OpenchatServiceExpiredException;
 import com.openchat.imservice.api.util.InvalidNumberException;
 import com.openchat.imservice.api.util.PhoneNumberFormatter;
 
@@ -268,4 +270,7 @@ public class Util {
     }
   }
 
+  public static boolean isBuildFresh() {
+    return BuildConfig.BUILD_TIMESTAMP + TimeUnit.DAYS.toMillis(180) > System.currentTimeMillis();
+  }
 }

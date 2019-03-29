@@ -27,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.openchat.secureim.components.DefaultSmsReminder;
+import com.openchat.secureim.components.ExpiredBuildReminder;
 import com.openchat.secureim.components.PushRegistrationReminder;
 import com.openchat.secureim.components.ReminderView;
 import com.openchat.secureim.components.SystemSmsImportReminder;
@@ -146,7 +147,9 @@ public class ConversationListFragment extends ListFragment
   }
 
   private void initializeReminders() {
-    if (DefaultSmsReminder.isEligible(getActivity())) {
+    if (ExpiredBuildReminder.isEligible(getActivity())) {
+      reminderView.showReminder(new ExpiredBuildReminder());
+    } else if (DefaultSmsReminder.isEligible(getActivity())) {
       reminderView.showReminder(new DefaultSmsReminder(getActivity()));
     } else if (SystemSmsImportReminder.isEligible(getActivity())) {
       reminderView.showReminder(new SystemSmsImportReminder(getActivity(), masterSecret));
