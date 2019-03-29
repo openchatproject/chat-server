@@ -16,8 +16,8 @@ import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.widget.EditText;
 
-import com.openchat.imservice.api.util.PhoneNumberFormatter;
 import com.openchat.imservice.api.util.InvalidNumberException;
+import com.openchat.imservice.api.util.PhoneNumberFormatter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

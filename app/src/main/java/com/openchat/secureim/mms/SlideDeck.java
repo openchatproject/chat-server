@@ -2,9 +2,9 @@ package com.openchat.secureim.mms;
 
 import android.content.Context;
 
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.dom.smil.parser.SmilXmlSerializer;
 import com.openchat.secureim.util.SmilUtil;
-import com.openchat.secureim.crypto.MasterSecret;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
