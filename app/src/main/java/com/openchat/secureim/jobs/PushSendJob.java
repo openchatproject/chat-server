@@ -6,7 +6,10 @@ import android.util.Log;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
+import com.openchat.secureim.mms.MmsMediaConstraints;
 import com.openchat.secureim.mms.PartAuthority;
+import com.openchat.secureim.mms.MediaConstraints;
+import com.openchat.secureim.mms.PushMediaConstraints;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
@@ -21,7 +24,6 @@ import com.openchat.secureim.database.OpenchatServiceDirectory;
 import com.openchat.imservice.api.push.PushAddress;
 import com.openchat.imservice.api.util.InvalidNumberException;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;

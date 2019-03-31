@@ -1,6 +1,6 @@
 package com.openchat.secureim.transport;
 
-public class UndeliverableMessageException extends Throwable {
+public class UndeliverableMessageException extends Exception {
   public UndeliverableMessageException() {
   }
 

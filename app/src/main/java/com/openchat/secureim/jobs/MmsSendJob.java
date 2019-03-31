@@ -12,11 +12,11 @@ import com.openchat.secureim.database.MmsDatabase;
 import com.openchat.secureim.database.NoSuchMessageException;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
 import com.openchat.secureim.mms.ApnUnavailableException;
+import com.openchat.secureim.mms.MediaConstraints;
 import com.openchat.secureim.mms.MmsRadio;
 import com.openchat.secureim.mms.MmsRadioException;
 import com.openchat.secureim.mms.MmsSendResult;
 import com.openchat.secureim.mms.OutgoingMmsConnection;
-import com.openchat.secureim.mms.PartAuthority;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
@@ -24,21 +24,17 @@ import com.openchat.secureim.transport.InsecureFallbackApprovalException;
 import com.openchat.secureim.transport.UndeliverableMessageException;
 import com.openchat.secureim.util.Hex;
 import com.openchat.secureim.util.NumberUtil;
-import com.openchat.secureim.util.Util;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.protocal.NoSessionException;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
 import ws.com.google.android.mms.MmsException;
 import ws.com.google.android.mms.pdu.EncodedStringValue;
-import ws.com.google.android.mms.pdu.PduBody;
 import ws.com.google.android.mms.pdu.PduComposer;
 import ws.com.google.android.mms.pdu.PduHeaders;
-import ws.com.google.android.mms.pdu.PduPart;
 import ws.com.google.android.mms.pdu.SendConf;
 import ws.com.google.android.mms.pdu.SendReq;
 
@@ -69,8 +65,6 @@ public class MmsSendJob extends SendJob {
     MmsDatabase database = DatabaseFactory.getMmsDatabase(context);
     SendReq     message  = database.getOutgoingMessage(masterSecret, messageId);
 
-    populatePartData(message.getBody(), masterSecret);
-
     try {
       MmsSendResult result = deliver(masterSecret, message);
 
@@ -99,24 +93,6 @@ public class MmsSendJob extends SendJob {
   public void onCanceled() {
     DatabaseFactory.getMmsDatabase(context).markAsSentFailed(messageId);
     notifyMediaMessageDeliveryFailed(context, messageId);
-  }
-
-  private void populatePartData(PduPart part, MasterSecret masterSecret) throws IOException {
-    if (part.getDataUri() == null) {
-      return;
-    }
-
-    ByteArrayOutputStream os = part.getDataSize() > 0 && part.getDataSize() < Integer.MAX_VALUE
-                             ? new ByteArrayOutputStream((int)part.getDataSize())
-                             : new ByteArrayOutputStream();
-    Util.copy(PartAuthority.getPartStream(context, masterSecret, part.getDataUri()), os);
-    part.setData(os.toByteArray());
-  }
-
-  private void populatePartData(PduBody body, MasterSecret masterSecret) throws IOException {
-    for (int i=body.getPartsNum()-1; i>=0; i--) {
-      populatePartData(body.getPart(i), masterSecret);
-    }
   }
 
   public MmsSendResult deliver(MasterSecret masterSecret, SendReq message)
@@ -182,13 +158,11 @@ public class MmsSendJob extends SendJob {
       message.setFrom(new EncodedStringValue(number));
     }
 
+    prepareMessageMedia(masterSecret, message, MediaConstraints.MMS_CONSTRAINTS, true);
+
     try {
       OutgoingMmsConnection connection = new OutgoingMmsConnection(context, radio.getApnInformation(), new PduComposer(context, message).make());
-      SendConf conf = connection.send(usingMmsRadio, useProxy);
-
-      for (int i=0;i<message.getBody().getPartsNum();i++) {
-        Log.w(TAG, "Sent MMS part of content-type: " + new String(message.getBody().getPart(i).getContentType()));
-      }
+      SendConf              conf       = connection.send(usingMmsRadio, useProxy);
 
       if (conf == null) {
         throw new UndeliverableMessageException("No M-Send.conf received in response to send.");

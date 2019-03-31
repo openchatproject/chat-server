@@ -10,6 +10,7 @@ import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsDatabase;
 import com.openchat.secureim.database.NoSuchMessageException;
 import com.openchat.secureim.dependencies.InjectableType;
+import com.openchat.secureim.mms.MediaConstraints;
 import com.openchat.secureim.mms.PartParser;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
@@ -19,6 +20,7 @@ import com.openchat.secureim.sms.IncomingIdentityUpdateMessage;
 import com.openchat.secureim.transport.InsecureFallbackApprovalException;
 import com.openchat.secureim.transport.RetryLaterException;
 import com.openchat.secureim.transport.SecureFallbackApprovalException;
+import com.openchat.secureim.transport.UndeliverableMessageException;
 import com.openchat.protocal.state.OpenchatStore;
 import com.openchat.imservice.api.OpenchatServiceMessageSender;
 import com.openchat.imservice.api.crypto.UntrustedIdentityException;
@@ -58,7 +60,7 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
 
   @Override
   public void onSend(MasterSecret masterSecret)
-      throws RetryLaterException, MmsException, NoSuchMessageException
+      throws RetryLaterException, MmsException, NoSuchMessageException, UndeliverableMessageException
   {
     MmsDatabase database = DatabaseFactory.getMmsDatabase(context);
     SendReq     message  = database.getOutgoingMessage(masterSecret, messageId);
@@ -98,7 +100,8 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
 
   private boolean deliver(MasterSecret masterSecret, SendReq message)
       throws RetryLaterException, SecureFallbackApprovalException,
-             InsecureFallbackApprovalException, UntrustedIdentityException
+             InsecureFallbackApprovalException, UntrustedIdentityException,
+             UndeliverableMessageException
   {
     MmsDatabase             database               = DatabaseFactory.getMmsDatabase(context);
     OpenchatServiceMessageSender messageSender          = messageSenderFactory.create(masterSecret);
@@ -106,6 +109,7 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
     boolean                 isSmsFallbackSupported = isSmsFallbackSupported(context, destination, true);
 
     try {
+      prepareMessageMedia(masterSecret, message, MediaConstraints.PUSH_CONSTRAINTS, false);
       Recipients                 recipients   = RecipientFactory.getRecipientsFromString(context, destination, false);
       PushAddress                address      = getPushAddress(recipients.getPrimaryRecipient());
       List<OpenchatServiceAttachment> attachments  = getAttachments(masterSecret, message);
