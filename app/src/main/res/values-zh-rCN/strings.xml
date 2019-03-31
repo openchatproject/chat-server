@@ -93,11 +93,12 @@
   <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
   <string name="ConversationActivity_get_with_it">已获得： %s</string>
   <string name="ConversationActivity_install_openchatservice">安装 OpenchatService： %s</string>
+  <string name="ConversationActivity_error_leaving_group">离开群组时遇到错误…</string>
   <string name="ConversationFragment_message_details">信息详情</string>
   <string name="ConversationFragment_transport_s_sent_received_s">传输：%1$s\n 发送/接收：%2$s</string>
   <string name="ConversationFragment_sender_s_transport_s_sent_s_received_s">发送者： %1$s\n传输： %2$s\n已发送： %3$s\n已接收： %4$s</string>
   <string name="ConversationFragment_confirm_message_delete">确认删除信息？</string>
-  <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">是否确定要永久删除此信息？</string>
+  <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_all_selected_messages">您确定您要删除所有已选择的信息吗？</string>
   <string name="ConversationFragment_save_to_sd_card">保存到存储？</string>
   <string name="ConversationFragment_this_media_has_been_stored_in_an_encrypted_database_warning">保存该媒体到存储将会允许您手机上的其他应用访问到该媒体。\n\n继续？</string>
   <string name="ConversationFragment_error_while_saving_attachment_to_sd_card">保存媒体到存储时遇到一个错误！</string>
@@ -109,6 +110,8 @@
   <string name="ConversationFragment_push">推</string>
   <string name="ConversationFragment_mms">彩信</string>
   <string name="ConversationFragment_sms">短信</string>
+  <string name="ConversationFragment_deleting">正在删除…</string>
+  <string name="ConversationFragment_deleting_messages">正在删除信息…</string>
   <string name="ConversationListFragment_delete_threads_question">删除线程？</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">是否确定要删除所有选定对话线程？</string>
   <string name="ConversationListFragment_deleting">正在删除</string>
@@ -120,9 +123,9 @@
   <string name="ExportFragment_warning_this_will_export_the_plaintext_contents">警告：这会将您的OpenchatService信息以明文的方式导出到SD卡上。</string>
   <string name="ExportFragment_cancel">取消</string>
   <string name="ExportFragment_exporting">正在导出</string>
-  <string name="ExportFragment_exporting_plaintext_to_sd_card">正在导出明文到SD卡…</string>
-  <string name="ExportFragment_error_unable_to_write_to_sd_card">错误：无法写入SD卡！</string>
-  <string name="ExportFragment_error_while_writing_to_sd_card">写入SD卡时发生错误。</string>
+  <string name="ExportFragment_exporting_plaintext_to_sd_card">正在导出明文到 SD 卡…</string>
+  <string name="ExportFragment_error_unable_to_write_to_sd_card">错误，无法写入 SD 卡！</string>
+  <string name="ExportFragment_error_while_writing_to_sd_card">在写入 SD 卡时遇到错误。</string>
   <string name="ExportFragment_success">成功！</string>
   <string name="GcmRefreshJob_Permanent_OpenchatService_communication_failure">OpenchatService 持续连接失效！</string>
   <string name="GcmRefreshJob_OpenchatService_was_unable_to_register_with_Google_Play_Services">OpenchatService 无法在 Google Play 服务中注册。通过数据通信通道已被禁用，请尝试在 OpenchatService 的设置菜单中重新注册。</string>
@@ -139,9 +142,10 @@
   <string name="GroupCreateActivity_menu_create_title">创建群组</string>
   <string name="GroupCreateActivity_creating_group">正在创建群组 %1$s…</string>
   <string name="GroupCreateActivity_updating_group">更新中… %1$s</string>
-  <string name="GroupCreateActivity_loading_group_details">正在读取群组详情</string>
   <string name="GroupCreateActivity_cannot_add_non_push_to_existing_group">无法添加非OpenchatService联系人到现存的OpenchatService群组</string>
+  <string name="GroupCreateActivity_loading_group_details">读取群组详情…</string>
   <string name="GroupMembersDialog_me">我</string>
+  <string name="GroupMembersDialog_members">成员…</string>
   <string name="ImportExportActivity_import">导入</string>
   <string name="ImportExportActivity_export">导出</string>
   <string name="ImportFragment_import_system_sms_database">导入系统短信数据库？</string>
@@ -172,6 +176,8 @@
   <string name="MmsDownloader_error_reading_mms_settings">在读取彩信服务器设置时遇到错误…</string>
   <string name="NotificationMmsMessageRecord_multimedia_message">多媒体信息</string>
   <string name="MessageRecord_message_encrypted_with_a_legacy_protocol_version_that_is_no_longer_supported">此消息经由旧版本的协议加密，并且已经不再受支持。请要求发送者升级至最新版本的OpenchatService，并重新发送这条信息。</string>
+  <string name="MessageRecord_left_group">您已经离开了此群组。</string>
+  <string name="MessageRecord_updated_group">已更新群组。</string>
   <string name="PassphraseChangeActivity_passphrases_dont_match_exclamation">口令不符！</string>
   <string name="PassphraseChangeActivity_incorrect_old_passphrase_exclamation">旧密码不正确！</string>
   <string name="PassphrasePromptActivity_enter_passphrase">输入密钥</string>
@@ -357,6 +363,9 @@
   <string name="MmsPreferencesFragment__not_set">未设置</string>
   <string name="MmsPreferencesFragment__invalid_uri">输入的文字并非真实的URI</string>
   <string name="MmsPreferencesFragment__invalid_host">输入的文字并非真实的主机</string>
+  <string name="GroupUtil_joined_the_group">%1$s 加入了群组。</string>
+  <string name="GroupUtil_group_updated">群组已更新。</string>
+  <string name="GroupUtil_title_is_now">目前的标题是 \'%1$s\'。</string>
   <string name="prompt_passphrase_activity__unlock">解锁</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService需要通过运营商获取您的彩信设置才能接受彩信或组播信息，但是您的设备没有这些信息，可能是由于设备被锁定或者访问受到限制。</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">想发送多媒体和组播信息，需点击“好”来完成所需的设置。您可以通过搜索“您的运营商 APN”（如百度／谷歌：中国移动 APN）来获取这些信息。通常，您只需要设置一次。</string>
@@ -531,6 +540,8 @@ OpenchatService 在等待短信验证时超时。</string>
   <string name="preferences__sms_fallback_never_send_mms">永不发送彩信</string>
   <string name="preferences__sms_fallback_non_push_users">非 OpenchatService  用户</string>
   <string name="preferences__sms_fallback_nobody">没有人</string>
+  <string name="preferences__support_wifi_calling">“Wifi呼叫”兼容模式</string>
+  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">如果您的设备使用 WiFi 来接受或发送短信，请启用此选项（仅当您的设备启用WiFi呼叫时启用）。</string>
   <string name="contact_selection_list__menu_select_all">全选</string>
   <string name="contact_selection_list__menu_unselect_all">全部取消选择</string>
   <string name="contact_selection_list__header_openchatservice_users">OPENCHAT 用户</string>
@@ -582,6 +593,7 @@ OpenchatService 在等待短信验证时超时。</string>
   <string name="reminder_header_push_text">顷刻投递，私密存储，并且没有短信费用。</string>
   <string name="MediaPreviewActivity_you">您</string>
   <string name="MediaPreviewActivity_cant_display">预览图片失败</string>
+  <string name="MediaPreviewActivity_unssuported_media_type">不支持的媒体类型。</string>
   <string name="media_preview__save_title">保存</string>
   <string name="media_preview_activity__image_content_description">图片预览</string>
   <string name="trimmer__deleting">正在删除…</string>
