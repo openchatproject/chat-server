@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.util.DynamicTheme;
 
 public class ImportExportActivity extends PassphraseRequiredActionBarActivity {
 
@@ -17,15 +18,24 @@ public class ImportExportActivity extends PassphraseRequiredActionBarActivity {
   private ViewPager viewPager;
   private MasterSecret masterSecret;
 
+  private DynamicTheme dynamicTheme = new DynamicTheme();
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    dynamicTheme.onCreate(this);
     setContentView(R.layout.import_export_activity);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     initializeResources();
     initializeViewPager();
     initializeTabs();
+  }
+
+  @Override
+  public void onResume() {
+      super.onResume();
+      dynamicTheme.onResume(this);
   }
 
   @Override
