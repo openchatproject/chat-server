@@ -5,6 +5,7 @@ import android.database.ContentObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
@@ -39,6 +40,8 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
     dynamicTheme.onCreate(this);
     dynamicLanguage.onCreate(this);
     super.onCreate(icicle);
+
+    getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
 
     setContentView(R.layout.conversation_list_activity);
 
@@ -138,7 +141,6 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
     super.onOptionsItemSelected(item);
 
     switch (item.getItemId()) {
-    case R.id.menu_new_message:       openSingleContactSelection();   return true;
     case R.id.menu_new_group:         createGroup();                  return true;
     case R.id.menu_settings:          handleDisplaySettings();        return true;
     case R.id.menu_clear_passphrase:  handleClearPassphrase();        return true;
@@ -158,12 +160,6 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
   private void createGroup() {
     Intent intent = new Intent(this, GroupCreateActivity.class);
     intent.putExtra("master_secret", masterSecret);
-    startActivity(intent);
-  }
-
-  private void openSingleContactSelection() {
-    Intent intent = new Intent(this, NewConversationActivity.class);
-    intent.putExtra(NewConversationActivity.MASTER_SECRET_EXTRA, masterSecret);
     startActivity(intent);
   }
 

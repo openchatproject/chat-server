@@ -18,7 +18,6 @@ import com.openchat.secureim.R;
 public class ReminderView extends LinearLayout {
   private ViewGroup   container;
   private ImageButton cancel;
-  private Button      ok;
   private TextView    title;
   private TextView    text;
   private ImageView   icon;
@@ -43,7 +42,6 @@ public class ReminderView extends LinearLayout {
     LayoutInflater.from(getContext()).inflate(R.layout.reminder_header, this, true);
     container = (ViewGroup  ) findViewById(R.id.container);
     cancel    = (ImageButton) findViewById(R.id.cancel);
-    ok        = (Button     ) findViewById(R.id.ok);
     title     = (TextView   ) findViewById(R.id.reminder_title);
     text      = (TextView   ) findViewById(R.id.reminder_text);
     icon      = (ImageView  ) findViewById(R.id.icon);
@@ -55,7 +53,7 @@ public class ReminderView extends LinearLayout {
     text.setText(reminder.getTextResId());
 
     if (reminder.isDismissable()) {
-      ok.setOnClickListener(reminder.getOkListener());
+      this.setOnClickListener(reminder.getOkListener());
       cancel.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -65,7 +63,6 @@ public class ReminderView extends LinearLayout {
       });
       container.setVisibility(View.VISIBLE);
     } else {
-      ok.setVisibility(View.GONE);
       cancel.setVisibility(View.GONE);
     }
   }
