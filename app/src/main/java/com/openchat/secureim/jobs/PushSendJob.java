@@ -5,11 +5,9 @@ import android.util.Log;
 
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
+import com.openchat.secureim.database.OpenchatServiceDirectory;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
-import com.openchat.secureim.mms.MmsMediaConstraints;
 import com.openchat.secureim.mms.PartAuthority;
-import com.openchat.secureim.mms.MediaConstraints;
-import com.openchat.secureim.mms.PushMediaConstraints;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
@@ -20,7 +18,6 @@ import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentStream;
-import com.openchat.secureim.database.OpenchatServiceDirectory;
 import com.openchat.imservice.api.push.PushAddress;
 import com.openchat.imservice.api.util.InvalidNumberException;
 
@@ -82,7 +79,7 @@ public abstract class PushSendJob extends SendJob {
   protected PushAddress getPushAddress(Recipient recipient) throws InvalidNumberException {
     String e164number = Util.canonicalizeNumber(context, recipient.getNumber());
     String relay      = OpenchatServiceDirectory.getInstance(context).getRelay(e164number);
-    return new PushAddress(recipient.getRecipientId(), e164number, 1, relay);
+    return new PushAddress(recipient.getRecipientId(), e164number, relay);
   }
 
   protected boolean isSmsFallbackApprovalRequired(String destination, boolean media) {

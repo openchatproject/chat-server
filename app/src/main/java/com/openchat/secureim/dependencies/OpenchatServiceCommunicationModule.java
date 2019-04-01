@@ -16,11 +16,15 @@ import com.openchat.secureim.jobs.PushTextSendJob;
 import com.openchat.secureim.jobs.RefreshPreKeysJob;
 import com.openchat.secureim.push.SecurityEventListener;
 import com.openchat.secureim.push.OpenchatServicePushTrustStore;
+import com.openchat.secureim.recipients.Recipient;
+import com.openchat.secureim.recipients.RecipientFactory;
+import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
 import com.openchat.imservice.api.OpenchatServiceMessageReceiver;
 import com.openchat.imservice.api.OpenchatServiceMessageSender;
+import com.openchat.imservice.api.push.PushAddress;
 
 import dagger.Module;
 import dagger.Provides;
@@ -52,13 +56,21 @@ public class OpenchatServiceCommunicationModule {
     return new OpenchatServiceMessageSenderFactory() {
       @Override
       public OpenchatServiceMessageSender create(MasterSecret masterSecret) {
-        return new OpenchatServiceMessageSender(Release.PUSH_URL,
-                                           new OpenchatServicePushTrustStore(context),
-                                           OpenchatServicePreferences.getLocalNumber(context),
-                                           OpenchatServicePreferences.getPushServerPassword(context),
-                                           new OpenchatServiceOpenchatStore(context, masterSecret),
-                                           Optional.of((OpenchatServiceMessageSender.EventListener)
-                                                           new SecurityEventListener(context)));
+        try {
+          String    localNumber    = OpenchatServicePreferences.getLocalNumber(context);
+          Recipient localRecipient = RecipientFactory.getRecipientsFromString(context, localNumber, false).getPrimaryRecipient();
+
+          return new OpenchatServiceMessageSender(Release.PUSH_URL,
+                                             new OpenchatServicePushTrustStore(context),
+                                             OpenchatServicePreferences.getLocalNumber(context),
+                                             OpenchatServicePreferences.getPushServerPassword(context),
+                                             localRecipient.getRecipientId(),
+                                             new OpenchatServiceOpenchatStore(context, masterSecret),
+                                             Optional.of((OpenchatServiceMessageSender.EventListener)
+                                                             new SecurityEventListener(context)));
+        } catch (RecipientFormattingException e) {
+          throw new AssertionError(e);
+        }
       }
     };
   }

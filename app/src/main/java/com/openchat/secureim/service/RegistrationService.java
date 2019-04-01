@@ -16,8 +16,12 @@ import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.IdentityKeyUtil;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.PreKeyUtil;
+import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.jobs.GcmRefreshJob;
 import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
+import com.openchat.secureim.recipients.Recipient;
+import com.openchat.secureim.recipients.RecipientFactory;
+import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.util.DirectoryHelper;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
@@ -211,21 +215,27 @@ public class RegistrationService extends Service {
       throws IOException
   {
     setState(new RegistrationState(RegistrationState.STATE_GENERATING_KEYS, number));
-    IdentityKeyPair    identityKey  = IdentityKeyUtil.getIdentityKeyPair(this, masterSecret);
-    List<PreKeyRecord> records      = PreKeyUtil.generatePreKeys(this, masterSecret);
-    PreKeyRecord       lastResort   = PreKeyUtil.generateLastResortKey(this, masterSecret);
-    SignedPreKeyRecord signedPreKey = PreKeyUtil.generateSignedPreKey(this, masterSecret, identityKey);
-    accountManager.setPreKeys(identityKey.getPublicKey(),lastResort, signedPreKey, records);
+    try {
+      Recipient          self         = RecipientFactory.getRecipientsFromString(this, number, false).getPrimaryRecipient();
+      IdentityKeyPair    identityKey  = IdentityKeyUtil.getIdentityKeyPair(this, masterSecret);
+      List<PreKeyRecord> records      = PreKeyUtil.generatePreKeys(this, masterSecret);
+      PreKeyRecord       lastResort   = PreKeyUtil.generateLastResortKey(this, masterSecret);
+      SignedPreKeyRecord signedPreKey = PreKeyUtil.generateSignedPreKey(this, masterSecret, identityKey);
+      accountManager.setPreKeys(identityKey.getPublicKey(),lastResort, signedPreKey, records);
 
-    setState(new RegistrationState(RegistrationState.STATE_GCM_REGISTERING, number));
+      setState(new RegistrationState(RegistrationState.STATE_GCM_REGISTERING, number));
 
-    String gcmRegistrationId = GoogleCloudMessaging.getInstance(this).register(GcmRefreshJob.REGISTRATION_ID);
-    OpenchatServicePreferences.setGcmRegistrationId(this, gcmRegistrationId);
-    accountManager.setGcmId(Optional.of(gcmRegistrationId));
+      String gcmRegistrationId = GoogleCloudMessaging.getInstance(this).register(GcmRefreshJob.REGISTRATION_ID);
+      OpenchatServicePreferences.setGcmRegistrationId(this, gcmRegistrationId);
+      accountManager.setGcmId(Optional.of(gcmRegistrationId));
 
-    DirectoryHelper.refreshDirectory(this, accountManager, number);
+      DatabaseFactory.getIdentityDatabase(this).saveIdentity(masterSecret, self.getRecipientId(), identityKey.getPublicKey());
+      DirectoryHelper.refreshDirectory(this, accountManager, number);
 
-    DirectoryRefreshListener.schedule(this);
+      DirectoryRefreshListener.schedule(this);
+    } catch (RecipientFormattingException e) {
+      throw new IOException(e);
+    }
   }
 
   private synchronized String waitForChallenge() throws AccountVerificationTimeoutException {
