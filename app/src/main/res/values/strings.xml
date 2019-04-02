@@ -132,6 +132,8 @@
 
     <string name="ConversationListItem_key_exchange_message">Key exchange message...</string>
 
+    <string name="DateUtils_now">Now</string>
+
     <string name="ShareActivity_share_with">Share with</string>
 
     <string name="ExportFragment_export">Export</string>
@@ -580,6 +582,11 @@
 
     <string name="arrays__import_export">Import / export</string>
     <string name="arrays__my_identity_key">My identity key</string>
+
+    <string name="plurals__one_minute">%d min</string>
+    <string name="plurals__many_minutes">%d mins</string>
+    <string name="plurals__one_hour">%d hour</string>
+    <string name="plurals__many_hours">%d hours</string>
 
     <string name="preferences__general">General</string>
     <string name="preferences__sms_mms">SMS and MMS</string>
