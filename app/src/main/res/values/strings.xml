@@ -583,15 +583,10 @@
     <string name="arrays__import_export">Import / export</string>
     <string name="arrays__my_identity_key">My identity key</string>
 
-    <plurals name="minutes_ago">
-        <item quantity="one">%d min</item>
-        <item quantity="other">%d mins</item>
-    </plurals>
-
-    <plurals name="hours_ago">
-        <item quantity="one">%d hour</item>
-        <item quantity="other">%d hours</item>
-    </plurals>
+    <string name="plurals__one_minute">%d min</string>
+    <string name="plurals__many_minutes">%d mins</string>
+    <string name="plurals__one_hour">%d hour</string>
+    <string name="plurals__many_hours">%d hours</string>
 
     <string name="preferences__general">General</string>
     <string name="preferences__sms_mms">SMS and MMS</string>
