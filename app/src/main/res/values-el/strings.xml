@@ -33,6 +33,7 @@
   <string name="ApplicationPreferencesActivity_sms">SMS</string>
   <string name="ApplicationPreferencesActivity_mms">MMS</string>
   <string name="ApplicationPreferencesActivity_incoming_sms">Εισερχόμενα</string>
+  <string name="AppProtectionPreferenceFragment_minutes">%d λεπτά</string>
   <string name="AttachmentTypeSelectorAdapter_picture">Εικόνα</string>
   <string name="AttachmentTypeSelectorAdapter_video">Βίντεο</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Ήχος</string>
@@ -73,16 +74,19 @@
   <string name="ConversationActivity_this_device_does_not_appear_to_support_dial_actions">Αυτή η συσκευή δε φαίνεται να υποστηρίζει ενέργειες κλήσης.</string>
   <string name="ConversationActivity_leave_group">Αποχωρείτε απο την ομάδα;</string>
   <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">Είστε σίγουροι πως θέλετε να αποχωρήσετε απο την ομάδα;</string>
+  <string name="ConversationActivity_transport_insecure_sms">Μη ασφαλές SMS</string>
+  <string name="ConversationActivity_transport_insecure_mms">Μη ασφαλές MMS</string>
   <string name="ConversationActivity_transport_secure_sms">Ασφαλό SMS</string>
   <string name="ConversationActivity_transport_secure_mms">Ασφαλό MMS</string>
   <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
   <string name="ConversationFragment_message_details">Στοιχεία μηνύματος</string>
   <string name="ConversationFragment_confirm_message_delete">Επιβεβαίωση Διαγραφής Μηνύματος</string>
-  <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">Είστε σίγουροι πως θέλετε να διαγράψετε αυτό το μήνυμα για πάντα;</string>
+  <string name="ConversationFragment_save_to_sd_card">Να αποθηκευτεί στην κάρτα μνήμης;</string>
   <string name="ConversationFragment_success_exclamation">Επιτυχία!</string>
   <string name="ConversationFragment_saving_attachment">Αποθήκευση συνημμένου</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
+  <string name="ConversationFragment_deleting">Γίνεται διαγραφή...</string>
   <string name="ConversationListFragment_delete_threads_question">Διαγραφή συζητήσεων;</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Είστε σίγουροι πως θέλετε να διαγράψετε ΟΛΕΣ τις επιλεγμένες συζητήσεις;</string>
   <string name="ConversationListFragment_deleting">Διαγραφή</string>
@@ -97,13 +101,7 @@
     </string>
   <string name="ExportFragment_cancel">Ακύρωση</string>
   <string name="ExportFragment_exporting">Εξαγωγή</string>
-  <string name="ExportFragment_exporting_plaintext_to_sd_card">Γίνεται εξαγωγή αποκρυπτογραφημένου κειμένου στην κάρτα μνήμης...
-</string>
-  <string name="ExportFragment_error_unable_to_write_to_sd_card">Σφάλμα, δε μπορέσαμε να αποθηκεύσουμε
-        στην κάρτα μνήμης!
-    </string>
-  <string name="ExportFragment_error_while_writing_to_sd_card">Σφάλμα κατά την εγγραφή στην κάρτα μνήμης.
-</string>
+  <string name="ExportFragment_error_while_writing_to_sd_card">Σφάλμα κατά την εγγραφή στην κάρτα μνήμης.</string>
   <string name="ExportFragment_success">Επιτυχία!</string>
   <string name="GroupCreateActivity_actionbar_title">Νέα ομάδα</string>
   <string name="GroupCreateActivity_actionbar_update_title">Ενημέρωση ομάδας</string>
@@ -149,6 +147,7 @@
   <string name="ImportFragment_no_encrypted_backup_found">Δε βρέθηκε κρυπτογραφημένο αντίγραφο ασφαλείας!</string>
   <string name="ImportFragment_restore_complete">Επαναφορά ολοκληρώθηκε!</string>
   <string name="KeyScanningActivity_no_scanned_key_found_exclamation">Δε βρέθηκε κλειδί!</string>
+  <string name="KeyScanningActivity_install_barcode_Scanner">Θέλετε να εγκαταστήσετε το Barcode Scanner?</string>
   <string name="MmsDownloader_error_storing_mms">Σφάλμα κατά την αποθήκευση MMS! </string>
   <string name="MmsDownloader_error_connecting_to_mms_provider">Σφάλμα κατά στη σύνδεση με τον πάροχο MMS...</string>
   <string name="MmsDownloader_error_reading_mms_settings">Σφάλμα κατά την διάβαση των ρυθμίσεων MMS του παροχέα...</string>
@@ -230,6 +229,7 @@
   <string name="SmsMessageRecord_duplicate_message">Διπλότυπο μήνυμα</string>
   <string name="ThreadRecord_left_the_group">Έφυγε απο την ομάδα...</string>
   <string name="TheadRecord_secure_session_ended">Η ασφαλής συζήτηση τερματίστηκε.</string>
+  <string name="ThreadRecord_draft">Πρόχειρο</string>
   <string name="VerifyIdentityActivity_you_do_not_have_an_identity_key">Δεν έχετε κλειδί ταυτότητας.</string>
   <string name="VerifyIdentityActivity_recipient_has_no_identity_key">Ο παραλήπτης δεν έχει κλειδί ταυτότητας.</string>
   <string name="VerifyIdentityActivity_recipient_has_no_identity_key_exclamation">Ο παραλήπτης δεν έχει κλειδί ταυτότητας!</string>
@@ -296,12 +296,16 @@
   <string name="conversation_activity__type_message_mms_secure">Αποστολή ασφαλούς MMS</string>
   <string name="conversation_activity__send">Αποστολή</string>
   <string name="conversation_activity__remove">Αφαίρεση</string>
+  <string name="conversation_activity__compose_description">Δημιουργία μηνύματος</string>
   <string name="conversation_item__mms_image_description">Μήνυμα πολυμέσων</string>
   <string name="conversation_item__play_button_description">Κουμπί αναπαραγωγής</string>
+  <string name="conversation_item__secure_message_description">Ασφαλές μήνυμα</string>
   <string name="conversation_item_sent__download">Λήψη</string>
   <string name="conversation_item_sent__downloading">Γίνεται λήψη</string>
+  <string name="conversation_item_sent__send_failed_indicator_description">Η αποστολή απέτυχε</string>
   <string name="conversation_item_sent__pending_approval_description">Eκκρεμής έγκριση</string>
   <string name="conversation_item_received__download">Λήψη</string>
+  <string name="conversation_item_received__contact_photo_description">Φωτογραφία επαφής</string>
   <string name="conversation_item_received__downloading">Γίνεται λήψη</string>
   <string name="conversation_fragment_cab__batch_selection_mode">Λειτουργία Μαζικής Επιλογής</string>
   <string name="conversation_fragment_cab__batch_selection_amount">%s επιλέχτηκαν</string>
@@ -332,6 +336,8 @@
   <string name="import_fragment__import_a_plaintext_backup_file">
         Εισαγωγή μη κρυπτογραφημένου αντιγράφου ασφαλείας. Συμβατό με την εφαρμογή «SMSBackup And Restore».</string>
   <string name="MmsPreferencesFragment__manual_mms_settings_are_required">Απαιτούνται προσαρμοσμένες ρυθμίσεις MMS για το κινητό σας.</string>
+  <string name="MmsPreferencesFragment__enabled">Ενεργοποιημένο</string>
+  <string name="MmsPreferencesFragment__disabled">Απενεργοποιημένο</string>
   <string name="prompt_passphrase_activity__unlock">Ξεκλείδωμα</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">Το OpenchatService χρειάζεται τις ρυθμίσεις MMS για να στείλει μηνύματα πολυμέσων μέσω του πάροχού σας. Η συσκευή σας δεν παρέχει αυτές τις ρυθμίσεις, κάτι που ισχύει σε κλειδωμένες συσκευές και άλλες περιοριστικές διαμορφώσεις.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Για να στείλετε μηνύματα πολυμέσων, πατήστε «ΟΚ» και συμπληρώστε τις ρυθμίσεις APN. Θα βρείτε τις σωστές ρυθμίσεις APN για τον πάροχό σας ψάχνοντας online για «το όνομα του πάροχού σας» + APN. Αυτές οι ρυθμίσεις θα χρειαστούν μόνο μία φορά.</string>
@@ -406,8 +412,10 @@
   <string name="AndroidManifest__verify_identity">Επιβεβαίωση Ταυτότητας</string>
   <string name="AndroidManifest__complete_key_exchange">Ολοκλήρωση Ανταλλαγής Κλειδιών</string>
   <string name="AndroidManifest__log_submit">Υποβολή διαγνωστικού αρχείου.</string>
+  <string name="arrays__import_export">Εισαγωγή / εξαγωγή</string>
   <string name="arrays__my_identity_key">Το Κλειδί Ταυτότητάς Μου</string>
   <string name="preferences__general">Γενικά</string>
+  <string name="preferences__sms_mms">SMS και MMS</string>
   <string name="preferences__push_sms_category">Push (μέσω Internet) και SMS</string>
   <string name="preferences__pref_all_sms_title">Λήψη όλων των μηνυμάτων</string>
   <string name="preferences__pref_all_mms_title">Λήψη όλων των μηνυμάτων MMS</string>
@@ -528,11 +536,8 @@
   <string name="text_secure_normal__menu_clear_passphrase">Κλείδωμα</string>
   <string name="text_secure_normal__mark_all_as_read">Επισήμανση όλων ως αναγνωσμένα</string>
   <string name="reminder_header_sms_default_title">Να είμαστε η προεπιλεγμένη εφαρμογή για SMS;</string>
-  <string name="reminder_header_sms_default_text">Το OpenchatService δεν είναι η προεπιλεγμένη εφαρμογή για SMS.</string>
   <string name="reminder_header_sms_import_title">Να εισαγχθούν όλα τα προϋπάρχοντα SMS;</string>
-  <string name="reminder_header_sms_import_text">Το OpenchatService μπορεί να αντιγράψει τα SMS του τηλεφώνου σας στην ασφαλή βάση δεδομένων του.</string>
   <string name="reminder_header_push_title">Ενεργοποίηση μηνυμάτων OpenchatService;</string>
-  <string name="reminder_header_push_text">Άμεση παράδοση, περισσότερο απόρρητα, και χωρίς χρεώσεις SMS.</string>
   <string name="MediaPreviewActivity_you">Εσείς</string>
   <string name="media_preview__save_title">Αποθήκευση</string>
   <string name="media_preview_activity__image_content_description">Προεπισκόπηση Εικόνας</string>

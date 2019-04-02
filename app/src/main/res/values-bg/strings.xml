@@ -96,10 +96,12 @@
   <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
   <string name="ConversationActivity_get_with_it">Започвай: %s</string>
   <string name="ConversationActivity_install_openchatservice">Инсталирай OpenchatService: %s</string>
+  <string name="ConversationActivity_error_leaving_group">Грешка при напускането на група...</string>
   <string name="ConversationFragment_message_details">Информация за съобщението</string>
   <string name="ConversationFragment_transport_s_sent_received_s">Транспорт: %1$s\nИзпратени/Получени: %2$s</string>
   <string name="ConversationFragment_sender_s_transport_s_sent_s_received_s">Изпращач: %1$s\nТранспорт: %2$s\nИзпратено: %3$s\nПолучено:%4$s</string>
   <string name="ConversationFragment_confirm_message_delete">Потвърди изтриване на съобщението</string>
+  <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_all_selected_messages">Сигурни ли сте, че искате да изтриете перманентно всички избрани съобщения?</string>
   <string name="ConversationFragment_save_to_sd_card">Запази на SD картата?</string>
   <string name="ConversationFragment_this_media_has_been_stored_in_an_encrypted_database_warning">Запазване на този файл на SD картата ще разреши на всички други приложения да го виждат и променят.\n\nПродължи?</string>
   <string name="ConversationFragment_error_while_saving_attachment_to_sd_card">Грешка при запазване на прикачения файл на SD карта!</string>
@@ -112,6 +114,7 @@
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
   <string name="ConversationFragment_deleting">Изтриване...</string>
+  <string name="ConversationFragment_deleting_messages">Изтриване на съобщения...</string>
   <string name="ConversationListFragment_delete_threads_question">Изтрий разговорите?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Сигурен ли си, че искаш да изтриеш ВСИЧКИ избрани разговори?</string>
   <string name="ConversationListFragment_deleting">Изтриване</string>
@@ -124,6 +127,9 @@
 запише в разшифрован вид съдържанието на вашите OpenchatService съобщения на SD карта. </string>
   <string name="ExportFragment_cancel">Отказ</string>
   <string name="ExportFragment_exporting">Изнасяне</string>
+  <string name="ExportFragment_exporting_plaintext_to_sd_card">Експортиране в разшифрован формат на SD карта..</string>
+  <string name="ExportFragment_error_unable_to_write_to_sd_card">Грешка, неуспешен опит за запис на SD карта!</string>
+  <string name="ExportFragment_error_while_writing_to_sd_card">Грешка при записване на SD карта</string>
   <string name="ExportFragment_success">Успех!</string>
   <string name="GcmRefreshJob_Permanent_OpenchatService_communication_failure">Перманентна OpenchatService комуникационна грешка!</string>
   <string name="GcmRefreshJob_OpenchatService_was_unable_to_register_with_Google_Play_Services">OpenchatService не успя да се регистрира с Google Play Services. Комуникация през канала с данни е забранен, моля опитайте да се пререгистрирате през менюто с настройки на OpenchatService.</string>
@@ -141,7 +147,9 @@
   <string name="GroupCreateActivity_creating_group">Създаване на %1$s...</string>
   <string name="GroupCreateActivity_updating_group">Обновяване %1$s...</string>
   <string name="GroupCreateActivity_cannot_add_non_push_to_existing_group">Не е възможно добавянето на потребители не използващи OpenchatService в съществуваща OpenchatService група</string>
+  <string name="GroupCreateActivity_loading_group_details">Зареждане на информация за групата...</string>
   <string name="GroupMembersDialog_me">Аз</string>
+  <string name="GroupMembersDialog_members">Участници...</string>
   <string name="ImportExportActivity_import">Внеси</string>
   <string name="ImportExportActivity_export">Изнеси</string>
   <string name="ImportFragment_import_system_sms_database">Добави всички съществуващи SMS-и?</string>
@@ -177,8 +185,24 @@ SMS съобщенията от системната базата данни в 
   <string name="MmsDownloader_error_reading_mms_settings">Грешка при четене на MMS настройките...</string>
   <string name="NotificationMmsMessageRecord_multimedia_message">Мултимедийно съобщение</string>
   <string name="MessageRecord_message_encrypted_with_a_legacy_protocol_version_that_is_no_longer_supported">Получено е съобщение шифровано със стара версия на OpenchatService, която вече не се поддържа. Помоли изпращача да опресни своята версия на програмата и да изпрати съобщението повторно.</string>
+  <string name="MessageRecord_left_group">Напуснахте групата.</string>
+  <string name="MessageRecord_updated_group">Групата е обновена.</string>
   <string name="PassphraseChangeActivity_passphrases_dont_match_exclamation">Паролите не съвпадат!</string>
   <string name="PassphraseChangeActivity_incorrect_old_passphrase_exclamation">Грешна стара парола!</string>
+  <string name="DeviceProvisioningActivity_link_this_device">Свържи това устройство?</string>
+  <string name="DeviceProvisioningActivity_cancel">ОТКАЖИ</string>
+  <string name="DeviceProvisioningActivity_continue">ПРОДЪЛЖИ</string>
+  <string name="DeviceProvisioningActivity_title">Свържи това устройство?</string>
+  <string name="DeviceProvisioningActivity_content_intro">Ще може да</string>
+  <string name="DeviceProvisioningActivity_content_bullets">
+Чете всичките ти съобщения
+\n - Изпраща съобщения от твое име</string>
+  <string name="DeviceProvisioningActivity_content_progress_title">Добавяне на устройство...</string>
+  <string name="DeviceProvisioningActivity_content_progress_content">Добавяне на ново устройство...</string>
+  <string name="DeviceProvisioningActivity_content_progress_success">Устройството добавено!</string>
+  <string name="DeviceProvisioningActivity_content_progress_no_device">Не е открито устройство.</string>
+  <string name="DeviceProvisioningActivity_content_progress_network_error">Проблем с мобилната мрежа.</string>
+  <string name="DeviceProvisioningActivity_content_progress_key_error">Невалиден QR код.</string>
   <string name="PassphrasePromptActivity_enter_passphrase">Въведи паролата</string>
   <string name="PassphrasePromptActivity_watermark_content_description">Икона на OpenchatService</string>
   <string name="PassphrasePromptActivity_ok_button_content_description">Задай паролата</string>
@@ -208,8 +232,7 @@ SMS съобщенията от системната базата данни в 
 това устройство не поддържа съобщения през интернет. Устройства използващи Android по-ранна версия от 4.0 трябва да са регистрирани с Google. Устройства използващи Android 4.0 или по-нова версия не е нужно
 да са регистрирани с Google, но трябва да имат Play Store инсталиран.</string>
   <string name="RegistrationActivity_we_will_now_verify_that_the_following_number_is_associated_with_your_device_s">
-Сега ще потвърдим дали следният телефонен номер е свързан с това устройство:\n\n%s\n\n
-Номерът правилен ли е или би ли желал да го промениш преди да продължиш?</string>
+Проверете, че това е Вашия номер! Следва да го проверим чрез SMS.</string>
   <string name="RegistrationActivity_continue">Продължи</string>
   <string name="RegistrationActivity_edit">Промени</string>
   <string name="RegistrationProblemsActivity_possible_problems">Възможни проблеми</string>
@@ -368,6 +391,9 @@ SMS съобщенията от системната базата данни в 
   <string name="MmsPreferencesFragment__not_set">Не е избрано</string>
   <string name="MmsPreferencesFragment__invalid_uri">Въведеният текст не е валиден адрес</string>
   <string name="MmsPreferencesFragment__invalid_host">Въведеният текст не валиден host</string>
+  <string name="GroupUtil_joined_the_group">%1$s се присъедини към групата.</string>
+  <string name="GroupUtil_group_updated">Групата е обновена.</string>
+  <string name="GroupUtil_title_is_now">Заглавието е вече \'%1$s\'.</string>
   <string name="prompt_passphrase_activity__unlock">Отключи</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService се нуждае от MMS настройки, за да може да достави медийни и групови съобщения през мрежата. Устройството ти не прави тази информация достъпна, което се случва понякога за заключени устройва и други ограничени конфигурации.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">За да изптратиш медийни и групови съобщения, избери \'ОК\' и нагласи изискваните настройки. MMS настройките на твоя мобилен оператор могат да бъдат намерени като потърсиш \'APN настройки\'. Нужно е да изпълниш тази стъпка само веднъж.</string>
@@ -547,6 +573,8 @@ OpenchatService чака твърде дълго за SMS потвърждени
   <string name="preferences__sms_fallback_never_send_mms">Никога не пращай MMS</string>
   <string name="preferences__sms_fallback_non_push_users">Потребители не ползващи OpenchatService</string>
   <string name="preferences__sms_fallback_nobody">Никой</string>
+  <string name="preferences__support_wifi_calling">Съвместим режим \'WiFi Calling\'</string>
+  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Включете ако устройството ти използва SMS/MMS през WiFi (използвай само, когато \'WiFi Calling\' e включено на устройството ти).</string>
   <string name="contact_selection_list__menu_select_all">Избери всичко</string>
   <string name="contact_selection_list__menu_unselect_all">Не избирай нищо</string>
   <string name="contact_selection_list__header_openchatservice_users">OPENCHAT ПОТРЕБИТЕЛИ</string>
@@ -590,14 +618,17 @@ OpenchatService чака твърде дълго за SMS потвърждени
   <string name="text_secure_normal__menu_settings">Настройки</string>
   <string name="text_secure_normal__menu_clear_passphrase">Заключи</string>
   <string name="text_secure_normal__mark_all_as_read">Маркирай всички като прочетени</string>
+  <string name="reminder_header_expired_build">Вашата версия на OpenchatService изтече!</string>
+  <string name="reminder_header_expired_build_details">Съобщенията няма повече да бъдат успешно доставени, моля, обновете до най-новата версия.</string>
   <string name="reminder_header_sms_default_title">Използвай като SMS програма по подразбиране?</string>
-  <string name="reminder_header_sms_default_text">OpenchatService, в момента, не е твоята SMS програма по подразбиране.</string>
+  <string name="reminder_header_sms_default_text">Натисни, за да зададеш OpenchatService като SMS програма по подразбиране.</string>
   <string name="reminder_header_sms_import_title">Внеси вече съществуващите SMS?</string>
-  <string name="reminder_header_sms_import_text">OpenchatService може да копира твоите SMS съобщения в шифрованата си база данни.</string>
+  <string name="reminder_header_sms_import_text">Натисните, за да копирате своите SMS съобщения в шифрованата база данни.</string>
   <string name="reminder_header_push_title">Разреши OpenchatService съобщения?</string>
-  <string name="reminder_header_push_text">Мигновено доставяне, по-добра защита на личното пространство, и без SMS такси.</string>
+  <string name="reminder_header_push_text">Натисните за мигновено доставяне, по-добра защита на личното пространство, и без SMS такси.</string>
   <string name="MediaPreviewActivity_you">Ти</string>
   <string name="MediaPreviewActivity_cant_display">Неуспешен преглед на това изображение</string>
+  <string name="MediaPreviewActivity_unssuported_media_type">Неподдържан медиен формат.</string>
   <string name="media_preview__save_title">Запази</string>
   <string name="media_preview_activity__image_content_description">Преглед на изображение</string>
   <string name="trimmer__deleting">Изтриване...</string>

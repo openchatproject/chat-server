@@ -48,7 +48,6 @@ Necessitaràs tornar a registrar el teu número de telèfon per utilitzar els mi
   <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">Estàs segur que vols deixar aquest grup?</string>
   <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
   <string name="ConversationFragment_message_details">Detalls del missatge</string>
-  <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">Estàs segur que vols esborrar permanentment aquest missatge?</string>
   <string name="ConversationFragment_success_exclamation">Èxit!</string>
   <string name="ConversationListFragment_delete_threads_question">Esborrar fils de conversa?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Estàs segur que vols esborrar TOTS els fils de conversa seleccionats?</string>
@@ -59,9 +58,6 @@ Necessitaràs tornar a registrar el teu número de telèfon per utilitzar els mi
   <string name="ExportFragment_warning_this_will_export_the_plaintext_contents">Alerta, això exportarà els continguts de text pla dels teus missatges OpenchatService a la targeta SD.</string>
   <string name="ExportFragment_cancel">Cancel·la</string>
   <string name="ExportFragment_exporting">Exportant</string>
-  <string name="ExportFragment_exporting_plaintext_to_sd_card">Exportant text pla a la targeta SD...</string>
-  <string name="ExportFragment_error_unable_to_write_to_sd_card">Error, no s\'ha pogut escriure a la targeta SD!</string>
-  <string name="ExportFragment_error_while_writing_to_sd_card">Error mentre s\'escrivia a la targeta SD.</string>
   <string name="ExportFragment_success">Èxit!</string>
   <string name="GroupCreateActivity_contacts_dont_support_push">Has seleccionat un contacte que no suporta grups de OpenchatService, això farà que aquest grup sigui de MMS.</string>
   <string name="GroupCreateActivity_you_dont_support_push">No estàs registrat per utilitzar el canal de dades, això farà que els grups de OpenchatService estiguin desactivats.</string>

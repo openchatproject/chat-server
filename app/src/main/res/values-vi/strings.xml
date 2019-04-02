@@ -66,7 +66,6 @@ Thao tác này sẽ tắt tin nhắn đẩy bằng cách gỡ đăng ký bạn r
   <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
   <string name="ConversationFragment_message_details">Chi tiết tin nhắn</string>
   <string name="ConversationFragment_confirm_message_delete">Xác nhận xóa tin</string>
-  <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">Bạn có chắc là muốn xóa vĩnh viễn tin nhắn này?</string>
   <string name="ConversationFragment_success_exclamation">Thành công!</string>
   <string name="ConversationFragment_saving_attachment">Đang lưu lại phần đính kèm</string>
   <string name="ConversationListFragment_delete_threads_question">Xóa các luồng trao đổi?</string>
@@ -80,9 +79,6 @@ Thao tác này sẽ tắt tin nhắn đẩy bằng cách gỡ đăng ký bạn r
   <string name="ExportFragment_warning_this_will_export_the_plaintext_contents">Cảnh báo, thao tác này sẽ xuất nội dung văn bản thường (không mã hóa) của các tin nhắn OpenchatService ra thẻ nhớ SD.</string>
   <string name="ExportFragment_cancel">Hủy bỏ</string>
   <string name="ExportFragment_exporting">Đang xuất</string>
-  <string name="ExportFragment_exporting_plaintext_to_sd_card">Đang xuất văn bản thường ra thẻ nhớ SD...</string>
-  <string name="ExportFragment_error_unable_to_write_to_sd_card">Có lỗi, không thể chép ra thẻ nhớ SD!</string>
-  <string name="ExportFragment_error_while_writing_to_sd_card">Có lỗi khi chép ra thẻ nhớ SD.</string>
   <string name="ExportFragment_success">Thành công!</string>
   <string name="GroupCreateActivity_actionbar_title">Tạo nhóm mới</string>
   <string name="GroupCreateActivity_actionbar_update_title">Cập nhật nhóm</string>

@@ -181,6 +181,21 @@ Gjenoppretting av en kryptert backup vil overskrive eksisterende nøkler, innsti
   <string name="MessageRecord_updated_group">Gruppen er oppdatert.</string>
   <string name="PassphraseChangeActivity_passphrases_dont_match_exclamation">Passordene er ikke like!</string>
   <string name="PassphraseChangeActivity_incorrect_old_passphrase_exclamation">Gammelt passord er feil!</string>
+  <string name="DeviceProvisioningActivity_link_this_device">Koble denne enheten?</string>
+  <string name="DeviceProvisioningActivity_cancel">AVBRYT</string>
+  <string name="DeviceProvisioningActivity_continue">FORTSETT</string>
+  <string name="DeviceProvisioningActivity_title">Koble denne enheten?</string>
+  <string name="DeviceProvisioningActivity_content_intro">Den vil ha muligheten til å</string>
+  <string name="DeviceProvisioningActivity_content_bullets">
+- Lese alle meldingene dine
+\n- Sende meldinger i ditt navn
+ </string>
+  <string name="DeviceProvisioningActivity_content_progress_title">Legger til enhet...</string>
+  <string name="DeviceProvisioningActivity_content_progress_content">Legger til ny enhet...</string>
+  <string name="DeviceProvisioningActivity_content_progress_success">Enhet lagt til!</string>
+  <string name="DeviceProvisioningActivity_content_progress_no_device">Ingen enhet funnet.</string>
+  <string name="DeviceProvisioningActivity_content_progress_network_error">Nettverksfeil.</string>
+  <string name="DeviceProvisioningActivity_content_progress_key_error">Ugyldig QR-kode.</string>
   <string name="PassphrasePromptActivity_enter_passphrase">Tast inn passord</string>
   <string name="PassphrasePromptActivity_watermark_content_description">OpenchatService ikon</string>
   <string name="PassphrasePromptActivity_ok_button_content_description">Sett passord</string>
@@ -206,8 +221,8 @@ oppga (%s) er ugylig.</string>
   <string name="RegistrationActivity_unsupported">Ikke støttet</string>
   <string name="RegistrationActivity_sorry_this_device_is_not_supported_for_data_messaging">Beklager, denne enheten støtter ikke meldinger over mobil data. Enheter som kjører versjoner av Android lavere enn 4.0 krever en Google konto. Enheter som kjører versjoner av Android 4.0 eller nyere krever ikke en Google konto, men Play Store applikasjonen må være installert.</string>
   <string name="RegistrationActivity_we_will_now_verify_that_the_following_number_is_associated_with_your_device_s">
-Vi vil nå verifisere om følgende nummer er forbundet med denne enheten:\n\n%s\n\n
-Er dette nummeret korrekt, eller ønsker du å endre det før du fortsetter? </string>
+Dobbelsjekk at dette er nummeret ditt! Vi er i ferd med å verifisere det med en SMS.
+</string>
   <string name="RegistrationActivity_continue">Fortsett</string>
   <string name="RegistrationActivity_edit">Endre</string>
   <string name="RegistrationProblemsActivity_possible_problems">Mulige problemer</string>
@@ -575,12 +590,14 @@ Styrk personvernet ditt og unngå SMS kostnader ved å benytte mobil data når d
   <string name="text_secure_normal__menu_settings">Innstillinger</string>
   <string name="text_secure_normal__menu_clear_passphrase">Lås</string>
   <string name="text_secure_normal__mark_all_as_read">Marker alle som lest</string>
+  <string name="reminder_header_expired_build">Din versjon av OpenchatService er gått ut på dato!</string>
+  <string name="reminder_header_expired_build_details">Det vil ikke lenger være mulig å sende meldinger. Vær vennlig å oppdatere til siste versjon.</string>
   <string name="reminder_header_sms_default_title">Bruk som standard SMS applikasjon?</string>
-  <string name="reminder_header_sms_default_text">OpenchatService er ikke konfigurert som standard SMS applikasjon.</string>
+  <string name="reminder_header_sms_default_text">Klikk for å la OpenchatService være din standard SMS applikasjon</string>
   <string name="reminder_header_sms_import_title">Importer enhetens SMS database?</string>
-  <string name="reminder_header_sms_import_text">OpenchatService kan kopiere telefonens SMS meldinger til sin egen krypterte database.</string>
+  <string name="reminder_header_sms_import_text">Klikk for å kopiere telefonens SMS meldinger til sin krypterte database.</string>
   <string name="reminder_header_push_title">Benytte OpenchatService meldinger?</string>
-  <string name="reminder_header_push_text">Umiddelbar levering, sterkere personvern, ingen SMS kostnader.</string>
+  <string name="reminder_header_push_text">Klikk for umiddelbar levering, sterkere personvern og ingen SMS kostnader.</string>
   <string name="MediaPreviewActivity_you">Du</string>
   <string name="MediaPreviewActivity_cant_display">Klarte ikke å forhåndsvise dette bildet</string>
   <string name="MediaPreviewActivity_unssuported_media_type">Media typen er ikke støttet.</string>

@@ -93,6 +93,7 @@ Ceci va désactiver les messages push en vous désinscrivant du serveur. Vous de
   <string name="ConversationActivity_transport_secure_sms">SMS sécurisé</string>
   <string name="ConversationActivity_transport_secure_mms">MMS sécurisé</string>
   <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
+  <string name="ConversationActivity_get_with_it">Mettez-vous-y: %s</string>
   <string name="ConversationActivity_install_openchatservice">Installez OpenchatService : %s</string>
   <string name="ConversationActivity_error_leaving_group">Erreur en quittant le groupe...</string>
   <string name="ConversationFragment_message_details">Détails du message</string>
@@ -112,7 +113,7 @@ Ceci va désactiver les messages push en vous désinscrivant du serveur. Vous de
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
   <string name="ConversationFragment_deleting">Suppression...</string>
-  <string name="ConversationFragment_deleting_messages">Supression des messages...</string>
+  <string name="ConversationFragment_deleting_messages">Suppression des messages...</string>
   <string name="ConversationListFragment_delete_threads_question">Supprimer les fils ?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Êtes-vous sûr de vouloir supprimer TOUS les fils de discussion sélectionnés ?</string>
   <string name="ConversationListFragment_deleting">Suppression</string>
@@ -145,7 +146,7 @@ exportera le contenu de vos messages OpenchatService en clair sur la carte SD.</
   <string name="GroupCreateActivity_creating_group">Création de %1$s en cours…</string>
   <string name="GroupCreateActivity_updating_group">Mise à jour %1$s...</string>
   <string name="GroupCreateActivity_cannot_add_non_push_to_existing_group">Impossible d’ajouter des contacts n\'utilisant pas OpenchatService à un groupe OpenchatService existant</string>
-  <string name="GroupCreateActivity_loading_group_details">Chargement des détails du groupe.</string>
+  <string name="GroupCreateActivity_loading_group_details">Chargement des détails du groupe...</string>
   <string name="GroupMembersDialog_me">Moi</string>
   <string name="GroupMembersDialog_members">Membres...</string>
   <string name="ImportExportActivity_import">Importer</string>
@@ -187,6 +188,21 @@ Merci de demander à l’expéditeur de mettre à jour OpenchatService dans sa v
   <string name="MessageRecord_updated_group">Groupe mis à jour.</string>
   <string name="PassphraseChangeActivity_passphrases_dont_match_exclamation">Les phrases de passe ne correspondent pas !</string>
   <string name="PassphraseChangeActivity_incorrect_old_passphrase_exclamation">Ancienne phrase de passe incorrecte !</string>
+  <string name="DeviceProvisioningActivity_link_this_device">Lier cet appareil?</string>
+  <string name="DeviceProvisioningActivity_cancel">ANNULER</string>
+  <string name="DeviceProvisioningActivity_continue">CONTINUER</string>
+  <string name="DeviceProvisioningActivity_title">Lier cet appareil?</string>
+  <string name="DeviceProvisioningActivity_content_intro">Il sera capable de</string>
+  <string name="DeviceProvisioningActivity_content_bullets">
+        - Lire tous vos messages
+        \n- Envoyer des messages en votre nom
+    </string>
+  <string name="DeviceProvisioningActivity_content_progress_title">Ajout de l\'appareil...</string>
+  <string name="DeviceProvisioningActivity_content_progress_content">Ajout du nouvel appareil...</string>
+  <string name="DeviceProvisioningActivity_content_progress_success">Appareil ajouté</string>
+  <string name="DeviceProvisioningActivity_content_progress_no_device">Pas d\'appareil trouvé.</string>
+  <string name="DeviceProvisioningActivity_content_progress_network_error">Erreur réseau.</string>
+  <string name="DeviceProvisioningActivity_content_progress_key_error">QR code invalide.</string>
   <string name="PassphrasePromptActivity_enter_passphrase">Entrez la phrase de passe</string>
   <string name="PassphrasePromptActivity_watermark_content_description">Icône OpenchatService</string>
   <string name="PassphrasePromptActivity_ok_button_content_description">Soumettre la phrase de passe</string>
@@ -217,8 +233,8 @@ cet appareil n\'est pas supporté pour la messagerie sur le canal de données. L
  que 4.0 doivent avoir un compte Google. Les appareils ayant Android 4.0 ou plus ne sont
  pas obligés d\'avoir un compte Google, mais doivent avoir l\'application Play Store installée.</string>
   <string name="RegistrationActivity_we_will_now_verify_that_the_following_number_is_associated_with_your_device_s">
-Nous allons maintenant vérifier que le numéro suivant est associé à cet appareil:\n\n%s\n\n
-Ce numéro est-il correct, ou souhaitez-vous le modifier avant de continuer ?</string>
+        Vérifiez qu\'il s’agit bien de votre numéro! Nous allons envoyer un SMS de vérification.
+    </string>
   <string name="RegistrationActivity_continue">Continuer</string>
   <string name="RegistrationActivity_edit">Modifier</string>
   <string name="RegistrationProblemsActivity_possible_problems">Problèmes possibles</string>
@@ -596,12 +612,14 @@ Augmenter la confidentialité et éviter les frais de SMS en utilisant le canal 
   <string name="text_secure_normal__menu_settings">Paramètres</string>
   <string name="text_secure_normal__menu_clear_passphrase">Verrouiller</string>
   <string name="text_secure_normal__mark_all_as_read">Tout marquer comme lu</string>
+  <string name="reminder_header_expired_build">La version de votre build de OpenchatService a expiré!</string>
+  <string name="reminder_header_expired_build_details">Les messages ne pourront plus être envoyés, veuillez installer la dernière version.</string>
   <string name="reminder_header_sms_default_title">Définir OpenchatService comme application SMS par défaut ? </string>
-  <string name="reminder_header_sms_default_text">OpenchatService n\'est pas définie comme application SMS par défaut.</string>
+  <string name="reminder_header_sms_default_text">Appuyez pour faire de OpenchatService votre application SMS par défaut.</string>
   <string name="reminder_header_sms_import_title">Désirez-vous importer les SMS du système ?</string>
-  <string name="reminder_header_sms_import_text">OpenchatService peut copier vos SMS au sein de sa base de donnée chiffrée. </string>
+  <string name="reminder_header_sms_import_text">Appuyez pour copier les SMS de votre téléphone dans sa base chiffrée.</string>
   <string name="reminder_header_push_title">Activer les messages OpenchatService ?</string>
-  <string name="reminder_header_push_text">Instantané, sans frais SMS et protège votre vie privé.</string>
+  <string name="reminder_header_push_text">Appuyer pour des messages instantanés, aucun frais de SMS et une meilleure protection de votre vie privée.</string>
   <string name="MediaPreviewActivity_you">Vous</string>
   <string name="MediaPreviewActivity_cant_display">La prévisualisation de l\'image a échouée</string>
   <string name="MediaPreviewActivity_unssuported_media_type">Type de média non supporté</string>

@@ -48,7 +48,6 @@ dapat mengaksesnya</string>
   <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">Anda yakin ingin meninggalkan grup ini?</string>
   <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
   <string name="ConversationFragment_message_details">Rincian pesan</string>
-  <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">Apakah anda yakin akan menghapus pesan ini secara permanen?</string>
   <string name="ConversationFragment_success_exclamation">Sukses!</string>
   <string name="ConversationListFragment_delete_threads_question">Hapus topik?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Apakah anda yakin ingin menghapus semua topik pembicaraan terpilih?</string>
@@ -60,13 +59,6 @@ dapat mengaksesnya</string>
 mengeksport konten pesan teks polos OpenchatService anda ke kartu SD</string>
   <string name="ExportFragment_cancel">Batal</string>
   <string name="ExportFragment_exporting">Mengeksport</string>
-  <string name="ExportFragment_exporting_plaintext_to_sd_card">Mengeksport teks polos ke kartu SD...
-</string>
-  <string name="ExportFragment_error_unable_to_write_to_sd_card">Tidak dapat menyimpan ke kartu
-SD!
-</string>
-  <string name="ExportFragment_error_while_writing_to_sd_card">Gagal ketika menyimpan ke kartu SD.
-</string>
   <string name="ExportFragment_success">Sukses!</string>
   <string name="GroupCreateActivity_contacts_dont_support_push">Anda telah memilih kontak yang tidak mendukung grup OpenchatService, sehingga grup ini akan menggunakan MMS.</string>
   <string name="GroupCreateActivity_you_dont_support_push">Anda tidak terdaftar untuk menggunakan saluran data, sehingga grup OpenchatService dimatikan.</string>

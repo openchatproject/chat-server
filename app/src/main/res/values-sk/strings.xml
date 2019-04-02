@@ -53,7 +53,6 @@ Upozornenie, toto vypne kryptovanie úložiska správ a kľúčov. Vaše bezpeč
   <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
   <string name="ConversationFragment_message_details">Detaily správy</string>
   <string name="ConversationFragment_confirm_message_delete">Potvrď zmazanie správy</string>
-  <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">Ste si istí že chcete úplne zmazať túto správu?</string>
   <string name="ConversationFragment_success_exclamation">Úspech!</string>
   <string name="ConversationFragment_saving_attachment">Ukladám prílohu</string>
   <string name="ConversationListFragment_delete_threads_question">Zmazať vlákna?</string>
@@ -68,10 +67,6 @@ Upozornenie, toto vypne kryptovanie úložiska správ a kľúčov. Vaše bezpeč
 exportuje nekryptovaný obsah OpenchatService správy na SD kartu.</string>
   <string name="ExportFragment_cancel">Zrušiť</string>
   <string name="ExportFragment_exporting">Exportujem</string>
-  <string name="ExportFragment_exporting_plaintext_to_sd_card">Exportujem nekryptovaný text na SD kartu...</string>
-  <string name="ExportFragment_error_unable_to_write_to_sd_card">Chyba, nemôžem zapísať na SD
-kartu!</string>
-  <string name="ExportFragment_error_while_writing_to_sd_card">Chyba pri zápise na SD kartu.</string>
   <string name="ExportFragment_success">Úspech!</string>
   <string name="GroupCreateActivity_actionbar_title">Nová skupina</string>
   <string name="GroupCreateActivity_actionbar_update_title">Aktualizuj skupinu</string>

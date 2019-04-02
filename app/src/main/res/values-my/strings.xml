@@ -25,7 +25,6 @@
   <string name="ConversationActivity_message_is_empty_exclamation">စာတိုမရှိ</string>
   <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
   <string name="ConversationFragment_message_details">စာတို အသေးစိတ်အချက်အလက်များ</string>
-  <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_this_message">စာတိုကို အပြီးဖျက်ပစ်မည်မှာ သေချာလား</string>
   <string name="ConversationFragment_success_exclamation">အောင်မြင်!</string>
   <string name="ConversationListFragment_delete_threads_question">စကားဝိုင်းကိုဖျက်မည်လား</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">စကားဝိုင်းတွင်စကားစမည်ပြောထားသည်များကိုဖျက်မည်မှာသေချာပြီလား</string>
