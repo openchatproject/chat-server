@@ -283,7 +283,7 @@ public class ConversationItem extends LinearLayout {
       if (messageRecord.isPush()) timestamp = messageRecord.getDateSent();
       else                        timestamp = messageRecord.getDateReceived();
 
-      dateText.setText(DateUtils.getExtendedRelativeTimeSpanString(getContext(), timestamp));
+      dateText.setText(DateUtils.getBetterRelativeTimeSpanString(getContext(), timestamp));
     }
   }
 

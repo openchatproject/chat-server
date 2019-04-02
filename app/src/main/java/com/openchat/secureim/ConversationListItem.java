@@ -89,7 +89,10 @@ public class ConversationListItem extends RelativeLayout
     this.subjectView.setTypeface(read ? LIGHT_TYPEFACE : BOLD_TYPEFACE);
 
     if (thread.getDate() > 0) {
-      CharSequence date = DateUtils.getBriefRelativeTimeSpanString(context, thread.getDate());
+      CharSequence date = DateUtils.getRelativeTimeSpanString(thread.getDate(),
+                                                              System.currentTimeMillis(),
+                                                              DateUtils.MINUTE_IN_MILLIS,
+                                                              DateUtils.FORMAT_ABBREV_RELATIVE);
       dateView.setText(read ? date : color(getResources().getColor(R.color.openchatservice_primary), date));
       dateView.setTypeface(read ? LIGHT_TYPEFACE : BOLD_TYPEFACE);
     }

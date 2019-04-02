@@ -61,6 +61,10 @@ public class MmsCipher {
       byte[] decodedCiphertext = textTransport.getDecodedMessage(ciphertext.get());
       byte[] plaintext;
 
+      if (decodedCiphertext == null) {
+        throw new InvalidMessageException("failed to decode ciphertext");
+      }
+
       try {
         plaintext = sessionCipher.decrypt(new OpenchatMessage(decodedCiphertext));
       } catch (InvalidMessageException e) {
