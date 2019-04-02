@@ -11,7 +11,7 @@ import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.service.KeyCachingService;
 import com.openchat.secureim.util.MemoryCleaner;
 
-public abstract class PassphraseActivity extends ActionBarActivity {
+public abstract class PassphraseActivity extends BaseActionBarActivity {
 
   private KeyCachingService keyCachingService;
   private MasterSecret masterSecret;

@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.openchat.libpastelog.SubmitLogFragment;
 
-public class LogSubmitActivity extends ActionBarActivity implements SubmitLogFragment.OnLogSubmittedListener {
+public class LogSubmitActivity extends BaseActionBarActivity implements SubmitLogFragment.OnLogSubmittedListener {
   private static final String TAG = LogSubmitActivity.class.getSimpleName();
 
   @Override

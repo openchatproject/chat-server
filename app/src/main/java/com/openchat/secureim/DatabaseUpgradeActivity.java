@@ -1,6 +1,5 @@
 package com.openchat.secureim;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -32,7 +31,7 @@ import java.io.File;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class DatabaseUpgradeActivity extends Activity {
+public class DatabaseUpgradeActivity extends BaseActivity {
 
   public static final int NO_MORE_KEY_EXCHANGE_PREFIX_VERSION  = 46;
   public static final int MMS_BODY_VERSION                     = 46;

@@ -1,6 +1,5 @@
 package com.openchat.secureim;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,7 +19,7 @@ import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.api.push.PushAddress;
 
-public class AutoInitiateActivity extends Activity {
+public class AutoInitiateActivity extends BaseActivity {
 
   private long threadId;
   private Recipient recipient;

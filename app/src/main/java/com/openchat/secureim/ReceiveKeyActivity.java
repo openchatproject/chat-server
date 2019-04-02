@@ -1,6 +1,5 @@
 package com.openchat.secureim;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -46,7 +45,7 @@ import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 
 import java.io.IOException;
 
-public class ReceiveKeyActivity extends Activity {
+public class ReceiveKeyActivity extends BaseActivity {
 
   private TextView descriptionText;
 

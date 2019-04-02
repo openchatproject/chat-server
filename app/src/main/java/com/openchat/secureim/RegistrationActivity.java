@@ -32,7 +32,7 @@ import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.util.Util;
 import com.openchat.imservice.api.util.PhoneNumberFormatter;
 
-public class RegistrationActivity extends ActionBarActivity {
+public class RegistrationActivity extends BaseActionBarActivity {
 
   private static final int PICK_COUNTRY = 1;
 

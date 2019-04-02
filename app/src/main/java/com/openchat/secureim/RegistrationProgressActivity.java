@@ -45,7 +45,7 @@ import java.io.IOException;
 
 import static com.openchat.secureim.service.RegistrationService.RegistrationState;
 
-public class RegistrationProgressActivity extends ActionBarActivity {
+public class RegistrationProgressActivity extends BaseActionBarActivity {
 
   private static final int FOCUSED_COLOR   = Color.parseColor("#ff333333");
   private static final int UNFOCUSED_COLOR = Color.parseColor("#ff808080");
