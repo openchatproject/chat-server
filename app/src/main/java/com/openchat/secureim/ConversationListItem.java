@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.provider.Contacts.Intents;
 import android.provider.ContactsContract.QuickContact;
@@ -19,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.model.ThreadRecord;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
@@ -27,12 +25,16 @@ import com.openchat.secureim.util.DateUtils;
 import com.openchat.secureim.util.Emoji;
 
 import java.util.Set;
-import java.util.concurrent.ThreadFactory;
+
+import static com.openchat.secureim.util.SpanUtil.color;
 
 public class ConversationListItem extends RelativeLayout
                                   implements Recipient.RecipientModifiedListener
 {
   private final static String TAG = ConversationListItem.class.getSimpleName();
+
+  private final static Typeface BOLD_TYPEFACE  = Typeface.create("sans-serif", Typeface.BOLD);
+  private final static Typeface LIGHT_TYPEFACE = Typeface.create("sans-serif-light", Typeface.NORMAL);
 
   private Context           context;
   private Set<Long>         selectedThreads;
@@ -43,7 +45,6 @@ public class ConversationListItem extends RelativeLayout
   private TextView          dateView;
   private long              count;
   private boolean           read;
-
   private ImageView         contactPhotoImage;
 
   private final Handler handler = new Handler();
@@ -85,12 +86,16 @@ public class ConversationListItem extends RelativeLayout
                                                                 Emoji.EMOJI_SMALL,
                                                                 new Emoji.InvalidatingPageLoadedListener(subjectView)),
                              TextView.BufferType.SPANNABLE);
+    this.subjectView.setTypeface(read ? LIGHT_TYPEFACE : BOLD_TYPEFACE);
 
-    if (thread.getDate() > 0)
-      this.dateView.setText(DateUtils.getRelativeTimeSpanString(thread.getDate(),
-                                                                System.currentTimeMillis(),
-                                                                DateUtils.MINUTE_IN_MILLIS,
-                                                                DateUtils.FORMAT_ABBREV_RELATIVE));
+    if (thread.getDate() > 0) {
+      CharSequence date = DateUtils.getRelativeTimeSpanString(thread.getDate(),
+                                                              System.currentTimeMillis(),
+                                                              DateUtils.MINUTE_IN_MILLIS,
+                                                              DateUtils.FORMAT_ABBREV_RELATIVE);
+      dateView.setText(read ? date : color(getResources().getColor(R.color.openchatservice_primary), date));
+      dateView.setTypeface(read ? LIGHT_TYPEFACE : BOLD_TYPEFACE);
+    }
 
     setBackground(read, batchMode);
     setContactPhoto(this.recipients.getPrimaryRecipient());
