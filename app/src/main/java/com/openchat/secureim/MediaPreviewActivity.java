@@ -45,6 +45,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
   private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
 
   private MasterSecret masterSecret;
+  private boolean      paused;
 
   private View              loadingView;
   private TextView          errorText;
@@ -95,13 +96,14 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
     } else {
       relativeTimeSpan = null;
     }
-    getSupportActionBar().setTitle(recipient == null ? getString(R.string.MediaPreviewActivity_you) : recipient.getName());
+    getSupportActionBar().setTitle(recipient == null ? getString(R.string.MediaPreviewActivity_you) : recipient.toShortString());
     getSupportActionBar().setSubtitle(relativeTimeSpan);
   }
 
   @Override
   public void onResume() {
     super.onResume();
+    paused = false;
     dynamicLanguage.onResume(this);
     if (recipient != null) recipient.addListener(this);
     initializeMedia();
@@ -110,6 +112,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
   @Override
   public void onPause() {
     super.onPause();
+    paused = true;
     if (recipient != null) recipient.removeListener(this);
     cleanupMedia();
   }
@@ -121,7 +124,6 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
     setIntent(intent);
     initializeResources();
     initializeActionBar();
-    initializeMedia();
   }
 
   private void initializeViews() {
@@ -135,9 +137,9 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
     final long recipientId = getIntent().getLongExtra(RECIPIENT_EXTRA, -1);
 
     masterSecret = getIntent().getParcelableExtra(MASTER_SECRET_EXTRA);
-    mediaUri = getIntent().getData();
-    mediaType = getIntent().getType();
-    date = getIntent().getLongExtra(DATE_EXTRA, -1);
+    mediaUri     = getIntent().getData();
+    mediaType    = getIntent().getType();
+    date         = getIntent().getLongExtra(DATE_EXTRA, -1);
 
     if (recipientId > -1) {
       recipient = RecipientFactory.getRecipientForId(this, recipientId, true);
@@ -192,8 +194,12 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
 
       @Override
       protected void onPostExecute(Bitmap bitmap) {
-        loadingView.setVisibility(View.GONE);
+        if (paused) {
+          if (bitmap != null) bitmap.recycle();
+          return;
+        }
 
+        loadingView.setVisibility(View.GONE);
         if (bitmap == null) {
           errorText.setText(R.string.MediaPreviewActivity_cant_display);
           errorText.setVisibility(View.VISIBLE);

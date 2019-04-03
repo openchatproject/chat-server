@@ -103,7 +103,8 @@ import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessage
 
 public class ConversationActivity extends PassphraseRequiredActionBarActivity
     implements ConversationFragment.ConversationFragmentListener,
-               AttachmentManager.AttachmentListener
+               AttachmentManager.AttachmentListener,
+               RecipientModifiedListener
 {
   private static final String TAG = ConversationActivity.class.getSimpleName();
 
@@ -209,6 +210,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   @Override
   protected void onDestroy() {
     saveDraft();
+    recipients.removeListener(this);
     unregisterReceiver(securityUpdateReceiver);
     unregisterReceiver(groupUpdateReceiver);
     MemoryCleaner.clean(masterSecret);
@@ -737,12 +739,12 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     distributionType = getIntent().getIntExtra(DISTRIBUTION_TYPE_EXTRA, ThreadDatabase.DistributionTypes.DEFAULT);
     masterSecret     = getIntent().getParcelableExtra(MASTER_SECRET_EXTRA);
 
-    recipients.addListener(new RecipientModifiedListener() {
-      @Override
-      public void onModified(Recipient recipient) {
-        initializeTitleBar();
-      }
-    });
+    recipients.addListener(this);
+  }
+
+  @Override
+  public void onModified(Recipient recipient) {
+    initializeTitleBar();
   }
 
   private void initializeReceivers() {
