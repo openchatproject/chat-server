@@ -47,7 +47,7 @@ public class OpenchatServiceDirectory {
     if (instance == null) {
       synchronized (instanceLock) {
         if (instance == null) {
-          instance = new OpenchatServiceDirectory(context);
+          instance = new OpenchatServiceDirectory(context.getApplicationContext());
         }
       }
     }
