@@ -10,6 +10,7 @@ import android.view.WindowManager;
 
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.service.KeyCachingService;
+import com.openchat.secureim.service.MessageRetrievalService;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 
 public class PassphraseRequiredMixin {
@@ -26,11 +27,13 @@ public class PassphraseRequiredMixin {
     initializeNewKeyReceiver(activity);
     initializeFromMasterSecret(activity);
     KeyCachingService.registerPassphraseActivityStarted(activity);
+    MessageRetrievalService.registerActivityStarted(activity);
   }
 
   public <T extends Activity & PassphraseRequiredActivity> void onPause(T activity) {
     removeNewKeyReceiver(activity);
     KeyCachingService.registerPassphraseActivityStopped(activity);
+    MessageRetrievalService.registerActivityStopped(activity);
   }
 
   public <T extends Activity & PassphraseRequiredActivity> void onDestroy(T activity) {

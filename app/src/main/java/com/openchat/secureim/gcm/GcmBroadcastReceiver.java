@@ -10,6 +10,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import com.openchat.secureim.ApplicationContext;
 import com.openchat.secureim.jobs.PushReceiveJob;
+import com.openchat.secureim.service.MessageRetrievalService;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 
 public class GcmBroadcastReceiver extends BroadcastReceiver {
@@ -34,6 +35,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 
       if      (!TextUtils.isEmpty(messageData)) handleReceivedMessage(context, messageData);
       else if (!TextUtils.isEmpty(receiptData)) handleReceivedMessage(context, receiptData);
+      else if (intent.hasExtra("notification")) handleReceivedNotification(context);
     }
   }
 
@@ -41,5 +43,9 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
     ApplicationContext.getInstance(context)
                       .getJobManager()
                       .add(new PushReceiveJob(context, data));
+  }
+
+  private void handleReceivedNotification(Context context) {
+    MessageRetrievalService.registerPushReceived(context);
   }
 }

@@ -23,6 +23,7 @@ import com.openchat.protocal.InvalidMessageException;
 import com.openchat.imservice.api.crypto.AttachmentCipherInputStream;
 import com.openchat.imservice.internal.push.PushServiceSocket;
 import com.openchat.imservice.api.push.exceptions.NonSuccessfulResponseCodeException;
+import com.openchat.imservice.internal.util.StaticCredentialsProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -99,8 +100,9 @@ public class AvatarDownloadJob extends MasterSecretJob {
   private File downloadAttachment(String relay, long contentLocation) throws IOException {
     PushServiceSocket socket = new PushServiceSocket(Release.PUSH_URL,
                                                      new OpenchatServicePushTrustStore(context),
-                                                     OpenchatServicePreferences.getLocalNumber(context),
-                                                     OpenchatServicePreferences.getPushServerPassword(context));
+                                                     new StaticCredentialsProvider(OpenchatServicePreferences.getLocalNumber(context),
+                                                                                   OpenchatServicePreferences.getPushServerPassword(context),
+                                                                                   null));
 
     File destination = File.createTempFile("avatar", "tmp");
 

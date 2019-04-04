@@ -221,10 +221,7 @@ public class PushDecryptJob extends MasterSecretJob {
   }
 
   private void handleDuplicateMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope) {
-    Pair<Long, Long> messageAndThreadId = insertPlaceholder(masterSecret, envelope);
-    DatabaseFactory.getEncryptingSmsDatabase(context).markAsDecryptDuplicate(messageAndThreadId.first);
 
-    MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
   }
 
   private void handleUntrustedIdentityMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope) {
