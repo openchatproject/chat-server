@@ -9,8 +9,13 @@ import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.PartDatabase;
+import com.openchat.secureim.mms.AudioSlide;
+import com.openchat.secureim.mms.ImageSlide;
 import com.openchat.secureim.mms.MediaConstraints;
+import com.openchat.secureim.mms.MediaTooLargeException;
 import com.openchat.secureim.mms.PartAuthority;
+import com.openchat.secureim.mms.Slide;
+import com.openchat.secureim.mms.VideoSlide;
 import com.openchat.secureim.transport.UndeliverableMessageException;
 
 import java.io.ByteArrayInputStream;
@@ -60,6 +65,19 @@ public class MediaUtil {
   {
     int maxSize = context.getResources().getDimensionPixelSize(R.dimen.thumbnail_max_size);
     return BitmapUtil.createScaledBitmap(context, masterSecret, uri, maxSize, maxSize);
+  }
+
+  public static Slide getSlideForPart(Context context, MasterSecret masterSecret, PduPart part, String contentType) {
+    Slide slide = null;
+    if (ContentType.isImageType(contentType)) {
+      slide = new ImageSlide(context, masterSecret, part);
+    } else if (ContentType.isVideoType(contentType)) {
+      slide = new VideoSlide(context, masterSecret, part);
+    } else if (ContentType.isAudioType(contentType)) {
+      slide = new AudioSlide(context, masterSecret, part);
+    }
+
+    return slide;
   }
 
   public static boolean isImage(PduPart part) {

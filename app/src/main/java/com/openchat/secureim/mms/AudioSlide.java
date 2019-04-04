@@ -3,6 +3,7 @@ package com.openchat.secureim.mms;
 import java.io.IOException;
 
 import com.openchat.secureim.R;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.util.SmilUtil;
 import org.w3c.dom.smil.SMILDocument;
 import org.w3c.dom.smil.SMILMediaElement;
@@ -18,12 +19,12 @@ import android.provider.MediaStore.Audio;
 
 public class AudioSlide extends Slide {
 
-  public AudioSlide(Context context, PduPart part) {
-    super(context, part);
-  }
-
   public AudioSlide(Context context, Uri uri) throws IOException, MediaTooLargeException {
     super(context, constructPartFromUri(context, uri));
+  }
+
+  public AudioSlide(Context context, MasterSecret masterSecret, PduPart part) {
+    super(context, masterSecret, part);
   }
 
   @Override

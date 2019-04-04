@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.dom.smil.parser.SmilXmlSerializer;
+import com.openchat.secureim.util.MediaUtil;
 import com.openchat.secureim.util.SmilUtil;
+import com.openchat.secureim.util.Util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
@@ -25,20 +27,10 @@ public class SlideDeck {
   }
 
   public SlideDeck(Context context, MasterSecret masterSecret, PduBody body) {
-    try {
-      for (int i=0;i<body.getPartsNum();i++) {
-        String contentType = new String(body.getPart(i).getContentType(), CharacterSets.MIMENAME_ISO_8859_1);
-        if (ContentType.isImageType(contentType))
-          slides.add(new ImageSlide(context, masterSecret, body.getPart(i)));
-        else if (ContentType.isVideoType(contentType))
-          slides.add(new VideoSlide(context, body.getPart(i)));
-        else if (ContentType.isAudioType(contentType))
-          slides.add(new AudioSlide(context, body.getPart(i)));
-        else if (ContentType.isTextType(contentType))
-          slides.add(new TextSlide(context, masterSecret, body.getPart(i)));
-      }
-    } catch (UnsupportedEncodingException uee) {
-      throw new AssertionError(uee);
+    for (int i=0;i<body.getPartsNum();i++) {
+      String contentType = Util.toIsoString(body.getPart(i).getContentType());
+      Slide  slide       = MediaUtil.getSlideForPart(context, masterSecret, body.getPart(i), contentType);
+      if (slide != null) slides.add(slide);
     }
   }
 
