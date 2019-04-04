@@ -100,7 +100,7 @@ public class SmsListener extends BroadcastReceiver {
     if (messageBody == null)
       return false;
 
-    if (messageBody.matches("Your OpenchatService verification code: [0-9]{3,4}-[0-9]{3,4}") &&
+    if (messageBody.matches(".*Your OpenchatService verification code: [0-9]{3,4}-[0-9]{3,4}") &&
         OpenchatServicePreferences.isVerifying(context))
     {
       return true;
