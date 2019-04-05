@@ -214,7 +214,7 @@ public class ReceiveKeyActivity extends BaseActivity {
 
                 ApplicationContext.getInstance(context)
                                   .getJobManager()
-                                  .add(new PushDecryptJob(context, pushId));
+                                  .add(new PushDecryptJob(context, pushId, message.getSender()));
 
                 smsDatabase.deleteMessage(messageId);
               } catch (IOException e) {
