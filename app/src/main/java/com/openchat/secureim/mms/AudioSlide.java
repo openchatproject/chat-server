@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.util.SmilUtil;
+import com.openchat.secureim.util.ThemeUtil;
 import org.w3c.dom.smil.SMILDocument;
 import org.w3c.dom.smil.SMILMediaElement;
 import org.w3c.dom.smil.SMILRegionElement;
@@ -12,6 +13,7 @@ import org.w3c.dom.smil.SMILRegionMediaElement;
 
 import ws.com.google.android.mms.pdu.PduPart;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -48,8 +50,8 @@ public class AudioSlide extends Slide {
   }
 
   @Override
-  public Drawable getThumbnail(int maxWidth, int maxHeight) {
-    return context.getResources().getDrawable(R.drawable.ic_menu_add_sound);
+  public Drawable getThumbnail(Context context, int maxWidth, int maxHeight) {
+    return ThemeUtil.resolveIcon(context, R.attr.conversation_icon_attach_audio);
   }
 
   public static PduPart constructPartFromUri(Context context, Uri uri) throws IOException, MediaTooLargeException {
