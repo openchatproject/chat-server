@@ -3,9 +3,10 @@ package com.openchat.secureim.crypto;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.thoughtcrimegson.Gson;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import com.openchat.secureim.crypto.storage.OpenchatServicePreKeyStore;
+import com.openchat.secureim.util.JsonUtils;
 import com.openchat.secureim.util.Util;
 import com.openchat.protocal.IdentityKeyPair;
 import com.openchat.protocal.InvalidKeyException;
@@ -13,10 +14,10 @@ import com.openchat.protocal.InvalidKeyIdException;
 import com.openchat.protocal.ecc.Curve;
 import com.openchat.protocal.ecc.Curve25519;
 import com.openchat.protocal.ecc.ECKeyPair;
-import com.openchat.protocal.state.SignedPreKeyRecord;
-import com.openchat.protocal.state.SignedPreKeyStore;
 import com.openchat.protocal.state.PreKeyRecord;
 import com.openchat.protocal.state.PreKeyStore;
+import com.openchat.protocal.state.SignedPreKeyRecord;
+import com.openchat.protocal.state.SignedPreKeyStore;
 import com.openchat.protocal.util.Medium;
 
 import java.io.File;
@@ -92,7 +93,7 @@ public class PreKeyUtil {
     try {
       File             nextFile = new File(getPreKeysDirectory(context), PreKeyIndex.FILE_NAME);
       FileOutputStream fout     = new FileOutputStream(nextFile);
-      fout.write(new Gson().toJson(new PreKeyIndex(id)).getBytes());
+      fout.write(JsonUtils.toJson(new PreKeyIndex(id)).getBytes());
       fout.close();
     } catch (IOException e) {
       Log.w("PreKeyUtil", e);
@@ -103,7 +104,7 @@ public class PreKeyUtil {
     try {
       File             nextFile = new File(getSignedPreKeysDirectory(context), SignedPreKeyIndex.FILE_NAME);
       FileOutputStream fout     = new FileOutputStream(nextFile);
-      fout.write(new Gson().toJson(new SignedPreKeyIndex(id)).getBytes());
+      fout.write(JsonUtils.toJson(new SignedPreKeyIndex(id)).getBytes());
       fout.close();
     } catch (IOException e) {
       Log.w("PreKeyUtil", e);
@@ -118,7 +119,7 @@ public class PreKeyUtil {
         return Util.getSecureRandom().nextInt(Medium.MAX_VALUE);
       } else {
         InputStreamReader reader = new InputStreamReader(new FileInputStream(nextFile));
-        PreKeyIndex       index  = new Gson().fromJson(reader, PreKeyIndex.class);
+        PreKeyIndex       index  = JsonUtils.fromJson(reader, PreKeyIndex.class);
         reader.close();
         return index.nextPreKeyId;
       }
@@ -136,7 +137,7 @@ public class PreKeyUtil {
         return Util.getSecureRandom().nextInt(Medium.MAX_VALUE);
       } else {
         InputStreamReader reader = new InputStreamReader(new FileInputStream(nextFile));
-        SignedPreKeyIndex index  = new Gson().fromJson(reader, SignedPreKeyIndex.class);
+        SignedPreKeyIndex index  = JsonUtils.fromJson(reader, SignedPreKeyIndex.class);
         reader.close();
         return index.nextSignedPreKeyId;
       }
@@ -166,6 +167,7 @@ public class PreKeyUtil {
   private static class PreKeyIndex {
     public static final String FILE_NAME = "index.dat";
 
+    @JsonProperty
     private int nextPreKeyId;
 
     public PreKeyIndex() {}
@@ -178,6 +180,7 @@ public class PreKeyUtil {
   private static class SignedPreKeyIndex {
     public static final String FILE_NAME = "index.dat";
 
+    @JsonProperty
     private int nextSignedPreKeyId;
 
     public SignedPreKeyIndex() {}

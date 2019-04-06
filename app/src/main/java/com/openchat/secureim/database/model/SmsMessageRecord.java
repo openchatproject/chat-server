@@ -6,9 +6,14 @@ import android.text.SpannableString;
 import com.openchat.secureim.R;
 import com.openchat.secureim.database.MmsSmsColumns;
 import com.openchat.secureim.database.SmsDatabase;
+import com.openchat.secureim.database.documents.NetworkFailure;
+import com.openchat.secureim.database.documents.IdentityKeyMismatch;
 import com.openchat.secureim.protocol.Tag;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class SmsMessageRecord extends MessageRecord {
 
@@ -19,10 +24,11 @@ public class SmsMessageRecord extends MessageRecord {
                           long dateSent, long dateReceived,
                           int receiptCount,
                           long type, long threadId,
-                          int status)
+                          int status, List<IdentityKeyMismatch> mismatches)
   {
     super(context, id, body, recipients, individualRecipient, recipientDeviceId,
-          dateSent, dateReceived, threadId, receiptCount, getGenericDeliveryStatus(status), type);
+          dateSent, dateReceived, threadId, receiptCount, getGenericDeliveryStatus(status), type,
+          mismatches, new LinkedList<NetworkFailure>());
   }
 
   public long getType() {
@@ -31,7 +37,9 @@ public class SmsMessageRecord extends MessageRecord {
 
   @Override
   public SpannableString getDisplayBody() {
-    if (isProcessedKeyExchange()) {
+    if (SmsDatabase.Types.isFailedDecryptType(type)) {
+      return emphasisAdded(context.getString(R.string.MessageDisplayHelper_bad_encrypted_message));
+    } else if (isProcessedKeyExchange()) {
       return new SpannableString("");
     } else if (isStaleKeyExchange()) {
       return emphasisAdded(context.getString(R.string.ConversationItem_error_received_stale_key_exchange_message));
@@ -49,8 +57,6 @@ public class SmsMessageRecord extends MessageRecord {
       return new SpannableString("");
     } else if (isKeyExchange() && !isOutgoing()) {
       return emphasisAdded(context.getString(R.string.ConversationItem_received_key_exchange_message_click_to_process));
-    } else if (SmsDatabase.Types.isFailedDecryptType(type)) {
-      return emphasisAdded(context.getString(R.string.MessageDisplayHelper_bad_encrypted_message));
     } else if (SmsDatabase.Types.isDuplicateMessageType(type)) {
       return emphasisAdded(context.getString(R.string.SmsMessageRecord_duplicate_message));
     } else if (SmsDatabase.Types.isDecryptInProgressType(type)) {

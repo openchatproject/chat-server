@@ -9,12 +9,14 @@ import com.openchat.secureim.crypto.storage.OpenchatServiceOpenchatStore;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.NoSuchMessageException;
+import com.openchat.secureim.database.SmsDatabase;
 import com.openchat.secureim.database.model.SmsMessageRecord;
 import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.recipients.Recipient;
+import com.openchat.secureim.recipients.RecipientFactory;
+import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
-import com.openchat.secureim.sms.IncomingIdentityUpdateMessage;
 import com.openchat.secureim.transport.InsecureFallbackApprovalException;
 import com.openchat.secureim.transport.RetryLaterException;
 import com.openchat.secureim.transport.SecureFallbackApprovalException;
@@ -47,14 +49,16 @@ public class PushTextSendJob extends PushSendJob implements InjectableType {
 
   @Override
   public void onAdded() {
-
+    SmsDatabase smsDatabase = DatabaseFactory.getSmsDatabase(context);
+    smsDatabase.markAsSending(messageId);
+    smsDatabase.markAsPush(messageId);
   }
 
   @Override
-  public void onSend(MasterSecret masterSecret) throws NoSuchMessageException, RetryLaterException {
-    EncryptingSmsDatabase database     = DatabaseFactory.getEncryptingSmsDatabase(context);
-    SmsMessageRecord      record       = database.getMessage(masterSecret, messageId);
-    String                destination  = record.getIndividualRecipient().getNumber();
+  public void onSend(MasterSecret masterSecret) throws NoSuchMessageException, RetryLaterException, RecipientFormattingException {
+    EncryptingSmsDatabase database    = DatabaseFactory.getEncryptingSmsDatabase(context);
+    SmsMessageRecord      record      = database.getMessage(masterSecret, messageId);
+    String                destination = record.getIndividualRecipient().getNumber();
 
     try {
       Log.w(TAG, "Sending message: " + messageId);
@@ -74,9 +78,12 @@ public class PushTextSendJob extends PushSendJob implements InjectableType {
       MessageNotifier.notifyMessageDeliveryFailed(context, record.getRecipients(), record.getThreadId());
     } catch (UntrustedIdentityException e) {
       Log.w(TAG, e);
-      IncomingIdentityUpdateMessage identityUpdateMessage = IncomingIdentityUpdateMessage.createFor(e.getE164Number(), e.getIdentityKey());
-      database.insertMessageInbox(masterSecret, identityUpdateMessage);
+      Recipients recipients  = RecipientFactory.getRecipientsFromString(context, e.getE164Number(), false);
+      long       recipientId = recipients.getPrimaryRecipient().getRecipientId();
+
+      database.addMismatchedIdentity(record.getId(), recipientId, e.getIdentityKey());
       database.markAsSentFailed(record.getId());
+      database.markAsPush(record.getId());
     }
   }
 

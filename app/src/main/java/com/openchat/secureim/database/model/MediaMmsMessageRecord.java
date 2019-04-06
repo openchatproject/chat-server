@@ -6,6 +6,8 @@ import android.util.Log;
 
 import com.openchat.secureim.R;
 import com.openchat.secureim.database.MmsDatabase;
+import com.openchat.secureim.database.documents.NetworkFailure;
+import com.openchat.secureim.database.documents.IdentityKeyMismatch;
 import com.openchat.secureim.mms.MediaNotFoundException;
 import com.openchat.secureim.mms.Slide;
 import com.openchat.secureim.mms.SlideDeck;
@@ -14,6 +16,7 @@ import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.FutureTaskListener;
 import com.openchat.secureim.util.ListenableFutureTask;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class MediaMmsMessageRecord extends MessageRecord {
@@ -28,10 +31,13 @@ public class MediaMmsMessageRecord extends MessageRecord {
                                long dateSent, long dateReceived, int deliveredCount,
                                long threadId, Body body,
                                ListenableFutureTask<SlideDeck> slideDeck,
-                               int partCount, long mailbox)
+                               int partCount, long mailbox,
+                               List<IdentityKeyMismatch> mismatches,
+                               List<NetworkFailure> failures)
   {
     super(context, id, body, recipients, individualRecipient, recipientDeviceId,
-          dateSent, dateReceived, threadId, DELIVERY_STATUS_NONE, deliveredCount, mailbox);
+          dateSent, dateReceived, threadId, DELIVERY_STATUS_NONE, deliveredCount, mailbox,
+          mismatches, failures);
 
     this.context             = context.getApplicationContext();
     this.partCount           = partCount;

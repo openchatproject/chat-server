@@ -30,6 +30,7 @@ import com.openchat.secureim.util.Base64;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.protocal.DuplicateMessageException;
+import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.InvalidKeyIdException;
 import com.openchat.protocal.InvalidMessageException;
@@ -37,13 +38,14 @@ import com.openchat.protocal.InvalidVersionException;
 import com.openchat.protocal.LegacyMessageException;
 import com.openchat.protocal.NoSessionException;
 import com.openchat.protocal.UntrustedIdentityException;
+import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
 import com.openchat.protocal.state.OpenchatStore;
 import com.openchat.protocal.state.SessionStore;
 import com.openchat.protocal.util.guava.Optional;
+import com.openchat.imservice.api.crypto.OpenchatServiceCipher;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
-import com.openchat.imservice.api.crypto.OpenchatServiceCipher;
 
 import ws.com.google.android.mms.MmsException;
 
@@ -52,14 +54,20 @@ public class PushDecryptJob extends MasterSecretJob {
   public static final String TAG = PushDecryptJob.class.getSimpleName();
 
   private final long messageId;
+  private final long smsMessageId;
 
-  public PushDecryptJob(Context context, long messageId, String sender) {
+  public PushDecryptJob(Context context, long pushMessageId, String sender) {
+    this(context, pushMessageId, -1, sender);
+  }
+
+  public PushDecryptJob(Context context, long pushMessageId, long smsMessageId, String sender) {
     super(context, JobParameters.newBuilder()
                                 .withPersistence()
                                 .withRequirement(new MasterSecretRequirement(context))
                                 .withGroupId(sender)
                                 .create());
-    this.messageId = messageId;
+    this.messageId    = pushMessageId;
+    this.smsMessageId = smsMessageId;
   }
 
   @Override
@@ -74,7 +82,7 @@ public class PushDecryptJob extends MasterSecretJob {
     PushDatabase       database = DatabaseFactory.getPushDatabase(context);
     OpenchatServiceEnvelope envelope = database.get(messageId);
 
-    handleMessage(masterSecret, envelope);
+    handleMessage(masterSecret, envelope, smsMessageId);
     database.delete(messageId);
   }
 
@@ -88,7 +96,7 @@ public class PushDecryptJob extends MasterSecretJob {
 
   }
 
-  private void handleMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope) {
+  private void handleMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope, long smsMessageId) {
     try {
       Recipients       recipients   = RecipientFactory.getRecipientsFromString(context, envelope.getSource(), false);
       long             recipientId  = recipients.getPrimaryRecipient().getRecipientId();
@@ -98,59 +106,72 @@ public class PushDecryptJob extends MasterSecretJob {
 
       OpenchatServiceMessage message = cipher.decrypt(envelope);
 
-      if      (message.isEndSession())               handleEndSessionMessage(masterSecret, recipientId, envelope, message);
-      else if (message.isGroupUpdate())              handleGroupMessage(masterSecret, envelope, message);
-      else if (message.getAttachments().isPresent()) handleMediaMessage(masterSecret, envelope, message);
-      else                                           handleTextMessage(masterSecret, envelope, message);
+      if      (message.isEndSession())               handleEndSessionMessage(masterSecret, recipientId, envelope, message, smsMessageId);
+      else if (message.isGroupUpdate())              handleGroupMessage(masterSecret, envelope, message, smsMessageId);
+      else if (message.getAttachments().isPresent()) handleMediaMessage(masterSecret, envelope, message, smsMessageId);
+      else                                           handleTextMessage(masterSecret, envelope, message, smsMessageId);
 
       if (envelope.isPreKeyOpenchatMessage()) {
         ApplicationContext.getInstance(context).getJobManager().add(new RefreshPreKeysJob(context));
       }
     } catch (InvalidVersionException e) {
       Log.w(TAG, e);
-      handleInvalidVersionMessage(masterSecret, envelope);
+      handleInvalidVersionMessage(masterSecret, envelope, smsMessageId);
     } catch (InvalidMessageException | InvalidKeyIdException | InvalidKeyException | MmsException | RecipientFormattingException e) {
       Log.w(TAG, e);
-      handleCorruptMessage(masterSecret, envelope);
+      handleCorruptMessage(masterSecret, envelope, smsMessageId);
     } catch (NoSessionException e) {
       Log.w(TAG, e);
-      handleNoSessionMessage(masterSecret, envelope);
+      handleNoSessionMessage(masterSecret, envelope, smsMessageId);
     } catch (LegacyMessageException e) {
       Log.w(TAG, e);
-      handleLegacyMessage(masterSecret, envelope);
+      handleLegacyMessage(masterSecret, envelope, smsMessageId);
     } catch (DuplicateMessageException e) {
       Log.w(TAG, e);
-      handleDuplicateMessage(masterSecret, envelope);
+      handleDuplicateMessage(masterSecret, envelope, smsMessageId);
     } catch (UntrustedIdentityException e) {
       Log.w(TAG, e);
-      handleUntrustedIdentityMessage(masterSecret, envelope);
+      handleUntrustedIdentityMessage(masterSecret, envelope, smsMessageId);
     }
   }
 
   private void handleEndSessionMessage(MasterSecret masterSecret, long recipientId,
-                                       OpenchatServiceEnvelope envelope, OpenchatServiceMessage message)
+                                       OpenchatServiceEnvelope envelope, OpenchatServiceMessage message,
+                                       long smsMessageId)
   {
-    IncomingTextMessage incomingTextMessage = new IncomingTextMessage(envelope.getSource(),
-                                                                      envelope.getSourceDevice(),
-                                                                      message.getTimestamp(),
-                                                                      "", Optional.<OpenchatServiceGroup>absent());
+    EncryptingSmsDatabase smsDatabase         = DatabaseFactory.getEncryptingSmsDatabase(context);
+    IncomingTextMessage   incomingTextMessage = new IncomingTextMessage(envelope.getSource(),
+                                                                        envelope.getSourceDevice(),
+                                                                        message.getTimestamp(),
+                                                                        "", Optional.<OpenchatServiceGroup>absent());
 
-    IncomingEndSessionMessage incomingEndSessionMessage = new IncomingEndSessionMessage(incomingTextMessage);
-    EncryptingSmsDatabase     database                  = DatabaseFactory.getEncryptingSmsDatabase(context);
-    Pair<Long, Long>          messageAndThreadId        = database.insertMessageInbox(masterSecret, incomingEndSessionMessage);
+    long threadId;
+
+    if (smsMessageId <= 0) {
+      IncomingEndSessionMessage incomingEndSessionMessage = new IncomingEndSessionMessage(incomingTextMessage);
+      Pair<Long, Long>          messageAndThreadId        = smsDatabase.insertMessageInbox(masterSecret, incomingEndSessionMessage);
+      threadId = messageAndThreadId.second;
+    } else {
+      smsDatabase.markAsEndSession(smsMessageId);
+      threadId = smsDatabase.getThreadIdForMessage(smsMessageId);
+    }
 
     SessionStore sessionStore = new OpenchatServiceSessionStore(context, masterSecret);
     sessionStore.deleteAllSessions(recipientId);
 
-    SecurityEvent.broadcastSecurityUpdateEvent(context, messageAndThreadId.second);
-    MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
+    SecurityEvent.broadcastSecurityUpdateEvent(context, threadId);
+    MessageNotifier.updateNotification(context, masterSecret, threadId);
   }
 
-  private void handleGroupMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope, OpenchatServiceMessage message) {
+  private void handleGroupMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope, OpenchatServiceMessage message, long smsMessageId) {
     GroupMessageProcessor.process(context, masterSecret, envelope, message);
+
+    if (smsMessageId > 0) {
+      DatabaseFactory.getSmsDatabase(context).deleteMessage(smsMessageId);
+    }
   }
 
-  private void handleMediaMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope, OpenchatServiceMessage message)
+  private void handleMediaMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope, OpenchatServiceMessage message, long smsMessageId)
       throws MmsException
   {
     String               localNumber  = OpenchatServicePreferences.getLocalNumber(context);
@@ -174,68 +195,113 @@ public class PushDecryptJob extends MasterSecretJob {
                       .getJobManager()
                       .add(new AttachmentDownloadJob(context, messageAndThreadId.first));
 
+    if (smsMessageId >= 0) {
+      DatabaseFactory.getSmsDatabase(context).deleteMessage(smsMessageId);
+    }
+
     MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
   }
 
-  private void handleTextMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope, OpenchatServiceMessage message) {
-    EncryptingSmsDatabase database    = DatabaseFactory.getEncryptingSmsDatabase(context);
-    String                body        = message.getBody().isPresent() ? message.getBody().get() : "";
-    IncomingTextMessage   textMessage = new IncomingTextMessage(envelope.getSource(),
+  private void handleTextMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope,
+                                 OpenchatServiceMessage message, long smsMessageId)
+  {
+    EncryptingSmsDatabase database = DatabaseFactory.getEncryptingSmsDatabase(context);
+    String                body     = message.getBody().isPresent() ? message.getBody().get() : "";
+
+    if (smsMessageId > 0) {
+      database.updateBundleMessageBody(masterSecret, smsMessageId, body);
+    } else {
+      IncomingTextMessage textMessage = new IncomingTextMessage(envelope.getSource(),
                                                                 envelope.getSourceDevice(),
                                                                 message.getTimestamp(), body,
                                                                 message.getGroupInfo());
 
-    if (message.isSecure()) {
-      textMessage = new IncomingEncryptedMessage(textMessage, body);
+      if (message.isSecure()) {
+        textMessage = new IncomingEncryptedMessage(textMessage, body);
+      }
+
+      Pair<Long, Long> messageAndThreadId = database.insertMessageInbox(masterSecret, textMessage);
+      MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
     }
-
-    Pair<Long, Long> messageAndThreadId = database.insertMessageInbox(masterSecret, textMessage);
-    MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
   }
 
-  private void handleInvalidVersionMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope) {
-    Pair<Long, Long> messageAndThreadId = insertPlaceholder(masterSecret, envelope);
-    DatabaseFactory.getEncryptingSmsDatabase(context).markAsInvalidVersionKeyExchange(messageAndThreadId.first);
+  private void handleInvalidVersionMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope, long smsMessageId) {
+    EncryptingSmsDatabase smsDatabase = DatabaseFactory.getEncryptingSmsDatabase(context);
 
-    MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
+    if (smsMessageId <= 0) {
+      Pair<Long, Long> messageAndThreadId = insertPlaceholder(masterSecret, envelope);
+      smsDatabase.markAsInvalidVersionKeyExchange(messageAndThreadId.first);
+      MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
+    } else {
+      smsDatabase.markAsInvalidVersionKeyExchange(smsMessageId);
+    }
   }
 
-  private void handleCorruptMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope) {
-    Pair<Long, Long> messageAndThreadId = insertPlaceholder(masterSecret, envelope);
-    DatabaseFactory.getEncryptingSmsDatabase(context).markAsDecryptFailed(messageAndThreadId.first);
+  private void handleCorruptMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope, long smsMessageId) {
+    EncryptingSmsDatabase smsDatabase = DatabaseFactory.getEncryptingSmsDatabase(context);
 
-    MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
+    if (smsMessageId <= 0) {
+      Pair<Long, Long> messageAndThreadId = insertPlaceholder(masterSecret, envelope);
+      smsDatabase.markAsDecryptFailed(messageAndThreadId.first);
+      MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
+    } else {
+      smsDatabase.markAsDecryptFailed(smsMessageId);
+    }
   }
 
-  private void handleNoSessionMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope) {
-    Pair<Long, Long> messageAndThreadId = insertPlaceholder(masterSecret, envelope);
-    DatabaseFactory.getEncryptingSmsDatabase(context).markAsNoSession(messageAndThreadId.first);
+  private void handleNoSessionMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope, long smsMessageId) {
+    EncryptingSmsDatabase smsDatabase = DatabaseFactory.getEncryptingSmsDatabase(context);
 
-    MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
+    if (smsMessageId <= 0) {
+      Pair<Long, Long> messageAndThreadId = insertPlaceholder(masterSecret, envelope);
+      smsDatabase.markAsNoSession(messageAndThreadId.first);
+      MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
+    } else {
+      smsDatabase.markAsNoSession(smsMessageId);
+    }
   }
 
-  private void handleLegacyMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope) {
-    Pair<Long, Long> messageAndThreadId = insertPlaceholder(masterSecret, envelope);
-    DatabaseFactory.getEncryptingSmsDatabase(context).markAsLegacyVersion(messageAndThreadId.first);
+  private void handleLegacyMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope, long smsMessageId) {
+    EncryptingSmsDatabase smsDatabase = DatabaseFactory.getEncryptingSmsDatabase(context);
 
-    MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
+    if (smsMessageId <= 0) {
+      Pair<Long, Long> messageAndThreadId = insertPlaceholder(masterSecret, envelope);
+      smsDatabase.markAsLegacyVersion(messageAndThreadId.first);
+      MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
+    } else {
+      smsDatabase.markAsLegacyVersion(smsMessageId);
+    }
   }
 
-  private void handleDuplicateMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope) {
-
+  private void handleDuplicateMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope, long smsMessageId) {
   }
 
-  private void handleUntrustedIdentityMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope) {
-    String              encoded     = Base64.encodeBytes(envelope.getMessage());
-    IncomingTextMessage textMessage = new IncomingTextMessage(envelope.getSource(), envelope.getSourceDevice(),
-                                                              envelope.getTimestamp(), encoded,
-                                                              Optional.<OpenchatServiceGroup>absent());
+  private void handleUntrustedIdentityMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope, long smsMessageId) {
+    try {
+      EncryptingSmsDatabase database       = DatabaseFactory.getEncryptingSmsDatabase(context);
+      Recipients            recipients     = RecipientFactory.getRecipientsFromString(context, envelope.getSource(), false);
+      long                  recipientId    = recipients.getPrimaryRecipient().getRecipientId();
+      PreKeyOpenchatMessage  openchatMessage = new PreKeyOpenchatMessage(envelope.getMessage());
+      IdentityKey           identityKey    = openchatMessage.getIdentityKey();
+      String                encoded        = Base64.encodeBytes(envelope.getMessage());
+      IncomingTextMessage   textMessage    = new IncomingTextMessage(envelope.getSource(), envelope.getSourceDevice(),
+                                                                     envelope.getTimestamp(), encoded,
+                                                                     Optional.<OpenchatServiceGroup>absent());
 
-    IncomingPreKeyBundleMessage bundleMessage      = new IncomingPreKeyBundleMessage(textMessage, encoded);
-    Pair<Long, Long>            messageAndThreadId = DatabaseFactory.getEncryptingSmsDatabase(context)
-                                                                    .insertMessageInbox(masterSecret, bundleMessage);
+      if (smsMessageId <= 0) {
+        IncomingPreKeyBundleMessage bundleMessage      = new IncomingPreKeyBundleMessage(textMessage, encoded);
+        Pair<Long, Long>            messageAndThreadId = database.insertMessageInbox(masterSecret, bundleMessage);
 
-    MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
+        database.addMismatchedIdentity(messageAndThreadId.first, recipientId, identityKey);
+        MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
+      } else {
+        database.updateMessageBody(masterSecret, smsMessageId, encoded);
+        database.markAsPreKeyBundle(smsMessageId);
+        database.addMismatchedIdentity(smsMessageId, recipientId, identityKey);
+      }
+    } catch (RecipientFormattingException | InvalidMessageException | InvalidVersionException e) {
+      throw new AssertionError(e);
+    }
   }
 
   private Pair<Long, Long> insertPlaceholder(MasterSecret masterSecret, OpenchatServiceEnvelope envelope) {

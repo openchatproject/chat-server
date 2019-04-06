@@ -7,6 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.openchat.secureim.recipients.Recipient;
+import com.openchat.secureim.recipients.RecipientFactory;
+import com.openchat.secureim.recipients.RecipientFormattingException;
+import com.openchat.secureim.recipients.Recipients;
+
 import ws.com.google.android.mms.pdu.CharacterSets;
 import ws.com.google.android.mms.pdu.EncodedStringValue;
 import ws.com.google.android.mms.pdu.PduHeaders;
@@ -16,6 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MmsAddressDatabase extends Database {
+
+  private static final String TAG = MmsAddressDatabase.class.getSimpleName();
 
   private static final String TABLE_NAME      = "mms_addresses";
   private static final String ID              = "_id";
@@ -109,6 +116,24 @@ public class MmsAddressDatabase extends Database {
     }
 
     return results;
+  }
+
+  public Recipients getRecipientsForId(long messageId) {
+    List<String>    numbers = getAddressesForId(messageId);
+    List<Recipient> results = new LinkedList<>();
+
+    for (String number : numbers) {
+      if (!PduHeaders.FROM_INSERT_ADDRESS_TOKEN_STR.equals(number)) {
+        try {
+          results.add(RecipientFactory.getRecipientsFromString(context, number, false)
+                                      .getPrimaryRecipient());
+        } catch (RecipientFormattingException e) {
+          Log.w(TAG, e);
+        }
+      }
+    }
+
+    return new Recipients(results);
   }
 
   public void deleteAddressesForId(long messageId) {

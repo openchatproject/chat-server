@@ -9,6 +9,7 @@ import com.openchat.secureim.crypto.storage.OpenchatServiceOpenchatStore;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsDatabase;
 import com.openchat.secureim.database.NoSuchMessageException;
+import com.openchat.secureim.database.SmsDatabase;
 import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.secureim.mms.MediaConstraints;
 import com.openchat.secureim.mms.PartParser;
@@ -16,7 +17,6 @@ import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
-import com.openchat.secureim.sms.IncomingIdentityUpdateMessage;
 import com.openchat.secureim.transport.InsecureFallbackApprovalException;
 import com.openchat.secureim.transport.RetryLaterException;
 import com.openchat.secureim.transport.SecureFallbackApprovalException;
@@ -55,12 +55,15 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
 
   @Override
   public void onAdded() {
-
+    MmsDatabase mmsDatabase = DatabaseFactory.getMmsDatabase(context);
+    mmsDatabase.markAsSending(messageId);
+    mmsDatabase.markAsPush(messageId);
   }
 
   @Override
   public void onSend(MasterSecret masterSecret)
-      throws RetryLaterException, MmsException, NoSuchMessageException, UndeliverableMessageException
+      throws RetryLaterException, MmsException, NoSuchMessageException,
+             UndeliverableMessageException, RecipientFormattingException
   {
     MmsDatabase database = DatabaseFactory.getMmsDatabase(context);
     SendReq     message  = database.getOutgoingMessage(masterSecret, messageId);
@@ -80,9 +83,13 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
       database.markAsPendingSecureSmsFallback(messageId);
       notifyMediaMessageDeliveryFailed(context, messageId);
     } catch (UntrustedIdentityException uie) {
-      IncomingIdentityUpdateMessage identityUpdateMessage = IncomingIdentityUpdateMessage.createFor(message.getTo()[0].getString(), uie.getIdentityKey());
-      DatabaseFactory.getEncryptingSmsDatabase(context).insertMessageInbox(masterSecret, identityUpdateMessage);
+      Log.w(TAG, uie);
+      Recipients recipients  = RecipientFactory.getRecipientsFromString(context, uie.getE164Number(), false);
+      long       recipientId = recipients.getPrimaryRecipient().getRecipientId();
+
+      database.addMismatchedIdentity(messageId, recipientId, uie.getIdentityKey());
       database.markAsSentFailed(messageId);
+      database.markAsPush(messageId);
     }
   }
 

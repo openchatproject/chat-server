@@ -5,8 +5,12 @@ import android.text.SpannableString;
 
 import com.openchat.secureim.R;
 import com.openchat.secureim.database.MmsDatabase;
+import com.openchat.secureim.database.documents.NetworkFailure;
+import com.openchat.secureim.database.documents.IdentityKeyMismatch;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
+
+import java.util.LinkedList;
 
 public class NotificationMmsMessageRecord extends MessageRecord {
 
@@ -23,7 +27,8 @@ public class NotificationMmsMessageRecord extends MessageRecord {
                                       long expiry, int status, byte[] transactionId, long mailbox)
   {
     super(context, id, new Body("", true), recipients, individualRecipient, recipientDeviceId,
-          dateSent, dateReceived, threadId, DELIVERY_STATUS_NONE, receiptCount, mailbox);
+          dateSent, dateReceived, threadId, DELIVERY_STATUS_NONE, receiptCount, mailbox,
+          new LinkedList<IdentityKeyMismatch>(), new LinkedList<NetworkFailure>());
 
     this.contentLocation = contentLocation;
     this.messageSize     = messageSize;

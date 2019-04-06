@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Recipients {
+public class Recipients implements Iterable<Recipient> {
 
   private List<Recipient> recipients;
 
@@ -118,5 +118,10 @@ public class Recipients {
 
   public int describeContents() {
     return 0;
+  }
+
+  @Override
+  public Iterator<Recipient> iterator() {
+    return recipients.iterator();
   }
 }

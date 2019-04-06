@@ -1,20 +1,11 @@
 package com.openchat.secureim;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.TypedArray;
-import android.graphics.Typeface;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
-import android.provider.Contacts.Intents;
-import android.provider.ContactsContract.QuickContact;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.TextUtils;
-import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,14 +14,10 @@ import com.makeramen.RoundedImageView;
 import com.openchat.secureim.database.model.ThreadRecord;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
-import com.openchat.secureim.util.BitmapUtil;
-import com.openchat.secureim.util.DateUtils;
-import com.openchat.secureim.util.Emoji;
-
-import java.util.Set;
+import com.openchat.secureim.util.RecipientViewUtil;
 
 public class ShareListItem extends RelativeLayout
-                                  implements Recipient.RecipientModifiedListener
+                        implements Recipient.RecipientModifiedListener
 {
   private final static String TAG = ShareListItem.class.getSimpleName();
 
@@ -66,19 +53,14 @@ public class ShareListItem extends RelativeLayout
     this.distributionType = thread.getDistributionType();
 
     this.recipients.addListener(this);
-    this.fromView.setText(formatFrom(recipients));
+    this.fromView.setText(RecipientViewUtil.formatFrom(getContext(), recipients));
 
     setBackground();
-    setContactPhoto(this.recipients.getPrimaryRecipient());
+    RecipientViewUtil.setContactPhoto(getContext(), contactPhotoImage, this.recipients.getPrimaryRecipient(), false);
   }
 
   public void unbind() {
     if (this.recipients != null) this.recipients.removeListener(this);
-  }
-
-  private void setContactPhoto(final Recipient recipient) {
-    if (recipient == null) return;
-    contactPhotoImage.setImageBitmap(recipient.getContactPhoto());
   }
 
   private void setBackground() {
@@ -88,26 +70,6 @@ public class ShareListItem extends RelativeLayout
     setBackgroundDrawable(drawables.getDrawable(0));
 
     drawables.recycle();
-  }
-
-  private CharSequence formatFrom(Recipients from) {
-    final String fromString;
-    final boolean isUnnamedGroup = from.isGroupRecipient() && TextUtils.isEmpty(from.getPrimaryRecipient().getName());
-    if (isUnnamedGroup) {
-      fromString = context.getString(R.string.ConversationActivity_unnamed_group);
-    } else {
-      fromString = from.toShortString();
-    }
-    SpannableStringBuilder builder = new SpannableStringBuilder(fromString);
-
-    final int typeface;
-    if (isUnnamedGroup) typeface = Typeface.ITALIC;
-    else                typeface = Typeface.NORMAL;
-
-    builder.setSpan(new StyleSpan(typeface), 0, builder.length(),
-                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-
-    return builder;
   }
 
   public Recipients getRecipients() {
@@ -127,8 +89,8 @@ public class ShareListItem extends RelativeLayout
     handler.post(new Runnable() {
       @Override
       public void run() {
-        fromView.setText(formatFrom(recipients));
-        setContactPhoto(recipients.getPrimaryRecipient());
+        fromView.setText(RecipientViewUtil.formatFrom(getContext(), recipients));
+        RecipientViewUtil.setContactPhoto(getContext(), contactPhotoImage, recipients.getPrimaryRecipient(), false);
       }
     });
   }

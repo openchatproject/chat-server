@@ -3,17 +3,19 @@ package com.openchat.secureim.database.model;
 import android.content.Context;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
-import android.text.style.TextAppearanceSpan;
 
 import com.openchat.secureim.R;
 import com.openchat.secureim.database.MmsSmsColumns;
 import com.openchat.secureim.database.SmsDatabase;
+import com.openchat.secureim.database.documents.NetworkFailure;
+import com.openchat.secureim.database.documents.IdentityKeyMismatch;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.GroupUtil;
+
+import java.util.List;
 
 public abstract class MessageRecord extends DisplayRecord {
 
@@ -24,16 +26,20 @@ public abstract class MessageRecord extends DisplayRecord {
 
   private static final int MAX_DISPLAY_LENGTH = 2000;
 
-  private final Recipient individualRecipient;
-  private final int       recipientDeviceId;
-  private final long      id;
-  private final int       deliveryStatus;
-  private final int       receiptCount;
+  private final Recipient                 individualRecipient;
+  private final int                       recipientDeviceId;
+  private final long                      id;
+  private final int                       deliveryStatus;
+  private final int                       receiptCount;
+  private final List<IdentityKeyMismatch> mismatches;
+  private final List<NetworkFailure>      networkFailures;
 
   MessageRecord(Context context, long id, Body body, Recipients recipients,
                 Recipient individualRecipient, int recipientDeviceId,
                 long dateSent, long dateReceived, long threadId,
-                int deliveryStatus, int receiptCount, long type)
+                int deliveryStatus, int receiptCount, long type,
+                List<IdentityKeyMismatch> mismatches,
+                List<NetworkFailure> networkFailures)
   {
     super(context, body, recipients, dateSent, dateReceived, threadId, type);
     this.id                  = id;
@@ -41,6 +47,8 @@ public abstract class MessageRecord extends DisplayRecord {
     this.recipientDeviceId   = recipientDeviceId;
     this.deliveryStatus      = deliveryStatus;
     this.receiptCount        = receiptCount;
+    this.mismatches          = mismatches;
+    this.networkFailures     = networkFailures;
   }
 
   public abstract boolean isMms();
@@ -121,6 +129,10 @@ public abstract class MessageRecord extends DisplayRecord {
     return SmsDatabase.Types.isPendingSmsFallbackType(type);
   }
 
+  public boolean isIdentityMismatchFailure() {
+    return mismatches != null && !mismatches.isEmpty();
+  }
+
   public boolean isPendingSecureSmsFallback() {
     return SmsDatabase.Types.isPendingSecureSmsFallbackType(type);
   }
@@ -157,6 +169,18 @@ public abstract class MessageRecord extends DisplayRecord {
     return type;
   }
 
+  public List<IdentityKeyMismatch> getIdentityKeyMismatches() {
+    return mismatches;
+  }
+
+  public List<NetworkFailure> getNetworkFailures() {
+    return networkFailures;
+  }
+
+  public boolean hasNetworkFailures() {
+    return networkFailures != null && !networkFailures.isEmpty();
+  }
+
   protected SpannableString emphasisAdded(String sequence) {
     SpannableString spannable = new SpannableString(sequence);
     spannable.setSpan(new RelativeSizeSpan(0.9f), 0, sequence.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -175,4 +199,5 @@ public abstract class MessageRecord extends DisplayRecord {
   public int hashCode() {
     return (int)getId();
   }
+
 }

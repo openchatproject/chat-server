@@ -38,7 +38,6 @@ public class ConversationAdapter extends CursorAdapter implements AbsListView.Re
   private final Set<MessageRecord> batchSelected = Collections.synchronizedSet(new HashSet<MessageRecord>());
 
   private final SelectionClickListener selectionClickListener;
-  private final Handler                failedIconClickHandler;
   private final Context                context;
   private final MasterSecret           masterSecret;
   private final boolean                groupThread;
@@ -46,13 +45,12 @@ public class ConversationAdapter extends CursorAdapter implements AbsListView.Re
   private final LayoutInflater         inflater;
 
   public ConversationAdapter(Context context, MasterSecret masterSecret, SelectionClickListener selectionClickListener,
-                             Handler failedIconClickHandler, boolean groupThread, boolean pushDestination)
+                             boolean groupThread, boolean pushDestination)
   {
     super(context, null, 0);
     this.context                = context;
     this.masterSecret           = masterSecret;
     this.selectionClickListener = selectionClickListener;
-    this.failedIconClickHandler = failedIconClickHandler;
     this.groupThread            = groupThread;
     this.pushDestination        = pushDestination;
     this.inflater               = LayoutInflater.from(context);
@@ -66,7 +64,7 @@ public class ConversationAdapter extends CursorAdapter implements AbsListView.Re
     MessageRecord messageRecord = getMessageRecord(id, cursor, type);
 
     item.set(masterSecret, messageRecord, batchSelected, selectionClickListener,
-             failedIconClickHandler, groupThread, pushDestination);
+             groupThread, pushDestination);
   }
 
   @Override
