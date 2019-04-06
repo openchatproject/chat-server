@@ -25,10 +25,9 @@ import com.openchat.imservice.api.crypto.UntrustedIdentityException;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
-import com.openchat.imservice.api.push.PushAddress;
+import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.api.push.exceptions.EncapsulatedExceptions;
 import com.openchat.imservice.api.push.exceptions.NetworkFailureException;
-import com.openchat.imservice.api.push.exceptions.UnregisteredUserException;
 import com.openchat.imservice.api.util.InvalidNumberException;
 import com.openchat.imservice.internal.push.PushMessageProtos;
 
@@ -128,7 +127,7 @@ public class PushGroupSendJob extends PushSendJob implements InjectableType {
     byte[]                     groupId       = GroupUtil.getDecodedId(message.getTo()[0].getString());
     Recipients                 recipients    = DatabaseFactory.getGroupDatabase(context).getGroupMembers(groupId, false);
     List<OpenchatServiceAttachment> attachments   = getAttachments(masterSecret, message);
-    List<PushAddress>          addresses;
+    List<OpenchatServiceAddress>    addresses;
 
     if (filterRecipientId >= 0) addresses = getPushAddresses(filterRecipientId);
     else                        addresses = getPushAddresses(recipients);
@@ -156,8 +155,8 @@ public class PushGroupSendJob extends PushSendJob implements InjectableType {
     }
   }
 
-  private List<PushAddress> getPushAddresses(Recipients recipients) throws InvalidNumberException {
-    List<PushAddress> addresses = new LinkedList<>();
+  private List<OpenchatServiceAddress> getPushAddresses(Recipients recipients) throws InvalidNumberException {
+    List<OpenchatServiceAddress> addresses = new LinkedList<>();
 
     for (Recipient recipient : recipients.getRecipientsList()) {
       addresses.add(getPushAddress(recipient));
@@ -166,8 +165,8 @@ public class PushGroupSendJob extends PushSendJob implements InjectableType {
     return addresses;
   }
 
-  private List<PushAddress> getPushAddresses(long filterRecipientId) throws InvalidNumberException {
-    List<PushAddress> addresses = new LinkedList<>();
+  private List<OpenchatServiceAddress> getPushAddresses(long filterRecipientId) throws InvalidNumberException {
+    List<OpenchatServiceAddress> addresses = new LinkedList<>();
     addresses.add(getPushAddress(RecipientFactory.getRecipientForId(context, filterRecipientId, false)));
     return addresses;
   }

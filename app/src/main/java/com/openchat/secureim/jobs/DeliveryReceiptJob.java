@@ -7,7 +7,7 @@ import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.imservice.api.OpenchatServiceMessageSender;
-import com.openchat.imservice.api.push.PushAddress;
+import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.api.push.exceptions.NonSuccessfulResponseCodeException;
 import com.openchat.imservice.api.push.exceptions.PushNetworkException;
 
@@ -45,10 +45,10 @@ public class DeliveryReceiptJob extends ContextJob implements InjectableType {
   @Override
   public void onRun() throws IOException {
     Log.w("DeliveryReceiptJob", "Sending delivery receipt...");
-    OpenchatServiceMessageSender messageSender = messageSenderFactory.create(null);
-    PushAddress             pushAddress   = new PushAddress(-1, destination, relay);
+    OpenchatServiceMessageSender messageSender     = messageSenderFactory.create(null);
+    OpenchatServiceAddress       openchatServiceAddress = new OpenchatServiceAddress(-1, destination, relay);
 
-    messageSender.sendDeliveryReceipt(pushAddress, timestamp);
+    messageSender.sendDeliveryReceipt(openchatServiceAddress, timestamp);
   }
 
   @Override

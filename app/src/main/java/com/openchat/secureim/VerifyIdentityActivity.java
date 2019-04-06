@@ -16,7 +16,7 @@ import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.state.SessionRecord;
 import com.openchat.protocal.state.SessionStore;
-import com.openchat.imservice.api.push.PushAddress;
+import com.openchat.imservice.api.push.OpenchatServiceAddress;
 
 public class VerifyIdentityActivity extends KeyScanningActivity {
 
@@ -163,7 +163,7 @@ public class VerifyIdentityActivity extends KeyScanningActivity {
   private IdentityKey getRemoteIdentityKey(MasterSecret masterSecret, Recipient recipient) {
     SessionStore  sessionStore = new OpenchatServiceSessionStore(this, masterSecret);
     SessionRecord record       = sessionStore.loadSession(recipient.getRecipientId(),
-                                                          PushAddress.DEFAULT_DEVICE_ID);
+                                                          OpenchatServiceAddress.DEFAULT_DEVICE_ID);
 
     if (record == null) {
       return null;

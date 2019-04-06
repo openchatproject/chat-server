@@ -9,7 +9,6 @@ import com.openchat.secureim.crypto.storage.OpenchatServiceOpenchatStore;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsDatabase;
 import com.openchat.secureim.database.NoSuchMessageException;
-import com.openchat.secureim.database.SmsDatabase;
 import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.secureim.mms.MediaConstraints;
 import com.openchat.secureim.mms.PartParser;
@@ -26,7 +25,7 @@ import com.openchat.imservice.api.OpenchatServiceMessageSender;
 import com.openchat.imservice.api.crypto.UntrustedIdentityException;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
-import com.openchat.imservice.api.push.PushAddress;
+import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.api.push.exceptions.UnregisteredUserException;
 import com.openchat.imservice.api.util.InvalidNumberException;
 
@@ -118,7 +117,7 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
     try {
       prepareMessageMedia(masterSecret, message, MediaConstraints.PUSH_CONSTRAINTS, false);
       Recipients                 recipients   = RecipientFactory.getRecipientsFromString(context, destination, false);
-      PushAddress                address      = getPushAddress(recipients.getPrimaryRecipient());
+      OpenchatServiceAddress          address      = getPushAddress(recipients.getPrimaryRecipient());
       List<OpenchatServiceAttachment> attachments  = getAttachments(masterSecret, message);
       String                     body         = PartParser.getMessageText(message.getBody());
       OpenchatServiceMessage          mediaMessage = new OpenchatServiceMessage(message.getSentTimestamp(), attachments, body);
@@ -149,7 +148,7 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
         Log.w(TAG, "Falling back to MMS");
         DatabaseFactory.getMmsDatabase(context).markAsForcedSms(mediaMessage.getDatabaseMessageId());
         ApplicationContext.getInstance(context).getJobManager().add(new MmsSendJob(context, messageId));
-      } else if (!axolotlStore.containsSession(recipient.getRecipientId(), PushAddress.DEFAULT_DEVICE_ID)) {
+      } else if (!axolotlStore.containsSession(recipient.getRecipientId(), OpenchatServiceAddress.DEFAULT_DEVICE_ID)) {
         Log.w(TAG, "Marking message as pending insecure SMS fallback");
         throw new InsecureFallbackApprovalException("Pending user approval for fallback to insecure SMS");
       } else {

@@ -17,7 +17,7 @@ import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.state.SessionStore;
-import com.openchat.imservice.api.push.PushAddress;
+import com.openchat.imservice.api.push.OpenchatServiceAddress;
 
 public class AutoInitiateActivity extends BaseActivity {
 
@@ -94,6 +94,6 @@ public class AutoInitiateActivity extends BaseActivity {
                                              Recipient recipient)
   {
     SessionStore sessionStore = new OpenchatServiceSessionStore(context, masterSecret);
-    return sessionStore.containsSession(recipient.getRecipientId(), PushAddress.DEFAULT_DEVICE_ID);
+    return sessionStore.containsSession(recipient.getRecipientId(), OpenchatServiceAddress.DEFAULT_DEVICE_ID);
   }
 }

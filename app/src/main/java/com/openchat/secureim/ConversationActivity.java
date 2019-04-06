@@ -52,7 +52,6 @@ import com.openchat.secureim.database.DraftDatabase.Draft;
 import com.openchat.secureim.database.DraftDatabase.Drafts;
 import com.openchat.secureim.database.GroupDatabase;
 import com.openchat.secureim.database.MmsSmsColumns.Types;
-import com.openchat.secureim.database.OpenchatServiceDirectory;
 import com.openchat.secureim.database.ThreadDatabase;
 import com.openchat.secureim.mms.AttachmentManager;
 import com.openchat.secureim.mms.AttachmentTypeSelectorAdapter;
@@ -88,7 +87,7 @@ import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.state.SessionStore;
-import com.openchat.imservice.api.push.PushAddress;
+import com.openchat.imservice.api.push.OpenchatServiceAddress;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -662,7 +661,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     boolean      isSecureSmsDestination = isSecureSmsAllowed     &&
                                           isSingleConversation() &&
                                           sessionStore.containsSession(primaryRecipient.getRecipientId(),
-                                                                         PushAddress.DEFAULT_DEVICE_ID);
+                                                                         OpenchatServiceAddress.DEFAULT_DEVICE_ID);
 
     if (isPushDestination || isSecureSmsDestination) {
       this.isEncryptedConversation = true;

@@ -18,7 +18,7 @@ import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentStream;
-import com.openchat.imservice.api.push.PushAddress;
+import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.api.util.InvalidNumberException;
 
 import java.io.IOException;
@@ -76,10 +76,10 @@ public abstract class PushSendJob extends SendJob {
     }
   }
 
-  protected PushAddress getPushAddress(Recipient recipient) throws InvalidNumberException {
+  protected OpenchatServiceAddress getPushAddress(Recipient recipient) throws InvalidNumberException {
     String e164number = Util.canonicalizeNumber(context, recipient.getNumber());
     String relay      = OpenchatServiceDirectory.getInstance(context).getRelay(e164number);
-    return new PushAddress(recipient.getRecipientId(), e164number, relay);
+    return new OpenchatServiceAddress(recipient.getRecipientId(), e164number, relay);
   }
 
   protected boolean isSmsFallbackApprovalRequired(String destination, boolean media) {

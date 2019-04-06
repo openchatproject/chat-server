@@ -24,7 +24,7 @@ import com.openchat.protocal.state.OpenchatStore;
 import com.openchat.imservice.api.OpenchatServiceMessageSender;
 import com.openchat.imservice.api.crypto.UntrustedIdentityException;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
-import com.openchat.imservice.api.push.PushAddress;
+import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.api.push.exceptions.UnregisteredUserException;
 import com.openchat.imservice.api.util.InvalidNumberException;
 
@@ -111,7 +111,7 @@ public class PushTextSendJob extends PushSendJob implements InjectableType {
     boolean isSmsFallbackSupported = isSmsFallbackSupported(context, destination, false);
 
     try {
-      PushAddress             address       = getPushAddress(message.getIndividualRecipient());
+      OpenchatServiceAddress       address       = getPushAddress(message.getIndividualRecipient());
       OpenchatServiceMessageSender messageSender = messageSenderFactory.create(masterSecret);
 
       if (message.isEndSession()) {
@@ -146,7 +146,7 @@ public class PushTextSendJob extends PushSendJob implements InjectableType {
       Log.w(TAG, "Falling back to SMS");
       DatabaseFactory.getSmsDatabase(context).markAsForcedSms(smsMessage.getId());
       ApplicationContext.getInstance(context).getJobManager().add(new SmsSendJob(context, messageId, destination));
-    } else if (!axolotlStore.containsSession(recipient.getRecipientId(), PushAddress.DEFAULT_DEVICE_ID)) {
+    } else if (!axolotlStore.containsSession(recipient.getRecipientId(), OpenchatServiceAddress.DEFAULT_DEVICE_ID)) {
       Log.w(TAG, "Marking message as pending insecure fallback.");
       throw new InsecureFallbackApprovalException("Pending user approval for fallback to insecure SMS");
     } else {

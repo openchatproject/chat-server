@@ -19,7 +19,7 @@ import com.openchat.protocal.protocol.CiphertextMessage;
 import com.openchat.protocal.protocol.OpenchatMessage;
 import com.openchat.protocal.state.OpenchatStore;
 import com.openchat.protocal.util.guava.Optional;
-import com.openchat.imservice.api.push.PushAddress;
+import com.openchat.imservice.api.push.OpenchatServiceAddress;
 
 import java.io.IOException;
 
@@ -98,11 +98,11 @@ public class MmsCipher {
       throw new UndeliverableMessageException("PDU composition failed, null payload");
     }
 
-    if (!axolotlStore.containsSession(recipientId, PushAddress.DEFAULT_DEVICE_ID)) {
+    if (!axolotlStore.containsSession(recipientId, OpenchatServiceAddress.DEFAULT_DEVICE_ID)) {
       throw new NoSessionException("No session for: " + recipientId);
     }
 
-    SessionCipher     cipher            = new SessionCipher(axolotlStore, recipientId, PushAddress.DEFAULT_DEVICE_ID);
+    SessionCipher     cipher            = new SessionCipher(axolotlStore, recipientId, OpenchatServiceAddress.DEFAULT_DEVICE_ID);
     CiphertextMessage ciphertextMessage = cipher.encrypt(pduBytes);
     byte[]            encryptedPduBytes = textTransport.getEncodedMessage(ciphertextMessage.serialize());
 

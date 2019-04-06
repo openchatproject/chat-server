@@ -20,7 +20,7 @@ import com.openchat.protocal.state.PreKeyStore;
 import com.openchat.protocal.state.SessionRecord;
 import com.openchat.protocal.state.SessionStore;
 import com.openchat.protocal.state.SignedPreKeyStore;
-import com.openchat.imservice.api.push.PushAddress;
+import com.openchat.imservice.api.push.OpenchatServiceAddress;
 
 public class KeyExchangeInitiator {
 
@@ -51,7 +51,7 @@ public class KeyExchangeInitiator {
 
     SessionBuilder    sessionBuilder    = new SessionBuilder(sessionStore, preKeyStore, signedPreKeyStore,
                                                              identityKeyStore, recipient.getRecipientId(),
-                                                             PushAddress.DEFAULT_DEVICE_ID);
+                                                             OpenchatServiceAddress.DEFAULT_DEVICE_ID);
 
     KeyExchangeMessage         keyExchangeMessage = sessionBuilder.process();
     String                     serializedMessage  = Base64.encodeBytesWithoutPadding(keyExchangeMessage.serialize());
@@ -64,7 +64,7 @@ public class KeyExchangeInitiator {
                                              Recipient recipient)
   {
     SessionStore  sessionStore  = new OpenchatServiceSessionStore(context, masterSecret);
-    SessionRecord sessionRecord = sessionStore.loadSession(recipient.getRecipientId(), PushAddress.DEFAULT_DEVICE_ID);
+    SessionRecord sessionRecord = sessionStore.loadSession(recipient.getRecipientId(), OpenchatServiceAddress.DEFAULT_DEVICE_ID);
 
     return sessionRecord.getSessionState().hasPendingKeyExchange();
   }
