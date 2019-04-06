@@ -2,6 +2,7 @@ package com.openchat.secureim;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -46,6 +47,8 @@ public class MessageDetailsActivity extends PassphraseRequiredActionBarActivity 
   private boolean          isPushGroup;
   private ConversationItem conversationItem;
   private ViewGroup        itemParent;
+  private View             metadataContainer;
+  private TextView         errorText;
   private TextView         sentDate;
   private TextView         receivedDate;
   private View             receivedContainer;
@@ -72,6 +75,8 @@ public class MessageDetailsActivity extends PassphraseRequiredActionBarActivity 
     isPushGroup       = getIntent().getBooleanExtra(IS_PUSH_GROUP_EXTRA, false);
     itemParent        = (ViewGroup) findViewById(R.id.item_container );
     recipientsList    = (ListView ) findViewById(R.id.recipients_list);
+    metadataContainer =             header.findViewById(R.id.metadata_container);
+    errorText         = (TextView ) header.findViewById(R.id.error_text);
     sentDate          = (TextView ) header.findViewById(R.id.sent_time);
     receivedContainer =             header.findViewById(R.id.received_container);
     receivedDate      = (TextView ) header.findViewById(R.id.received_time);
@@ -233,8 +238,15 @@ public class MessageDetailsActivity extends PassphraseRequiredActionBarActivity 
       inflateMessageViewIfAbsent(messageRecord);
 
       updateRecipients(messageRecord, recipients);
-      updateTransport(messageRecord);
-      updateTime(messageRecord);
+      if (messageRecord.isFailed()) {
+        errorText.setVisibility(View.VISIBLE);
+        metadataContainer.setVisibility(View.GONE);
+      } else {
+        updateTransport(messageRecord);
+        updateTime(messageRecord);
+        errorText.setVisibility(View.GONE);
+        metadataContainer.setVisibility(View.VISIBLE);
+      }
     }
 
   }
