@@ -52,6 +52,7 @@ import com.openchat.secureim.database.DraftDatabase.Draft;
 import com.openchat.secureim.database.DraftDatabase.Drafts;
 import com.openchat.secureim.database.GroupDatabase;
 import com.openchat.secureim.database.MmsSmsColumns.Types;
+import com.openchat.secureim.database.OpenchatServiceDirectory;
 import com.openchat.secureim.database.ThreadDatabase;
 import com.openchat.secureim.mms.AttachmentManager;
 import com.openchat.secureim.mms.AttachmentTypeSelectorAdapter;
@@ -654,25 +655,29 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   }
 
   private void initializeSecurity() {
-    SessionStore sessionStore      = new OpenchatServiceSessionStore(this, masterSecret);
-    Recipient  primaryRecipient    = getRecipients() == null ? null : getRecipients().getPrimaryRecipient();
-    boolean    isPushDestination   = DirectoryHelper.isPushDestination(this, getRecipients());
-    boolean    isSecureDestination = isSingleConversation() && sessionStore.containsSession(primaryRecipient.getRecipientId(),
-                                                                                            PushAddress.DEFAULT_DEVICE_ID);
+    SessionStore sessionStore           = new OpenchatServiceSessionStore(this, masterSecret);
+    Recipient    primaryRecipient       = getRecipients() == null ? null : getRecipients().getPrimaryRecipient();
+    boolean      isPushDestination      = DirectoryHelper.isPushDestination(this, getRecipients());
+    boolean      isSecureSmsAllowed     = (!isPushDestination || DirectoryHelper.isSmsFallbackAllowed(this, getRecipients()));
+    boolean      isSecureSmsDestination = isSecureSmsAllowed     &&
+                                          isSingleConversation() &&
+                                          sessionStore.containsSession(primaryRecipient.getRecipientId(),
+                                                                         PushAddress.DEFAULT_DEVICE_ID);
 
-    if (isPushDestination || isSecureDestination) {
+    if (isPushDestination || isSecureSmsDestination) {
       this.isEncryptedConversation = true;
     } else {
       this.isEncryptedConversation = false;
     }
 
     sendButton.initializeAvailableTransports(!recipients.isSingleRecipient() || attachmentManager.isAttachmentPresent());
-    if (!isPushDestination  ) sendButton.disableTransport("openchatservice");
-    if (!isSecureDestination) sendButton.disableTransport("secure_sms");
+    if (!isPushDestination           ) sendButton.disableTransport("openchatservice");
+    if (!isSecureSmsDestination      ) sendButton.disableTransport("secure_sms");
+    if (recipients.isGroupRecipient()) sendButton.disableTransport("insecure_sms");
 
     if (isPushDestination) {
       sendButton.setDefaultTransport("openchatservice");
-    } else if (isSecureDestination) {
+    } else if (isSecureSmsDestination) {
       sendButton.setDefaultTransport("secure_sms");
     } else {
       sendButton.setDefaultTransport("insecure_sms");
