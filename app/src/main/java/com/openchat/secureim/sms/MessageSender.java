@@ -29,7 +29,6 @@ import com.openchat.jobqueue.JobManager;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
 import com.openchat.imservice.api.push.ContactTokenDetails;
-import com.openchat.secureim.util.DirectoryUtil;
 import com.openchat.imservice.api.util.InvalidNumberException;
 
 import java.io.IOException;
@@ -267,8 +266,7 @@ public class MessageSender {
     } catch (NotInDirectoryException e) {
       try {
         OpenchatServiceAccountManager      accountManager = OpenchatServiceCommunicationFactory.createManager(context);
-        String                        contactToken   = DirectoryUtil.getDirectoryServerToken(destination);
-        Optional<ContactTokenDetails> registeredUser = accountManager.getContact(contactToken);
+        Optional<ContactTokenDetails> registeredUser = accountManager.getContact(destination);
 
         if (!registeredUser.isPresent()) {
           registeredUser = Optional.of(new ContactTokenDetails());
