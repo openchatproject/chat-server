@@ -13,6 +13,7 @@ import com.openchat.secureim.sms.MessageSender;
 import com.openchat.secureim.sms.OutgoingKeyExchangeMessage;
 import com.openchat.secureim.util.Base64;
 import com.openchat.secureim.util.Dialogs;
+import com.openchat.protocal.OpenchatAddress;
 import com.openchat.protocal.SessionBuilder;
 import com.openchat.protocal.protocol.KeyExchangeMessage;
 import com.openchat.protocal.state.IdentityKeyStore;
@@ -50,8 +51,8 @@ public class KeyExchangeInitiator {
     IdentityKeyStore  identityKeyStore  = new OpenchatServiceIdentityKeyStore(context, masterSecret);
 
     SessionBuilder    sessionBuilder    = new SessionBuilder(sessionStore, preKeyStore, signedPreKeyStore,
-                                                             identityKeyStore, recipient.getRecipientId(),
-                                                             OpenchatServiceAddress.DEFAULT_DEVICE_ID);
+                                                             identityKeyStore, new OpenchatAddress(recipient.getNumber(),
+                                                                                                  OpenchatServiceAddress.DEFAULT_DEVICE_ID));
 
     KeyExchangeMessage         keyExchangeMessage = sessionBuilder.process();
     String                     serializedMessage  = Base64.encodeBytesWithoutPadding(keyExchangeMessage.serialize());
@@ -64,7 +65,7 @@ public class KeyExchangeInitiator {
                                              Recipient recipient)
   {
     SessionStore  sessionStore  = new OpenchatServiceSessionStore(context, masterSecret);
-    SessionRecord sessionRecord = sessionStore.loadSession(recipient.getRecipientId(), OpenchatServiceAddress.DEFAULT_DEVICE_ID);
+    SessionRecord sessionRecord = sessionStore.loadSession(new OpenchatAddress(recipient.getNumber(), OpenchatServiceAddress.DEFAULT_DEVICE_ID));
 
     return sessionRecord.getSessionState().hasPendingKeyExchange();
   }

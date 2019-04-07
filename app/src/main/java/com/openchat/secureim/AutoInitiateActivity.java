@@ -10,14 +10,12 @@ import android.widget.Button;
 
 import com.openchat.secureim.crypto.KeyExchangeInitiator;
 import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.secureim.crypto.storage.OpenchatServiceSessionStore;
+import com.openchat.secureim.crypto.SessionUtil;
 import com.openchat.secureim.protocol.Tag;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.protocal.state.SessionStore;
-import com.openchat.imservice.api.push.OpenchatServiceAddress;
 
 public class AutoInitiateActivity extends BaseActivity {
 
@@ -93,7 +91,6 @@ public class AutoInitiateActivity extends BaseActivity {
                                              MasterSecret masterSecret,
                                              Recipient recipient)
   {
-    SessionStore sessionStore = new OpenchatServiceSessionStore(context, masterSecret);
-    return sessionStore.containsSession(recipient.getRecipientId(), OpenchatServiceAddress.DEFAULT_DEVICE_ID);
+    return SessionUtil.hasSession(context, masterSecret, recipient);
   }
 }

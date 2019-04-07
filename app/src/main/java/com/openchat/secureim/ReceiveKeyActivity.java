@@ -114,10 +114,9 @@ public class ReceiveKeyActivity extends BaseActivity {
   }
 
   private boolean isTrusted(IdentityKey identityKey) {
-    long             recipientId      = recipient.getRecipientId();
     IdentityKeyStore identityKeyStore = new OpenchatServiceIdentityKeyStore(this, masterSecret);
 
-    return identityKeyStore.isTrustedIdentity(recipientId, identityKey);
+    return identityKeyStore.isTrustedIdentity(recipient.getNumber(), identityKey);
   }
 
   private void initializeKey()

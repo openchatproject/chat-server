@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.openchat.secureim.ApplicationContext;
 import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.secureim.crypto.storage.OpenchatServiceOpenchatStore;
+import com.openchat.secureim.crypto.SessionUtil;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.NoSuchMessageException;
@@ -15,12 +15,10 @@ import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
-import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.transport.InsecureFallbackApprovalException;
 import com.openchat.secureim.transport.RetryLaterException;
 import com.openchat.secureim.transport.SecureFallbackApprovalException;
-import com.openchat.protocal.state.OpenchatStore;
 import com.openchat.imservice.api.OpenchatServiceMessageSender;
 import com.openchat.imservice.api.crypto.UntrustedIdentityException;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
@@ -55,7 +53,7 @@ public class PushTextSendJob extends PushSendJob implements InjectableType {
   }
 
   @Override
-  public void onSend(MasterSecret masterSecret) throws NoSuchMessageException, RetryLaterException, RecipientFormattingException {
+  public void onSend(MasterSecret masterSecret) throws NoSuchMessageException, RetryLaterException {
     EncryptingSmsDatabase database    = DatabaseFactory.getEncryptingSmsDatabase(context);
     SmsMessageRecord      record      = database.getMessage(masterSecret, messageId);
     String                destination = record.getIndividualRecipient().getNumber();
@@ -111,7 +109,7 @@ public class PushTextSendJob extends PushSendJob implements InjectableType {
     boolean isSmsFallbackSupported = isSmsFallbackSupported(context, destination, false);
 
     try {
-      OpenchatServiceAddress       address       = getPushAddress(message.getIndividualRecipient());
+      OpenchatServiceAddress       address       = getPushAddress(message.getIndividualRecipient().getNumber());
       OpenchatServiceMessageSender messageSender = messageSenderFactory.create(masterSecret);
 
       if (message.isEndSession()) {
@@ -138,15 +136,14 @@ public class PushTextSendJob extends PushSendJob implements InjectableType {
   private void fallbackOrAskApproval(MasterSecret masterSecret, SmsMessageRecord smsMessage, String destination)
       throws SecureFallbackApprovalException, InsecureFallbackApprovalException
   {
-    Recipient    recipient                     = smsMessage.getIndividualRecipient();
-    boolean      isSmsFallbackApprovalRequired = isSmsFallbackApprovalRequired(destination, false);
-    OpenchatStore axolotlStore                  = new OpenchatServiceOpenchatStore(context, masterSecret);
+    Recipient recipient                     = smsMessage.getIndividualRecipient();
+    boolean   isSmsFallbackApprovalRequired = isSmsFallbackApprovalRequired(destination, false);
 
     if (!isSmsFallbackApprovalRequired) {
       Log.w(TAG, "Falling back to SMS");
       DatabaseFactory.getSmsDatabase(context).markAsForcedSms(smsMessage.getId());
       ApplicationContext.getInstance(context).getJobManager().add(new SmsSendJob(context, messageId, destination));
-    } else if (!axolotlStore.containsSession(recipient.getRecipientId(), OpenchatServiceAddress.DEFAULT_DEVICE_ID)) {
+    } else if (!SessionUtil.hasSession(context, masterSecret, recipient)) {
       Log.w(TAG, "Marking message as pending insecure fallback.");
       throw new InsecureFallbackApprovalException("Pending user approval for fallback to insecure SMS");
     } else {

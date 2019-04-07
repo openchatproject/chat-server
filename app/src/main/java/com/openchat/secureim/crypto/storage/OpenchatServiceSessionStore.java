@@ -5,12 +5,15 @@ import android.util.Log;
 
 import com.openchat.secureim.crypto.MasterCipher;
 import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.recipients.Recipient;
+import com.openchat.secureim.recipients.RecipientFactory;
+import com.openchat.secureim.util.Conversions;
+import com.openchat.protocal.OpenchatAddress;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.state.SessionRecord;
 import com.openchat.protocal.state.SessionState;
 import com.openchat.protocal.state.SessionStore;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
-import com.openchat.secureim.util.Conversions;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,11 +45,11 @@ public class OpenchatServiceSessionStore implements SessionStore {
   }
 
   @Override
-  public SessionRecord loadSession(long recipientId, int deviceId) {
+  public SessionRecord loadSession(OpenchatAddress address) {
     synchronized (FILE_LOCK) {
       try {
-        MasterCipher cipher = new MasterCipher(masterSecret);
-        FileInputStream in     = new FileInputStream(getSessionFile(recipientId, deviceId));
+        MasterCipher    cipher = new MasterCipher(masterSecret);
+        FileInputStream in     = new FileInputStream(getSessionFile(address));
 
         int versionMarker  = readInteger(in);
 
@@ -74,11 +77,11 @@ public class OpenchatServiceSessionStore implements SessionStore {
   }
 
   @Override
-  public void storeSession(long recipientId, int deviceId, SessionRecord record) {
+  public void storeSession(OpenchatAddress address, SessionRecord record) {
     synchronized (FILE_LOCK) {
       try {
         MasterCipher     masterCipher = new MasterCipher(masterSecret);
-        RandomAccessFile sessionFile  = new RandomAccessFile(getSessionFile(recipientId, deviceId), "rw");
+        RandomAccessFile sessionFile  = new RandomAccessFile(getSessionFile(address), "rw");
         FileChannel      out          = sessionFile.getChannel();
 
         out.position(0);
@@ -94,32 +97,33 @@ public class OpenchatServiceSessionStore implements SessionStore {
   }
 
   @Override
-  public boolean containsSession(long recipientId, int deviceId) {
-    return getSessionFile(recipientId, deviceId).exists() &&
-        loadSession(recipientId, deviceId).getSessionState().hasSenderChain();
+  public boolean containsSession(OpenchatAddress address) {
+    return getSessionFile(address).exists() &&
+           loadSession(address).getSessionState().hasSenderChain();
   }
 
   @Override
-  public void deleteSession(long recipientId, int deviceId) {
-    getSessionFile(recipientId, deviceId).delete();
+  public void deleteSession(OpenchatAddress address) {
+    getSessionFile(address).delete();
   }
 
   @Override
-  public void deleteAllSessions(long recipientId) {
-    List<Integer> devices = getSubDeviceSessions(recipientId);
+  public void deleteAllSessions(String name) {
+    List<Integer> devices = getSubDeviceSessions(name);
 
-    deleteSession(recipientId, OpenchatServiceAddress.DEFAULT_DEVICE_ID);
+    deleteSession(new OpenchatAddress(name, OpenchatServiceAddress.DEFAULT_DEVICE_ID));
 
     for (int device : devices) {
-      deleteSession(recipientId, device);
+      deleteSession(new OpenchatAddress(name, device));
     }
   }
 
   @Override
-  public List<Integer> getSubDeviceSessions(long recipientId) {
-    List<Integer> results  = new LinkedList<>();
-    File          parent   = getSessionDirectory();
-    String[]      children = parent.list();
+  public List<Integer> getSubDeviceSessions(String name) {
+    long          recipientId = RecipientFactory.getRecipientsFromString(context, name, true).getPrimaryRecipient().getRecipientId();
+    List<Integer> results     = new LinkedList<>();
+    File          parent      = getSessionDirectory();
+    String[]      children    = parent.list();
 
     if (children == null) return results;
 
@@ -132,15 +136,15 @@ public class OpenchatServiceSessionStore implements SessionStore {
           results.add(Integer.parseInt(parts[1]));
         }
       } catch (NumberFormatException e) {
-        Log.w("SessionRecordV2", e);
+        Log.w(TAG, e);
       }
     }
 
     return results;
   }
 
-  private File getSessionFile(long recipientId, int deviceId) {
-    return new File(getSessionDirectory(), getSessionName(recipientId, deviceId));
+  private File getSessionFile(OpenchatAddress address) {
+    return new File(getSessionDirectory(), getSessionName(address));
   }
 
   private File getSessionDirectory() {
@@ -155,7 +159,12 @@ public class OpenchatServiceSessionStore implements SessionStore {
     return directory;
   }
 
-  private String getSessionName(long recipientId, int deviceId) {
+  private String getSessionName(OpenchatAddress axolotlAddress) {
+    Recipient recipient   = RecipientFactory.getRecipientsFromString(context, axolotlAddress.getName(), true)
+                                          .getPrimaryRecipient();
+    long      recipientId = recipient.getRecipientId();
+    int       deviceId    = axolotlAddress.getDeviceId();
+
     return recipientId + (deviceId == OpenchatServiceAddress.DEFAULT_DEVICE_ID ? "" : "." + deviceId);
   }
 

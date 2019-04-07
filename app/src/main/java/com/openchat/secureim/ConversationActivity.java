@@ -45,7 +45,7 @@ import com.openchat.secureim.crypto.KeyExchangeInitiator;
 import com.openchat.secureim.crypto.MasterCipher;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.SecurityEvent;
-import com.openchat.secureim.crypto.storage.OpenchatServiceSessionStore;
+import com.openchat.secureim.crypto.SessionUtil;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.DraftDatabase;
 import com.openchat.secureim.database.DraftDatabase.Draft;
@@ -86,8 +86,6 @@ import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
 import com.openchat.protocal.InvalidMessageException;
-import com.openchat.protocal.state.SessionStore;
-import com.openchat.imservice.api.push.OpenchatServiceAddress;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -654,14 +652,12 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   }
 
   private void initializeSecurity() {
-    SessionStore sessionStore           = new OpenchatServiceSessionStore(this, masterSecret);
     Recipient    primaryRecipient       = getRecipients() == null ? null : getRecipients().getPrimaryRecipient();
     boolean      isPushDestination      = DirectoryHelper.isPushDestination(this, getRecipients());
     boolean      isSecureSmsAllowed     = (!isPushDestination || DirectoryHelper.isSmsFallbackAllowed(this, getRecipients()));
     boolean      isSecureSmsDestination = isSecureSmsAllowed     &&
                                           isSingleConversation() &&
-                                          sessionStore.containsSession(primaryRecipient.getRecipientId(),
-                                                                         OpenchatServiceAddress.DEFAULT_DEVICE_ID);
+                                          SessionUtil.hasSession(this, masterSecret, primaryRecipient);
 
     if (isPushDestination || isSecureSmsDestination) {
       this.isEncryptedConversation = true;

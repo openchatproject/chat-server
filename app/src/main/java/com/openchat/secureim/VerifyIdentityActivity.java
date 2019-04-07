@@ -13,6 +13,7 @@ import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;
 import com.openchat.secureim.util.MemoryCleaner;
+import com.openchat.protocal.OpenchatAddress;
 import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.state.SessionRecord;
 import com.openchat.protocal.state.SessionStore;
@@ -161,9 +162,9 @@ public class VerifyIdentityActivity extends KeyScanningActivity {
   }
 
   private IdentityKey getRemoteIdentityKey(MasterSecret masterSecret, Recipient recipient) {
-    SessionStore  sessionStore = new OpenchatServiceSessionStore(this, masterSecret);
-    SessionRecord record       = sessionStore.loadSession(recipient.getRecipientId(),
-                                                          OpenchatServiceAddress.DEFAULT_DEVICE_ID);
+    SessionStore   sessionStore   = new OpenchatServiceSessionStore(this, masterSecret);
+    OpenchatAddress axolotlAddress = new OpenchatAddress(recipient.getNumber(), OpenchatServiceAddress.DEFAULT_DEVICE_ID);
+    SessionRecord  record         = sessionStore.loadSession(axolotlAddress);
 
     if (record == null) {
       return null;

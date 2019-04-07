@@ -33,7 +33,6 @@ import com.openchat.secureim.database.SmsDatabase;
 import com.openchat.secureim.database.model.MessageRecord;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
-import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.service.KeyCachingService;
 import com.openchat.secureim.util.OpenchatServicePreferences;
@@ -287,18 +286,10 @@ public class MessageNotifier {
       reader = DatabaseFactory.getPushDatabase(context).readerFor(cursor);
 
       while ((envelope = reader.getNext()) != null) {
-        Recipients recipients;
-
-        try {
-          recipients = RecipientFactory.getRecipientsFromString(context, envelope.getSource(), false);
-        } catch (RecipientFormattingException e) {
-          Log.w("MessageNotifier", e);
-          recipients = new Recipients(Recipient.getUnknownRecipient(context));
-        }
-
-        Recipient       recipient = recipients.getPrimaryRecipient();
-        long            threadId  = DatabaseFactory.getThreadDatabase(context).getThreadIdFor(recipients);
-        SpannableString body      = new SpannableString(context.getString(R.string.MessageNotifier_encrypted_message));
+        Recipients      recipients = RecipientFactory.getRecipientsFromString(context, envelope.getSource(), false);
+        Recipient       recipient  = recipients.getPrimaryRecipient();
+        long            threadId   = DatabaseFactory.getThreadDatabase(context).getThreadIdFor(recipients);
+        SpannableString body       = new SpannableString(context.getString(R.string.MessageNotifier_encrypted_message));
         body.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), 0, body.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         notificationState.addNotification(new NotificationItem(recipient, recipients, null, threadId, body, null));

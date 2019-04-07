@@ -5,11 +5,10 @@ import android.util.Log;
 
 import com.openchat.secureim.mms.TextTransport;
 import com.openchat.secureim.protocol.WirePrefix;
-import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
-import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.transport.UndeliverableMessageException;
 import com.openchat.secureim.util.Util;
+import com.openchat.protocal.OpenchatAddress;
 import com.openchat.protocal.DuplicateMessageException;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.LegacyMessageException;
@@ -49,9 +48,7 @@ public class MmsCipher {
              NoSessionException
   {
     try {
-      Recipients    recipients    = RecipientFactory.getRecipientsFromString(context, pdu.getFrom().getString(), false);
-      long          recipientId   = recipients.getPrimaryRecipient().getRecipientId();
-      SessionCipher sessionCipher = new SessionCipher(axolotlStore, recipientId, 1);
+      SessionCipher sessionCipher = new SessionCipher(axolotlStore, new OpenchatAddress(pdu.getFrom().getString(), OpenchatServiceAddress.DEFAULT_DEVICE_ID));
       Optional<byte[]> ciphertext = getEncryptedData(pdu);
 
       if (!ciphertext.isPresent()) {
@@ -80,7 +77,7 @@ public class MmsCipher {
 
       MultimediaMessagePdu plaintextGenericPdu = (MultimediaMessagePdu) new PduParser(plaintext).parse();
       return new RetrieveConf(plaintextGenericPdu.getPduHeaders(), plaintextGenericPdu.getBody());
-    } catch (RecipientFormattingException | IOException e) {
+    } catch (IOException e) {
       throw new InvalidMessageException(e);
     }
   }
@@ -90,19 +87,17 @@ public class MmsCipher {
   {
     EncodedStringValue[] encodedRecipient = message.getTo();
     String               recipientString  = encodedRecipient[0].getString();
-    Recipients           recipients       = RecipientFactory.getRecipientsFromString(context, recipientString, false);
-    long                 recipientId      = recipients.getPrimaryRecipient().getRecipientId();
     byte[]               pduBytes         = new PduComposer(context, message).make();
 
     if (pduBytes == null) {
       throw new UndeliverableMessageException("PDU composition failed, null payload");
     }
 
-    if (!axolotlStore.containsSession(recipientId, OpenchatServiceAddress.DEFAULT_DEVICE_ID)) {
-      throw new NoSessionException("No session for: " + recipientId);
+    if (!axolotlStore.containsSession(new OpenchatAddress(recipientString, OpenchatServiceAddress.DEFAULT_DEVICE_ID))) {
+      throw new NoSessionException("No session for: " + recipientString);
     }
 
-    SessionCipher     cipher            = new SessionCipher(axolotlStore, recipientId, OpenchatServiceAddress.DEFAULT_DEVICE_ID);
+    SessionCipher     cipher            = new SessionCipher(axolotlStore, new OpenchatAddress(recipientString, OpenchatServiceAddress.DEFAULT_DEVICE_ID));
     CiphertextMessage ciphertextMessage = cipher.encrypt(pduBytes);
     byte[]            encryptedPduBytes = textTransport.getEncodedMessage(ciphertextMessage.serialize());
 

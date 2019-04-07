@@ -7,6 +7,7 @@ import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.imservice.api.OpenchatServiceMessageSender;
+import com.openchat.imservice.api.push.OpenchatServiceAddress;
 
 public class SecurityEventListener implements OpenchatServiceMessageSender.EventListener {
 
@@ -19,8 +20,8 @@ public class SecurityEventListener implements OpenchatServiceMessageSender.Event
   }
 
   @Override
-  public void onSecurityEvent(long recipientId) {
-    Recipients recipients = RecipientFactory.getRecipientsForIds(context, new long[]{recipientId}, false);
+  public void onSecurityEvent(OpenchatServiceAddress openchatServiceAddress) {
+    Recipients recipients = RecipientFactory.getRecipientsFromString(context, openchatServiceAddress.getNumber(), false);
     long       threadId   = DatabaseFactory.getThreadDatabase(context).getThreadIdFor(recipients);
 
     SecurityEvent.broadcastSecurityUpdateEvent(context, threadId);

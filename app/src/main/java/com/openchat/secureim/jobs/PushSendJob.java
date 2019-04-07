@@ -9,13 +9,13 @@ import com.openchat.secureim.database.OpenchatServiceDirectory;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
 import com.openchat.secureim.mms.PartAuthority;
 import com.openchat.secureim.notifications.MessageNotifier;
-import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
+import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentStream;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
@@ -76,10 +76,10 @@ public abstract class PushSendJob extends SendJob {
     }
   }
 
-  protected OpenchatServiceAddress getPushAddress(Recipient recipient) throws InvalidNumberException {
-    String e164number = Util.canonicalizeNumber(context, recipient.getNumber());
+  protected OpenchatServiceAddress getPushAddress(String number) throws InvalidNumberException {
+    String e164number = Util.canonicalizeNumber(context, number);
     String relay      = OpenchatServiceDirectory.getInstance(context).getRelay(e164number);
-    return new OpenchatServiceAddress(recipient.getRecipientId(), e164number, relay);
+    return new OpenchatServiceAddress(e164number, Optional.fromNullable(relay));
   }
 
   protected boolean isSmsFallbackApprovalRequired(String destination, boolean media) {

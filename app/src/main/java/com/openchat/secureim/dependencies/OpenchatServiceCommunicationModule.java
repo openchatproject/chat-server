@@ -57,21 +57,13 @@ public class OpenchatServiceCommunicationModule {
     return new OpenchatServiceMessageSenderFactory() {
       @Override
       public OpenchatServiceMessageSender create(MasterSecret masterSecret) {
-        try {
-          String    localNumber    = OpenchatServicePreferences.getLocalNumber(context);
-          Recipient localRecipient = RecipientFactory.getRecipientsFromString(context, localNumber, false).getPrimaryRecipient();
-
-          return new OpenchatServiceMessageSender(Release.PUSH_URL,
-                                             new OpenchatServicePushTrustStore(context),
-                                             OpenchatServicePreferences.getLocalNumber(context),
-                                             OpenchatServicePreferences.getPushServerPassword(context),
-                                             localRecipient.getRecipientId(),
-                                             new OpenchatServiceOpenchatStore(context, masterSecret),
-                                             Optional.of((OpenchatServiceMessageSender.EventListener)
-                                                             new SecurityEventListener(context)));
-        } catch (RecipientFormattingException e) {
-          throw new AssertionError(e);
-        }
+        return new OpenchatServiceMessageSender(Release.PUSH_URL,
+                                           new OpenchatServicePushTrustStore(context),
+                                           OpenchatServicePreferences.getLocalNumber(context),
+                                           OpenchatServicePreferences.getPushServerPassword(context),
+                                           new OpenchatServiceOpenchatStore(context, masterSecret),
+                                           Optional.of((OpenchatServiceMessageSender.EventListener)
+                                                           new SecurityEventListener(context)));
       }
     };
   }

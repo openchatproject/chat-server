@@ -72,7 +72,7 @@ public class PushGroupSendJob extends PushSendJob implements InjectableType {
 
   @Override
   public void onSend(MasterSecret masterSecret)
-      throws MmsException, IOException, NoSuchMessageException, RecipientFormattingException
+      throws MmsException, IOException, NoSuchMessageException
   {
     MmsDatabase database = DatabaseFactory.getMmsDatabase(context);
     SendReq     message  = database.getOutgoingMessage(masterSecret, messageId);
@@ -159,7 +159,7 @@ public class PushGroupSendJob extends PushSendJob implements InjectableType {
     List<OpenchatServiceAddress> addresses = new LinkedList<>();
 
     for (Recipient recipient : recipients.getRecipientsList()) {
-      addresses.add(getPushAddress(recipient));
+      addresses.add(getPushAddress(recipient.getNumber()));
     }
 
     return addresses;
@@ -167,7 +167,7 @@ public class PushGroupSendJob extends PushSendJob implements InjectableType {
 
   private List<OpenchatServiceAddress> getPushAddresses(long filterRecipientId) throws InvalidNumberException {
     List<OpenchatServiceAddress> addresses = new LinkedList<>();
-    addresses.add(getPushAddress(RecipientFactory.getRecipientForId(context, filterRecipientId, false)));
+    addresses.add(getPushAddress(RecipientFactory.getRecipientForId(context, filterRecipientId, false).getNumber()));
     return addresses;
   }
 
