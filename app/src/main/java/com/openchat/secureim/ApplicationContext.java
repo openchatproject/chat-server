@@ -15,6 +15,8 @@ import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.JobManager;
 import com.openchat.jobqueue.dependencies.DependencyInjector;
 import com.openchat.jobqueue.requirements.NetworkRequirementProvider;
+import com.openchat.protocal.logging.OpenchatLoggerProvider;
+import com.openchat.protocal.util.AndroidOpenchatLogger;
 
 import java.security.Security;
 
@@ -32,6 +34,7 @@ public class ApplicationContext extends Application implements DependencyInjecto
   @Override
   public void onCreate() {
     initializeRandomNumberFix();
+    initializeLogging();
     initializeDependencyInjection();
     initializeJobManager();
     initializeGcmCheck();
@@ -50,6 +53,10 @@ public class ApplicationContext extends Application implements DependencyInjecto
 
   private void initializeRandomNumberFix() {
     PRNGFixes.apply();
+  }
+
+  private void initializeLogging() {
+    OpenchatLoggerProvider.setProvider(new AndroidOpenchatLogger());
   }
 
   private void initializeJobManager() {

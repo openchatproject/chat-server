@@ -12,7 +12,6 @@ import com.openchat.protocal.IdentityKeyPair;
 import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.InvalidKeyIdException;
 import com.openchat.protocal.ecc.Curve;
-import com.openchat.protocal.ecc.Curve25519;
 import com.openchat.protocal.ecc.ECKeyPair;
 import com.openchat.protocal.state.PreKeyRecord;
 import com.openchat.protocal.state.PreKeyStore;
@@ -39,7 +38,7 @@ public class PreKeyUtil {
 
     for (int i=0;i<BATCH_SIZE;i++) {
       int          preKeyId = (preKeyIdOffset + i) % Medium.MAX_VALUE;
-      ECKeyPair    keyPair  = Curve25519.generateKeyPair();
+      ECKeyPair    keyPair  = Curve.generateKeyPair();
       PreKeyRecord record   = new PreKeyRecord(preKeyId, keyPair);
 
       preKeyStore.storePreKey(preKeyId, record);
@@ -56,7 +55,7 @@ public class PreKeyUtil {
     try {
       SignedPreKeyStore  signedPreKeyStore = new OpenchatServicePreKeyStore(context, masterSecret);
       int                signedPreKeyId    = getNextSignedPreKeyId(context);
-      ECKeyPair          keyPair           = Curve25519.generateKeyPair();
+      ECKeyPair          keyPair           = Curve.generateKeyPair();
       byte[]             signature         = Curve.calculateSignature(identityKeyPair.getPrivateKey(), keyPair.getPublicKey().serialize());
       SignedPreKeyRecord record            = new SignedPreKeyRecord(signedPreKeyId, System.currentTimeMillis(), keyPair, signature);
 
@@ -81,7 +80,7 @@ public class PreKeyUtil {
       }
     }
 
-    ECKeyPair    keyPair = Curve25519.generateKeyPair();
+    ECKeyPair    keyPair = Curve.generateKeyPair();
     PreKeyRecord record  = new PreKeyRecord(Medium.MAX_VALUE, keyPair);
 
     preKeyStore.storePreKey(Medium.MAX_VALUE, record);
