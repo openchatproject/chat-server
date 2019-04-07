@@ -429,6 +429,7 @@
     <string name="conversation_activity__window_description">Conversation with %1$s</string>
     <string name="conversation_activity__compose_description">Message composition</string>
     <string name="conversation_activity__emoji_toggle_description">Toggle emoji keyboard</string>
+    <string name="conversation_activity__attachment_thumbnail">Attachment Thumbnail</string>
 
     <string name="conversation_item__mms_image_description">Media message</string>
     <string name="conversation_item__play_button_description">Play button</string>
@@ -580,6 +581,9 @@
         failed.
     </string>
     <string name="registration_progress_activity__generating_keys">Generating keys...</string>
+    <string name="registration_progress_activity__alert">Alert</string>
+    <string name="registration_progress_activity__telephone">Telephone</string>
+    <string name="registration_progress_activity__check">Check</string>
 
     <string name="recipients_panel__to"><small>Enter a name or number</small></string>
     <string name="recipients_panel__add_member">Add member</string>
@@ -753,12 +757,19 @@
 
     <string name="conversation_context_image__save_attachment">Save attachment</string>
 
+    <string name="conversation_insecure__invite">Invite</string>
+
     <string name="conversation_insecure__menu_start_secure_session">Start secure session</string>
+    <string name="conversation_insecure__security">Security</string>
 
     <string name="conversation_list_batch__menu_delete_selected">Delete selected</string>
     <string name="conversation_list_batch__menu_select_all">Select all</string>
 
     <string name="conversation_list__menu_search">Search</string>
+
+    <string name="conversation_list_item_view__contact_photo_image">Contact Photo Image</string>
+    <string name="conversation_list_item_view__attachment_indicator">Attachment Indicator</string>
+    <string name="conversation_list_item_view__error_alert">Error alert</string>
 
     <string name="conversation_list_fragment__fab_content_description">New conversation</string>
 
@@ -809,5 +820,7 @@
     <string name="trimmer__deleting">Deleting...</string>
     <string name="trimmer__deleting_old_messages">Deleting old messages...</string>
     <string name="trimmer__old_messages_successfully_deleted">Old messages successfully deleted</string>
+
+    <string name="transport_selection_list_item__transport_icon">Transport icon</string>
 
 </resources>
