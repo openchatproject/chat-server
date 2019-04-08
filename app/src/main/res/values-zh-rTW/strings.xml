@@ -32,9 +32,10 @@
   <string name="AttachmentTypeSelectorAdapter_picture">照片</string>
   <string name="AttachmentTypeSelectorAdapter_video">影片</string>
   <string name="AttachmentTypeSelectorAdapter_audio">音樂</string>
+  <string name="ConfirmIdentityDialog_you_may_wish_to_verify_this_contact">您想要對這名連絡人
+進行認證嗎？</string>
   <string name="ConversationItem_message_size_d_kb">訊息大小: %d KB</string>
   <string name="ConversationItem_expires_s">於: %s 後過期</string>
-  <string name="ConversationItem_error_sending_message">傳送訊息失敗</string>
   <string name="ConversationItem_view_secure_media_question">檢視安全的媒體檔案？</string>
   <string name="ConversationItem_this_media_has_been_stored_in_an_encrypted_database_external_viewer_warning">由於這個媒體檔案已被加密。如果要用外部的媒體瀏覽APP來開啟／檢視它，則需將其解密並儲存至未加密的空間。您確定要這樣做嗎？</string>
   <string name="ConversationItem_error_received_stale_key_exchange_message">錯誤，收到的是過期的金鑰交換訊息。</string>
@@ -88,6 +89,7 @@
   <string name="ConversationListFragment_deleting">正在刪除</string>
   <string name="ConversationListFragment_deleting_selected_threads">正在刪除已選的對話群組...</string>
   <string name="ConversationListItem_key_exchange_message">金鑰交換訊息...</string>
+  <string name="CustomDefaultPreference_none">無</string>
   <string name="ShareActivity_share_with">分享給</string>
   <string name="ExportFragment_export">匯出</string>
   <string name="ExportFragment_export_plaintext_to_sd_card">以純文字（未加密）格式輸出至 SD 卡？</string>
@@ -464,11 +466,6 @@ OpenchatService 等候驗證用的手機簡訊已逾時。</string>
   <string name="preferences__custom">自訂</string>
   <string name="preferences__advanced">進階</string>
   <string name="preferences__override_system_mms_settings">您可自訂 MMS多媒體簡訊設定，並覆蓋過系統的預設值。</string>
-  <string name="preferences__mmsc_url_required">電信業者所提供的 MMSC URL（多媒體簡訊中繼伺服器網址）（必要）:</string>
-  <string name="preferences__mms_proxy_host_optional">MMS多媒體簡訊代理伺服器位址(選擇性):</string>
-  <string name="preferences__mms_proxy_port_optional">MMS多媒體簡訊代理伺服器連接埠(選擇性):</string>
-  <string name="preferences__mmsc_username_optional">MMSC（多媒體簡訊中繼伺服器）使用者名稱（選擇˙性）</string>
-  <string name="preferences__mmsc_password_optional">MMSC（多媒體簡訊中繼伺服器）密碼（選擇˙性）</string>
   <string name="preferences__sms_delivery_reports">手機簡訊傳送狀態報告</string>
   <string name="preferences__request_a_delivery_report_for_each_sms_message_you_send">針對每則手機簡訊都要求回覆傳送報告</string>
   <string name="preferences__automatically_delete_older_messages_once_a_conversation_thread_exceeds_a_specified_length">自動刪除舊的簡訊，當對話群組超過一定長度時</string>
@@ -508,6 +505,7 @@ OpenchatService 等候驗證用的手機簡訊已逾時。</string>
   <string name="conversation_context__menu_resend_message">重送訊息</string>
   <string name="conversation_context_image__save_attachment">另存附件檔案</string>
   <string name="conversation_insecure__menu_start_secure_session">起始安全連線</string>
+  <string name="conversation_insecure__security">安全設定</string>
   <string name="conversation_list_batch__menu_delete_selected">刪除已選項目</string>
   <string name="conversation_list_batch__menu_select_all">全選</string>
   <string name="conversation_list__menu_search">搜尋</string>

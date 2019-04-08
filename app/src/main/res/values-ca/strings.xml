@@ -24,9 +24,9 @@ Necessitaràs tornar a registrar el teu número de telèfon per utilitzar els mi
   <string name="AttachmentTypeSelectorAdapter_picture">Fotografia</string>
   <string name="AttachmentTypeSelectorAdapter_video">Vídeo</string>
   <string name="AttachmentTypeSelectorAdapter_audio">So</string>
+  <string name="ConfirmIdentityDialog_you_may_wish_to_verify_this_contact">Pot ser que vulguis verificar aquest contacte.</string>
   <string name="ConversationItem_message_size_d_kb">Mida del missatge: %d KB</string>
   <string name="ConversationItem_expires_s">Expira: %s</string>
-  <string name="ConversationItem_error_sending_message">Error enviant el missatge</string>
   <string name="ConversationItem_view_secure_media_question">Vols veure continguts segurs?</string>
   <string name="ConversationItem_this_media_has_been_stored_in_an_encrypted_database_external_viewer_warning">Aquest contingut ha estat emmagatzemant en una base de dades encriptada. Desafortunadament, actualment per veure\'l amb un visor de continguts externs les dades han de ser temporalment desencriptades i escrites al disc. Estàs segur que vols fer això?</string>
   <string name="ConversationItem_error_received_stale_key_exchange_message">Error, s\'ha rebut un missatge d\'intercanvi de clau viciat.</string>
@@ -270,9 +270,6 @@ des de l\'app de missatgeria predeterminada del sistema.</string>
   <string name="preferences__custom">Personalitzat</string>
   <string name="preferences__advanced">Avançat</string>
   <string name="preferences__override_system_mms_settings">Sobreescriu els ajustaments MMS del sistema amb la informació següent.</string>
-  <string name="preferences__mmsc_url_required">MMSC URL (Requerit)</string>
-  <string name="preferences__mms_proxy_host_optional">Servidor Proxy MMS (Opcional)</string>
-  <string name="preferences__mms_proxy_port_optional">Port Proxy MMS (Opcional)</string>
   <string name="preferences__sms_delivery_reports">Informes de lliurament de SMS</string>
   <string name="preferences__request_a_delivery_report_for_each_sms_message_you_send">Demana un informe de lliurament en cada missatge SMS que enviïs</string>
   <string name="preferences__automatically_delete_older_messages_once_a_conversation_thread_exceeds_a_specified_length">Esborra automàticament els missatges antics una vegada el fil de conversa excedeixi la mida especificada</string>
@@ -297,6 +294,7 @@ Augmenta la privacitat i evita els càrrecs d\'SMS utilitzant el canal de dades 
   <string name="conversation_context__menu_delete_message">Esborra el missatge</string>
   <string name="conversation_context__menu_forward_message">Reenvia el missatge</string>
   <string name="conversation_context__menu_resend_message">Torna a enviar el missatge</string>
+  <string name="conversation_insecure__security">Seguretat</string>
   <string name="conversation_list__menu_search">Cerca</string>
   <string name="conversation_secure_verified__menu_security">Seguretat</string>
   <string name="conversation__menu_add_attachment">Afegeix un adjunt</string>

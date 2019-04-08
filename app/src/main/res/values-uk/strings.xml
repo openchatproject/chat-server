@@ -20,9 +20,9 @@
   <string name="AttachmentTypeSelectorAdapter_picture">Зображення</string>
   <string name="AttachmentTypeSelectorAdapter_video">Відео</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Аудіо</string>
+  <string name="ConfirmIdentityDialog_you_may_wish_to_verify_this_contact">Можливо, вам потрібно перевірити цей контакт.</string>
   <string name="ConversationItem_message_size_d_kb">Розмір повідомленя: %d KБ</string>
   <string name="ConversationItem_expires_s">Минає: %s</string>
-  <string name="ConversationItem_error_sending_message">Помилка відправлення повідомлення</string>
   <string name="ConversationItem_view_secure_media_question">Переглянути захищений медіа-файл?</string>
   <string name="ConversationItem_this_media_has_been_stored_in_an_encrypted_database_external_viewer_warning">Цей медіа-файл зберігається в зашифрованій базі даних. Через технічні обмеження для того, щоб переглянути його через сторонній додаток, необхідно його тимчасово розшифрувати і записати на диск. Ви впевнені, що хочете це зробити?</string>
   <string name="ConversationItem_error_received_stale_key_exchange_message">Помилка, отримано застаріле повідомлення обміну ключами.</string>
@@ -252,9 +252,6 @@
   <string name="preferences__custom">Користувацький</string>
   <string name="preferences__advanced">Додаткові функції</string>
   <string name="preferences__override_system_mms_settings">Перезаписати системні налаштування MMS вказаними нижче.</string>
-  <string name="preferences__mmsc_url_required">MMSC URL (обов’язково):</string>
-  <string name="preferences__mms_proxy_host_optional">Хост MMS проксі (не обов’язково)</string>
-  <string name="preferences__mms_proxy_port_optional">Порт MMS проксі (не обов’язково)</string>
   <string name="preferences__sms_delivery_reports">Звіти про доставку SMS</string>
   <string name="preferences__request_a_delivery_report_for_each_sms_message_you_send">Запитувати звіт про доставку для кожного відісланого вами SMS</string>
   <string name="preferences__automatically_delete_older_messages_once_a_conversation_thread_exceeds_a_specified_length">Автоматично видаляти старі повідомлення, коли довжина розмови перевищує задану</string>
@@ -278,6 +275,7 @@
   <string name="conversation_context__menu_delete_message">Видалити повідомлення</string>
   <string name="conversation_context__menu_forward_message">Переслати повідомлення</string>
   <string name="conversation_context__menu_resend_message">Переслати повідомлення</string>
+  <string name="conversation_insecure__security">Безпека</string>
   <string name="conversation_list__menu_search">Пошук</string>
   <string name="conversation_secure_verified__menu_security">Безпека</string>
   <string name="conversation__menu_add_attachment">Додати вкладення</string>

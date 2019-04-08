@@ -24,9 +24,11 @@ dapat mengaksesnya</string>
   <string name="AttachmentTypeSelectorAdapter_picture">Gambar</string>
   <string name="AttachmentTypeSelectorAdapter_video">Video</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Audio</string>
+  <string name="ConfirmIdentityDialog_you_may_wish_to_verify_this_contact">Anda mungkin ingin memverifikasi
+kontak ini.
+</string>
   <string name="ConversationItem_message_size_d_kb">Ukuran pesan: %d KB</string>
   <string name="ConversationItem_expires_s">Berakhir: %s</string>
-  <string name="ConversationItem_error_sending_message">Gagal mengirim pesan</string>
   <string name="ConversationItem_view_secure_media_question">Tampilkan media aman?</string>
   <string name="ConversationItem_this_media_has_been_stored_in_an_encrypted_database_external_viewer_warning">Media ini disimpan dalam basis data terenkripsi. Namun, untuk melihatnya dengan aplikasi eksternal akan memerlukan berkas di deskripsi dan disimpan. Apa anda yakin ingin melakukan ini?</string>
   <string name="ConversationItem_error_received_stale_key_exchange_message">Gagal, menerima pesan pertukaran kunci terhenti.</string>
@@ -54,6 +56,7 @@ dapat mengaksesnya</string>
   <string name="ConversationListFragment_deleting">Menghapus</string>
   <string name="ConversationListFragment_deleting_selected_threads">Menghapus percakapan yang dipilih ...</string>
   <string name="ConversationListItem_key_exchange_message">Pesan pertukaran kunci...</string>
+  <string name="CustomDefaultPreference_none">Kosong</string>
   <string name="ExportFragment_export">Eksport</string>
   <string name="ExportFragment_warning_this_will_export_the_plaintext_contents">Peringatan, ini akan
 mengeksport konten pesan teks polos OpenchatService anda ke kartu SD</string>
@@ -324,9 +327,6 @@ Telah gagal
   <string name="preferences__custom">Spesifik</string>
   <string name="preferences__advanced">Lanjutan</string>
   <string name="preferences__override_system_mms_settings">Ganti pengaturan MMS dengan informasi berikut.</string>
-  <string name="preferences__mmsc_url_required">URL MMSC (Diperlukan)</string>
-  <string name="preferences__mms_proxy_host_optional">Host Proxy MMS (Opsional)</string>
-  <string name="preferences__mms_proxy_port_optional">Port Proxy MMS (Opsional)</string>
   <string name="preferences__sms_delivery_reports">Laporan pengiriman SMS</string>
   <string name="preferences__request_a_delivery_report_for_each_sms_message_you_send">Minta laporan pengiriman untuk tiap SMS yang dikirim</string>
   <string name="preferences__automatically_delete_older_messages_once_a_conversation_thread_exceeds_a_specified_length">Secara otomatis hapus pesan yang lebih lama ketika percakapan telah melebihi jumlah yang ditentukan</string>
@@ -352,6 +352,7 @@ Telah gagal
   <string name="conversation_context__menu_delete_message">Hapus pesan</string>
   <string name="conversation_context__menu_forward_message">Teruskan pesan</string>
   <string name="conversation_context__menu_resend_message">Kirim ulang </string>
+  <string name="conversation_insecure__security">Keamanan</string>
   <string name="conversation_list__menu_search">Cari</string>
   <string name="conversation_secure_verified__menu_security">Keamanan</string>
   <string name="conversation__menu_add_attachment">Tambahkan lampiran</string>

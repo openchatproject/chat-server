@@ -23,7 +23,6 @@ Upozornenie, toto vypne kryptovanie úložiska správ a kľúčov. Vaše bezpeč
   <string name="AttachmentTypeSelectorAdapter_audio">Audio</string>
   <string name="ConversationItem_message_size_d_kb">Veľkosť správy: %d KB</string>
   <string name="ConversationItem_expires_s">Vyprší: %s</string>
-  <string name="ConversationItem_error_sending_message">Chyba pri posielaní správy</string>
   <string name="ConversationItem_view_secure_media_question">Zobraziť kryptované údaje?</string>
   <string name="ConversationItem_error_received_stale_key_exchange_message">Chyba, prijal som zaseknutú správu vzájomnej výmeny kľúčov.</string>
   <string name="ConversationItem_received_key_exchange_message_click_to_process">Prijal som správu vzájomnej výmeny kľúčov, kliknite pre spracovanie.</string>
@@ -60,6 +59,7 @@ Upozornenie, toto vypne kryptovanie úložiska správ a kľúčov. Vaše bezpeč
   <string name="ConversationListFragment_deleting">Mažem</string>
   <string name="ConversationListFragment_deleting_selected_threads">Mažem vybrané konverzácie...</string>
   <string name="ConversationListItem_key_exchange_message">Správa vzájomnej výmeny kľúčov...</string>
+  <string name="CustomDefaultPreference_none">Žiadna</string>
   <string name="ShareActivity_share_with">Zdieľaj s</string>
   <string name="ExportFragment_export">Export</string>
   <string name="ExportFragment_export_plaintext_to_sd_card">Exportuj čistý text na SD kartu?</string>
@@ -329,9 +329,6 @@ zlyhalo.
   <string name="preferences__slow">Pomaly</string>
   <string name="preferences__custom">Vlastné</string>
   <string name="preferences__advanced">Rozšírené</string>
-  <string name="preferences__mmsc_url_required">MMSC URL (nutné)</string>
-  <string name="preferences__mms_proxy_host_optional">MMS Proxy (voliteľné)</string>
-  <string name="preferences__mms_proxy_port_optional">MMS Proxy port (voliteľné)</string>
   <string name="preferences__sms_delivery_reports">Správy o doručení SMS</string>
   <string name="preferences__request_a_delivery_report_for_each_sms_message_you_send">Pre každú odoslanú SMS vyžiadaj správu o doručení</string>
   <string name="preferences__automatically_delete_older_messages_once_a_conversation_thread_exceeds_a_specified_length">Ak dĺžka vlákna presiahne nastavenú hranicu, automaticky zmaž najstaršie správy.</string>
@@ -367,6 +364,7 @@ zlyhalo.
   <string name="conversation_context__menu_resend_message">Prepošli správu</string>
   <string name="conversation_context_image__save_attachment">Uložiť prílohu </string>
   <string name="conversation_insecure__menu_start_secure_session">Začni bezpečnú reláciu</string>
+  <string name="conversation_insecure__security">Bezpečnosť</string>
   <string name="conversation_list_batch__menu_delete_selected">Odstrániť označené</string>
   <string name="conversation_list_batch__menu_select_all">Označ všetko</string>
   <string name="conversation_list__menu_search">Hľadaj</string>

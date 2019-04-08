@@ -14,7 +14,6 @@
   <string name="AttachmentTypeSelectorAdapter_audio">སྒྲ་ཟློས། </string>
   <string name="ConversationItem_message_size_d_kb">འཕྲིན་ཐུང་ཆེ་ཆུང་།%d KB</string>
   <string name="ConversationItem_expires_s">དུས་ཚོད་རྫོགས།%s</string>
-  <string name="ConversationItem_error_sending_message">གཏོང་བཞིན་པའི་འཕྲིན་ཐུང་དེར་ནོར་འཁྲུལ་ཞིག་འདུག </string>
   <string name="ConversationItem_view_secure_media_question">ཉེན་སྲུང་ཡོད་པའི་བརྒྱུད་ལམ་ལ་ལྟོས། </string>
   <string name="ConversationItem_error_received_stale_key_exchange_message">ནོར་འཁྲུལ། ལྡེ་མིག་རྙིང་པ་བརྗེ་ལེན་བྱེད་རྒྱུའི་བརྡ་ལན་འབྱོར་ཚར། དེ་རུ་ནོར་འཁྲུལ་འདུག </string>
   <string name="ConversationActivity_initiate_secure_session_with_s_question">%s དང་ལྷན་དུ་བདེ་འཇགས་ཀྱི་གླེང་མོལ་འགོ་རྩོམ་གྱི་ཡིན་ནམ།</string>
@@ -130,9 +129,6 @@
   <string name="preferences__normal">སྤྱིར་བཏང་། </string>
   <string name="preferences__slow">དལ་བོ། </string>
   <string name="preferences__custom">ཡུལ་སྲོལ། </string>
-  <string name="preferences__mmsc_url_required">MMSC URL(དགོས་ངེས་ཅན) </string>
-  <string name="preferences__mms_proxy_host_optional">MMS Proxy Host (གདམ་ཀ་ཅན) </string>
-  <string name="preferences__mms_proxy_port_optional">MMS Proxy Port (གདམ་ཀ་ཅན) </string>
   <string name="preferences__sms_delivery_reports">སྣ་མང་བརྒྱུད་ལམ་ཅན་གྱི་འཕྲིན་ཐུང་གིས་སྙན་ཐོ་སྐྱེལ། </string>
   <string name="preferences__request_a_delivery_report_for_each_sms_message_you_send">ཁྱེད་ཀྱིས་གཏོང་བའི་འཕྲིན་ཐུང་རེ་རེར་སྙན་ཐོ་སྐྱེལ་བའི་རེ་སྐུལ་བྱོས། </string>
   <string name="preferences__automatically_delete_older_messages_once_a_conversation_thread_exceeds_a_specified_length">གླེང་མོལ་གྱི་སྐུད་པའི་དམིགས་བསལ་རིང་ཚད་རྫོགས་མཚམས། རང་བཞིན་ནས་འཕྲིན་ཐུང་རྙིང་པ་དག་བསུབ་འགྲོ་གི་རེད། </string>
@@ -146,6 +142,7 @@
   <string name="conversation_context__menu_copy_text">ཡི་གེ་འདྲ་བཤུས་བྱོས། </string>
   <string name="conversation_context__menu_delete_message">འཕྲིན་ཐུང་གསུབ།</string>
   <string name="conversation_context__menu_forward_message">འཕྲིན་ཐུང་བརྒྱུད་འགྲེམ་བྱོས། </string>
+  <string name="conversation_insecure__security">ཉེན་སྲུང་།</string>
   <string name="conversation_list__menu_search">འཚོལ།</string>
   <string name="conversation_secure_verified__menu_security">ཉེན་སྲུང་།</string>
   <string name="conversation__menu_add_attachment">ཟུར་སྣོན་ཞོག </string>

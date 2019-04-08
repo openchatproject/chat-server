@@ -32,8 +32,6 @@ Du skal registrere dit telefonnummer påny hvis du vil bruge \'push\' beskeder i
   <string name="ApplicationPreferencesActivity_touch_to_make_openchatservice_your_default_sms_app">Brug OpenchatService som dit standard SMS program</string>
   <string name="ApplicationPreferencesActivity_sms">SMS</string>
   <string name="ApplicationPreferencesActivity_mms">MMS</string>
-  <string name="ApplicationPreferencesActivity_incoming_sms">Indkommende</string>
-  <string name="ApplicationPreferencesActivity_outgoing_sms">Udgående</string>
   <string name="AppProtectionPreferenceFragment_minutes">%d minutter</string>
   <string name="DraftDatabase_Draft_image_snippet">(billede)</string>
   <string name="DraftDatabase_Draft_audio_snippet">(lyd)</string>
@@ -43,9 +41,10 @@ Du skal registrere dit telefonnummer påny hvis du vil bruge \'push\' beskeder i
   <string name="AttachmentTypeSelectorAdapter_video">Video</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Lyd</string>
   <string name="AttachmentTypeSelectorAdapter_contact">Kontakt information</string>
+  <string name="ConfirmIdentityDialog_you_may_wish_to_verify_this_contact">Du bør verificere
+denne kontakt.</string>
   <string name="ConversationItem_message_size_d_kb">Besked størrelse: %d KB</string>
   <string name="ConversationItem_expires_s">Udløber: %s</string>
-  <string name="ConversationItem_error_sending_message">Kunne ikke sende besked</string>
   <string name="ConversationItem_view_secure_media_question">Gennemse sikret data?</string>
   <string name="ConversationItem_this_media_has_been_stored_in_an_encrypted_database_external_viewer_warning">Denne fil er gemt i en krypteret database. For at se den i et eksternt program kræves det, desværre, at filen midlertidigt dekrypteres og gemmes. Er du sikker på at du vil gøre det?</string>
   <string name="ConversationItem_error_received_stale_key_exchange_message">Fejl! Modtog en gammel udvekslingsnøgle.</string>
@@ -95,7 +94,6 @@ Du skal registrere dit telefonnummer påny hvis du vil bruge \'push\' beskeder i
   <string name="ConversationFragment_are_you_sure_you_want_to_permanently_delete_all_selected_messages">Er du sikker på at du vil slette ALLE valgte beskeder permanent?</string>
   <string name="ConversationFragment_success_exclamation">Fuldført!</string>
   <string name="ConversationFragment_saving_attachment">Gem vedhæftning</string>
-  <string name="ConversationFragment_pending">AFVENTER</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
   <string name="ConversationFragment_deleting">Sletter...</string>
@@ -105,6 +103,7 @@ Du skal registrere dit telefonnummer påny hvis du vil bruge \'push\' beskeder i
   <string name="ConversationListFragment_deleting">Sletter</string>
   <string name="ConversationListFragment_deleting_selected_threads">Sletter valgte tråde</string>
   <string name="ConversationListItem_key_exchange_message">Udvekslingsnøgle...</string>
+  <string name="CustomDefaultPreference_none">Ingen</string>
   <string name="ShareActivity_share_with">Del med</string>
   <string name="ExportFragment_export">Eksportér</string>
   <string name="ExportFragment_export_plaintext_to_sd_card">Eksportere klartekst til SD-kort?</string>
@@ -461,9 +460,6 @@ fejlede.
   <string name="preferences__custom">Tilpasset</string>
   <string name="preferences__advanced">Avanceret</string>
   <string name="preferences__override_system_mms_settings">Brug nedenstående MMS-indstillinger i stedet for systemets</string>
-  <string name="preferences__mmsc_url_required">MMSC URL (påkrævet)</string>
-  <string name="preferences__mms_proxy_host_optional">MMS proxy host (valgfrit)</string>
-  <string name="preferences__mms_proxy_port_optional">MMS proxy port (valgfrit)</string>
   <string name="preferences__sms_delivery_reports">Leveringsrapport for SMS</string>
   <string name="preferences__request_a_delivery_report_for_each_sms_message_you_send">Bed om en leveringsrapport for hver SMS-besked du sender</string>
   <string name="preferences__automatically_delete_older_messages_once_a_conversation_thread_exceeds_a_specified_length">Slet gamle beskeder automatisk når en besked tråd overskrider en specificeret størrelse</string>
@@ -503,6 +499,7 @@ Styrk sikkerheden af din data kommunikation og undgå SMS gebyrer ved at bruge m
   <string name="conversation_context__menu_resend_message">Send besked igen</string>
   <string name="conversation_context_image__save_attachment">Gem vedhæftning</string>
   <string name="conversation_insecure__menu_start_secure_session">Start sikker forbindelse</string>
+  <string name="conversation_insecure__security">Sikkerhed</string>
   <string name="conversation_list_batch__menu_delete_selected">Slet markeret</string>
   <string name="conversation_list_batch__menu_select_all">Marker alle</string>
   <string name="conversation_list__menu_search">Søg</string>

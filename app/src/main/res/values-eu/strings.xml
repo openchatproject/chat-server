@@ -36,8 +36,6 @@ Zure telefono zenbakia bererregistratu beharko duzu push mezuak berriro erabili 
   <string name="ApplicationPreferencesActivity_partial">partziala</string>
   <string name="ApplicationPreferencesActivity_sms">SMS</string>
   <string name="ApplicationPreferencesActivity_mms">MMS</string>
-  <string name="ApplicationPreferencesActivity_incoming_sms">Hartzekoa</string>
-  <string name="ApplicationPreferencesActivity_outgoing_sms">bidaltzekoa</string>
   <string name="AppProtectionPreferenceFragment_minutes">%d minutu</string>
   <string name="DraftDatabase_Draft_image_snippet">(irudia)</string>
   <string name="DraftDatabase_Draft_audio_snippet">(audioa)</string>
@@ -47,9 +45,9 @@ Zure telefono zenbakia bererregistratu beharko duzu push mezuak berriro erabili 
   <string name="AttachmentTypeSelectorAdapter_video">Bideoa</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Audioa</string>
   <string name="AttachmentTypeSelectorAdapter_contact">Kontaktuaren informazioa</string>
+  <string name="ConfirmIdentityDialog_you_may_wish_to_verify_this_contact">Agian kontaktu hau egiaztatu beharko zenuke.</string>
   <string name="ConversationItem_message_size_d_kb">Mezuaren tamaina: %d KB</string>
   <string name="ConversationItem_expires_s">Iraingutuko da: %s</string>
-  <string name="ConversationItem_error_sending_message">Errorea mezua bidaltzen</string>
   <string name="ConversationItem_view_secure_media_question">Euskarri segurua ikusi?</string>
   <string name="ConversationItem_this_media_has_been_stored_in_an_encrypted_database_external_viewer_warning">Media hau enkriptatutako datubase batean gorde da. Tamalez, aplikazioaz kanpoko edukien ikusle bat erabili ahal izateko, datuak tenporalki desenkriptatu behar dira eta diskoan gorde. Ziur zaude hau egin nahi izateaz?</string>
   <string name="ConversationItem_error_received_stale_key_exchange_message">Errorea, jaso da iraungita dagoen datu-trukerako gakoaren mezua.</string>
@@ -109,8 +107,6 @@ Zure telefono zenbakia bererregistratu beharko duzu push mezuak berriro erabili 
   <string name="ConversationFragment_unable_to_write_to_sd_card_exclamation">Ezgai biltegian idazteko!</string>
   <string name="ConversationFragment_saving_attachment">Eranskina gordetzen</string>
   <string name="ConversationFragment_saving_attachment_to_sd_card">Eranskina biltegian gordetzen...</string>
-  <string name="ConversationFragment_pending">EGITEKE</string>
-  <string name="ConversationFragment_push">PUSH</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
   <string name="ConversationFragment_deleting">Ezabatzen...</string>
@@ -120,6 +116,7 @@ Zure telefono zenbakia bererregistratu beharko duzu push mezuak berriro erabili 
   <string name="ConversationListFragment_deleting">Ezabatzen</string>
   <string name="ConversationListFragment_deleting_selected_threads">Aukeratutako hariak ezabatzen...</string>
   <string name="ConversationListItem_key_exchange_message">Gakoaren datu-trukerako mezua...</string>
+  <string name="CustomDefaultPreference_none">Bat ere ez</string>
   <string name="ShareActivity_share_with">Norekin konpartitu</string>
   <string name="ExportFragment_export">Esportatu</string>
   <string name="ExportFragment_export_plaintext_to_sd_card">Enkriptatu gabeko testua SD txartel batera esportatu?</string>
@@ -526,11 +523,6 @@ huts egin du.
   <string name="preferences__advanced_mms_access_point_names">MMS eskuzko ezarpenak</string>
   <string name="preferences__enable_manual_mms">MMS eskuzko ezarpenak erabili</string>
   <string name="preferences__override_system_mms_settings">Jaramonik ez sistemaren MMS ezarpenei azpian dagoen informazioa erabiliz.</string>
-  <string name="preferences__mmsc_url_required">MMSC URL (Beharrezkoa)</string>
-  <string name="preferences__mms_proxy_host_optional">MMS Proxy Host (Aukerazkoa)</string>
-  <string name="preferences__mms_proxy_port_optional">MMS Proxy Port (Aukerazkoa)</string>
-  <string name="preferences__mmsc_username_optional">MMSC Erabiltzaile izena (Aukerazkoa)</string>
-  <string name="preferences__mmsc_password_optional">MMSC Pasahitza (Aukerazkoa)</string>
   <string name="preferences__sms_delivery_reports">SMS banaketaren txostenak</string>
   <string name="preferences__request_a_delivery_report_for_each_sms_message_you_send">Bidaltzen duzun SMS mezu bakoitzeko banaketa txosten bat eskatu</string>
   <string name="preferences__automatically_delete_older_messages_once_a_conversation_thread_exceeds_a_specified_length">Automatikoki ezabatu mezu zaharragoak behin solasaldi hari batek ezarritako luzera gainditutakoan</string>
@@ -581,6 +573,7 @@ Hobetu zure pribatutasuna eta ekidin SMS tasak datu kanala erabiliz OpenchatServ
   <string name="conversation_context__menu_resend_message">Mezua berbidali</string>
   <string name="conversation_context_image__save_attachment">Eraskina gorde</string>
   <string name="conversation_insecure__menu_start_secure_session">Saio segurua hasi</string>
+  <string name="conversation_insecure__security">Segurtasuna</string>
   <string name="conversation_list_batch__menu_delete_selected">Hautatutakoak ezabatu</string>
   <string name="conversation_list_batch__menu_select_all">Denak hautatu</string>
   <string name="conversation_list__menu_search">Bilatu</string>

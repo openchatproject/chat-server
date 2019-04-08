@@ -14,7 +14,6 @@
   <string name="AttachmentTypeSelectorAdapter_audio">အသံ</string>
   <string name="ConversationItem_message_size_d_kb">စာတိုအရွယ်အစား: %d KB</string>
   <string name="ConversationItem_expires_s">သက်တမ်းကုန်: %s</string>
-  <string name="ConversationItem_error_sending_message">မှာကြားချက်ပို့ခြင်းအမှား</string>
   <string name="ConversationItem_view_secure_media_question">လံုခြုံသောမီဒီယာကိုကြည့်မည်လား</string>
   <string name="ConversationItem_error_received_stale_key_exchange_message">ပြဿနာ၊ ရရှိလာတဲ့ ကီးအလဲအလှယ်စာသား လွဲနေပါသည်။</string>
   <string name="ConversationActivity_initiate_secure_session_with_s_question">%s ဖြင့်လံုခြုံသောဆက်ရှင်အစပြုမည်လား?</string>
@@ -125,9 +124,6 @@
   <string name="preferences__normal">ပုံမှန်</string>
   <string name="preferences__slow">အနှေး</string>
   <string name="preferences__custom">စိတ်ကြိုက်</string>
-  <string name="preferences__mmsc_url_required">MMSC URL (အရေးကြီး)</string>
-  <string name="preferences__mms_proxy_host_optional">MMS ပရောက်ဇီ အိမ်ရှင်စက် (အရေးမကြီး)</string>
-  <string name="preferences__mms_proxy_port_optional">MMS ပရောက်ဇီ Port (အရေးမကြီး)</string>
   <string name="preferences__sms_delivery_reports">SMS ပို့ပြီးကြောင်းအသိပေးခြင်း</string>
   <string name="preferences__request_a_delivery_report_for_each_sms_message_you_send">SMS တစ်ခုပို့ပြီးတိုင်း ပို့ပြီးကြောင်း အသိပေးပါ</string>
   <string name="preferences__automatically_delete_older_messages_once_a_conversation_thread_exceeds_a_specified_length">သတ်မှတ်အရေအတွက်ထက်ကျော်လွန်ပါက စာတိုအဟောင်းများကို အလိုလျှောက်ဖျတ်ပါ</string>
@@ -141,6 +137,7 @@
   <string name="conversation_context__menu_copy_text">စာသားကူးရန်</string>
   <string name="conversation_context__menu_delete_message">စာတိုဖျက်ရန်</string>
   <string name="conversation_context__menu_forward_message">စာတိုဆက်ပို့ရန်</string>
+  <string name="conversation_insecure__security">လုံခြုံရေး</string>
   <string name="conversation_list__menu_search">ရှာရန်</string>
   <string name="conversation_secure_verified__menu_security">လုံခြုံရေး</string>
   <string name="conversation__menu_add_attachment">ပူးတွဲမှုအားပေါင်းထည့်</string>
