@@ -1,4 +1,4 @@
-package com.openchat.secureim;
+package com.openchat.secureim.preferences;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
+import com.openchat.secureim.PassphraseRequiredActionBarActivity;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;

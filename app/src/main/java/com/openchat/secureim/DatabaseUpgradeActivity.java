@@ -22,6 +22,7 @@ import com.openchat.secureim.jobs.PushDecryptJob;
 import com.openchat.secureim.jobs.SmsDecryptJob;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.util.ParcelUtil;
+import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
 import com.openchat.secureim.util.VersionTracker;
 import com.openchat.jobqueue.EncryptionKeys;

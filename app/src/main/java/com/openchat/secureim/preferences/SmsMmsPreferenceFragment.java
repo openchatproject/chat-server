@@ -15,7 +15,6 @@ import android.support.v4.preference.PreferenceFragment;
 import android.text.TextUtils;
 
 import com.openchat.secureim.ApplicationPreferencesActivity;
-import com.openchat.secureim.MmsPreferencesFragment;
 import com.openchat.secureim.R;
 import com.openchat.secureim.components.OutgoingSmsPreference;
 import com.openchat.secureim.util.OpenchatServicePreferences;
@@ -46,8 +45,6 @@ public class SmsMmsPreferenceFragment extends PreferenceFragment {
   public void onResume() {
     super.onResume();
     ((ApplicationPreferencesActivity) getActivity()).getSupportActionBar().setTitle(R.string.preferences__sms_mms);
-    this.findPreference(MMS_PREF)
-      .setSummary(MmsPreferencesFragment.getSummary(getActivity()));
 
     initializePlatformSpecificOptions();
   }

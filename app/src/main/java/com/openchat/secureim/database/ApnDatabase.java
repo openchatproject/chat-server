@@ -11,6 +11,7 @@ import com.openchat.secureim.mms.ApnUnavailableException;
 import com.openchat.secureim.mms.MmsConnection.Apn;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
+import com.openchat.protocal.util.guava.Optional;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -74,13 +75,11 @@ public class ApnDatabase {
                                           null,
                                           SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
   }
-  protected Apn getLocallyConfiguredMmsConnectionParameters() throws ApnUnavailableException {
-    if (OpenchatServicePreferences.isUseLocalApnsEnabled(context)) {
-      String mmsc = OpenchatServicePreferences.getMmscUrl(context).trim();
-      if (TextUtils.isEmpty(mmsc))
-        throw new ApnUnavailableException("Malformed locally configured MMSC.");
 
-      if (!mmsc.startsWith("http"))
+  private Apn getCustomApnParameters() {
+      String mmsc = OpenchatServicePreferences.getMmscUrl(context).trim();
+
+      if (!TextUtils.isEmpty(mmsc) && !mmsc.startsWith("http"))
         mmsc = "http://" + mmsc;
 
       String proxy = OpenchatServicePreferences.getMmscProxy(context);
@@ -89,26 +88,12 @@ public class ApnDatabase {
       String pass  = OpenchatServicePreferences.getMmscPassword(context);
 
       return new Apn(mmsc, proxy, port, user, pass);
-    }
-
-    throw new ApnUnavailableException("No locally configured parameters available");
-
   }
 
-  public Apn getMmsConnectionParameters(final String mccmnc, final String apn) {
-
-    if (OpenchatServicePreferences.isUseLocalApnsEnabled(context)) {
-      Log.w(TAG, "Choosing locally-overridden MMS settings");
-      try {
-        return getLocallyConfiguredMmsConnectionParameters();
-      } catch (ApnUnavailableException aue) {
-        Log.w(TAG, "preference to use local apn set, but no parameters avaiable. falling back.");
-      }
-    }
-
+  public Apn getDefaultApnParameters(String mccmnc, String apn) {
     if (mccmnc == null) {
       Log.w(TAG, "mccmnc was null, returning null");
-      return null;
+      return Apn.EMPTY;
     }
 
     Cursor cursor = null;
@@ -142,9 +127,25 @@ public class ApnDatabase {
       }
 
       Log.w(TAG, "No matching APNs found, returning null");
-      return null;
+
+      return Apn.EMPTY;
     } finally {
       if (cursor != null) cursor.close();
     }
+
+  }
+
+  public Optional<Apn> getMmsConnectionParameters(String mccmnc, String apn) {
+    Apn customApn  = getCustomApnParameters();
+    Apn defaultApn = getDefaultApnParameters(mccmnc, apn);
+    Apn result     = new Apn(customApn, defaultApn,
+                             OpenchatServicePreferences.getUseCustomMmsc(context),
+                             OpenchatServicePreferences.getUseCustomMmscProxy(context),
+                             OpenchatServicePreferences.getUseCustomMmscProxyPort(context),
+                             OpenchatServicePreferences.getUseCustomMmscUsername(context),
+                             OpenchatServicePreferences.getUseCustomMmscPassword(context));
+
+    if (TextUtils.isEmpty(result.getMmsc())) return Optional.absent();
+    else                                     return Optional.of(result);
   }
 }

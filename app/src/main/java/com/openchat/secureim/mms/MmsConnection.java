@@ -21,6 +21,7 @@ import com.openchat.secureim.database.ApnDatabase;
 import com.openchat.secureim.util.TelephonyUtil;
 import com.openchat.secureim.util.Conversions;
 import com.openchat.secureim.util.Util;
+import com.openchat.protocal.util.guava.Optional;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -40,25 +41,22 @@ public abstract class MmsConnection {
     this.apn     = apn;
   }
 
-  protected static Apn getLocalApn(Context context) throws ApnUnavailableException {
-    try {
-      Apn params = ApnDatabase.getInstance(context)
-                              .getMmsConnectionParameters(TelephonyUtil.getMccMnc(context),
-                                                          TelephonyUtil.getApn(context));
+  public static Apn getApn(Context context, String apnName) throws ApnUnavailableException {
+    Log.w(TAG, "Getting MMSC params for apn " + apnName);
 
-      if (params == null) {
+    try {
+      Optional<Apn> params = ApnDatabase.getInstance(context)
+                                        .getMmsConnectionParameters(TelephonyUtil.getMccMnc(context),
+                                                                    TelephonyUtil.getApn(context));
+
+      if (!params.isPresent()) {
         throw new ApnUnavailableException("No parameters available from ApnDefaults.");
       }
 
-      return params;
+      return params.get();
     } catch (IOException ioe) {
       throw new ApnUnavailableException("ApnDatabase threw an IOException", ioe);
     }
-  }
-
-  public static Apn getApn(Context context, String apnName) throws ApnUnavailableException {
-    Log.w(TAG, "Getting MMSC params for apn " + apnName);
-    return getLocalApn(context);
   }
 
   protected static boolean checkRouteToHost(Context context, String host, boolean usingMmsRadio)
@@ -155,6 +153,9 @@ public abstract class MmsConnection {
   protected abstract HttpUriRequest constructRequest(boolean useProxy) throws IOException;
 
   public static class Apn {
+
+    public static Apn EMPTY = new Apn("", "", "", "", "");
+
     private final String mmsc;
     private final String proxy;
     private final String port;
@@ -167,6 +168,20 @@ public abstract class MmsConnection {
       this.port     = port;
       this.username = username;
       this.password = password;
+    }
+
+    public Apn(Apn customApn, Apn defaultApn,
+               boolean useCustomMmsc,
+               boolean useCustomProxy,
+               boolean useCustomProxyPort,
+               boolean useCustomUsername,
+               boolean useCustomPassword)
+    {
+      this.mmsc     = useCustomMmsc ? customApn.mmsc : defaultApn.mmsc;
+      this.proxy    = useCustomProxy ? customApn.proxy : defaultApn.proxy;
+      this.port     = useCustomProxyPort ? customApn.port : defaultApn.port;
+      this.username = useCustomUsername ? customApn.username : defaultApn.username;
+      this.password = useCustomPassword ? customApn.password : defaultApn.password;
     }
 
     public boolean hasProxy() {
