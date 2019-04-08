@@ -1,8 +1,6 @@
 package com.openchat.secureim;
 
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 
@@ -30,7 +28,6 @@ public class PassphraseCreateActivity extends PassphraseActivity {
     getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
     getSupportActionBar().setCustomView(R.layout.light_centered_app_title);
 
-    OpenchatServicePreferences.setPasswordDisabled(this, true);
     new SecretGenerator().execute(MasterSecretUtil.UNENCRYPTED_PASSPHRASE);
   }
 
@@ -52,6 +49,7 @@ public class PassphraseCreateActivity extends PassphraseActivity {
       MasterSecretUtil.generateAsymmetricMasterSecret(PassphraseCreateActivity.this, masterSecret);
       IdentityKeyUtil.generateIdentityKeys(PassphraseCreateActivity.this, masterSecret);
       VersionTracker.updateLastSeenVersion(PassphraseCreateActivity.this);
+      OpenchatServicePreferences.setPasswordDisabled(PassphraseCreateActivity.this, true);
 
       return null;
     }
