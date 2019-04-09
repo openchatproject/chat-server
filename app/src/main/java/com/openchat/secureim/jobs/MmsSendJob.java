@@ -24,6 +24,7 @@ import com.openchat.secureim.transport.InsecureFallbackApprovalException;
 import com.openchat.secureim.transport.UndeliverableMessageException;
 import com.openchat.secureim.util.Hex;
 import com.openchat.secureim.util.NumberUtil;
+import com.openchat.secureim.util.TelephonyUtil;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.protocal.NoSessionException;
@@ -146,7 +147,7 @@ public class MmsSendJob extends SendJob {
                                 boolean usingMmsRadio, boolean useProxy)
       throws IOException, UndeliverableMessageException, InsecureFallbackApprovalException
   {
-    String  number         = ((TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE)).getLine1Number();
+    String  number         = TelephonyUtil.getManager(context).getLine1Number();
     boolean upgradedSecure = false;
 
     prepareMessageMedia(masterSecret, message, MediaConstraints.MMS_CONSTRAINTS, true);

@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.apache.http.Header;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -17,6 +18,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
+import org.apache.http.message.BasicHeader;
 import com.openchat.secureim.database.ApnDatabase;
 import com.openchat.secureim.util.TelephonyUtil;
 import com.openchat.secureim.util.Conversions;
@@ -29,6 +31,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 
 public abstract class MmsConnection {
   private static final String TAG = "MmsCommunication";
@@ -151,6 +155,21 @@ public abstract class MmsConnection {
   }
 
   protected abstract HttpUriRequest constructRequest(boolean useProxy) throws IOException;
+
+  protected List<Header> getBaseHeaders() {
+    final String number = TelephonyUtil.getManager(context).getLine1Number();
+    return new LinkedList<Header>() {{
+      add(new BasicHeader("Accept", "*/*, application/vnd.wap.mms-message, application/vnd.wap.sic"));
+      add(new BasicHeader("x-wap-profile", "http://www.google.com/oha/rdf/ua-profile-kila.xml"));
+      add(new BasicHeader("Content-Type", "application/vnd.wap.mms-message"));
+      add(new BasicHeader("x-carrier-magic", "http://magic.google.com"));
+      if (!TextUtils.isEmpty(number)) {
+        add(new BasicHeader("x-up-calling-line-id", number));
+        add(new BasicHeader("X-MDN", number));
+      }
+    }};
+
+  }
 
   public static class Apn {
 
