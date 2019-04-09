@@ -35,6 +35,7 @@ import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.service.KeyCachingService;
+import com.openchat.secureim.util.SpanUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 
@@ -315,7 +316,7 @@ public class MessageNotifier {
       Recipient       recipient        = record.getIndividualRecipient();
       Recipients      recipients       = record.getRecipients();
       long            threadId         = record.getThreadId();
-      SpannableString body             = record.getDisplayBody();
+      CharSequence    body             = record.getDisplayBody();
       Uri             image            = null;
       Recipients      threadRecipients = null;
 
@@ -324,8 +325,13 @@ public class MessageNotifier {
       }
 
       if (SmsDatabase.Types.isDecryptInProgressType(record.getType()) || !record.getBody().isPlaintext()) {
-        body = new SpannableString(context.getString(R.string.MessageNotifier_encrypted_message));
-        body.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), 0, body.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        body = SpanUtil.italic(context.getString(R.string.MessageNotifier_encrypted_message));
+      } else if (record.isMms() && TextUtils.isEmpty(body)) {
+        body = SpanUtil.italic(context.getString(R.string.MessageNotifier_media_message));
+      } else if (record.isMms()) {
+        String message      = context.getString(R.string.MessageNotifier_media_message_with_text, body);
+        int    italicLength = message.length() - body.length();
+        body = SpanUtil.italic(message, italicLength);
       }
 
       notificationState.addNotification(new NotificationItem(recipient, recipients, threadRecipients, threadId, body, image));
