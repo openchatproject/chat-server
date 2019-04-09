@@ -2,7 +2,6 @@ package com.openchat.secureim;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -12,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -132,7 +132,7 @@ public class MessageDetailsActivity extends PassphraseRequiredActionBarActivity 
       toFromRes = R.string.message_details_header__from;
     }
     toFrom.setText(toFromRes);
-    conversationItem.set(masterSecret, messageRecord, new HashSet<MessageRecord>(), null,
+    conversationItem.set(masterSecret, messageRecord, new HashSet<MessageRecord>(), new NullSelectionListener(),
                          recipients != messageRecord.getRecipients(),
                          DirectoryHelper.isPushDestination(this, recipients));
     recipientsList.setAdapter(new MessageDetailsRecipientAdapter(this, masterSecret, messageRecord,
@@ -261,6 +261,14 @@ public class MessageDetailsActivity extends PassphraseRequiredActionBarActivity 
         metadataContainer.setVisibility(View.VISIBLE);
       }
     }
+  }
 
+  private static class NullSelectionListener implements ConversationFragment.SelectionClickListener {
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {}
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+      return false;
+    }
   }
 }
