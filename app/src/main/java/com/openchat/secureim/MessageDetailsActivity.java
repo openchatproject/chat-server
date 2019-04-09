@@ -27,6 +27,8 @@ import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.DateUtils;
 import com.openchat.secureim.util.DirectoryHelper;
+import com.openchat.secureim.util.DynamicLanguage;
+import com.openchat.secureim.util.DynamicTheme;
 import com.openchat.secureim.util.GroupUtil;
 
 import java.io.IOException;
@@ -58,8 +60,13 @@ public class MessageDetailsActivity extends PassphraseRequiredActionBarActivity 
   private ListView         recipientsList;
   private LayoutInflater   inflater;
 
+  private DynamicTheme     dynamicTheme    = new DynamicTheme();
+  private DynamicLanguage  dynamicLanguage = new DynamicLanguage();
+
   @Override
   public void onCreate(Bundle bundle) {
+    dynamicTheme.onCreate(this);
+    dynamicLanguage.onCreate(this);
     super.onCreate(bundle);
     setContentView(R.layout.message_details_activity);
 
@@ -67,6 +74,13 @@ public class MessageDetailsActivity extends PassphraseRequiredActionBarActivity 
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportLoaderManager().initLoader(0, null, this);
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    dynamicTheme.onResume(this);
+    dynamicLanguage.onResume(this);
   }
 
   private void initializeResources() {
