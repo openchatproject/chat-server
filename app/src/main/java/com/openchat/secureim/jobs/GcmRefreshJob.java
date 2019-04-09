@@ -50,6 +50,7 @@ public class GcmRefreshJob extends ContextJob {
         String gcmId = GoogleCloudMessaging.getInstance(context).register(REGISTRATION_ID);
         accountManager.setGcmId(Optional.of(gcmId));
         OpenchatServicePreferences.setGcmRegistrationId(context, gcmId);
+        OpenchatServicePreferences.setWebsocketRegistered(context, true);
       }
     }
   }
