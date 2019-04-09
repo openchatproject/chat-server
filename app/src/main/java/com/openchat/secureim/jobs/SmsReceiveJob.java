@@ -12,8 +12,8 @@ import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.protocol.WirePrefix;
 import com.openchat.secureim.service.KeyCachingService;
+import com.openchat.secureim.sms.IncomingEncryptedMessage;
 import com.openchat.secureim.sms.IncomingTextMessage;
-import com.openchat.secureim.sms.MultipartSmsMessageHandler;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.protocal.util.guava.Optional;
 
@@ -23,8 +23,6 @@ import java.util.List;
 public class SmsReceiveJob extends ContextJob {
 
   private static final String TAG = SmsReceiveJob.class.getSimpleName();
-
-  private static MultipartSmsMessageHandler multipartMessageHandler = new MultipartSmsMessageHandler();
 
   private final Object[] pdus;
 
@@ -67,18 +65,15 @@ public class SmsReceiveJob extends ContextJob {
 
     if (message.isSecureMessage()) {
       messageAndThreadId = database.insertMessageInbox((MasterSecret)null, message);
+      database.markAsLegacyVersion(messageAndThreadId.first);
     } else if (masterSecret == null) {
       messageAndThreadId = database.insertMessageInbox(MasterSecretUtil.getAsymmetricMasterSecret(context, null), message);
-    } else {
-      messageAndThreadId = database.insertMessageInbox(masterSecret, message);
-    }
 
-    if (masterSecret == null || message.isSecureMessage() || message.isKeyExchange() || message.isEndSession()) {
       ApplicationContext.getInstance(context)
                         .getJobManager()
                         .add(new SmsDecryptJob(context, messageAndThreadId.first));
     } else {
-      MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
+      messageAndThreadId = database.insertMessageInbox(masterSecret, message);
     }
 
     return messageAndThreadId;
@@ -102,7 +97,7 @@ public class SmsReceiveJob extends ContextJob {
         WirePrefix.isPreKeyBundle(message.getMessageBody())     ||
         WirePrefix.isEndSession(message.getMessageBody()))
     {
-      return Optional.fromNullable(multipartMessageHandler.processPotentialMultipartMessage(message));
+      return Optional.<IncomingTextMessage>of(new IncomingEncryptedMessage(message, message.getMessageBody()));
     } else {
       return Optional.of(message);
     }

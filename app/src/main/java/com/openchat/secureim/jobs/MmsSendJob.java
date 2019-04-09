@@ -5,8 +5,6 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.secureim.crypto.MmsCipher;
-import com.openchat.secureim.crypto.storage.OpenchatServiceOpenchatStore;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsDatabase;
 import com.openchat.secureim.database.NoSuchMessageException;
@@ -18,7 +16,6 @@ import com.openchat.secureim.mms.MmsRadioException;
 import com.openchat.secureim.mms.MmsSendResult;
 import com.openchat.secureim.mms.OutgoingMmsConnection;
 import com.openchat.secureim.notifications.MessageNotifier;
-import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.transport.InsecureFallbackApprovalException;
 import com.openchat.secureim.transport.UndeliverableMessageException;
@@ -27,7 +24,6 @@ import com.openchat.secureim.util.NumberUtil;
 import com.openchat.secureim.util.TelephonyUtil;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
-import com.openchat.protocal.NoSessionException;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -68,10 +64,6 @@ public class MmsSendJob extends SendJob {
 
     try {
       MmsSendResult result = deliver(masterSecret, message);
-
-      if (result.isUpgradedSecure()) {
-        database.markAsSecure(messageId);
-      }
 
       database.markAsSent(messageId, result.getMessageId(), result.getResponseStatus());
     } catch (UndeliverableMessageException e) {
@@ -146,14 +138,12 @@ public class MmsSendJob extends SendJob {
                                 boolean usingMmsRadio, boolean useProxy)
       throws IOException, UndeliverableMessageException, InsecureFallbackApprovalException
   {
-    String  number         = TelephonyUtil.getManager(context).getLine1Number();
-    boolean upgradedSecure = false;
+    String number = TelephonyUtil.getManager(context).getLine1Number();
 
     prepareMessageMedia(masterSecret, message, MediaConstraints.MMS_CONSTRAINTS, true);
 
     if (MmsDatabase.Types.isSecureType(message.getDatabaseMessageBox())) {
-      message        = getEncryptedMessage(masterSecret, message);
-      upgradedSecure = true;
+      throw new UndeliverableMessageException("Attempt to send encrypted MMS?");
     }
 
     if (number != null && number.trim().length() != 0) {
@@ -177,23 +167,10 @@ public class MmsSendJob extends SendJob {
       } else if (isInconsistentResponse(message, conf)) {
         throw new UndeliverableMessageException("Mismatched response!");
       } else {
-        return new MmsSendResult(conf.getMessageId(), conf.getResponseStatus(), upgradedSecure, false);
+        return new MmsSendResult(conf.getMessageId(), conf.getResponseStatus());
       }
     } catch (ApnUnavailableException aue) {
       throw new IOException("no APN was retrievable");
-    }
-  }
-
-  private SendReq getEncryptedMessage(MasterSecret masterSecret, SendReq pdu)
-      throws InsecureFallbackApprovalException, UndeliverableMessageException
-  {
-    try {
-      MmsCipher cipher = new MmsCipher(new OpenchatServiceOpenchatStore(context, masterSecret));
-      return cipher.encrypt(context, pdu);
-    } catch (NoSessionException e) {
-      throw new InsecureFallbackApprovalException(e);
-    } catch (RecipientFormattingException e) {
-      throw new AssertionError(e);
     }
   }
 

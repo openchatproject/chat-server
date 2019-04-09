@@ -5,19 +5,16 @@ import android.util.Log;
 
 import com.openchat.secureim.ApplicationContext;
 import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.secureim.crypto.SessionUtil;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsDatabase;
 import com.openchat.secureim.database.NoSuchMessageException;
 import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.secureim.mms.MediaConstraints;
 import com.openchat.secureim.mms.PartParser;
-import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.transport.InsecureFallbackApprovalException;
 import com.openchat.secureim.transport.RetryLaterException;
-import com.openchat.secureim.transport.SecureFallbackApprovalException;
 import com.openchat.secureim.transport.UndeliverableMessageException;
 import com.openchat.imservice.api.OpenchatServiceMessageSender;
 import com.openchat.imservice.api.crypto.UntrustedIdentityException;
@@ -46,7 +43,7 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
   private final long messageId;
 
   public PushMediaSendJob(Context context, long messageId, String destination) {
-    super(context, constructParameters(context, destination, true));
+    super(context, constructParameters(context, destination));
     this.messageId = messageId;
   }
 
@@ -66,19 +63,15 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
     SendReq     message  = database.getOutgoingMessage(masterSecret, messageId);
 
     try {
-      if (deliver(masterSecret, message)) {
-        database.markAsPush(messageId);
-        database.markAsSecure(messageId);
-        database.markAsSent(messageId, "push".getBytes(), 0);
-      }
+      deliver(masterSecret, message);
+      database.markAsPush(messageId);
+      database.markAsSecure(messageId);
+      database.markAsSent(messageId, "push".getBytes(), 0);
     } catch (InsecureFallbackApprovalException ifae) {
       Log.w(TAG, ifae);
       database.markAsPendingInsecureSmsFallback(messageId);
       notifyMediaMessageDeliveryFailed(context, messageId);
-    } catch (SecureFallbackApprovalException sfae) {
-      Log.w(TAG, sfae);
-      database.markAsPendingSecureSmsFallback(messageId);
-      notifyMediaMessageDeliveryFailed(context, messageId);
+      ApplicationContext.getInstance(context).getJobManager().add(new DirectoryRefreshJob(context));
     } catch (UntrustedIdentityException uie) {
       Log.w(TAG, uie);
       Recipients recipients  = RecipientFactory.getRecipientsFromString(context, uie.getE164Number(), false);
@@ -102,53 +95,32 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
     notifyMediaMessageDeliveryFailed(context, messageId);
   }
 
-  private boolean deliver(MasterSecret masterSecret, SendReq message)
-      throws RetryLaterException, SecureFallbackApprovalException,
-             InsecureFallbackApprovalException, UntrustedIdentityException,
+  private void deliver(MasterSecret masterSecret, SendReq message)
+      throws RetryLaterException, InsecureFallbackApprovalException, UntrustedIdentityException,
              UndeliverableMessageException
   {
-    MmsDatabase             database               = DatabaseFactory.getMmsDatabase(context);
-    OpenchatServiceMessageSender messageSender          = messageSenderFactory.create(masterSecret);
-    String                  destination            = message.getTo()[0].getString();
-    boolean                 isSmsFallbackSupported = isSmsFallbackSupported(context, destination, true);
+    OpenchatServiceMessageSender messageSender = messageSenderFactory.create(masterSecret);
+    String                  destination   = message.getTo()[0].getString();
 
     try {
       prepareMessageMedia(masterSecret, message, MediaConstraints.PUSH_CONSTRAINTS, false);
+
       OpenchatServiceAddress          address      = getPushAddress(destination);
       List<OpenchatServiceAttachment> attachments  = getAttachments(masterSecret, message);
       String                     body         = PartParser.getMessageText(message.getBody());
-      OpenchatServiceMessage          mediaMessage = new OpenchatServiceMessage(message.getSentTimestamp(), attachments, body);
+      OpenchatServiceMessage          mediaMessage = OpenchatServiceMessage.newBuilder()
+                                                                 .withBody(body)
+                                                                 .withAttachments(attachments)
+                                                                 .withTimestamp(message.getSentTimestamp())
+                                                                 .build();
 
       messageSender.sendMessage(address, mediaMessage);
-      return true;
     } catch (InvalidNumberException | UnregisteredUserException e) {
       Log.w(TAG, e);
-      if (isSmsFallbackSupported) fallbackOrAskApproval(masterSecret, message, destination);
-      else                        database.markAsSentFailed(messageId);
+      throw new InsecureFallbackApprovalException(e);
     } catch (IOException e) {
       Log.w(TAG, e);
-      if (isSmsFallbackSupported) fallbackOrAskApproval(masterSecret, message, destination);
-      else                        throw new RetryLaterException(e);
-    }
-    return false;
-  }
-
-  private void fallbackOrAskApproval(MasterSecret masterSecret, SendReq mediaMessage, String destination)
-      throws SecureFallbackApprovalException, InsecureFallbackApprovalException
-  {
-    boolean   isSmsFallbackApprovalRequired = isSmsFallbackApprovalRequired(destination, true);
-
-    if (!isSmsFallbackApprovalRequired) {
-      Log.w(TAG, "Falling back to MMS");
-      DatabaseFactory.getMmsDatabase(context).markAsForcedSms(mediaMessage.getDatabaseMessageId());
-      ApplicationContext.getInstance(context).getJobManager().add(new MmsSendJob(context, messageId));
-    } else if (!SessionUtil.hasSession(context, masterSecret, destination)) {
-      Log.w(TAG, "Marking message as pending insecure SMS fallback");
-      throw new InsecureFallbackApprovalException("Pending user approval for fallback to insecure SMS");
-    } else {
-      Log.w(TAG, "Marking message as pending secure SMS fallback");
-      throw new SecureFallbackApprovalException("Pending user approval for fallback secure to SMS");
+      throw new RetryLaterException(e);
     }
   }
-
 }

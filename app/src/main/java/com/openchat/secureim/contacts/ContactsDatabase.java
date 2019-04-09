@@ -76,7 +76,7 @@ public class ContactsDatabase {
   }
 
   public Cursor query(String filter, boolean pushOnly) {
-    final boolean      includeAndroidContacts = !pushOnly && OpenchatServicePreferences.isDirectSmsAllowed(context);
+    final boolean      includeAndroidContacts = !pushOnly && OpenchatServicePreferences.isSmsEnabled(context);
     final Cursor       localCursor            = queryLocalDb(filter);
     final Cursor       androidCursor;
     final MatrixCursor newNumberCursor;

@@ -3,6 +3,7 @@ package com.openchat.secureim.jobs;
 import android.content.Context;
 import android.os.PowerManager;
 
+import com.openchat.secureim.crypto.SecurityEvent;
 import com.openchat.secureim.util.DirectoryHelper;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
@@ -30,6 +31,7 @@ public class DirectoryRefreshJob extends ContextJob {
     try {
       wakeLock.acquire();
       DirectoryHelper.refreshDirectory(context);
+      SecurityEvent.broadcastSecurityUpdateEvent(context);
     } finally {
       if (wakeLock.isHeld()) wakeLock.release();
     }

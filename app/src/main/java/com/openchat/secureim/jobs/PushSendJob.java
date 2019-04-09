@@ -38,52 +38,21 @@ public abstract class PushSendJob extends SendJob {
     super(context, parameters);
   }
 
-  protected static JobParameters constructParameters(Context context, String destination, boolean media) {
+  protected static JobParameters constructParameters(Context context, String destination) {
     JobParameters.Builder builder = JobParameters.newBuilder();
     builder.withPersistence();
     builder.withGroupId(destination);
     builder.withRequirement(new MasterSecretRequirement(context));
-
-    if (!isSmsFallbackSupported(context, destination, media)) {
-      builder.withRequirement(new NetworkRequirement(context));
-      builder.withRetryCount(5);
-    }
+    builder.withRequirement(new NetworkRequirement(context));
+    builder.withRetryCount(5);
 
     return builder.create();
-  }
-
-  protected static boolean isSmsFallbackSupported(Context context, String destination, boolean media) {
-    try {
-      String e164number = Util.canonicalizeNumber(context, destination);
-
-      if (GroupUtil.isEncodedGroup(e164number)) {
-        return false;
-      }
-
-      if (!OpenchatServicePreferences.isFallbackSmsAllowed(context)) {
-        return false;
-      }
-
-      if (media && !OpenchatServicePreferences.isFallbackMmsEnabled(context)) {
-        return false;
-      }
-
-      OpenchatServiceDirectory directory = OpenchatServiceDirectory.getInstance(context);
-      return directory.isSmsFallbackSupported(e164number);
-    } catch (InvalidNumberException e) {
-      Log.w(TAG, e);
-      return false;
-    }
   }
 
   protected OpenchatServiceAddress getPushAddress(String number) throws InvalidNumberException {
     String e164number = Util.canonicalizeNumber(context, number);
     String relay      = OpenchatServiceDirectory.getInstance(context).getRelay(e164number);
     return new OpenchatServiceAddress(e164number, Optional.fromNullable(relay));
-  }
-
-  protected boolean isSmsFallbackApprovalRequired(String destination, boolean media) {
-    return (isSmsFallbackSupported(context, destination, media) && OpenchatServicePreferences.isFallbackSmsAskRequired(context));
   }
 
   protected List<OpenchatServiceAttachment> getAttachments(final MasterSecret masterSecret, final SendReq message) {

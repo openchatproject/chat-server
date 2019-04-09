@@ -6,9 +6,8 @@ import android.text.SpannableString;
 import com.openchat.secureim.R;
 import com.openchat.secureim.database.MmsSmsColumns;
 import com.openchat.secureim.database.SmsDatabase;
-import com.openchat.secureim.database.documents.NetworkFailure;
 import com.openchat.secureim.database.documents.IdentityKeyMismatch;
-import com.openchat.secureim.protocol.Tag;
+import com.openchat.secureim.database.documents.NetworkFailure;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
 
@@ -67,8 +66,6 @@ public class SmsMessageRecord extends MessageRecord {
       return emphasisAdded(context.getString(R.string.MessageNotifier_encrypted_message));
     } else if (SmsDatabase.Types.isEndSessionType(type)) {
       return emphasisAdded(context.getString(R.string.SmsMessageRecord_secure_session_ended));
-    } else if (isOutgoing() && Tag.isTagged(getBody().getBody())) {
-      return new SpannableString(Tag.stripTag(getBody().getBody()));
     } else {
       return super.getDisplayBody();
     }

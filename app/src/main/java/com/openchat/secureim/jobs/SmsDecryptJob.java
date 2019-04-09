@@ -7,32 +7,16 @@ import com.openchat.secureim.crypto.AsymmetricMasterCipher;
 import com.openchat.secureim.crypto.AsymmetricMasterSecret;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.MasterSecretUtil;
-import com.openchat.secureim.crypto.SecurityEvent;
-import com.openchat.secureim.crypto.SmsCipher;
-import com.openchat.secureim.crypto.storage.OpenchatServiceOpenchatStore;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.NoSuchMessageException;
 import com.openchat.secureim.database.model.SmsMessageRecord;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
 import com.openchat.secureim.notifications.MessageNotifier;
-import com.openchat.secureim.service.KeyCachingService;
 import com.openchat.secureim.sms.IncomingEncryptedMessage;
-import com.openchat.secureim.sms.IncomingEndSessionMessage;
-import com.openchat.secureim.sms.IncomingKeyExchangeMessage;
-import com.openchat.secureim.sms.IncomingPreKeyBundleMessage;
 import com.openchat.secureim.sms.IncomingTextMessage;
-import com.openchat.secureim.sms.MessageSender;
-import com.openchat.secureim.sms.OutgoingKeyExchangeMessage;
-import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.JobParameters;
-import com.openchat.protocal.DuplicateMessageException;
 import com.openchat.protocal.InvalidMessageException;
-import com.openchat.protocal.InvalidVersionException;
-import com.openchat.protocal.LegacyMessageException;
-import com.openchat.protocal.NoSessionException;
-import com.openchat.protocal.StaleKeyExchangeException;
-import com.openchat.protocal.UntrustedIdentityException;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 
@@ -54,11 +38,7 @@ public class SmsDecryptJob extends MasterSecretJob {
   }
 
   @Override
-  public void onAdded() {
-    if (KeyCachingService.getMasterSecret(context) == null) {
-      MessageNotifier.updateNotification(context, null, -2);
-    }
-  }
+  public void onAdded() {}
 
   @Override
   public void onRun(MasterSecret masterSecret) throws NoSuchMessageException {
@@ -68,27 +48,17 @@ public class SmsDecryptJob extends MasterSecretJob {
       SmsMessageRecord    record    = database.getMessage(masterSecret, messageId);
       IncomingTextMessage message   = createIncomingTextMessage(masterSecret, record);
       long                messageId = record.getId();
-      long                threadId  = record.getThreadId();
 
-      if      (message.isSecureMessage()) handleSecureMessage(masterSecret, messageId, threadId, message);
-      else if (message.isPreKeyBundle())  handlePreKeyOpenchatMessage(masterSecret, messageId, threadId, (IncomingPreKeyBundleMessage) message);
-      else if (message.isKeyExchange())   handleKeyExchangeMessage(masterSecret, messageId, threadId, (IncomingKeyExchangeMessage) message);
-      else if (message.isEndSession())    handleSecureMessage(masterSecret, messageId, threadId, message);
-      else                                database.updateMessageBody(masterSecret, messageId, message.getMessageBody());
+      if (message.isSecureMessage()) {
+        database.markAsLegacyVersion(messageId);
+      } else {
+        database.updateMessageBody(masterSecret, messageId, message.getMessageBody());
+      }
 
       MessageNotifier.updateNotification(context, masterSecret);
-    } catch (LegacyMessageException e) {
-      Log.w(TAG, e);
-      database.markAsLegacyVersion(messageId);
     } catch (InvalidMessageException e) {
       Log.w(TAG, e);
       database.markAsDecryptFailed(messageId);
-    } catch (DuplicateMessageException e) {
-      Log.w(TAG, e);
-      database.markAsDecryptDuplicate(messageId);
-    } catch (NoSessionException e) {
-      Log.w(TAG, e);
-      database.markAsNoSession(messageId);
     }
   }
 
@@ -99,77 +69,6 @@ public class SmsDecryptJob extends MasterSecretJob {
 
   @Override
   public void onCanceled() {
-  }
-
-  private void handleSecureMessage(MasterSecret masterSecret, long messageId, long threadId,
-                                   IncomingTextMessage message)
-      throws NoSessionException, DuplicateMessageException,
-      InvalidMessageException, LegacyMessageException
-  {
-    EncryptingSmsDatabase database  = DatabaseFactory.getEncryptingSmsDatabase(context);
-    SmsCipher             cipher    = new SmsCipher(new OpenchatServiceOpenchatStore(context, masterSecret));
-    IncomingTextMessage   plaintext = cipher.decrypt(context, message);
-
-    database.updateMessageBody(masterSecret, messageId, plaintext.getMessageBody());
-
-    if (message.isEndSession()) SecurityEvent.broadcastSecurityUpdateEvent(context, threadId);
-  }
-
-  private void handlePreKeyOpenchatMessage(MasterSecret masterSecret, long messageId, long threadId,
-                                          IncomingPreKeyBundleMessage message)
-      throws NoSessionException, DuplicateMessageException,
-      InvalidMessageException, LegacyMessageException
-  {
-    EncryptingSmsDatabase database = DatabaseFactory.getEncryptingSmsDatabase(context);
-
-    try {
-      SmsCipher                smsCipher = new SmsCipher(new OpenchatServiceOpenchatStore(context, masterSecret));
-      IncomingEncryptedMessage plaintext = smsCipher.decrypt(context, message);
-
-      database.updateBundleMessageBody(masterSecret, messageId, plaintext.getMessageBody());
-
-      SecurityEvent.broadcastSecurityUpdateEvent(context, threadId);
-    } catch (InvalidVersionException e) {
-      Log.w(TAG, e);
-      database.markAsInvalidVersionKeyExchange(messageId);
-    } catch (UntrustedIdentityException e) {
-      Log.w(TAG, e);
-    }
-  }
-
-  private void handleKeyExchangeMessage(MasterSecret masterSecret, long messageId, long threadId,
-                                        IncomingKeyExchangeMessage message)
-  {
-    EncryptingSmsDatabase database = DatabaseFactory.getEncryptingSmsDatabase(context);
-
-    if (OpenchatServicePreferences.isAutoRespondKeyExchangeEnabled(context)) {
-      try {
-        SmsCipher                  cipher   = new SmsCipher(new OpenchatServiceOpenchatStore(context, masterSecret));
-        OutgoingKeyExchangeMessage response = cipher.process(context, message);
-
-        database.markAsProcessedKeyExchange(messageId);
-
-        SecurityEvent.broadcastSecurityUpdateEvent(context, threadId);
-
-        if (response != null) {
-          MessageSender.send(context, masterSecret, response, threadId, true);
-        }
-      } catch (InvalidVersionException e) {
-        Log.w(TAG, e);
-        database.markAsInvalidVersionKeyExchange(messageId);
-      } catch (InvalidMessageException e) {
-        Log.w(TAG, e);
-        database.markAsCorruptKeyExchange(messageId);
-      } catch (LegacyMessageException e) {
-        Log.w(TAG, e);
-        database.markAsLegacyVersion(messageId);
-      } catch (StaleKeyExchangeException e) {
-        Log.w(TAG, e);
-        database.markAsStaleKeyExchange(messageId);
-      } catch (UntrustedIdentityException e) {
-        Log.w(TAG, e);
-      }
-    }
   }
 
   private String getAsymmetricDecryptedBody(MasterSecret masterSecret, String body)
@@ -188,28 +87,17 @@ public class SmsDecryptJob extends MasterSecretJob {
   private IncomingTextMessage createIncomingTextMessage(MasterSecret masterSecret, SmsMessageRecord record)
       throws InvalidMessageException
   {
-    String plaintextBody = record.getBody().getBody();
-
-    if (record.isAsymmetricEncryption()) {
-      plaintextBody = getAsymmetricDecryptedBody(masterSecret, record.getBody().getBody());
-    }
-
     IncomingTextMessage message = new IncomingTextMessage(record.getRecipients().getPrimaryRecipient().getNumber(),
                                                           record.getRecipientDeviceId(),
                                                           record.getDateSent(),
-                                                          plaintextBody,
+                                                          record.getBody().getBody(),
                                                           Optional.<OpenchatServiceGroup>absent());
 
-    if (record.isEndSession()) {
-      return new IncomingEndSessionMessage(message);
-    } else if (record.isBundleKeyExchange()) {
-      return new IncomingPreKeyBundleMessage(message, message.getMessageBody());
-    } else if (record.isKeyExchange()) {
-      return new IncomingKeyExchangeMessage(message, message.getMessageBody());
-    } else if (record.isSecure()) {
+    if (record.isAsymmetricEncryption()) {
+      String plaintextBody = getAsymmetricDecryptedBody(masterSecret, record.getBody().getBody());
+      return new IncomingTextMessage(message, plaintextBody);
+    } else {
       return new IncomingEncryptedMessage(message, message.getMessageBody());
     }
-
-    return message;
   }
 }

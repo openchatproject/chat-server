@@ -8,8 +8,6 @@ import android.util.Pair;
 
 import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.secureim.crypto.MmsCipher;
-import com.openchat.secureim.crypto.storage.OpenchatServiceOpenchatStore;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsDatabase;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
@@ -35,7 +33,6 @@ import java.io.IOException;
 
 import ws.com.google.android.mms.InvalidHeaderValueException;
 import ws.com.google.android.mms.MmsException;
-import ws.com.google.android.mms.pdu.MultimediaMessagePdu;
 import ws.com.google.android.mms.pdu.NotificationInd;
 import ws.com.google.android.mms.pdu.NotifyRespInd;
 import ws.com.google.android.mms.pdu.PduComposer;
@@ -212,20 +209,14 @@ public class MmsDownloadJob extends MasterSecretJob {
     Pair<Long, Long> messageAndThreadId;
 
     if (retrieved.getSubject() != null && WirePrefix.isEncryptedMmsSubject(retrieved.getSubject().getString())) {
-      MmsCipher            mmsCipher          = new MmsCipher(new OpenchatServiceOpenchatStore(context, masterSecret));
-      MultimediaMessagePdu plaintextPdu       = mmsCipher.decrypt(context, retrieved);
-      RetrieveConf         plaintextRetrieved = new RetrieveConf(plaintextPdu.getPduHeaders(), plaintextPdu.getBody());
-      IncomingMediaMessage plaintextMessage   = new IncomingMediaMessage(plaintextRetrieved);
-
-      messageAndThreadId = database.insertSecureDecryptedMessageInbox(masterSecret, plaintextMessage,
-                                                                      threadId);
-
+      database.markAsLegacyVersion(messageId, threadId);
+      messageAndThreadId = new Pair<>(messageId, threadId);
     } else {
       messageAndThreadId = database.insertMessageInbox(masterSecret, message,
                                                        contentLocation, threadId);
+      database.delete(messageId);
     }
 
-    database.delete(messageId);
     MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
   }
 

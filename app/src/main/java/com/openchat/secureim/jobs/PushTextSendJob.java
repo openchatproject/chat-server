@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.openchat.secureim.ApplicationContext;
 import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.secureim.crypto.SessionUtil;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.NoSuchMessageException;
@@ -13,12 +12,10 @@ import com.openchat.secureim.database.SmsDatabase;
 import com.openchat.secureim.database.model.SmsMessageRecord;
 import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.secureim.notifications.MessageNotifier;
-import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.transport.InsecureFallbackApprovalException;
 import com.openchat.secureim.transport.RetryLaterException;
-import com.openchat.secureim.transport.SecureFallbackApprovalException;
 import com.openchat.imservice.api.OpenchatServiceMessageSender;
 import com.openchat.imservice.api.crypto.UntrustedIdentityException;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
@@ -41,7 +38,7 @@ public class PushTextSendJob extends PushSendJob implements InjectableType {
   private final long messageId;
 
   public PushTextSendJob(Context context, long messageId, String destination) {
-    super(context, constructParameters(context, destination, false));
+    super(context, constructParameters(context, destination));
     this.messageId = messageId;
   }
 
@@ -54,26 +51,22 @@ public class PushTextSendJob extends PushSendJob implements InjectableType {
 
   @Override
   public void onSend(MasterSecret masterSecret) throws NoSuchMessageException, RetryLaterException {
-    EncryptingSmsDatabase database    = DatabaseFactory.getEncryptingSmsDatabase(context);
-    SmsMessageRecord      record      = database.getMessage(masterSecret, messageId);
-    String                destination = record.getIndividualRecipient().getNumber();
+    EncryptingSmsDatabase database = DatabaseFactory.getEncryptingSmsDatabase(context);
+    SmsMessageRecord      record   = database.getMessage(masterSecret, messageId);
 
     try {
       Log.w(TAG, "Sending message: " + messageId);
 
-      if (deliver(masterSecret, record, destination)) {
-        database.markAsPush(messageId);
-        database.markAsSecure(messageId);
-        database.markAsSent(messageId);
-      }
+      deliver(masterSecret, record);
+      database.markAsPush(messageId);
+      database.markAsSecure(messageId);
+      database.markAsSent(messageId);
+
     } catch (InsecureFallbackApprovalException e) {
       Log.w(TAG, e);
       database.markAsPendingInsecureSmsFallback(record.getId());
       MessageNotifier.notifyMessageDeliveryFailed(context, record.getRecipients(), record.getThreadId());
-    } catch (SecureFallbackApprovalException e) {
-      Log.w(TAG, e);
-      database.markAsPendingSecureSmsFallback(record.getId());
-      MessageNotifier.notifyMessageDeliveryFailed(context, record.getRecipients(), record.getThreadId());
+      ApplicationContext.getInstance(context).getJobManager().add(new DirectoryRefreshJob(context));
     } catch (UntrustedIdentityException e) {
       Log.w(TAG, e);
       Recipients recipients  = RecipientFactory.getRecipientsFromString(context, e.getE164Number(), false);
@@ -102,54 +95,25 @@ public class PushTextSendJob extends PushSendJob implements InjectableType {
     MessageNotifier.notifyMessageDeliveryFailed(context, recipients, threadId);
   }
 
-  private boolean deliver(MasterSecret masterSecret, SmsMessageRecord message, String destination)
-      throws UntrustedIdentityException, SecureFallbackApprovalException,
-             InsecureFallbackApprovalException, RetryLaterException
+  private void deliver(MasterSecret masterSecret, SmsMessageRecord message)
+      throws UntrustedIdentityException, InsecureFallbackApprovalException, RetryLaterException
   {
-    boolean isSmsFallbackSupported = isSmsFallbackSupported(context, destination, false);
-
     try {
-      OpenchatServiceAddress       address       = getPushAddress(message.getIndividualRecipient().getNumber());
-      OpenchatServiceMessageSender messageSender = messageSenderFactory.create(masterSecret);
+      OpenchatServiceAddress       address           = getPushAddress(message.getIndividualRecipient().getNumber());
+      OpenchatServiceMessageSender messageSender     = messageSenderFactory.create(masterSecret);
+      OpenchatServiceMessage       openchatServiceMessage = OpenchatServiceMessage.newBuilder()
+                                                                   .withTimestamp(message.getDateSent())
+                                                                   .withBody(message.getBody().getBody())
+                                                                   .asEndSessionMessage(message.isEndSession())
+                                                                   .build();
 
-      if (message.isEndSession()) {
-        messageSender.sendMessage(address, new OpenchatServiceMessage(message.getDateSent(), null,
-                                                                 null, null, true, true));
-      } else {
-        messageSender.sendMessage(address, new OpenchatServiceMessage(message.getDateSent(), message.getBody().getBody()));
-      }
-
-      return true;
+      messageSender.sendMessage(address, openchatServiceMessage);
     } catch (InvalidNumberException | UnregisteredUserException e) {
       Log.w(TAG, e);
-      if (isSmsFallbackSupported) fallbackOrAskApproval(masterSecret, message, destination);
-      else                        DatabaseFactory.getSmsDatabase(context).markAsSentFailed(messageId);
+      throw new InsecureFallbackApprovalException(e);
     } catch (IOException e) {
       Log.w(TAG, e);
-      if (isSmsFallbackSupported) fallbackOrAskApproval(masterSecret, message, destination);
-      else                        throw new RetryLaterException(e);
-    }
-
-    return false;
-  }
-
-  private void fallbackOrAskApproval(MasterSecret masterSecret, SmsMessageRecord smsMessage, String destination)
-      throws SecureFallbackApprovalException, InsecureFallbackApprovalException
-  {
-    Recipient recipient                     = smsMessage.getIndividualRecipient();
-    boolean   isSmsFallbackApprovalRequired = isSmsFallbackApprovalRequired(destination, false);
-
-    if (!isSmsFallbackApprovalRequired) {
-      Log.w(TAG, "Falling back to SMS");
-      DatabaseFactory.getSmsDatabase(context).markAsForcedSms(smsMessage.getId());
-      ApplicationContext.getInstance(context).getJobManager().add(new SmsSendJob(context, messageId, destination));
-    } else if (!SessionUtil.hasSession(context, masterSecret, recipient)) {
-      Log.w(TAG, "Marking message as pending insecure fallback.");
-      throw new InsecureFallbackApprovalException("Pending user approval for fallback to insecure SMS");
-    } else {
-      Log.w(TAG, "Marking message as pending secure fallback.");
-      throw new SecureFallbackApprovalException("Pending user approval for fallback to secure SMS");
+      throw new RetryLaterException(e);
     }
   }
-
 }

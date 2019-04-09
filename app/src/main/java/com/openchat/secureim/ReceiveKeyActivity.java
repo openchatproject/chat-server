@@ -18,15 +18,11 @@ import com.openchat.secureim.crypto.IdentityKeyParcelable;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.storage.OpenchatServiceIdentityKeyStore;
 import com.openchat.secureim.database.DatabaseFactory;
-import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.IdentityDatabase;
 import com.openchat.secureim.database.PushDatabase;
 import com.openchat.secureim.jobs.PushDecryptJob;
-import com.openchat.secureim.jobs.SmsDecryptJob;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
-import com.openchat.secureim.sms.IncomingIdentityUpdateMessage;
-import com.openchat.secureim.sms.IncomingKeyExchangeMessage;
 import com.openchat.secureim.sms.IncomingPreKeyBundleMessage;
 import com.openchat.secureim.sms.IncomingTextMessage;
 import com.openchat.secureim.util.Base64;
@@ -36,7 +32,6 @@ import com.openchat.protocal.InvalidKeyException;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.InvalidVersionException;
 import com.openchat.protocal.LegacyMessageException;
-import com.openchat.protocal.protocol.KeyExchangeMessage;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
 import com.openchat.protocal.state.IdentityKeyStore;
 import com.openchat.protocal.util.guava.Optional;
@@ -56,9 +51,9 @@ public class ReceiveKeyActivity extends BaseActivity {
   private int       recipientDeviceId;
   private long      messageId;
 
-  private MasterSecret               masterSecret;
-  private IncomingKeyExchangeMessage message;
-  private IdentityKey                identityKey;
+  private MasterSecret                masterSecret;
+  private IncomingPreKeyBundleMessage message;
+  private IdentityKey                 identityKey;
 
   @Override
   protected void onCreate(Bundle state) {
@@ -129,14 +124,7 @@ public class ReceiveKeyActivity extends BaseActivity {
                                                           getIntent().getStringExtra("body"),
                                                           Optional.<OpenchatServiceGroup>absent());
 
-    if (getIntent().getBooleanExtra("is_bundle", false)) {
-      this.message = new IncomingPreKeyBundleMessage(message, message.getMessageBody());
-    } else if (getIntent().getBooleanExtra("is_identity_update", false)) {
-      this.message = new IncomingIdentityUpdateMessage(message, message.getMessageBody());
-    } else {
-      this.message = new IncomingKeyExchangeMessage(message, message.getMessageBody());
-    }
-
+    this.message     = new IncomingPreKeyBundleMessage(message, message.getMessageBody());
     this.identityKey = getIdentityKey(this.message);
   }
 
@@ -155,21 +143,12 @@ public class ReceiveKeyActivity extends BaseActivity {
     this.cancelButton.setOnClickListener(new CancelListener());
   }
 
-  private IdentityKey getIdentityKey(IncomingKeyExchangeMessage message)
+  private IdentityKey getIdentityKey(IncomingPreKeyBundleMessage message)
       throws InvalidKeyException, InvalidVersionException,
              InvalidMessageException, LegacyMessageException
   {
     try {
-      if (message.isIdentityUpdate()) {
-        return new IdentityKey(Base64.decodeWithoutPadding(message.getMessageBody()), 0);
-      } else if (message.isPreKeyBundle()) {
-        boolean isPush = getIntent().getBooleanExtra("is_push", false);
-
-        if (isPush) return new PreKeyOpenchatMessage(Base64.decode(message.getMessageBody())).getIdentityKey();
-        else        return new PreKeyOpenchatMessage(Base64.decodeWithoutPadding(message.getMessageBody())).getIdentityKey();
-      } else {
-        return new KeyExchangeMessage(Base64.decodeWithoutPadding(message.getMessageBody())).getIdentityKey();
-      }
+      return new PreKeyOpenchatMessage(Base64.decode(message.getMessageBody())).getIdentityKey();
     } catch (IOException e) {
       throw new AssertionError(e);
     }
@@ -191,37 +170,25 @@ public class ReceiveKeyActivity extends BaseActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-          Context               context          = ReceiveKeyActivity.this;
-          IdentityDatabase      identityDatabase = DatabaseFactory.getIdentityDatabase(context);
-          EncryptingSmsDatabase smsDatabase      = DatabaseFactory.getEncryptingSmsDatabase(context);
-          PushDatabase          pushDatabase     = DatabaseFactory.getPushDatabase(context);
+          Context          context          = ReceiveKeyActivity.this;
+          IdentityDatabase identityDatabase = DatabaseFactory.getIdentityDatabase(context);
+          PushDatabase     pushDatabase     = DatabaseFactory.getPushDatabase(context);
 
           identityDatabase.saveIdentity(masterSecret, recipient.getRecipientId(), identityKey);
+          try {
+            byte[]             body     = Base64.decode(message.getMessageBody());
+            OpenchatServiceEnvelope envelope = new OpenchatServiceEnvelope(3, message.getSender(),
+                                                                 message.getSenderDeviceId(), "",
+                                                                 message.getSentTimestampMillis(),
+                                                                 body);
 
-          if (message.isIdentityUpdate()) {
-            smsDatabase.markAsProcessedKeyExchange(messageId);
-          } else {
-            if (getIntent().getBooleanExtra("is_push", false)) {
-              try {
-                byte[]             body     = Base64.decode(message.getMessageBody());
-                OpenchatServiceEnvelope envelope = new OpenchatServiceEnvelope(3, message.getSender(),
-                                                                     message.getSenderDeviceId(), "",
-                                                                     message.getSentTimestampMillis(),
-                                                                     body);
+            long pushId = pushDatabase.insert(envelope);
 
-                long pushId = pushDatabase.insert(envelope);
-
-                ApplicationContext.getInstance(context)
-                                  .getJobManager()
-                                  .add(new PushDecryptJob(context, pushId, messageId, message.getSender()));
-              } catch (IOException e) {
-                throw new AssertionError(e);
-              }
-            } else {
-              ApplicationContext.getInstance(context)
-                                .getJobManager()
-                                .add(new SmsDecryptJob(context, messageId));
-            }
+            ApplicationContext.getInstance(context)
+                              .getJobManager()
+                              .add(new PushDecryptJob(context, pushId, messageId, message.getSender()));
+          } catch (IOException e) {
+            throw new AssertionError(e);
           }
 
           return null;

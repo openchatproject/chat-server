@@ -19,10 +19,8 @@ import com.openchat.secureim.database.model.SmsMessageRecord;
 import com.openchat.secureim.jobs.TrimThreadJob;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
-import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.sms.IncomingGroupMessage;
-import com.openchat.secureim.sms.IncomingKeyExchangeMessage;
 import com.openchat.secureim.sms.IncomingTextMessage;
 import com.openchat.secureim.sms.OutgoingTextMessage;
 import com.openchat.secureim.util.JsonUtils;
@@ -161,18 +159,6 @@ public class SmsDatabase extends MessagingDatabase {
     updateTypeBitmask(id, Types.KEY_EXCHANGE_MASK, Types.KEY_EXCHANGE_BIT | Types.KEY_EXCHANGE_BUNDLE_BIT);
   }
 
-  public void markAsStaleKeyExchange(long id) {
-    updateTypeBitmask(id, 0, Types.KEY_EXCHANGE_STALE_BIT);
-  }
-
-  public void markAsProcessedKeyExchange(long id) {
-    updateTypeBitmask(id, 0, Types.KEY_EXCHANGE_PROCESSED_BIT);
-  }
-
-  public void markAsCorruptKeyExchange(long id) {
-    updateTypeBitmask(id, 0, Types.KEY_EXCHANGE_CORRUPTED_BIT);
-  }
-
   public void markAsInvalidVersionKeyExchange(long id) {
     updateTypeBitmask(id, 0, Types.KEY_EXCHANGE_INVALID_VERSION_BIT);
   }
@@ -215,10 +201,6 @@ public class SmsDatabase extends MessagingDatabase {
 
   public void markAsOutbox(long id) {
     updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_OUTBOX_TYPE);
-  }
-
-  public void markAsPendingSecureSmsFallback(long id) {
-    updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_PENDING_SECURE_SMS_FALLBACK);
   }
 
   public void markAsPendingInsecureSmsFallback(long id) {
@@ -341,16 +323,8 @@ public class SmsDatabase extends MessagingDatabase {
   }
 
   protected Pair<Long, Long> insertMessageInbox(IncomingTextMessage message, long type) {
-    if (message.isKeyExchange()) {
-      type |= Types.KEY_EXCHANGE_BIT;
-      if      (((IncomingKeyExchangeMessage)message).isStale())          type |= Types.KEY_EXCHANGE_STALE_BIT;
-      else if (((IncomingKeyExchangeMessage)message).isProcessed())      type |= Types.KEY_EXCHANGE_PROCESSED_BIT;
-      else if (((IncomingKeyExchangeMessage)message).isCorrupted())      type |= Types.KEY_EXCHANGE_CORRUPTED_BIT;
-      else if (((IncomingKeyExchangeMessage)message).isInvalidVersion()) type |= Types.KEY_EXCHANGE_INVALID_VERSION_BIT;
-      else if (((IncomingKeyExchangeMessage)message).isIdentityUpdate()) type |= Types.KEY_EXCHANGE_IDENTITY_UPDATE_BIT;
-      else if (((IncomingKeyExchangeMessage)message).isLegacyVersion())  type |= Types.ENCRYPTION_REMOTE_LEGACY_BIT;
-      else if (((IncomingKeyExchangeMessage)message).isDuplicate())      type |= Types.ENCRYPTION_REMOTE_DUPLICATE_BIT;
-      else if (((IncomingKeyExchangeMessage)message).isPreKeyBundle())   type |= Types.KEY_EXCHANGE_BUNDLE_BIT;
+    if (message.isPreKeyBundle()) {
+      type |= Types.KEY_EXCHANGE_BIT | Types.KEY_EXCHANGE_BUNDLE_BIT;
     } else if (message.isSecureMessage()) {
       type |= Types.SECURE_MESSAGE_BIT;
     } else if (message.isGroup()) {
@@ -382,7 +356,7 @@ public class SmsDatabase extends MessagingDatabase {
     }
 
     boolean    unread     = com.openchat.secureim.util.Util.isDefaultSmsProvider(context) ||
-                            message.isSecureMessage() || message.isKeyExchange();
+                            message.isSecureMessage() || message.isPreKeyBundle();
 
     long       threadId;
 

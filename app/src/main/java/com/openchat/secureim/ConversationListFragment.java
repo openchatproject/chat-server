@@ -11,10 +11,10 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.text.TextUtils;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
-import android.support.v4.widget.CursorAdapter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,12 +32,12 @@ import com.openchat.secureim.components.ExpiredBuildReminder;
 import com.openchat.secureim.components.PushRegistrationReminder;
 import com.openchat.secureim.components.ReminderView;
 import com.openchat.secureim.components.SystemSmsImportReminder;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.loaders.ConversationListLoader;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.Dialogs;
-import com.openchat.secureim.crypto.MasterSecret;
 
 import java.util.Set;
 
