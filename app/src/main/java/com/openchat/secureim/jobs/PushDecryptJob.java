@@ -99,9 +99,8 @@ public class PushDecryptJob extends MasterSecretJob {
 
   private void handleMessage(MasterSecret masterSecret, OpenchatServiceEnvelope envelope, long smsMessageId) {
     try {
-      int              deviceId     = envelope.getSourceDevice();
       OpenchatStore     axolotlStore = new OpenchatServiceOpenchatStore(context, masterSecret);
-      OpenchatServiceCipher cipher       = new OpenchatServiceCipher(axolotlStore, new OpenchatAddress(envelope.getSource(), deviceId));
+      OpenchatServiceCipher cipher       = new OpenchatServiceCipher(axolotlStore);
 
       OpenchatServiceMessage message = cipher.decrypt(envelope);
 
