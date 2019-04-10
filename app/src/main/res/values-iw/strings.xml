@@ -88,10 +88,6 @@
   <string name="ReceiveKeyActivity_you_may_wish_to_verify_this_contact">ייתכן שתרצה לאמת
 את איש הקשר הזה.
 </string>
-  <string name="ReceiveKeyActivity_the_signature_on_this_key_exchange_is_trusted_but">החתימה
-על החלפת המפתח הזו אמינה, אבל ביטלת את האפשרות של \"השלם החלפת
- מפתח אוטומטית\" בהגדרות.
-</string>
   <string name="RegistrationActivity_continue">המשך</string>
   <string name="VerifyIdentityActivity_you_do_not_have_an_identity_key">אין לך מפתח זהות.</string>
   <string name="VerifyIdentityActivity_recipient_has_no_identity_key">לנמען אין מפתח זהות.</string>
@@ -130,7 +126,6 @@
   <string name="MessageNotifier_error_delivering_message">שגיאה במסירת ההודעה.</string>
   <string name="MessageNotifier_mark_all_as_read">סמן הכל כנקרא</string>
   <string name="MessageNotifier_mark_as_read">סמן כנקרא</string>
-  <string name="auto_initiate_activity__you_have_received_a_message_from_someone_who_supports_openchatservice_encrypted_sessions_would_you_like_to_initiate_a_secure_session">קיבלת הודעה ממישהו שתומך בחיבור מאובטח של OpenchatService. האם ברצונך להתחיל חיבור מאובטח? </string>
   <string name="change_passphrase_activity__old_passphrase">סיסמה ישנה:</string>
   <string name="change_passphrase_activity__new_passphrase">סיסמה חדשה:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">חזור על הסיסמה החדשה:</string>
@@ -165,7 +160,6 @@
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService דורש הגדרות MMS כדי לשלוח הודעות מולטימדיה או הודעות קבוצתיות דרך ספק השירות שלך. המכשיר שלך לא מספק את המידע הזה, זה קורה לעיתים במכשירים נעולים או קונפיגורציות מוגבלות אחרות.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">כדי לשלוח הודעות מולטימדיה או הודעות קבוצתיות,לחץ \'אישור\' והשלם את ההגדרות המתבקשות.את הגדרות ה-MMS עבור ספק השירות שלך אתה יכול למצוא בד\"כ ע\"י חיפוש \"ספק השרות APN\". אתה תצטרך להשלים מידע זה רק פעם אחת.</string>
   <string name="receive_key_activity__complete">השלם</string>
-  <string name="registration_activity__skip">דלג</string>
   <string name="verify_identity_activity__their_identity_they_read">הזהות שלהם (הם קוראים):</string>
   <string name="verify_identity_activity__your_identity_you_read">הזהות שלך (אתה קורא):</string>
   <string name="AndroidManifest__change_passphrase">שנה סיסמה</string>
@@ -176,8 +170,6 @@
   <string name="preferences__choose_your_contact_entry_from_the_contacts_list">בחר איש קשר מאנשי הקשר.</string>
   <string name="preferences__change_passphrase">שנה סיסמה</string>
   <string name="preferences__change_my_passphrase">שנה סיסמה</string>
-  <string name="preferences__complete_key_exchanges">השלם החלפות מפתח</string>
-  <string name="preferences__automatically_complete_key_exchanges_for_new_sessions_or_for_existing_sessions_with_the_same_identity_key">השלם אוטומטית החלפות מפתח לחיבורים חדשים או קיימים עם אותו מפתח הזהות</string>
   <string name="preferences__forget_passphrase_from_memory_after_some_interval">שכח את הסיסמה מהזיכרון לאחר זמן מסויים </string>
   <string name="preferences__timeout_passphrase">זמן תוקף לסיסמה</string>
   <string name="preferences__pref_timeout_interval_title">זמן התוקף</string>

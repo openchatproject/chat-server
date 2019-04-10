@@ -74,7 +74,6 @@
   <string name="MessageNotifier_message_delivery_failed">အကြောင်းကြားချက်ပို့လွတ်ခြင်းမအောင်မြင်</string>
   <string name="MessageNotifier_failed_to_deliver_message">အကြောင်းကြားချက်ပို့လွတ်ရန်မအောင်မြင်</string>
   <string name="MessageNotifier_error_delivering_message">အကြောင်းကြားချက်ပို့လွတ်စဉ်အမှား</string>
-  <string name="auto_initiate_activity__you_have_received_a_message_from_someone_who_supports_openchatservice_encrypted_sessions_would_you_like_to_initiate_a_secure_session">Textsecure ဝှက်စာပို့စနစ်ကို သုံးသည့်သူတစ်ဦးထံမှ စာလက်ခံရရှိလာပါတယ်။ လုံခြုံမှုရှိသော ဆက်ရှင်တစ်ခု စမည်လား။</string>
   <string name="change_passphrase_activity__old_passphrase">စကားဝှက်အဟောင်း:</string>
   <string name="change_passphrase_activity__new_passphrase">စကားဝှက်အသစ်:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">စကားဝှက်အသစ်အားနောက်တစ်ကြိမ်:</string>
@@ -95,7 +94,6 @@
   <string name="database_migration_activity__this_could_take_a_moment_please_be_patient">ခေတ္တကြာပါလိမ့်မယ်။ တင်သွင်းမှု ပြီးဆုံးသွားရင် အကြောင်းကြားပေးပါမယ်။</string>
   <string name="database_migration_activity__importing">သွင်းယူနေ</string>
   <string name="prompt_passphrase_activity__unlock">ပိတ်ထားသည်ကိုဖွင့်</string>
-  <string name="registration_activity__skip">ကျော်</string>
   <string name="verify_identity_activity__their_identity_they_read">သူများ အိုင်ဒီ (သူများ အမြင်) - </string>
   <string name="verify_identity_activity__your_identity_you_read">အသင့်အိုင်ဒီ (အသင့်အမြင်) - </string>
   <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_text_messages">openchatservice ကိုဝင်လာသောစာတိုများကိုကြည့်ရန်/သိမ်းရန်အတွက်သုံးပါ</string>
@@ -103,7 +101,6 @@
   <string name="preferences__input_settings">ကီးဘုတ်ပုံစံသတ်မှတ်ချက်များ</string>
   <string name="preferences__choose_your_contact_entry_from_the_contacts_list">အဆက်အသွယ်ကို အဆက်အသွယ်စာရင်းမှ ရွေးယူပါ</string>
   <string name="preferences__change_my_passphrase">ကျွန်ုပ်စကားဝှက်ကိုပြောင်းပါ</string>
-  <string name="preferences__automatically_complete_key_exchanges_for_new_sessions_or_for_existing_sessions_with_the_same_identity_key">ဆက်ရှင်အသစ်အတွက်(သို့)ကိုယ်စားပြုကီးတူညီသောလက်ရှိဆက်ရှင်အတွက် ကီးပြောင်းလဲမှုကိုအလိုလျှောက်လုပ်ဆောင်ပါ</string>
   <string name="preferences__forget_passphrase_from_memory_after_some_interval">အချိန်တစ်ခုကြာပြီးနောက်မန်မိုရီပေါ်မှဝှက်စာကိုမေ့ပစ်ပါ</string>
   <string name="preferences__timeout_passphrase">စကားဝှက် အချိန်လွန်</string>
   <string name="preferences__pref_timeout_interval_title">ကြားချိန်</string>

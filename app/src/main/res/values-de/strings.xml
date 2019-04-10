@@ -55,15 +55,11 @@ Dies könnte bedeuten, dass jemand versucht, Ihr Gespräch abzuhören. Vielleich
   <string name="ConversationItem_error_received_stale_key_exchange_message">Fehler: Abgelaufene Schlüsselaustausch-Nachricht empfangen.</string>
   <string name="ConversationItem_received_key_exchange_message_click_to_process">Schlüsselaustausch-Nachricht empfangen. Antippen um fortzufahren.</string>
   <string name="ConversationItem_group_action_left">%1$s hat die Gruppe verlassen.</string>
-  <string name="ConversationItem_click_to_approve_sms">Für Rückgriff auf SMS antippen</string>
-  <string name="ConversationItem_click_to_approve_mms">Für Rückgriff auf MMS antippen</string>
   <string name="ConversationItem_click_for_details">Antippen für Details</string>
   <string name="ConversationItem_click_to_approve_unencrypted">Für Rückgriff auf unsicheren Versand antippen</string>
-  <string name="ConversationItem_click_to_approve_sms_dialog_title">Rückgriff auf SMS?</string>
-  <string name="ConversationItem_click_to_approve_mms_dialog_title">Rückgriff auf MMS?</string>
   <string name="ConversationItem_click_to_approve_unencrypted_sms_dialog_title">Rückgriff auf unverschlüsselte SMS?</string>
   <string name="ConversationItem_click_to_approve_unencrypted_mms_dialog_title">Rückgriff auf unverschlüsselte MMS?</string>
-  <string name="ConversationItem_click_to_approve_unencrypted_dialog_message">Diese Nachricht wird <b>nicht</b> verschlüsselt sein, da keine sichere Unterhaltung aufgebaut werden konnte.\n\nUnsichere Nachricht senden?</string>
+  <string name="ConversationItem_click_to_approve_unencrypted_dialog_message">Diese Nachricht wird <b>nicht</b> verschlüsselt sein, da der Empfänger OpenchatService nicht mehr nutzt.\n\nUnsichere Nachricht senden?</string>
   <string name="ConversationItem_unable_to_open_media">Keine App zum Öffnen der Datei gefunden.</string>
   <string name="ConversationActivity_initiate_secure_session_question">Sichere Unterhaltung starten?</string>
   <string name="ConversationActivity_initiate_secure_session_with_s_question">Sichere Unterhaltung mit %s starten?</string>
@@ -92,8 +88,6 @@ Dies könnte bedeuten, dass jemand versucht, Ihr Gespräch abzuhören. Vielleich
   <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">Sind Sie sicher, dass Sie die Gruppe verlassen wollen?</string>
   <string name="ConversationActivity_transport_insecure_sms">Unsichere SMS</string>
   <string name="ConversationActivity_transport_insecure_mms">Unsichere MMS</string>
-  <string name="ConversationActivity_transport_secure_sms">Sichere SMS</string>
-  <string name="ConversationActivity_transport_secure_mms">Sichere MMS</string>
   <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
   <string name="ConversationActivity_get_with_it">Sicher kommunizieren: %s</string>
   <string name="ConversationActivity_install_openchatservice">OpenchatService installieren: %s</string>
@@ -123,7 +117,7 @@ Dies könnte bedeuten, dass jemand versucht, Ihr Gespräch abzuhören. Vielleich
   <string name="ConversationListItem_key_exchange_message">Schlüsselaustausch-Nachricht...</string>
   <string name="CustomDefaultPreference_using_custom">Benutzerdefiniert: %s</string>
   <string name="CustomDefaultPreference_using_default">Standard: %s</string>
-  <string name="CustomDefaultPreference_none">Keine</string>
+  <string name="CustomDefaultPreference_none">Kein Eintrag</string>
   <string name="DateUtils_now">Jetzt</string>
   <string name="ShareActivity_share_with">Teilen mit</string>
   <string name="ExportFragment_export">Exportieren</string>
@@ -136,7 +130,7 @@ Dies könnte bedeuten, dass jemand versucht, Ihr Gespräch abzuhören. Vielleich
   <string name="ExportFragment_error_while_writing_to_sd_card">Fehler beim Schreiben auf die SD-Karte.</string>
   <string name="ExportFragment_success">Erfolgreich!</string>
   <string name="GcmRefreshJob_Permanent_OpenchatService_communication_failure">Dauerhaftes Problem mit OpenchatService-Nachrichten!</string>
-  <string name="GcmRefreshJob_OpenchatService_was_unable_to_register_with_Google_Play_Services">OpenchatService konnte keine Verbindung zu Google Play Services herstellen. OpenchatService-Nachrichten wurden daher deaktiviert. Bitte im Menü \"Einstellungen\" erneut registrieren.</string>
+  <string name="GcmRefreshJob_OpenchatService_was_unable_to_register_with_Google_Play_Services">OpenchatService konnte keine Verbindung zu den Google Play-Diensten herstellen. OpenchatService-Nachrichten wurden daher deaktiviert. Bitte im Menü \"Einstellungen\" erneut registrieren.</string>
   <string name="GroupCreateActivity_actionbar_title">Neue Gruppe</string>
   <string name="GroupCreateActivity_actionbar_update_title">Gruppe bearbeiten</string>
   <string name="GroupCreateActivity_group_name_hint">Gruppenname</string>
@@ -213,7 +207,6 @@ Bitten Sie den Absender, OpenchatService zu aktualisieren und die Nachricht erne
   <string name="PassphrasePromptActivity_invalid_passphrase_exclamation">Passwort ungültig!</string>
   <string name="ReceiveKeyActivity_the_signature_on_this_key_exchange_is_different">Die Signatur dieses Schlüsselaustauschs hat sich geändert. Dies könnte bedeuten, dass jemand versucht, Ihr Gespräch abzuhören. Vielleicht hat dieser Kontakt OpenchatService aber auch nur neu installiert und benutzt nun einen neuen Schlüssel.</string>
   <string name="ReceiveKeyActivity_you_may_wish_to_verify_this_contact">Sie sollten diesen Kontakt ggf. überprüfen.</string>
-  <string name="ReceiveKeyActivity_the_signature_on_this_key_exchange_is_trusted_but">Die Signatur dieses Schlüsselaustauschs ist vertrauenswürdig, aber die Einstellung \"Automatischer Schlüsselaustausch\" ist deaktiviert.</string>
   <string name="ReceiveKeyActivity_processing">Schlüsselaustausch</string>
   <string name="ReceiveKeyActivity_processing_key_exchange">Schlüsselaustausch wird durchgeführt...</string>
   <string name="RegistrationActivity_connect_with_openchatservice">Mit OpenchatService verbinden</string>
@@ -223,7 +216,7 @@ Bitten Sie den Absender, OpenchatService zu aktualisieren und die Nachricht erne
   <string name="RegistrationActivity_invalid_number">Ungültige Rufnummer</string>
   <string name="RegistrationActivity_the_number_you_specified_s_is_invalid">Die angegebene Rufummer (%s) ist ungültig.</string>
   <string name="RegistrationActivity_unsupported">Nicht unterstützt</string>
-  <string name="RegistrationActivity_sorry_this_device_is_not_supported_for_data_messaging">Entschuldigung, dieses Gerät unterstützt keine Übertragung über den Datenkanal. Geräte mit Android vor Version 4.0 müssen ein Google-Konto eingerichtet haben. Geräte mit Android 4.0 und neuer benötigen kein Google-Konto, müssen aber die \"Play Store\"-App installiert haben.</string>
+  <string name="RegistrationActivity_sorry_this_device_is_not_supported_for_data_messaging">Entschuldigung, dieses Gerät unterstützt keine Übertragung über den Datenkanal. Geräte mit Android vor Version 4.0 müssen ein Google-Konto eingerichtet haben. Geräte mit Android 4.0 und neuer benötigen kein Google-Konto, müssen aber die Google Play Store-App installiert haben.</string>
   <string name="RegistrationActivity_we_will_now_verify_that_the_following_number_is_associated_with_your_device_s">
 Bitte kontrollieren Sie noch einmal Ihre Rufnummer. Diese wird anschließend durch eine SMS überprüft.</string>
   <string name="RegistrationActivity_continue">Weiter</string>
@@ -308,15 +301,15 @@ Nachricht mit unbekanntem Schlüssel empfangen. Zum Fortfahren antippen.</string
   <string name="MessageNotifier_d_new_messages">%d neue Nachrichten</string>
   <string name="MessageNotifier_most_recent_from_s">Letzte Nachricht von: %s</string>
   <string name="MessageNotifier_encrypted_message">Verschlüsselte Nachricht...</string>
+  <string name="MessageNotifier_media_message_with_text">Mediennachricht: %s</string>
   <string name="MessageNotifier_no_subject">(Kein Betreff)</string>
   <string name="MessageNotifier_message_delivery_failed">Nachrichtenübermittlung fehlgeschlagen.</string>
   <string name="MessageNotifier_failed_to_deliver_message">Nachrichtenübermittlung fehlgeschlagen.</string>
   <string name="MessageNotifier_error_delivering_message">Nachrichtenübermittlung fehlgeschlagen.</string>
   <string name="MessageNotifier_mark_all_as_read">Alle als gelesen markieren</string>
   <string name="MessageNotifier_mark_as_read">Als gelesen markieren</string>
+  <string name="MessageNotifier_media_message">Mediennachricht</string>
   <string name="QuickResponseService_sorry_quick_response_is_not_yet_supported_by_openchatservice">Leider werden Schnellantworten noch nicht von OpenchatService unterstützt!</string>
-  <string name="auto_initiate_activity__you_have_received_a_message_from_someone_who_supports_openchatservice_encrypted_sessions_would_you_like_to_initiate_a_secure_session">Sie haben eine Nachricht von jemandem empfangen, der verschlüsselte Unterhaltungen über OpenchatService unterstützt. Wollen Sie jetzt eine sichere Unterhaltung aufbauen?</string>
-  <string name="auto_initiate_activity__initiate_exchange">Austausch starten</string>
   <string name="change_passphrase_activity__old_passphrase">ALTES PASSWORT:</string>
   <string name="change_passphrase_activity__new_passphrase">NEUES PASSWORT:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">NEUES PASSWORT WIEDERHOLEN:</string>
@@ -339,6 +332,7 @@ Nachricht mit unbekanntem Schlüssel empfangen. Zum Fortfahren antippen.</string
   <string name="conversation_activity__compose_description">Nachricht verfassen</string>
   <string name="conversation_activity__emoji_toggle_description">Emoji-Tastatur aktivieren</string>
   <string name="conversation_activity__attachment_thumbnail">Anhangsvorschaubild</string>
+  <string name="conversation_item__mms_downloading_description">Mediennachricht wird heruntergeladen</string>
   <string name="conversation_item__mms_image_description">Mediennachricht</string>
   <string name="conversation_item__play_button_description">Wiedergabetaste</string>
   <string name="conversation_item__secure_message_description">Sichere Nachricht</string>
@@ -393,14 +387,13 @@ Eine mit \"SMS Backup + Restore\" kompatible Klartextsicherung importieren.</str
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Zum Versenden von Medien- und Gruppennachrichten bitte \"OK\" antippen und die geforderten Einstellungen vervollständigen. Die MMS-Einstellungen Ihres Anbieters können normalerweise  durch eine Internetsuche nach dem \"APN\" des Anbieters gefunden werden.</string>
   <string name="receive_key_activity__complete">Fortfahren</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
-Die Registrierung ist kostenlos und erhöht bei Unterhaltungen mit anderen OpenchatService-Nutzern die Privatsphäre. Bitte bestätigen Sie Ihre Rufnummer.</string>
+Überprüfen Sie zur Verbindung mit OpenchatService Ihre Rufnummer.</string>
   <string name="registration_activity__your_country">IHR LAND</string>
   <string name="registration_activity__your_country_code_and_phone_number">IHRE LANDESVORWAHL UND
 RUFNUMMER</string>
   <string name="registration_activity__phone_number">RUFNUMMER</string>
   <string name="registration_activity__register">Registrieren</string>
   <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">Während der Registrierung werden einige Kontaktinformationen an den Server übermittelt. Diese werden jedoch nicht gespeichert.</string>
-  <string name="registration_activity__skip">Überspringen</string>
   <string name="registration_problems__some_possible_problems_include">Einige mögliche Probleme beinhalten:</string>
   <string name="registration_problems__sms_interceptors">SMS-abfangende Apps.</string>
   <string name="registration_problems__some_third_party_text_messaging_clients_such_as_handcent">Manche SMS-Apps von Drittanbietern, z.B. Handcent oder GoSMS, fangen fälschlicherweise alle eingehenden SMS ab. Überprüfen Sie, ob Sie eine Textnachricht empfangen haben, die mit \"Your OpenchatService verification code:\" beginnt. In diesem Fall müssen Sie Ihre Drittanbieter-App so einstellen, dass sie SMS durchlässt.</string>
@@ -437,7 +430,7 @@ Die Überprüfung der SMS-Bestätigung hat zu lange gedauert.</string>
   <string name="registration_progress_activity__generating_keys">Schlüssel werden erzeugt...</string>
   <string name="registration_progress_activity__alert">Benachrichtigung</string>
   <string name="registration_progress_activity__telephone">Telefon</string>
-  <string name="registration_progress_activity__check">Überprüfen</string>
+  <string name="registration_progress_activity__check">Haken</string>
   <string name="recipients_panel__to"><small>Name oder Rufnummer eingeben</small></string>
   <string name="recipients_panel__add_member">Mitglied hinzufügen</string>
   <string name="verify_identity_activity__their_identity_they_read">Empfängeridentität:</string>
@@ -456,15 +449,14 @@ Die Überprüfung der SMS-Bestätigung hat zu lange gedauert.</string>
   <string name="AndroidManifest__public_identity_key">Öffentlicher Schlüssel</string>
   <string name="AndroidManifest__change_passphrase">Passwort ändern</string>
   <string name="AndroidManifest__verify_identity">Empfänger überprüfen</string>
-  <string name="AndroidManifest__complete_key_exchange">Automatischer Schlüsselaustausch</string>
   <string name="AndroidManifest__log_submit">Diagnoseprotokoll übermitteln</string>
   <string name="AndroidManifest__media_preview">Dateivorschau</string>
   <string name="AndroidManifest__media_overview">Alle Bilder</string>
   <string name="AndroidManifest__media_overview_named">Alle Bilder mit %1$s</string>
   <string name="arrays__import_export">Datensicherung</string>
   <string name="arrays__my_identity_key">Mein Schlüssel</string>
-  <string name="arrays__use_default">Standard</string>
-  <string name="arrays__use_custom">Benutzerdefiniert</string>
+  <string name="arrays__use_default">Standard verwenden</string>
+  <string name="arrays__use_custom">Benutzerdefiniert verwenden</string>
   <plurals name="minutes_ago">
     <item quantity="one">%d Minute</item>
     <item quantity="other">%d Minuten</item>
@@ -490,13 +482,11 @@ Die Überprüfung der SMS-Bestätigung hat zu lange gedauert.</string>
   <string name="preferences__choose_your_contact_entry_from_the_contacts_list">Wählen Sie den Kontakt aus der Kontaktliste.</string>
   <string name="preferences__change_passphrase">Passwort ändern</string>
   <string name="preferences__change_my_passphrase">Mein Passwort ändern</string>
-  <string name="preferences__complete_key_exchanges">Autom. Schlüsselaustausch</string>
   <string name="preferences__enable_passphrase">Passwort aktivieren</string>
   <string name="preferences__passphrase_summary">Passwort %s</string>
   <string name="preferences__enable_local_encryption_of_messages_and_keys">Lokale Verschlüsselung von Nachrichten und Schlüsseln aktivieren</string>
   <string name="preferences__screen_security">Bildschirmschutz</string>
   <string name="preferences__screen_security_summary">Bildschirmschutz %s</string>
-  <string name="preferences__automatically_complete_key_exchanges_for_new_sessions_or_for_existing_sessions_with_the_same_identity_key">Automatischer Schlüsselaustausch für neue oder bestehende Unterhaltungen mit demselben Schlüssel</string>
   <string name="preferences__disable_screen_security_to_allow_screen_shots">Bildschirmfotos in der Anwendung und der Liste der letzten Anwendungen blockieren</string>
   <string name="preferences__forget_passphrase_from_memory_after_some_interval">Passwort nach einer gewissen Zeit vergessen</string>
   <string name="preferences__timeout_passphrase">Passwort vergessen</string>
@@ -518,11 +508,11 @@ Die Überprüfung der SMS-Bestätigung hat zu lange gedauert.</string>
   <string name="preferences__play_inthread_notifications">Benachrichtigungston während aktiver Unterhaltungen abspielen</string>
   <string name="preferences__repeat_alerts">Benachrichtigungen wiederholen</string>
   <string name="preferences__never">Nie</string>
-  <string name="preferences__one_time">Einmal</string>
-  <string name="preferences__two_times">Zweimal</string>
-  <string name="preferences__three_times">Dreimal</string>
-  <string name="preferences__five_times">Fünfmal</string>
-  <string name="preferences__ten_times">Zehnmal</string>
+  <string name="preferences__one_time">Ein Mal</string>
+  <string name="preferences__two_times">Zwei Mal</string>
+  <string name="preferences__three_times">Drei Mal</string>
+  <string name="preferences__five_times">Fünf Mal</string>
+  <string name="preferences__ten_times">Zehn Mal</string>
   <string name="preferences__vibrate">Vibration</string>
   <string name="preferences__also_vibrate_when_notified">Bei Benachrichtigungen vibrieren</string>
   <string name="preferences__minutes">Minuten</string>
@@ -588,11 +578,6 @@ Mehr Privatsphäre und keine SMS-Kosten durch Nutzung der Datenverbindung zur Ko
   <string name="contact_selection_list__unknown_contact">Neue Nachricht an...</string>
   <string name="contact_selection__menu_finished">Fertig</string>
   <string name="push_directory__menu_refresh">Kontaktliste aktualisieren</string>
-  <string name="conversation_button_context__send_openchatservice_message">OpenchatService-Nachricht senden</string>
-  <string name="conversation_button_context__send_secure_sms">Sichere SMS senden</string>
-  <string name="conversation_button_context__send_insecure_sms">Unsichere SMS senden</string>
-  <string name="conversation_button_context__send_secure_mms">Sichere MMS senden</string>
-  <string name="conversation_button_context__send_insecure_mms">Unsichere MMS senden</string>
   <string name="conversation_callable__menu_call">Anrufen</string>
   <string name="conversation_context__menu_message_details">Nachrichtendetails</string>
   <string name="conversation_context__menu_copy_text">Text kopieren</string>
@@ -600,7 +585,7 @@ Mehr Privatsphäre und keine SMS-Kosten durch Nutzung der Datenverbindung zur Ko
   <string name="conversation_context__menu_forward_message">Nachricht weiterleiten</string>
   <string name="conversation_context__menu_resend_message">Nachricht erneut senden</string>
   <string name="conversation_context_image__save_attachment">Anhang speichern</string>
-  <string name="conversation_insecure__invite">Einladen</string>
+  <string name="conversation_insecure__invite">Einladung</string>
   <string name="conversation_insecure__menu_start_secure_session">Sichere Unterhaltung starten</string>
   <string name="conversation_insecure__security">Sicherheit</string>
   <string name="conversation_list_batch__menu_delete_selected">Ausgewählte löschen</string>
