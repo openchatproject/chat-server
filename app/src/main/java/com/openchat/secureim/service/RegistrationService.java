@@ -273,6 +273,7 @@ public class RegistrationService extends Service {
     OpenchatServicePreferences.setPushServerPassword(this, password);
     OpenchatServicePreferences.setOpenchatingKey(this, openchatingKey);
     OpenchatServicePreferences.setSignedPreKeyRegistered(this, true);
+    OpenchatServicePreferences.setPromptedPushRegistration(this, true);
   }
 
   private void setState(RegistrationState state) {
