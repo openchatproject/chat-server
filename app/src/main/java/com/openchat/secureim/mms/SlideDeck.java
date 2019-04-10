@@ -1,9 +1,13 @@
 package com.openchat.secureim.mms;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.util.Pair;
 
+import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.dom.smil.parser.SmilXmlSerializer;
+import com.openchat.secureim.util.ListenableFutureTask;
 import com.openchat.secureim.util.MediaUtil;
 import com.openchat.secureim.util.SmilUtil;
 import com.openchat.secureim.util.Util;
@@ -74,8 +78,15 @@ public class SlideDeck {
         return true;
       }
     }
-
     return false;
   }
 
+  public Slide getThumbnailSlide(Context context) {
+    for (Slide slide : slides) {
+      if (slide.hasImage()) {
+        return slide;
+      }
+    }
+    return null;
+  }
 }

@@ -10,14 +10,15 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 import android.provider.ContactsContract;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.openchat.secureim.R;
-import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.util.BitmapDecodingException;
+import com.openchat.secureim.util.FutureTaskListener;
 
 import java.io.IOException;
 
@@ -63,20 +64,25 @@ public class AttachmentManager {
   public void setMedia(final Slide slide, final int thumbnailWidth, final int thumbnailHeight) {
     slideDeck.clear();
     slideDeck.addSlide(slide);
-    new AsyncTask<Void,Void,Drawable>() {
-
+     slide.getThumbnail(context).addListener(new FutureTaskListener<Pair<Drawable, Boolean>>() {
       @Override
-      protected Drawable doInBackground(Void... params) {
-        return slide.getThumbnail(context, thumbnailWidth, thumbnailHeight);
+      public void onSuccess(final Pair<Drawable, Boolean> result) {
+        thumbnail.post(new Runnable() {
+          @Override
+          public void run() {
+            thumbnail.setImageDrawable(result.first);
+            attachmentView.setVisibility(View.VISIBLE);
+            attachmentListener.onAttachmentChanged();
+          }
+        });
       }
 
       @Override
-      protected void onPostExecute(Drawable drawable) {
-        thumbnail.setImageDrawable(drawable);
-        attachmentView.setVisibility(View.VISIBLE);
-        attachmentListener.onAttachmentChanged();
+      public void onFailure(Throwable error) {
+        Log.w(TAG, error);
+        slideDeck.clear();
       }
-    }.execute();
+    });
   }
 
   public void setMedia(Slide slide) {

@@ -31,6 +31,7 @@ import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;
 import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.ProgressDialogAsyncTask;
+import com.openchat.secureim.util.ResUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
@@ -263,7 +264,7 @@ public class ApplicationPreferencesActivity extends PassphraseRequiredActionBarA
       public boolean onPreferenceChange(final Preference preference, Object newValue) {
         if (((CheckBoxPreference)preference).isChecked()) {
           AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-          builder.setIcon(Dialogs.resolveIcon(getActivity(), R.attr.dialog_info_icon));
+          builder.setIcon(ResUtil.getDrawable(getActivity(), R.attr.dialog_info_icon));
           builder.setTitle(R.string.ApplicationPreferencesActivity_disable_push_messages);
           builder.setMessage(R.string.ApplicationPreferencesActivity_this_will_disable_push_messages);
           builder.setNegativeButton(android.R.string.cancel, null);

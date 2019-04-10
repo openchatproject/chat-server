@@ -40,6 +40,7 @@ import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.DirectoryHelper;
 import com.openchat.secureim.util.FutureTaskListener;
 import com.openchat.secureim.util.ProgressDialogAsyncTask;
+import com.openchat.secureim.util.ResUtil;
 import com.openchat.secureim.util.SaveAttachmentTask;
 import com.openchat.secureim.util.SaveAttachmentTask.Attachment;
 
@@ -192,7 +193,7 @@ public class ConversationFragment extends ListFragment
   private void handleDeleteMessages(final List<MessageRecord> messageRecords) {
     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
     builder.setTitle(R.string.ConversationFragment_confirm_message_delete);
-    builder.setIcon(Dialogs.resolveIcon(getActivity(), R.attr.dialog_alert_icon));
+    builder.setIcon(ResUtil.getDrawable(getActivity(), R.attr.dialog_alert_icon));
     builder.setCancelable(true);
     builder.setMessage(R.string.ConversationFragment_are_you_sure_you_want_to_permanently_delete_all_selected_messages);
     builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {

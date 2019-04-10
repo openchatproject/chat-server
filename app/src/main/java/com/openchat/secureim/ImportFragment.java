@@ -22,6 +22,7 @@ import com.openchat.secureim.database.PlaintextBackupImporter;
 import com.openchat.secureim.service.ApplicationMigrationService;
 import com.openchat.secureim.service.KeyCachingService;
 import com.openchat.secureim.util.Dialogs;
+import com.openchat.secureim.util.ResUtil;
 
 import java.io.IOException;
 
@@ -81,7 +82,7 @@ public class ImportFragment extends Fragment {
 
   private void handleImportSms() {
     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-    builder.setIcon(Dialogs.resolveIcon(getActivity(), R.attr.dialog_info_icon));
+    builder.setIcon(ResUtil.getDrawable(getActivity(), R.attr.dialog_info_icon));
     builder.setTitle(getActivity().getString(R.string.ImportFragment_import_system_sms_database));
     builder.setMessage(getActivity().getString(R.string.ImportFragment_this_will_import_messages_from_the_system));
     builder.setPositiveButton(getActivity().getString(R.string.ImportFragment_import), new AlertDialog.OnClickListener() {
@@ -107,7 +108,7 @@ public class ImportFragment extends Fragment {
 
   private void handleImportEncryptedBackup() {
     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-    builder.setIcon(Dialogs.resolveIcon(getActivity(), R.attr.dialog_alert_icon));
+    builder.setIcon(ResUtil.getDrawable(getActivity(), R.attr.dialog_alert_icon));
     builder.setTitle(getActivity().getString(R.string.ImportFragment_restore_encrypted_backup));
     builder.setMessage(getActivity().getString(R.string.ImportFragment_restoring_an_encrypted_backup_will_completely_replace_your_existing_keys));
     builder.setPositiveButton(getActivity().getString(R.string.ImportFragment_restore), new AlertDialog.OnClickListener() {
@@ -122,7 +123,7 @@ public class ImportFragment extends Fragment {
 
   private void handleImportPlaintextBackup() {
     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-    builder.setIcon(Dialogs.resolveIcon(getActivity(), R.attr.dialog_alert_icon));
+    builder.setIcon(ResUtil.getDrawable(getActivity(), R.attr.dialog_alert_icon));
     builder.setTitle(getActivity().getString(R.string.ImportFragment_import_plaintext_backup));
     builder.setMessage(getActivity().getString(R.string.ImportFragment_this_will_import_messages_from_a_plaintext_backup));
     builder.setPositiveButton(getActivity().getString(R.string.ImportFragment_import), new AlertDialog.OnClickListener() {

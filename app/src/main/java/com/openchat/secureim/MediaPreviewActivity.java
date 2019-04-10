@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.opengl.GLES20;
 import android.os.AsyncTask;
@@ -15,12 +16,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.mms.PartAuthority;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipient.RecipientModifiedListener;
 import com.openchat.secureim.recipients.RecipientFactory;
@@ -47,7 +50,6 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
   private MasterSecret masterSecret;
   private boolean      paused;
 
-  private View              loadingView;
   private TextView          errorText;
   private Bitmap            bitmap;
   private ImageView         image;
@@ -63,6 +65,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
     dynamicLanguage.onCreate(this);
 
     super.onCreate(bundle);
+
     setFullscreenIfPossible();
     getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                          WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -127,7 +130,6 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
   }
 
   private void initializeViews() {
-    loadingView   =             findViewById(R.id.loading_indicator);
     errorText     = (TextView)  findViewById(R.id.error);
     image         = (ImageView) findViewById(R.id.image);
     imageAttacher = new PhotoViewAttacher(image);
@@ -172,6 +174,13 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
   }
 
   private void displayImage() {
+    try {
+      image.setImageBitmap(BitmapFactory.decodeStream(PartAuthority.getThumbnail(this, masterSecret, mediaUri)));
+      image.setVisibility(View.VISIBLE);
+    } catch (IOException fnfe) {
+      Log.w(TAG, "tried to render thumbnail, but it wasn't found. carrying on.");
+    }
+
     new AsyncTask<Void,Void,Bitmap>() {
       @Override
       protected Bitmap doInBackground(Void... params) {
@@ -188,18 +197,12 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
       }
 
       @Override
-      protected void onPreExecute() {
-        loadingView.setVisibility(View.VISIBLE);
-      }
-
-      @Override
       protected void onPostExecute(Bitmap bitmap) {
         if (paused) {
           if (bitmap != null) bitmap.recycle();
           return;
         }
 
-        loadingView.setVisibility(View.GONE);
         if (bitmap == null) {
           errorText.setText(R.string.MediaPreviewActivity_cant_display);
           errorText.setVisibility(View.VISIBLE);

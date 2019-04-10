@@ -4,8 +4,9 @@ import java.io.IOException;
 
 import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.util.ListenableFutureTask;
+import com.openchat.secureim.util.ResUtil;
 import com.openchat.secureim.util.SmilUtil;
-import com.openchat.secureim.util.ThemeUtil;
 import org.w3c.dom.smil.SMILDocument;
 import org.w3c.dom.smil.SMILMediaElement;
 import org.w3c.dom.smil.SMILRegionElement;
@@ -13,12 +14,12 @@ import org.w3c.dom.smil.SMILRegionElement;
 import ws.com.google.android.mms.pdu.PduPart;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.Pair;
 
 public class VideoSlide extends Slide {
 
@@ -31,8 +32,8 @@ public class VideoSlide extends Slide {
   }
 
   @Override
-  public Drawable getThumbnail(Context context, int width, int height) {
-    return ThemeUtil.resolveIcon(context, R.attr.conversation_icon_attach_video);
+  public ListenableFutureTask<Pair<Drawable,Boolean>> getThumbnail(Context context) {
+    return new ListenableFutureTask<>(new Pair<>(ResUtil.getDrawable(context, R.attr.conversation_icon_attach_video), true));
   }
 
   @Override

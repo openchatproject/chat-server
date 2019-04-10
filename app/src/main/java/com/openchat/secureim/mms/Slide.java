@@ -3,6 +3,7 @@ package com.openchat.secureim.mms;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.openchat.secureim.util.ListenableFutureTask;
 import com.openchat.secureim.util.Util;
 import org.w3c.dom.smil.SMILDocument;
 import org.w3c.dom.smil.SMILMediaElement;
@@ -14,8 +15,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
-import android.util.TypedValue;
-import android.widget.ImageView;
+import android.util.Pair;
 
 import ws.com.google.android.mms.pdu.PduPart;
 
@@ -55,19 +55,9 @@ public abstract class Slide {
     return part.getDataUri();
   }
 
-  public Drawable getThumbnail(Context context, int maxWidth, int maxHeight) {
+  public ListenableFutureTask<Pair<Drawable,Boolean>> getThumbnail(Context context) {
     throw new AssertionError("getThumbnail() called on non-thumbnail producing slide!");
   }
-
-  public void setThumbnailOn(Context context, ImageView imageView) {
-    imageView.setImageDrawable(getThumbnail(context, imageView.getWidth(), imageView.getHeight()));
-  }
-
-  public void setThumbnailOn(Context context, ImageView imageView, int height, int width, Drawable placeholder) {
-    imageView.setImageDrawable(getThumbnail(context, width, height));
-  }
-
-  public Bitmap getGeneratedThumbnail() { return null; }
 
   public boolean hasImage() {
     return false;

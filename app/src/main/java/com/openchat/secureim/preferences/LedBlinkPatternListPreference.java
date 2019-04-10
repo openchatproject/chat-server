@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.openchat.secureim.ApplicationPreferencesActivity;
 import com.openchat.secureim.R;
+import com.openchat.secureim.util.ResUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Dialogs;
 
@@ -60,7 +61,7 @@ public class LedBlinkPatternListPreference extends ListPreference implements OnS
 
   private void initializeDialog(View view) {
     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-    builder.setIcon(Dialogs.resolveIcon(context, R.attr.dialog_info_icon));
+    builder.setIcon(ResUtil.getDrawable(context, R.attr.dialog_info_icon));
     builder.setTitle(R.string.preferences__pref_led_blink_custom_pattern_title);
     builder.setView(view);
     builder.setOnCancelListener(new CustomDialogCancelListener());

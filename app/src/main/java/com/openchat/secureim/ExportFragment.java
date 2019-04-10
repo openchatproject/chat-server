@@ -18,6 +18,7 @@ import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.NoExternalStorageException;
 import com.openchat.secureim.database.PlaintextBackupExporter;
 import com.openchat.secureim.util.Dialogs;
+import com.openchat.secureim.util.ResUtil;
 
 import java.io.IOException;
 
@@ -50,7 +51,7 @@ public class ExportFragment extends Fragment {
 
   private void handleExportPlaintextBackup() {
     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-    builder.setIcon(Dialogs.resolveIcon(getActivity(), R.attr.dialog_alert_icon));
+    builder.setIcon(ResUtil.getDrawable(getActivity(), R.attr.dialog_alert_icon));
     builder.setTitle(getActivity().getString(R.string.ExportFragment_export_plaintext_to_sd_card));
     builder.setMessage(getActivity().getString(R.string.ExportFragment_warning_this_will_export_the_plaintext_contents));
     builder.setPositiveButton(getActivity().getString(R.string.ExportFragment_export), new Dialog.OnClickListener() {
