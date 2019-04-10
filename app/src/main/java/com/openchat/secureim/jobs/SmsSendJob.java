@@ -11,6 +11,7 @@ import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.NoSuchMessageException;
+import com.openchat.secureim.database.SmsDatabase;
 import com.openchat.secureim.database.model.SmsMessageRecord;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
 import com.openchat.secureim.jobs.requirements.NetworkOrServiceRequirement;
@@ -39,7 +40,8 @@ public class SmsSendJob extends SendJob {
 
   @Override
   public void onAdded() {
-
+    SmsDatabase database = DatabaseFactory.getEncryptingSmsDatabase(context);
+    database.markAsSending(messageId);
   }
 
   @Override
