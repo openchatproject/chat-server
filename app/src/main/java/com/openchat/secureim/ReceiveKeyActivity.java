@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.openchat.secureim.crypto.IdentityKeyParcelable;
 import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.secureim.crypto.storage.OpenchatServiceIdentityKeyStore;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.IdentityDatabase;
 import com.openchat.secureim.database.PushDatabase;
@@ -33,7 +32,6 @@ import com.openchat.protocal.InvalidMessageException;
 import com.openchat.protocal.InvalidVersionException;
 import com.openchat.protocal.LegacyMessageException;
 import com.openchat.protocal.protocol.PreKeyOpenchatMessage;
-import com.openchat.protocal.state.IdentityKeyStore;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
@@ -78,18 +76,6 @@ public class ReceiveKeyActivity extends BaseActivity {
   }
 
   private void initializeText() {
-    if (isTrusted(this.identityKey)) {
-      initializeTrustedText();
-    } else {
-      initializeUntrustedText();
-    }
-  }
-
-  private void initializeTrustedText() {
-    descriptionText.setText(getString(R.string.ReceiveKeyActivity_the_signature_on_this_key_exchange_is_trusted_but));
-  }
-
-  private void initializeUntrustedText() {
     SpannableString spannableString = new SpannableString(getString(R.string.ReceiveKeyActivity_the_signature_on_this_key_exchange_is_different) + " " +
                                                           getString(R.string.ReceiveKeyActivity_you_may_wish_to_verify_this_contact));
     spannableString.setSpan(new ClickableSpan() {
@@ -106,12 +92,6 @@ public class ReceiveKeyActivity extends BaseActivity {
 
     descriptionText.setText(spannableString);
     descriptionText.setMovementMethod(LinkMovementMethod.getInstance());
-  }
-
-  private boolean isTrusted(IdentityKey identityKey) {
-    IdentityKeyStore identityKeyStore = new OpenchatServiceIdentityKeyStore(this, masterSecret);
-
-    return identityKeyStore.isTrustedIdentity(recipient.getNumber(), identityKey);
   }
 
   private void initializeKey()
