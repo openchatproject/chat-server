@@ -1,21 +1,13 @@
 package com.openchat.secureim;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.preference.PreferenceFragment;
-import android.util.Log;
-import android.widget.Toast;
-
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.preferences.AdvancedPreferenceFragment;
@@ -24,20 +16,11 @@ import com.openchat.secureim.preferences.AppearancePreferenceFragment;
 import com.openchat.secureim.preferences.NotificationsPreferenceFragment;
 import com.openchat.secureim.preferences.SmsMmsPreferenceFragment;
 import com.openchat.secureim.preferences.StoragePreferenceFragment;
-import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.service.KeyCachingService;
-import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;
 import com.openchat.secureim.util.MemoryCleaner;
-import com.openchat.secureim.util.ProgressDialogAsyncTask;
-import com.openchat.secureim.util.ResUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.protocal.util.guava.Optional;
-import com.openchat.imservice.api.OpenchatServiceAccountManager;
-import com.openchat.imservice.api.push.exceptions.AuthorizationFailedException;
-
-import java.io.IOException;
 
 public class ApplicationPreferencesActivity extends PassphraseRequiredActionBarActivity
     implements SharedPreferences.OnSharedPreferenceChangeListener
@@ -50,8 +33,6 @@ public class ApplicationPreferencesActivity extends PassphraseRequiredActionBarA
   private static final String PREFERENCE_CATEGORY_APPEARANCE     = "preference_category_appearance";
   private static final String PREFERENCE_CATEGORY_STORAGE        = "preference_category_storage";
   private static final String PREFERENCE_CATEGORY_ADVANCED       = "preference_category_advanced";
-
-  private static final String PUSH_MESSAGING_PREF = "pref_toggle_push_messaging";
 
   private final DynamicTheme    dynamicTheme    = new DynamicTheme();
   private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
@@ -123,10 +104,7 @@ public class ApplicationPreferencesActivity extends PassphraseRequiredActionBarA
     @Override
     public void onCreate(Bundle icicle) {
       super.onCreate(icicle);
-
       addPreferencesFromResource(R.xml.preferences);
-
-      initializePushMessagingToggle();
 
       this.findPreference(PREFERENCE_CATEGORY_SMS_MMS)
         .setOnPreferenceClickListener(new CategoryClickListener(PREFERENCE_CATEGORY_SMS_MMS));
@@ -203,90 +181,6 @@ public class ApplicationPreferencesActivity extends PassphraseRequiredActionBarA
         fragmentTransaction.commit();
 
         return true;
-      }
-    }
-
-    private void initializePushMessagingToggle() {
-      CheckBoxPreference preference = (CheckBoxPreference)this.findPreference(PUSH_MESSAGING_PREF);
-      preference.setChecked(OpenchatServicePreferences.isPushRegistered(getActivity()));
-      preference.setOnPreferenceChangeListener(new PushMessagingClickListener());
-    }
-
-    private class PushMessagingClickListener implements Preference.OnPreferenceChangeListener {
-      private static final int SUCCESS       = 0;
-      private static final int NETWORK_ERROR = 1;
-
-      private class DisablePushMessagesTask extends ProgressDialogAsyncTask<Void, Void, Integer> {
-        private final CheckBoxPreference checkBoxPreference;
-
-        public DisablePushMessagesTask(final CheckBoxPreference checkBoxPreference) {
-          super(getActivity(), R.string.ApplicationPreferencesActivity_unregistering, R.string.ApplicationPreferencesActivity_unregistering_for_data_based_communication);
-          this.checkBoxPreference = checkBoxPreference;
-        }
-
-        @Override
-        protected void onPostExecute(Integer result) {
-          super.onPostExecute(result);
-          switch (result) {
-          case NETWORK_ERROR:
-            Toast.makeText(getActivity(),
-                           R.string.ApplicationPreferencesActivity_error_connecting_to_server,
-                           Toast.LENGTH_LONG).show();
-            break;
-          case SUCCESS:
-            checkBoxPreference.setChecked(false);
-            OpenchatServicePreferences.setPushRegistered(getActivity(), false);
-            break;
-          }
-        }
-
-        @Override
-        protected Integer doInBackground(Void... params) {
-          try {
-            Context                  context        = getActivity();
-            OpenchatServiceAccountManager accountManager = OpenchatServiceCommunicationFactory.createManager(context);
-
-            accountManager.setGcmId(Optional.<String>absent());
-            GoogleCloudMessaging.getInstance(context).unregister();
-
-            return SUCCESS;
-          } catch (AuthorizationFailedException afe) {
-            Log.w(TAG, afe);
-            return SUCCESS;
-          } catch (IOException ioe) {
-            Log.w(TAG, ioe);
-            return NETWORK_ERROR;
-          }
-        }
-      }
-
-      @Override
-      public boolean onPreferenceChange(final Preference preference, Object newValue) {
-        if (((CheckBoxPreference)preference).isChecked()) {
-          AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-          builder.setIcon(ResUtil.getDrawable(getActivity(), R.attr.dialog_info_icon));
-          builder.setTitle(R.string.ApplicationPreferencesActivity_disable_push_messages);
-          builder.setMessage(R.string.ApplicationPreferencesActivity_this_will_disable_push_messages);
-          builder.setNegativeButton(android.R.string.cancel, null);
-          builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              new DisablePushMessagesTask((CheckBoxPreference)preference).execute();
-            }
-          });
-          builder.show();
-        } else {
-          Intent nextIntent = new Intent(getActivity(), ApplicationPreferencesActivity.class);
-          nextIntent.putExtra("master_secret", getActivity().getIntent().getParcelableExtra("master_secret"));
-
-          Intent intent = new Intent(getActivity(), RegistrationActivity.class);
-          intent.putExtra("cancel_button", true);
-          intent.putExtra("next_intent", nextIntent);
-          intent.putExtra("master_secret", getActivity().getIntent().getParcelableExtra("master_secret"));
-          startActivity(intent);
-        }
-
-        return false;
       }
     }
   }
