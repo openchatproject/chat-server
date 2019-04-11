@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnKeyListener;
+import android.view.ViewStub;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -84,6 +85,7 @@ import com.openchat.secureim.util.ResUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
 import com.openchat.protocal.InvalidMessageException;
+import com.openchat.protocal.util.guava.Optional;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -126,7 +128,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   private AttachmentManager             attachmentManager;
   private BroadcastReceiver             securityUpdateReceiver;
   private BroadcastReceiver             groupUpdateReceiver;
-  private EmojiDrawer                   emojiDrawer;
+  private Optional<EmojiDrawer>         emojiDrawer;
   private EmojiToggle                   emojiToggle;
 
   private Recipients recipients;
@@ -298,8 +300,8 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
   @Override
   public void onBackPressed() {
-    if (emojiDrawer.getVisibility() == View.VISIBLE) {
-      emojiDrawer.setVisibility(View.GONE);
+    if (emojiDrawer.isPresent() && emojiDrawer.get().getVisibility() == View.VISIBLE) {
+      emojiDrawer.get().setVisibility(View.GONE);
       emojiToggle.toggle();
     } else {
       super.onBackPressed();
@@ -659,7 +661,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     sendButton     = (SendButton)  findViewById(R.id.send_button);
     composeText    = (ComposeText) findViewById(R.id.embedded_text_editor);
     charactersLeft = (TextView)    findViewById(R.id.space_left);
-    emojiDrawer    = (EmojiDrawer) findViewById(R.id.emoji_drawer);
+    emojiDrawer    = Optional.absent();
     emojiToggle    = (EmojiToggle) findViewById(R.id.emoji_toggle);
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -687,8 +689,13 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     composeText.setOnEditorActionListener(sendButtonListener);
     composeText.setOnClickListener(composeKeyPressedListener);
     composeText.setOnFocusChangeListener(composeKeyPressedListener);
-    emojiDrawer.setComposeEditText(composeText);
     emojiToggle.setOnClickListener(new EmojiToggleListener());
+  }
+
+  private EmojiDrawer initializeEmojiDrawer() {
+    EmojiDrawer emojiDrawer = (EmojiDrawer)((ViewStub)findViewById(R.id.emoji_drawer_stub)).inflate();
+    emojiDrawer.setComposeEditText(composeText);
+    return emojiDrawer;
   }
 
   private void initializeResources() {
@@ -1069,13 +1076,16 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     public void onClick(View v) {
       InputMethodManager input = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 
-      if (emojiDrawer.isOpen()) {
+      if (emojiDrawer.isPresent() && emojiDrawer.get().isOpen()) {
         input.showSoftInput(composeText, 0);
-        emojiDrawer.hide();
+        emojiDrawer.get().hide();
       } else {
+        if (!emojiDrawer.isPresent()) {
+          emojiDrawer = Optional.of(initializeEmojiDrawer());
+        }
         input.hideSoftInputFromWindow(composeText.getWindowToken(), 0);
 
-        emojiDrawer.show();
+        emojiDrawer.get().show();
       }
     }
   }
@@ -1114,7 +1124,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
     @Override
     public void onClick(View v) {
-      if (emojiDrawer.isOpen()) {
+      if (emojiDrawer.isPresent() && emojiDrawer.get().isOpen()) {
         emojiToggle.performClick();
       }
     }
@@ -1130,7 +1140,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
-      if (hasFocus && emojiDrawer.isOpen()) {
+      if (hasFocus && emojiDrawer.isPresent() && emojiDrawer.get().isOpen()) {
         emojiToggle.performClick();
       }
     }
