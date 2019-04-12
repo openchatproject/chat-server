@@ -20,19 +20,17 @@ Let op, dit schakelt opslagversleuteling uit voor alle berichten en sleutels. Je
   <string name="ApplicationPreferencesActivity_disable_push_messages">Pushberichten uitschakelen?</string>
   <string name="ApplicationPreferencesActivity_this_will_disable_push_messages">
 Dit zal push berichten uitzetten door uw registratie bij de server ongedaan te maken.
-U zal uw telefoonnummer opnieuw moeten registreren als u push berichten weer wilt gebruiken.</string>
+Je zal je telefoonnummer opnieuw moeten registreren als je pushberichten weer wilt gebruiken.</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Fout bij verbinden met de server!</string>
-  <string name="ApplicationPreferencesActivity_sms_enabled">Inkomende SMS geactiveerd</string>
+  <string name="ApplicationPreferencesActivity_sms_enabled">SMS ingeschakeld</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Aanraken om je standaard SMS-applicatie te veranderen</string>
-  <string name="ApplicationPreferencesActivity_sms_disabled">Inkomende SMS uitgeschakeld</string>
-  <string name="ApplicationPreferencesActivity_touch_to_make_openchatservice_your_default_sms_app">Raak aan om OpenchatService je standaard SMS-applicatie te maken</string>
+  <string name="ApplicationPreferencesActivity_sms_disabled">SMS uitgeschakeld</string>
+  <string name="ApplicationPreferencesActivity_touch_to_make_openchatservice_your_default_sms_app">Aanraken om OpenchatService je standaard SMS-applicatie te maken</string>
   <string name="ApplicationPreferencesActivity_on">aan</string>
   <string name="ApplicationPreferencesActivity_On">Aan</string>
   <string name="ApplicationPreferencesActivity_off">uit</string>
   <string name="ApplicationPreferencesActivity_Off">Uit</string>
-  <string name="ApplicationPreferencesActivity_partial">gedeeltelijk</string>
-  <string name="ApplicationPreferencesActivity_sms">SMS</string>
-  <string name="ApplicationPreferencesActivity_mms">MMS</string>
+  <string name="ApplicationPreferencesActivity_sms_mms_summary">SMS %1$s, MMS %2$s</string>
   <string name="AppProtectionPreferenceFragment_minutes">%d minuten</string>
   <string name="DraftDatabase_Draft_image_snippet">(afbeelding)</string>
   <string name="DraftDatabase_Draft_audio_snippet">(audio)</string>
@@ -42,22 +40,26 @@ U zal uw telefoonnummer opnieuw moeten registreren als u push berichten weer wil
   <string name="AttachmentTypeSelectorAdapter_video">Video</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Audio</string>
   <string name="AttachmentTypeSelectorAdapter_contact">Contact info</string>
-  <string name="ConfirmIdentityDialog_you_may_wish_to_verify_this_contact">U kunt wensen dit contact te verifiëren.</string>
+  <string name="ConfirmIdentityDialog_the_signature_on_this_key_exchange_is_different">De identificerende sleutel van %1$s is veranderd. Dit kan betekenen dat iemand je communicatie probeert te onderscheppen of dat %2$s simpelweg OpenchatService opnieuw geïnstalleerd heeft en nu een nieuwe identiteit heeft.</string>
+  <string name="ConfirmIdentityDialog_you_may_wish_to_verify_this_contact">Je wilt wellicht dit contact verifiëren.</string>
   <string name="ConversationItem_message_size_d_kb">Berichtgrootte: %d KB</string>
   <string name="ConversationItem_expires_s">Verloopt: %s</string>
+  <string name="ConversationItem_error_not_delivered">Niet bezorgd</string>
   <string name="ConversationItem_view_secure_media_question">Bekijk beveiligde media?</string>
   <string name="ConversationItem_this_media_has_been_stored_in_an_encrypted_database_external_viewer_warning">Deze media is opgeslagen in een versleutelde database. Om het weer te geven, zal het tijdelijk moeten worden ontsleuteld en naar het opslaggeheugen worden weggeschreven. Weet u zeker dat u dit wil doen?</string>
   <string name="ConversationItem_error_received_stale_key_exchange_message">Fout, verouderd sleuteluitwisselingsbericht ontvangen.</string>
   <string name="ConversationItem_received_key_exchange_message_click_to_process">Sleuteluitwisselingsbericht ontvangen, klik hier om te verwerken.</string>
   <string name="ConversationItem_group_action_left">%1$s heeft de groep verlaten.</string>
+  <string name="ConversationItem_click_for_details">Aanraken voor details</string>
   <string name="ConversationItem_click_to_approve_unencrypted">Tik voor terugvallen naar onbeveiligd</string>
   <string name="ConversationItem_click_to_approve_unencrypted_sms_dialog_title">Terugvallen naar onversleutelde SMS?</string>
   <string name="ConversationItem_click_to_approve_unencrypted_mms_dialog_title">Terugvallen naar onversleutelde MMS?</string>
+  <string name="ConversationItem_click_to_approve_unencrypted_dialog_message">Dit bericht zal <b>niet</b> versleuteld worden om de ontvanger geen OpenchatService meer gebruikt.\n\nOnbeveiligd bericht verzenden?</string>
   <string name="ConversationItem_unable_to_open_media">Geen app gevonden om dit bestand te openen.</string>
   <string name="ConversationActivity_initiate_secure_session_question">Veilige sessie initiëren?</string>
   <string name="ConversationActivity_initiate_secure_session_with_s_question">Initieer beveiligde sessie met %s?</string>
   <string name="ConversationActivity_abort_secure_session_confirmation">Beëindigen beveiligde sessie bevestigen</string>
-  <string name="ConversationActivity_are_you_sure_that_you_want_to_abort_this_secure_session_question">Weet u zeker dat u deze beveiligde sessie wilt beëindigen?</string>
+  <string name="ConversationActivity_are_you_sure_that_you_want_to_abort_this_secure_session_question">Weet je zeker dat je deze beveiligde sessie wilt beëindigen?</string>
   <string name="ConversationActivity_delete_thread_confirmation">Verwijderen gesprek bevestigen</string>
   <string name="ConversationActivity_are_you_sure_that_you_want_to_permanently_delete_this_conversation_question">Weet je zeker dat je dit gesprek permanent wilt verwijderen?</string>
   <string name="ConversationActivity_add_attachment">Voeg bijlage toe</string>
@@ -78,7 +80,7 @@ U zal uw telefoonnummer opnieuw moeten registreren als u push berichten weer wil
   <string name="ConversationActivity_calls_not_supported">Bellen niet ondersteund</string>
   <string name="ConversationActivity_this_device_does_not_appear_to_support_dial_actions">Dit apparaat lijkt dial-acties niet te ondersteunen.</string>
   <string name="ConversationActivity_leave_group">Groep verlaten?</string>
-  <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">Weet u zeker dat u deze groep wil verlaten?</string>
+  <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">Weet je zeker dat je deze groep wil verlaten?</string>
   <string name="ConversationActivity_transport_insecure_sms">Onveilige SMS</string>
   <string name="ConversationActivity_transport_insecure_mms">Onveilige MMS</string>
   <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
@@ -97,6 +99,8 @@ U zal uw telefoonnummer opnieuw moeten registreren als u push berichten weer wil
   <string name="ConversationFragment_unable_to_write_to_sd_card_exclamation">Opslag niet beschrijfbaar!</string>
   <string name="ConversationFragment_saving_attachment">Bijlage opslaan</string>
   <string name="ConversationFragment_saving_attachment_to_sd_card">Bijlage aan het opslaan...</string>
+  <string name="ConversationFragment_pending">In afwachting...</string>
+  <string name="ConversationFragment_push">Data (OpenchatService)</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
   <string name="ConversationFragment_deleting">Verwijderen...</string>
@@ -106,6 +110,8 @@ U zal uw telefoonnummer opnieuw moeten registreren als u push berichten weer wil
   <string name="ConversationListFragment_deleting">Aan het verwijderen</string>
   <string name="ConversationListFragment_deleting_selected_threads">Geselecteerde gesprekken aan het verwijderen...</string>
   <string name="ConversationListItem_key_exchange_message">Sleuteluitwisselingsbericht...</string>
+  <string name="CustomDefaultPreference_using_custom">Handmatig gebruiken: %s</string>
+  <string name="CustomDefaultPreference_using_default">Standaard gebruiken: %s</string>
   <string name="CustomDefaultPreference_none">Niets</string>
   <string name="DateUtils_now">Nu</string>
   <string name="ShareActivity_share_with">Delen met</string>
@@ -161,6 +167,8 @@ Herstellen van een versleutelde back-up zal je bestaande sleutels, voorkeuren en
   <string name="KeyScanningActivity_no_scanned_key_found_exclamation">Geen gescande sleutel gevonden!</string>
   <string name="KeyScanningActivity_install_barcode_Scanner">Installeer Barcode Scanner?</string>
   <string name="KeyScanningActivity_this_application_requires_barcode_scanner_would_you_like_to_install_it">OpenchatService heeft Barcode Scanner nodig voor QR codes.</string>
+  <string name="MessageDetailsRecipient_failed_to_send">Verzenden mislukt</string>
+  <string name="MessageDetailsRecipient_new_identity">Nieuwe identiteit</string>
   <string name="MmsDownloader_error_storing_mms">MMS opslaan mislukt!</string>
   <string name="MmsDownloader_error_connecting_to_mms_provider">Fout bij verbinden met MMS provider...</string>
   <string name="MmsDownloader_error_reading_mms_settings">Fout bij het lezen van de MMS-instellingen van uw provider...</string>
@@ -190,7 +198,7 @@ Herstellen van een versleutelde back-up zal je bestaande sleutels, voorkeuren en
   <string name="PassphrasePromptActivity_ok_button_content_description">Wachtwoord instellen</string>
   <string name="PassphrasePromptActivity_invalid_passphrase_exclamation">Ongeldig wachtwoord!</string>
   <string name="ReceiveKeyActivity_the_signature_on_this_key_exchange_is_different">De handtekening op deze sleuteluitwisseling is anders dan wat u eerder ontvangen heeft van dit contact. Dit kan betekenen dat iemand probeert uw communicatie the onderscheppen, of dat dit contact gewoon OpenchatService opnieuw geïnstalleerd heeft en nu een nieuwe identiteitssleutel heeft.</string>
-  <string name="ReceiveKeyActivity_you_may_wish_to_verify_this_contact">U kunt wensen dit contact te verifiëren.</string>
+  <string name="ReceiveKeyActivity_you_may_wish_to_verify_this_contact">Je wilt wellicht dit contact verifiëren.</string>
   <string name="ReceiveKeyActivity_processing">Aan het verwerken</string>
   <string name="ReceiveKeyActivity_processing_key_exchange">Sleuteluitwisseling verwerken...</string>
   <string name="RegistrationActivity_connect_with_openchatservice">Verbind met OpenchatService</string>
@@ -240,13 +248,13 @@ ontvangen!</string>
 Sleuteluitwisselingsbericht ontvangen voor een verkeerde protocol-versie.</string>
   <string name="SmsMessageRecord_received_message_with_unknown_identity_key_click_to_process">
 Bericht ontvangen met een onbekende identiteitssleutel. Klik om te verwerken en weer te geven.</string>
-  <string name="SmsMessageRecord_received_updated_but_unknown_identity_information">Bijgewerkte maar onbekende identiteitsgegevens ontvangen. Raak aan om identiteit te bevestigen.</string>
+  <string name="SmsMessageRecord_received_updated_but_unknown_identity_information">Bijgewerkte maar onbekende identiteitsgegevens ontvangen. Aanraken om identiteit te bevestigen.</string>
   <string name="SmsMessageRecord_secure_session_ended">Beveiligde sessie beëindigd.</string>
   <string name="SmsMessageRecord_duplicate_message">Dupliceer bericht.</string>
   <string name="ThreadRecord_left_the_group">Je hebt deze groep verlaten...</string>
   <string name="TheadRecord_secure_session_ended">Beveiligde sessie beëindigd.</string>
   <string name="ThreadRecord_draft">Concept:</string>
-  <string name="VerifyIdentityActivity_you_do_not_have_an_identity_key">U heeft geen identiteitssleutel.</string>
+  <string name="VerifyIdentityActivity_you_do_not_have_an_identity_key">Je hebt geen identiteitssleutel.</string>
   <string name="VerifyIdentityActivity_recipient_has_no_identity_key">De ontvanger heeft geen identiteitssleutel.</string>
   <string name="VerifyIdentityActivity_recipient_has_no_identity_key_exclamation">De ontvanger heeft geen identiteitssleutel!</string>
   <string name="VerifyIdentityActivity_scan_their_key_to_compare">Scan zijn/haar sleutel om te vergelijken</string>
@@ -283,13 +291,14 @@ Bericht ontvangen met een onbekende identiteitssleutel. Klik om te verwerken en 
   <string name="MmsMessageRecord_mms_message_encrypted_for_non_existing_session">MMS-bericht versleuteld voor niet bestaande sessie...</string>
   <string name="ApplicationMigrationService_import_in_progress">Bezig met importeren</string>
   <string name="ApplicationMigrationService_importing_text_messages">Tekstberichten aan het importeren</string>
-  <string name="KeyCachingService_openchatservice_passphrase_cached">Raak aan om te openen.</string>
-  <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Raak aan om te openen, of raak het slot aan om te sluiten.</string>
+  <string name="KeyCachingService_openchatservice_passphrase_cached">Aanraken om te openen.</string>
+  <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Aanraken om te openen of slot aanraken om te sluiten.</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatService is ontgrendeld</string>
   <string name="KeyCachingService_lock">Vergrendel met wachtwoord</string>
   <string name="MessageNotifier_d_new_messages">(%d) Nieuwe berichten</string>
   <string name="MessageNotifier_most_recent_from_s">Meest recente van: %s</string>
   <string name="MessageNotifier_encrypted_message">Versleuteld bericht...</string>
+  <string name="MessageNotifier_media_message_with_text">Mediabericht: %s</string>
   <string name="MessageNotifier_no_subject">(Geen onderwerp)</string>
   <string name="MessageNotifier_message_delivery_failed">Berichtaflevering mislukt.</string>
   <string name="MessageNotifier_failed_to_deliver_message">Het bericht afleveren is mislukt.</string>
@@ -310,15 +319,15 @@ Bericht ontvangen met een onbekende identiteitssleutel. Klik om te verwerken en 
   <string name="ContactSelectionlistFragment_select_for">Selecteer voor</string>
   <string name="contact_selection_recent_activity__no_recent_calls">Geen recente gesprekken.</string>
   <string name="conversation_activity__type_message_push">OpenchatService bericht versturen</string>
-  <string name="conversation_activity__type_message_sms_secure">Verstuur beveiligde SMS</string>
   <string name="conversation_activity__type_message_sms_insecure">Verstuur onbeveiligde SMS</string>
-  <string name="conversation_activity__type_message_mms_secure">Verstuur beveiligde MMS</string>
   <string name="conversation_activity__type_message_mms_insecure">Verstuur onbeveiligde MMS</string>
   <string name="conversation_activity__send">Verstuur</string>
   <string name="conversation_activity__remove">Verwijder</string>
   <string name="conversation_activity__window_description">Gesprek met %1$s</string>
   <string name="conversation_activity__compose_description">Bericht samenstelling</string>
   <string name="conversation_activity__emoji_toggle_description">Wissel emoji toetsenbord</string>
+  <string name="conversation_activity__attachment_thumbnail">Bijlage Miniatuur</string>
+  <string name="conversation_item__mms_downloading_description">Mediabericht aan het downloaden</string>
   <string name="conversation_item__mms_image_description">Mediabericht</string>
   <string name="conversation_item__play_button_description">Afspeelknop</string>
   <string name="conversation_item__secure_message_description">Beveiligd bericht</string>
@@ -357,6 +366,8 @@ Herstel een eerder geëxporteerde versleutelde back-up van OpenchatService.</str
   <string name="import_fragment__import_a_plaintext_backup_file">
 Importeer een niet-versleutelde back-up voor \'SMS Back-up En Herstellen\'.</string>
   <string name="media_overview_activity__no_images">Geen afbeeldingen</string>
+  <string name="message_recipients_list_item__verify">VERIFIËREN</string>
+  <string name="message_recipients_list_item__resend">OPNIEUW VERZENDEN</string>
   <string name="MmsPreferencesFragment__manual_mms_settings_are_required">Voor jouw telefoon zijn handmatige MMS-instellingen noodzakelijk.</string>
   <string name="MmsPreferencesFragment__enabled">Ingeschakeld</string>
   <string name="MmsPreferencesFragment__disabled">Uitgeschakeld</string>
@@ -367,11 +378,14 @@ Importeer een niet-versleutelde back-up voor \'SMS Back-up En Herstellen\'.</str
   <string name="GroupUtil_group_updated">Groep bijgewerkt.</string>
   <string name="GroupUtil_title_is_now">Titel is nu \'%1$s\'.</string>
   <string name="prompt_passphrase_activity__unlock">Ontgrendel</string>
-  <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService heeft MMS-instellingen nodig om mediaberichten te kunnen versturen via uw telefoonprovider. Uw toestel heeft deze informatie niet beschikbaar. Dit komt vaker voor bij gelockte toestellen en andere beperkende configuraties.</string>
+  <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService heeft MMS-instellingen nodig om mediaberichten te kunnen versturen via uw telefoonprovider. Je toestel heeft deze informatie niet beschikbaar. Dit komt vaker voor bij gelockte toestellen en andere beperkende configuraties.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Om mediaberichten en groepsberichten te versturen, drukt u op \'OK\' en voert u de gevraagde gegevens in. De MMS-instellingen voor uw provider kunnen meestal gevonden worden door te zoeken naar \'&amp;lt;uw provider&amp;gt; APN\'. U hoeft dit maar eenmaal te doen.</string>
   <string name="receive_key_activity__complete">Voltooid</string>
-  <string name="registration_activity__your_country">UW LAND</string>
-  <string name="registration_activity__your_country_code_and_phone_number">UW LANDCODE EN
+  <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
+        Verifieer je telefoonnummer om met OpenchatService verbinding te maken.
+    </string>
+  <string name="registration_activity__your_country">JE LAND</string>
+  <string name="registration_activity__your_country_code_and_phone_number">JE LANDCODE EN
 TELEFOONNUMMER</string>
   <string name="registration_activity__phone_number">TELEFOONNUMMER</string>
   <string name="registration_activity__register">Registreren</string>
@@ -395,7 +409,7 @@ OpenchatService werkt niet met nummers van Google Voice.</string>
   <string name="registration_progress_activity__voice_verification">Spraakverificatie</string>
   <string name="registration_progress_activity__openchatservice_can_also_call_you_to_verify_your_number">
 OpenchatService kan je ook bellen om je nummer te verifiëren. Raak \'Bel Me\' aan en voer hieronder de 6-cijferige code code in die wordt voorgelezen.</string>
-  <string name="registration_progress_activity__verify">Verifieer</string>
+  <string name="registration_progress_activity__verify">Verifiëren</string>
   <string name="registration_progress_activity__call_me">Bel me</string>
   <string name="registration_progress_activity__edit_number">Nummer bewerken</string>
   <string name="registration_progress_activity__connectivity_error">Verbindingsfout.</string>
@@ -420,10 +434,20 @@ SMS-verificatie...</string>
 OpenchatService heeft te lang moeten wachten op het binnenkomen van de verificatie-SMS.</string>
   <string name="registration_progress_activity__sms_verification_failed">SMS-verificatie mislukt.</string>
   <string name="registration_progress_activity__generating_keys">Sleutels genereren...</string>
+  <string name="registration_progress_activity__alert">Melding</string>
+  <string name="registration_progress_activity__telephone">Telefoon</string>
+  <string name="registration_progress_activity__check">Check</string>
   <string name="recipients_panel__to"><small>Typ een naam of nummer</small></string>
   <string name="recipients_panel__add_member">Voeg groepslid toe</string>
   <string name="verify_identity_activity__their_identity_they_read">Identiteit partner (partner leest):</string>
   <string name="verify_identity_activity__your_identity_you_read">Jouw identiteit (jij leest):</string>
+  <string name="message_details_header__issues_need_your_attention">Wat zaken vergen je aandacht.</string>
+  <string name="message_details_header__sent">Verzonden</string>
+  <string name="message_details_header__received">Ontvangen</string>
+  <string name="message_details_header__via">Via</string>
+  <string name="message_details_header__to">Naar:</string>
+  <string name="message_details_header__from">Van:</string>
+  <string name="message_details_header__with">Met:</string>
   <string name="AndroidManifest__create_passphrase">Wachtwoord creëren</string>
   <string name="AndroidManifest__enter_passphrase">Wachtwoord invoeren</string>
   <string name="AndroidManifest__select_contacts">Contacten selecteren</string>
@@ -437,6 +461,8 @@ OpenchatService heeft te lang moeten wachten op het binnenkomen van de verificat
   <string name="AndroidManifest__media_overview_named">Alle afbeeldingen met %1$s</string>
   <string name="arrays__import_export">Importeer / exporteer </string>
   <string name="arrays__my_identity_key">Mijn identiteitssleutel</string>
+  <string name="arrays__use_default">Gebruik standaard</string>
+  <string name="arrays__use_custom">Gebruik handmatig</string>
   <plurals name="minutes_ago">
     <item quantity="one">%d minuut</item>
     <item quantity="other">%d minuten</item>
@@ -447,11 +473,10 @@ OpenchatService heeft te lang moeten wachten op het binnenkomen van de verificat
   </plurals>
   <string name="preferences__general">Algemeen</string>
   <string name="preferences__sms_mms">SMS en MMS</string>
-  <string name="preferences__push_sms_category">Push en SMS</string>
   <string name="preferences__pref_all_sms_title">Ontvang alle SMS</string>
   <string name="preferences__pref_all_mms_title">Ontvang alle MMS</string>
-  <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_text_messages">OpenchatService gebruiken voor het bekijken en opslaan van alle inkomende tekstberichten</string>
-  <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_multimedia_messages">OpenchatService gebruiken voor het bekijken en opslaan van alle inkomende multimediaberichten</string>
+  <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_text_messages">OpenchatService gebruiken voor alle inkomende tekstberichten</string>
+  <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_multimedia_messages">OpenchatService gebruiken voor alle inkomende multimediaberichten</string>
   <string name="preferences__input_settings">Invoer Instellingen</string>
   <string name="preferences__enable_enter_key_title">Activeer Enter-toets</string>
   <string name="preferences__replace_smiley_with_enter_key">De smiley-toets vervangen door een Enter-toets</string>
@@ -459,12 +484,14 @@ OpenchatService heeft te lang moeten wachten op het binnenkomen van de verificat
   <string name="preferences__pressing_the_enter_key_will_send_text_messages">De \'Enter\' toets gebruiken voor versturen tekstberichten</string>
   <string name="preferences__display_settings">Beeldscherminstellingen</string>
   <string name="preferences__choose_identity">Identiteit kiezen</string>
-  <string name="preferences__choose_your_contact_entry_from_the_contacts_list">Kies uw contactinformatie uit de contactpersonenlijst.</string>
+  <string name="preferences__choose_your_contact_entry_from_the_contacts_list">Kies je contactgegevens uit de contactpersonenlijst.</string>
   <string name="preferences__change_passphrase">Wachtwoord veranderen</string>
   <string name="preferences__change_my_passphrase">Mijn wachtwoord veranderen</string>
   <string name="preferences__enable_passphrase">Wachtwoord inschakelen</string>
+  <string name="preferences__passphrase_summary">Wachtwoord %s</string>
   <string name="preferences__enable_local_encryption_of_messages_and_keys">Lokale versleuteling van berichten en sleutels inschakelen</string>
   <string name="preferences__screen_security">Schermbeveiliging</string>
+  <string name="preferences__screen_security_summary">Schermbeveiliging %s</string>
   <string name="preferences__disable_screen_security_to_allow_screen_shots">Screenshots onmogelijk maken in deze app en de recente lijst</string>
   <string name="preferences__forget_passphrase_from_memory_after_some_interval">Wachtwoord na een bepaalde tijd uit het geheugen vergeten</string>
   <string name="preferences__timeout_passphrase">Time-out wachtwoord</string>
@@ -512,6 +539,11 @@ OpenchatService heeft te lang moeten wachten op het binnenkomen van de verificat
   <string name="preferences__advanced_mms_access_point_names">Handmatige MMS instellingen</string>
   <string name="preferences__enable_manual_mms">Gebruik handmatige MMS instellingen</string>
   <string name="preferences__override_system_mms_settings">Gebruik onderstaande gegevens in plaats van de MMS instellingen van het systeem.</string>
+  <string name="preferences__mmsc_url">MMSC URL</string>
+  <string name="preferences__mms_proxy_host">MMS Proxy Server</string>
+  <string name="preferences__mms_proxy_port">MMS Proxy Poort</string>
+  <string name="preferences__mmsc_username">MMSC Gebruikersnaam</string>
+  <string name="preferences__mmsc_password">MMSC Wachtwoord</string>
   <string name="preferences__sms_delivery_reports">SMS ontvangstbevestigingen</string>
   <string name="preferences__request_a_delivery_report_for_each_sms_message_you_send">Verzoeken om een ontvangstbevestiging voor ieder verzonden SMS bericht</string>
   <string name="preferences__automatically_delete_older_messages_once_a_conversation_thread_exceeds_a_specified_length">Automatisch oudere berichten verwijderen wanneer een gesprek meer dan een bepaald aantal berichten bevat</string>
@@ -523,23 +555,15 @@ OpenchatService heeft te lang moeten wachten op het binnenkomen van de verificat
   <string name="preferences__dark_theme">Donker</string>
   <string name="preferences__appearance">Uiterlijk</string>
   <string name="preferences__theme">Thema</string>
+  <string name="preferences__theme_summary">Thema %s</string>
   <string name="preferences__default">Standaard</string>
   <string name="preferences__language">Taal</string>
-  <string name="preferences__make_default_sms_app">Stel in als standaard SMS-app</string>
-  <string name="preferences__make_openchatservice_the_default_sms_mms_app">Stel OpenchatService in als standaard SMS/MMS-applicatie voor uw systeem.</string>
-  <string name="preferences__use_data_channel">Pushberichten</string>
+  <string name="preferences__language_summary">Taal %s</string>
+  <string name="preferences__openchatservice_messages">OpenchatService berichten</string>
   <string name="preferences__use_the_data_channel_for_communication_with_other_openchatservice_users">
-Privacy verbeteren en SMS-kosten vermijden door het datakanaal te gebruiken voor communicatie met andere OpenchatService gebruikers</string>
-  <string name="preferences__sms_fallback">Uitgaande SMS/MMS</string>
+        Gratis privéberichten versturen aan OpenchatService en Openchat gebruikers
+    </string>
   <string name="preferences__submit_debug_log">Dien debug log in</string>
-  <string name="preferences__sms_outgoing_push_users">OpenchatService gebruikers</string>
-  <string name="preferences__sms_fallback_push_users_ask">eerst vragen</string>
-  <string name="preferences__sms_fallback_push_users_no_mms">geen MMS</string>
-  <string name="preferences__sms_outgoing_push_users_description">Stuur een veilige SMS als de dataverbinding niet beschikbaar is</string>
-  <string name="preferences__sms_fallback_ask_before_sending_sms_mms">Vragen voor het versturen van SMS/MMS</string>
-  <string name="preferences__sms_fallback_never_send_mms">Nooit MMS versturen</string>
-  <string name="preferences__sms_fallback_non_push_users">Niet-OpenchatService gebruikers</string>
-  <string name="preferences__sms_fallback_nobody">Niemand</string>
   <string name="preferences__support_wifi_calling">\'Bellen via WiFi\' compatibiliteitsmodus</string>
   <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Aanzetten als je toestel SMS/MMS ontvangst via WiFi gebruikt (enkel aanzetten als \'Bellen via WiFi\' aan staat).</string>
   <string name="contact_selection_list__menu_select_all">Alles selecteren</string>
@@ -556,11 +580,16 @@ Privacy verbeteren en SMS-kosten vermijden door het datakanaal te gebruiken voor
   <string name="conversation_context__menu_forward_message">Bericht doorsturen</string>
   <string name="conversation_context__menu_resend_message">Bericht opnieuw versturen</string>
   <string name="conversation_context_image__save_attachment">Bijlage opslaan</string>
+  <string name="conversation_insecure__invite">Uitnodigen</string>
   <string name="conversation_insecure__menu_start_secure_session">Beveiligde sessie beginnen</string>
   <string name="conversation_insecure__security">Beveiliging</string>
   <string name="conversation_list_batch__menu_delete_selected">Geselecteerde verwijderen</string>
   <string name="conversation_list_batch__menu_select_all">Alles selecteren</string>
   <string name="conversation_list__menu_search">Zoeken</string>
+  <string name="conversation_list_item_view__contact_photo_image">Foto Contact</string>
+  <string name="conversation_list_item_view__attachment_indicator">Bijlage Indicator</string>
+  <string name="conversation_list_item_view__error_alert">Foutmelding</string>
+  <string name="conversation_list_fragment__fab_content_description">Nieuw gesprek</string>
   <string name="conversation_secure_verified__menu_security">Beveiliging</string>
   <string name="conversation_secure_verified__menu_verify_identity">Identiteit verifiëren</string>
   <string name="conversation_secure_verified__menu_abort_secure_session">Beveiligde sessie beëindigen</string>
@@ -585,11 +614,11 @@ Privacy verbeteren en SMS-kosten vermijden door het datakanaal te gebruiken voor
   <string name="reminder_header_expired_build">Je build van OpenchatService is verlopen!</string>
   <string name="reminder_header_expired_build_details">Berichten zullen niet langer verzonden worden, gelieve te updaten naar de recentste versie.</string>
   <string name="reminder_header_sms_default_title">Als standaard SMS-app gebruiken?</string>
-  <string name="reminder_header_sms_default_text">Raak aan om van OpenchatService je standaard SMS applicatie te maken.</string>
+  <string name="reminder_header_sms_default_text">Aanraken om van OpenchatService je standaard SMS applicatie te maken.</string>
   <string name="reminder_header_sms_import_title">SMS importeren uit systeem?</string>
-  <string name="reminder_header_sms_import_text">Raak aan om de SMS berichten in je telefoon te kopiëren naar een versleutelde database.</string>
+  <string name="reminder_header_sms_import_text">Aanraken om de SMS berichten in je telefoon te kopiëren naar een versleutelde database.</string>
   <string name="reminder_header_push_title">Activeer OpenchatService berichten</string>
-  <string name="reminder_header_push_text">Raak aan voor directe aflevering, sterkere privacy, en geen SMS kosten.</string>
+  <string name="reminder_header_push_text">Aanraken voor directe aflevering, sterkere privacy, en geen SMS kosten.</string>
   <string name="MediaPreviewActivity_you">Jij</string>
   <string name="MediaPreviewActivity_cant_display">Weergeven van deze afbeelding is mislukt</string>
   <string name="MediaPreviewActivity_unssuported_media_type">Niet ondersteund mediatype</string>
@@ -598,4 +627,5 @@ Privacy verbeteren en SMS-kosten vermijden door het datakanaal te gebruiken voor
   <string name="trimmer__deleting">Verwijderen...</string>
   <string name="trimmer__deleting_old_messages">Oude berichten verwijderen...</string>
   <string name="trimmer__old_messages_successfully_deleted">Oude berichten succesvol verwijderd</string>
+  <string name="transport_selection_list_item__transport_icon">Transportkanaal icoon</string>
 </resources>

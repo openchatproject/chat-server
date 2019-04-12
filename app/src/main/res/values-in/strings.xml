@@ -20,9 +20,7 @@ dapat mengaksesnya</string>
   <string name="ApplicationPreferencesActivity_unregistering_for_data_based_communication">Keluar dari komunikasi berbasis data</string>
   <string name="ApplicationPreferencesActivity_disable_push_messages">Jangan gunakan push message</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Kesalahan dalam menghubungkan ke server!</string>
-  <string name="ApplicationPreferencesActivity_sms_enabled">SMS Terima Aktif</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Sentuh untuk mengubah aplikasi SMS default</string>
-  <string name="ApplicationPreferencesActivity_sms_disabled">SMS Terima Non Aktif</string>
   <string name="ApplicationPreferencesActivity_touch_to_make_openchatservice_your_default_sms_app">Sentuh untuk membuat OpenchatService sebagai aplikasi SMS default</string>
   <string name="AttachmentTypeSelectorAdapter_picture">Gambar</string>
   <string name="AttachmentTypeSelectorAdapter_video">Video</string>
@@ -283,8 +281,6 @@ Telah gagal
   <string name="preferences__general">Umum</string>
   <string name="preferences__pref_all_sms_title">Terima semua SMS</string>
   <string name="preferences__pref_all_mms_title">Terima semua MMS</string>
-  <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_text_messages">Gunakan OpenchatService untuk melihat dan menyimpan semua pesan teks yang masuk</string>
-  <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_multimedia_messages">Gunakan OpenchatService untuk melihat dan menyimpan semua pesan multimedia yang masuk</string>
   <string name="preferences__input_settings">Seting Masukan</string>
   <string name="preferences__enable_enter_key_title">Gunakan tombol Enter</string>
   <string name="preferences__choose_your_contact_entry_from_the_contacts_list">Pilih kontak anda dari daftar kontak yang ada.</string>
@@ -333,13 +329,7 @@ Telah gagal
   <string name="preferences__theme">Tema</string>
   <string name="preferences__default">Default</string>
   <string name="preferences__language">Bahasa</string>
-  <string name="preferences__make_default_sms_app">Jadikan sebagai aplikasi SMS default</string>
-  <string name="preferences__make_openchatservice_the_default_sms_mms_app">Jadikan OpenchatService sebagai palikasi default untuk SMS/MMS.</string>
-  <string name="preferences__use_data_channel">Pesan Push</string>
   <string name="preferences__submit_debug_log">Kirim debug log</string>
-  <string name="preferences__sms_outgoing_push_users">Pengguna OpenchatService</string>
-  <string name="preferences__sms_fallback_non_push_users">Bukan pengguna OpenchatService</string>
-  <string name="preferences__sms_fallback_nobody">Tak seorangpun</string>
   <string name="contact_selection__menu_finished">Selesai</string>
   <string name="conversation_callable__menu_call">Panggil</string>
   <string name="conversation_context__menu_message_details">Rincian pesan</string>

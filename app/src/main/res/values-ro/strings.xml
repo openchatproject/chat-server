@@ -23,17 +23,12 @@ Atenție, acestă acțiune va dezactiva stocarea criptată a tuturor mesajelor �
         Numărul tău de telefon va trebui înregistrat din nou pentru a utiliza mesajele de tip push pe viitor.
     </string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Eroare de conectare cu serverul!</string>
-  <string name="ApplicationPreferencesActivity_sms_enabled">Primire SMS activă</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Atingeţi pentru a schimba aplicaţia SMS implicită</string>
-  <string name="ApplicationPreferencesActivity_sms_disabled">SMS-uri primite dezactivate</string>
   <string name="ApplicationPreferencesActivity_touch_to_make_openchatservice_your_default_sms_app">Atingeţi pentru a seta OpenchatService ca şi aplicaţie SMS implicită</string>
   <string name="ApplicationPreferencesActivity_on">activat</string>
   <string name="ApplicationPreferencesActivity_On">Activat</string>
   <string name="ApplicationPreferencesActivity_off">dezactivat</string>
   <string name="ApplicationPreferencesActivity_Off">Dezactivat</string>
-  <string name="ApplicationPreferencesActivity_partial">parțial</string>
-  <string name="ApplicationPreferencesActivity_sms">SMS</string>
-  <string name="ApplicationPreferencesActivity_mms">MMS</string>
   <string name="AppProtectionPreferenceFragment_minutes">%d minute</string>
   <string name="DraftDatabase_Draft_image_snippet">(imagine)</string>
   <string name="DraftDatabase_Draft_audio_snippet">(audio)</string>
@@ -51,6 +46,8 @@ Atenție, acestă acțiune va dezactiva stocarea criptată a tuturor mesajelor �
   <string name="ConversationItem_error_received_stale_key_exchange_message">Eroare, mesajul pentru schimbul de chei este vechi.</string>
   <string name="ConversationItem_received_key_exchange_message_click_to_process">Am recepționat un mesaj \"schimb de cheie\", tastați pentru a-l procesa.</string>
   <string name="ConversationItem_group_action_left">%1$s a ieșit din grup.</string>
+  <string name="ConversationItem_click_for_details">Apasă pentru detalii</string>
+  <string name="ConversationItem_click_to_approve_unencrypted">Apasă pentru revenirea la soluția ne-securizată</string>
   <string name="ConversationItem_click_to_approve_unencrypted_sms_dialog_title">Reveniţi la SMS necriptat ca soluţie de rezervă?</string>
   <string name="ConversationItem_click_to_approve_unencrypted_mms_dialog_title">Reveniţi la MMS necriptat ca soluţie de rezervă?</string>
   <string name="ConversationItem_unable_to_open_media">Nu a fost găsită o aplicație pentru a deschide acest tip media.</string>
@@ -96,6 +93,8 @@ Atenție, acestă acțiune va dezactiva stocarea criptată a tuturor mesajelor �
   <string name="ConversationFragment_unable_to_write_to_sd_card_exclamation">Nu se poate scrie pe spațiul de stocare!</string>
   <string name="ConversationFragment_saving_attachment">Ataşamentul se salvează</string>
   <string name="ConversationFragment_saving_attachment_to_sd_card">Atașamentul se salvează pe spațiul de stocare...</string>
+  <string name="ConversationFragment_pending">În curs...</string>
+  <string name="ConversationFragment_push">Date (OpenchatService)</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
   <string name="ConversationFragment_deleting">Se șterge...</string>
@@ -105,7 +104,10 @@ Atenție, acestă acțiune va dezactiva stocarea criptată a tuturor mesajelor �
   <string name="ConversationListFragment_deleting">Se șterge</string>
   <string name="ConversationListFragment_deleting_selected_threads">Se şterg conversaţiile selectate...</string>
   <string name="ConversationListItem_key_exchange_message">Mesaj pentru schimb de chei...</string>
+  <string name="CustomDefaultPreference_using_custom">Specific %s</string>
+  <string name="CustomDefaultPreference_using_default">Implicit: %s</string>
   <string name="CustomDefaultPreference_none">Niciuna</string>
+  <string name="DateUtils_now">Acum</string>
   <string name="ShareActivity_share_with">Partajează cu</string>
   <string name="ExportFragment_export">Exportă</string>
   <string name="ExportFragment_export_plaintext_to_sd_card">Export în format text pe SD card?</string>
@@ -157,6 +159,7 @@ Restaurarea unui backup criptat va înlocui complet cheile existente, setările 
   <string name="KeyScanningActivity_no_scanned_key_found_exclamation">Nu a fost găsită nici o cheie scanată!</string>
   <string name="KeyScanningActivity_install_barcode_Scanner">Instalez scannerul de coduri de bare?</string>
   <string name="KeyScanningActivity_this_application_requires_barcode_scanner_would_you_like_to_install_it">OpenchatService are nevoie de Barcode Scanner pentru codurile QR.</string>
+  <string name="MessageDetailsRecipient_new_identity">Identitate nouă</string>
   <string name="MmsDownloader_error_storing_mms">Eroare la stocarea MMS-ului!</string>
   <string name="MmsDownloader_error_connecting_to_mms_provider">Eroare de conectare la furnizorul MMS...</string>
   <string name="MmsDownloader_error_reading_mms_settings">Eroare la citirea setărilor MMS ale operatorului wireless...</string>
@@ -168,6 +171,10 @@ Restaurarea unui backup criptat va înlocui complet cheile existente, setările 
   <string name="PassphraseChangeActivity_incorrect_old_passphrase_exclamation">Parola veche este incorectă!</string>
   <string name="DeviceProvisioningActivity_cancel">ANULEAZĂ</string>
   <string name="DeviceProvisioningActivity_continue">CONTINUĂ</string>
+  <string name="DeviceProvisioningActivity_content_bullets">
+        - Citirea tuturor mesajelor
+        \n- Trimiterea mesajelor în numele tău
+    </string>
   <string name="DeviceProvisioningActivity_content_progress_title">Se adaugă dispozitivul...</string>
   <string name="DeviceProvisioningActivity_content_progress_content">Se adaugă un dispozitiv nou...</string>
   <string name="DeviceProvisioningActivity_content_progress_success">Dispozitiv adăugat!</string>
@@ -278,6 +285,7 @@ Primit mesaj trimis cu o cheie de identitate necunoscută. Faceți click pentru 
   <string name="MessageNotifier_d_new_messages">%d mesaje noi</string>
   <string name="MessageNotifier_most_recent_from_s">Cel mai recent de la: %s</string>
   <string name="MessageNotifier_encrypted_message">Mesaj criptat...</string>
+  <string name="MessageNotifier_media_message_with_text">Mesaje media: %s</string>
   <string name="MessageNotifier_no_subject">(Fără subiect)</string>
   <string name="MessageNotifier_message_delivery_failed">Trimiterea mesajului a esuat.</string>
   <string name="MessageNotifier_failed_to_deliver_message">Mesajul nu a putut fi trimis.</string>
@@ -298,15 +306,15 @@ Primit mesaj trimis cu o cheie de identitate necunoscută. Faceți click pentru 
   <string name="ContactSelectionlistFragment_select_for">Selectează pentru</string>
   <string name="contact_selection_recent_activity__no_recent_calls">Nu exista apeluri recente.</string>
   <string name="conversation_activity__type_message_push">Trimite mesaj OpenchatService</string>
-  <string name="conversation_activity__type_message_sms_secure">Trimite SMS securizat</string>
   <string name="conversation_activity__type_message_sms_insecure">Trimite SMS nesecurizat</string>
-  <string name="conversation_activity__type_message_mms_secure">Trimite MMS securizat</string>
   <string name="conversation_activity__type_message_mms_insecure">Trimite SMS nesecurizat</string>
   <string name="conversation_activity__send">Trimite</string>
   <string name="conversation_activity__remove">Șterge</string>
   <string name="conversation_activity__window_description">Conversaţie cu %1$s</string>
   <string name="conversation_activity__compose_description">Compunere mesaj</string>
   <string name="conversation_activity__emoji_toggle_description">Comutare tastatură emoji</string>
+  <string name="conversation_activity__attachment_thumbnail">Pictogramă atașament</string>
+  <string name="conversation_item__mms_downloading_description">Mesajul media se descarcă</string>
   <string name="conversation_item__mms_image_description">Mesaj media</string>
   <string name="conversation_item__play_button_description">Buton redare</string>
   <string name="conversation_item__secure_message_description">Mesaj securizat</string>
@@ -345,6 +353,9 @@ Restaurează un backup criptat exportat anterior din OpenchatService.</string>
   <string name="import_fragment__import_plaintext_backup">Importă backup text</string>
   <string name="import_fragment__import_a_plaintext_backup_file">
 Importă un fișier de backup text. Compatibil cu \'SMSBackup And Restore.\'</string>
+  <string name="media_overview_activity__no_images">Nici o imagine</string>
+  <string name="message_recipients_list_item__verify">VERIFICĂ</string>
+  <string name="message_recipients_list_item__resend">RE-TRIMITE</string>
   <string name="MmsPreferencesFragment__manual_mms_settings_are_required">Pentru telefonul tău sunt necesare setări MMS manuale.</string>
   <string name="MmsPreferencesFragment__enabled">Activat</string>
   <string name="MmsPreferencesFragment__disabled">Dezactivat</string>
@@ -358,6 +369,9 @@ Importă un fișier de backup text. Compatibil cu \'SMSBackup And Restore.\'</st
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService are nevoie de setările APN pentru a trimite mesaje multimedia prin operatorul wireless. Acest aparat nu oferă informațiile necesare, lucru care se poate întâmpla uneori pentru dispozitive blocate sau alte configurații restrictive.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Pentru a putea trimite mesaje multimedia cât și mesaje într-un grup, apăsați \'OK\' și completați setările solicitate. Setările MMS pentru operatorul dvs. pot fi găsite cautând după \'APN operatorul tău\'. Această operațiune este necesară o singură dată.</string>
   <string name="receive_key_activity__complete">Complet</string>
+  <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
+        Verifică numărul tău de telefon pentru a te conecta la OpenchatService.
+    </string>
   <string name="registration_activity__your_country">TARA DVS.</string>
   <string name="registration_activity__your_country_code_and_phone_number">CODUL ŢĂRII DVS. ŞI 
 NUMĂRUL DE TELEFON</string>
@@ -405,10 +419,20 @@ Vă rugăm să aveți răbdare, vă vom notifica când verificarea este complet�
 Operaţiunea iniţiată de OpenchatService a expirat în timpul aşteptării primirii mesajului SMS de verificare.</string>
   <string name="registration_progress_activity__sms_verification_failed">Verificarea prin SMS a esuat.</string>
   <string name="registration_progress_activity__generating_keys">Generarea cheilor...</string>
+  <string name="registration_progress_activity__alert">Alertă</string>
+  <string name="registration_progress_activity__telephone">Telefon</string>
+  <string name="registration_progress_activity__check">Verifică</string>
   <string name="recipients_panel__to"><small>Introduceţi un nume sau un număr</small></string>
   <string name="recipients_panel__add_member">Adăugare membru</string>
   <string name="verify_identity_activity__their_identity_they_read">Identitatea partenerului (cum apare el):</string>
   <string name="verify_identity_activity__your_identity_you_read">Identitatea ta (cum apari tu):</string>
+  <string name="message_details_header__issues_need_your_attention">Anumite probleme au nevoie de atenția ta.</string>
+  <string name="message_details_header__sent">Trimis</string>
+  <string name="message_details_header__received">Primit</string>
+  <string name="message_details_header__via">Via</string>
+  <string name="message_details_header__to">Către:</string>
+  <string name="message_details_header__from">De la:</string>
+  <string name="message_details_header__with">Cu:</string>
   <string name="AndroidManifest__create_passphrase">Creează parolă</string>
   <string name="AndroidManifest__enter_passphrase">Introduceţi parola</string>
   <string name="AndroidManifest__select_contacts">Selectează contacte</string>
@@ -418,8 +442,12 @@ Operaţiunea iniţiată de OpenchatService a expirat în timpul aşteptării pri
   <string name="AndroidManifest__verify_identity">Verifică identitatea</string>
   <string name="AndroidManifest__log_submit">Trimite log-urile de depanare</string>
   <string name="AndroidManifest__media_preview">Previzualizare media</string>
+  <string name="AndroidManifest__media_overview">Toate imaginile</string>
+  <string name="AndroidManifest__media_overview_named">Toate imaginile cu %1$s</string>
   <string name="arrays__import_export">Importă / Exportă</string>
   <string name="arrays__my_identity_key">Cheia mea de identitate</string>
+  <string name="arrays__use_default">Implicit</string>
+  <string name="arrays__use_custom">Specific</string>
   <plurals name="minutes_ago">
     <item quantity="one">%d min</item>
     <item quantity="few">%d min</item>
@@ -432,11 +460,8 @@ Operaţiunea iniţiată de OpenchatService a expirat în timpul aşteptării pri
   </plurals>
   <string name="preferences__general">General</string>
   <string name="preferences__sms_mms">SMS și MMS</string>
-  <string name="preferences__push_sms_category">Push și SMS</string>
   <string name="preferences__pref_all_sms_title">Recepționează toate SMS-urile</string>
   <string name="preferences__pref_all_mms_title">Recepționează toate MMS-urile</string>
-  <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_text_messages">Folosește OpenchatService pentru vizualizarea și salvarea tuturor mesajelor text primite</string>
-  <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_multimedia_messages">Folosește OpenchatService pentru vizualizarea și salvarea tuturor mesajelor multimedia primite</string>
   <string name="preferences__input_settings">Setări de introducere</string>
   <string name="preferences__enable_enter_key_title">Activează tasta Enter</string>
   <string name="preferences__replace_smiley_with_enter_key">Inlocuiți tasta smiley cu tasta Enter</string>
@@ -448,8 +473,10 @@ Operaţiunea iniţiată de OpenchatService a expirat în timpul aşteptării pri
   <string name="preferences__change_passphrase">Schimbă parola</string>
   <string name="preferences__change_my_passphrase">Schimbă parola</string>
   <string name="preferences__enable_passphrase">Activează parola</string>
+  <string name="preferences__passphrase_summary">Parola %s</string>
   <string name="preferences__enable_local_encryption_of_messages_and_keys">Activează criptarea locală a mesajelor și a cheilor</string>
   <string name="preferences__screen_security">Securitate ecran</string>
+  <string name="preferences__screen_security_summary">Securitate ecran %s</string>
   <string name="preferences__disable_screen_security_to_allow_screen_shots">Blochează screenshot-urile în lista cu aplicaţii recente şi în interiorul applicaţiei</string>
   <string name="preferences__forget_passphrase_from_memory_after_some_interval">Şterge parolele din memorie după un interval de timp</string>
   <string name="preferences__timeout_passphrase">Expiră parola</string>
@@ -469,6 +496,13 @@ Operaţiunea iniţiată de OpenchatService a expirat în timpul aşteptării pri
   <string name="preferences__change_notification_sound">Schimbă sunetul de notificare</string>
   <string name="preferences__inthread_notifications">Notificări în conversație</string>
   <string name="preferences__play_inthread_notifications">Redare sunet de notificare în timp ce vizualizați o conversație activă.</string>
+  <string name="preferences__repeat_alerts">Repetă alerte</string>
+  <string name="preferences__never">Niciodată</string>
+  <string name="preferences__one_time">O dată</string>
+  <string name="preferences__two_times">De două ori</string>
+  <string name="preferences__three_times">De trei ori</string>
+  <string name="preferences__five_times">De cinci ori</string>
+  <string name="preferences__ten_times">De 10 ori</string>
   <string name="preferences__vibrate">Vibrează</string>
   <string name="preferences__also_vibrate_when_notified">Vibrează și când ești notificat</string>
   <string name="preferences__minutes">minute</string>
@@ -490,6 +524,11 @@ Operaţiunea iniţiată de OpenchatService a expirat în timpul aşteptării pri
   <string name="preferences__advanced_mms_access_point_names">Setări MMS manuale</string>
   <string name="preferences__enable_manual_mms">Utilizează setări MMS manuale</string>
   <string name="preferences__override_system_mms_settings">Suprascrie setările MMS de sistem cu informațiile de mai jos.</string>
+  <string name="preferences__mmsc_url">URL MMSC</string>
+  <string name="preferences__mms_proxy_host">Gazdă Proxy MMS</string>
+  <string name="preferences__mms_proxy_port">Port Proxy MMS</string>
+  <string name="preferences__mmsc_username">Nume utilizator MMSC</string>
+  <string name="preferences__mmsc_password">Parolă MMSC</string>
   <string name="preferences__sms_delivery_reports">Confirmari de livrare SMS</string>
   <string name="preferences__request_a_delivery_report_for_each_sms_message_you_send">Cere o confirmare de livrare pentru fiecare SMS trimis</string>
   <string name="preferences__automatically_delete_older_messages_once_a_conversation_thread_exceeds_a_specified_length">Șterge automat mesajele vechi când conversația depășește mărimea specificată</string>
@@ -501,22 +540,11 @@ Operaţiunea iniţiată de OpenchatService a expirat în timpul aşteptării pri
   <string name="preferences__dark_theme">Închisă</string>
   <string name="preferences__appearance">Aspect</string>
   <string name="preferences__theme">Tema</string>
+  <string name="preferences__theme_summary">Tema %s</string>
   <string name="preferences__default">Implicit</string>
   <string name="preferences__language">Limba</string>
-  <string name="preferences__make_default_sms_app">Setează ca aplicație implicită SMS</string>
-  <string name="preferences__make_openchatservice_the_default_sms_mms_app">Alege OpenchatService ca aplicație SMS/MMS implicită pentru sistemul tău.</string>
-  <string name="preferences__use_data_channel">Mesaje push</string>
-  <string name="preferences__use_the_data_channel_for_communication_with_other_openchatservice_users">Sporește intimitatea și evită costurile de SMS folosind comunicarea prin canalul de date cu alți utilizatori OpenchatService</string>
-  <string name="preferences__sms_fallback">Trimitere SMS/MMS</string>
+  <string name="preferences__language_summary">Limba %s</string>
   <string name="preferences__submit_debug_log">Trimite log-urile de depanare</string>
-  <string name="preferences__sms_outgoing_push_users">Utilizatori OpenchatService</string>
-  <string name="preferences__sms_fallback_push_users_ask">întreabă mai întâi</string>
-  <string name="preferences__sms_fallback_push_users_no_mms">no MMS</string>
-  <string name="preferences__sms_outgoing_push_users_description">Trimite SMS securizat dacă conexiunea de dată este pierdută</string>
-  <string name="preferences__sms_fallback_ask_before_sending_sms_mms">Întreabă înainte de a trimite SMS/MMS</string>
-  <string name="preferences__sms_fallback_never_send_mms">Nu trimite MMS niciodată</string>
-  <string name="preferences__sms_fallback_non_push_users">Utilizatori Non-OpenchatService</string>
-  <string name="preferences__sms_fallback_nobody">Nimeni</string>
   <string name="preferences__support_wifi_calling">Mod compatibilitate \"Apelare WiFi\"</string>
   <string name="contact_selection_list__menu_select_all">Selectează tot</string>
   <string name="contact_selection_list__menu_unselect_all">Deselectează tot</string>
@@ -532,11 +560,15 @@ Operaţiunea iniţiată de OpenchatService a expirat în timpul aşteptării pri
   <string name="conversation_context__menu_forward_message">Expediază mesajul</string>
   <string name="conversation_context__menu_resend_message">Retrimite mesaj</string>
   <string name="conversation_context_image__save_attachment">Salvează ataşamentul</string>
+  <string name="conversation_insecure__invite">Invită</string>
   <string name="conversation_insecure__menu_start_secure_session">Iniţializează Sesiune Securizată</string>
   <string name="conversation_insecure__security">Securitate</string>
   <string name="conversation_list_batch__menu_delete_selected">Şterge ce este selectat</string>
   <string name="conversation_list_batch__menu_select_all">Selectează tot</string>
   <string name="conversation_list__menu_search">Caută</string>
+  <string name="conversation_list_item_view__contact_photo_image">Poză contact</string>
+  <string name="conversation_list_item_view__attachment_indicator">Indicator atașament</string>
+  <string name="conversation_list_fragment__fab_content_description">Conversație nouă</string>
   <string name="conversation_secure_verified__menu_security">Securitate</string>
   <string name="conversation_secure_verified__menu_verify_identity">Verifică identitatea</string>
   <string name="conversation_secure_verified__menu_abort_secure_session">Încheie Sesiune Securizată</string>
@@ -544,6 +576,7 @@ Operaţiunea iniţiată de OpenchatService a expirat în timpul aşteptării pri
   <string name="conversation__menu_update_group">Actualizează grup</string>
   <string name="conversation__menu_leave_group">Părăseşte grupul</string>
   <string name="conversation__menu_delete_thread">Șterge conversația</string>
+  <string name="conversation__menu_view_media">Toate imaginile</string>
   <string name="conversation_add_to_contacts__menu_add_to_contacts">Adaugă la contacte</string>
   <string name="convesation_group_options__recipients_list">Lista recipienti</string>
   <string name="conversation_group_options__delivery">Trimitere</string>
@@ -572,4 +605,5 @@ Operaţiunea iniţiată de OpenchatService a expirat în timpul aşteptării pri
   <string name="trimmer__deleting">Se șterge...</string>
   <string name="trimmer__deleting_old_messages">Se șterg mesajele vechi...</string>
   <string name="trimmer__old_messages_successfully_deleted">Mesajele vechi au fost șterse cu succes</string>
+  <string name="transport_selection_list_item__transport_icon">Icoană transport</string>
 </resources>

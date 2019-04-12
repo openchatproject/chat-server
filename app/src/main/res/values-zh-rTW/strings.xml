@@ -24,9 +24,7 @@
         將來您若欲重新使用即時訊息，則須把您的手機號碼再重新註冊一次。
     </string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">與伺服器的連線發生錯誤！</string>
-  <string name="ApplicationPreferencesActivity_sms_enabled">已開啟手機簡訊接收功能</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">按這裡來變更您預設的手機簡訊APP</string>
-  <string name="ApplicationPreferencesActivity_sms_disabled">已關閉手機簡按這裡來變更您預設的手機簡訊APP訊接收功能</string>
   <string name="ApplicationPreferencesActivity_touch_to_make_openchatservice_your_default_sms_app">按這裡將 OpenchatService 設為預設的手機簡訊APP</string>
   <string name="AttachmentManager_cant_open_media_selection">找不到合適的 APP 來選擇媒體檔案。</string>
   <string name="AttachmentTypeSelectorAdapter_picture">照片</string>
@@ -279,8 +277,6 @@
   <string name="ContactSelectionlistFragment_select_for">相片</string>
   <string name="contact_selection_recent_activity__no_recent_calls">沒有最近通話。</string>
   <string name="conversation_activity__type_message_push">傳送 OpenchatService 加密訊息</string>
-  <string name="conversation_activity__type_message_sms_secure">傳送加密的手機簡訊</string>
-  <string name="conversation_activity__type_message_mms_secure">傳送加密的 MMS多媒體簡訊</string>
   <string name="conversation_activity__send">送出</string>
   <string name="conversation_activity__remove">移除</string>
   <string name="conversation_activity__window_description">與 %1$s 聊天</string>
@@ -398,11 +394,8 @@ OpenchatService 等候驗證用的手機簡訊已逾時。</string>
   <string name="arrays__import_export">匯入／匯出</string>
   <string name="arrays__my_identity_key">我的身分識別金鑰</string>
   <string name="preferences__general">一般</string>
-  <string name="preferences__push_sms_category">即時訊息與手機簡訊</string>
   <string name="preferences__pref_all_sms_title">接收所有手機簡訊</string>
   <string name="preferences__pref_all_mms_title">接收所有MMS多媒體簡訊</string>
-  <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_text_messages">使用 OpenchatService 來檢視與儲存所有接收到的文字簡訊</string>
-  <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_multimedia_messages">使用 OpenchatService 來檢視與儲存所有接收到的多媒體簡訊</string>
   <string name="preferences__input_settings">輸入設定</string>
   <string name="preferences__enable_enter_key_title">啟用 Enter 鍵</string>
   <string name="preferences__replace_smiley_with_enter_key">把介面上的表情符號按鈕，換成 Enter 按鈕</string>
@@ -461,16 +454,7 @@ OpenchatService 等候驗證用的手機簡訊已逾時。</string>
   <string name="preferences__theme">主題</string>
   <string name="preferences__default">預設</string>
   <string name="preferences__language">語言選項</string>
-  <string name="preferences__make_default_sms_app">設定為預設的手機簡訊 APP</string>
-  <string name="preferences__make_openchatservice_the_default_sms_mms_app">將 OpenchatService 設定為您系統預設的 SMS/MMS 應用程式。</string>
-  <string name="preferences__use_data_channel">即時訊息</string>
-  <string name="preferences__use_the_data_channel_for_communication_with_other_openchatservice_users">
-可提升隱私性，並且藉由與其他也使用 OpenchatService 的使用這透過加密的連線通訊來節約手機簡訊費用。</string>
   <string name="preferences__submit_debug_log">送出偵錯紀錄</string>
-  <string name="preferences__sms_outgoing_push_users">OpenchatService 使用者</string>
-  <string name="preferences__sms_outgoing_push_users_description">如果網路斷線，改送出付費的加密手機簡訊</string>
-  <string name="preferences__sms_fallback_non_push_users">非 OpenchatService 使用者</string>
-  <string name="preferences__sms_fallback_nobody">無人</string>
   <string name="contact_selection_list__menu_select_all">全選</string>
   <string name="contact_selection_list__menu_unselect_all">取消全選</string>
   <string name="contact_selection_list__header_openchatservice_users">全部 OpenchatService 使用者</string>

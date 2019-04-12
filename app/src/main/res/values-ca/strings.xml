@@ -228,8 +228,6 @@ des de l\'app de missatgeria predeterminada del sistema.</string>
   <string name="verify_identity_activity__your_identity_you_read">La teva identitat (tu llegeixes):</string>
   <string name="AndroidManifest__change_passphrase">Canvia frase contrasenya</string>
   <string name="preferences__general">General</string>
-  <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_text_messages">Utilitza OpenchatService per veure i emmagatzemar tots els missatges de text entrants</string>
-  <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_multimedia_messages">Utilitza OpenchatService per veure i emmagatzemar tots els missatges multimèdia entrants</string>
   <string name="preferences__enable_enter_key_title">Habilita la tecla Enter</string>
   <string name="preferences__choose_your_contact_entry_from_the_contacts_list">Escull el teu contacte de la llista de contactes</string>
   <string name="preferences__change_passphrase">Canvia frase contrasenya</string>
@@ -276,11 +274,6 @@ des de l\'app de missatgeria predeterminada del sistema.</string>
   <string name="preferences__theme">Tema</string>
   <string name="preferences__default">Predeterminat</string>
   <string name="preferences__language">Idioma</string>
-  <string name="preferences__make_default_sms_app">Estableix com a app d\'SMS predeterminada</string>
-  <string name="preferences__make_openchatservice_the_default_sms_mms_app">Fes OpenchatService l\'aplicació d\'SMS/MMS predeterminada del teu sistema.</string>
-  <string name="preferences__use_data_channel">Missatges Push</string>
-  <string name="preferences__use_the_data_channel_for_communication_with_other_openchatservice_users">
-Augmenta la privacitat i evita els càrrecs d\'SMS utilitzant el canal de dades per comunicar-se amb altres usuaris de OpenchatService</string>
   <string name="preferences__submit_debug_log">Envia un registre de depuració</string>
   <string name="contact_selection__menu_finished">Finalitzat</string>
   <string name="conversation_callable__menu_call">Truca</string>

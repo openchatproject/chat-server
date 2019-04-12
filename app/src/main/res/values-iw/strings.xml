@@ -164,8 +164,6 @@
   <string name="verify_identity_activity__your_identity_you_read">הזהות שלך (אתה קורא):</string>
   <string name="AndroidManifest__change_passphrase">שנה סיסמה</string>
   <string name="preferences__general">כללי</string>
-  <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_text_messages">השתמש ב-OpenchatService לצפייה ואחסון של כל הודעות הטקסט</string>
-  <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_multimedia_messages">השתמש ב-OpenchatService לצפייה ואחסון של כל הודעות המולטימדיה</string>
   <string name="preferences__input_settings">הכנס הגדרות</string>
   <string name="preferences__choose_your_contact_entry_from_the_contacts_list">בחר איש קשר מאנשי הקשר.</string>
   <string name="preferences__change_passphrase">שנה סיסמה</string>
