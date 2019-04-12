@@ -46,6 +46,8 @@ import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 import com.openchat.imservice.api.messages.OpenchatServiceMessage;
 
+import java.util.concurrent.TimeUnit;
+
 import ws.com.google.android.mms.MmsException;
 
 public class PushDecryptJob extends MasterSecretJob {
@@ -64,6 +66,7 @@ public class PushDecryptJob extends MasterSecretJob {
                                 .withPersistence()
                                 .withRequirement(new MasterSecretRequirement(context))
                                 .withGroupId(sender)
+                                .withWakeLock(true, 5, TimeUnit.SECONDS)
                                 .create());
     this.messageId    = pushMessageId;
     this.smsMessageId = smsMessageId;
