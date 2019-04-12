@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Pair;
 
@@ -15,11 +14,6 @@ import com.openchat.secureim.util.BitmapDecodingException;
 import com.openchat.secureim.util.LRUCache;
 import com.openchat.secureim.util.ListenableFutureTask;
 import com.openchat.secureim.util.MediaUtil;
-import com.openchat.secureim.util.ResUtil;
-import com.openchat.secureim.util.SmilUtil;
-import org.w3c.dom.smil.SMILDocument;
-import org.w3c.dom.smil.SMILMediaElement;
-import org.w3c.dom.smil.SMILRegionElement;
 import com.openchat.secureim.crypto.MasterSecret;
 
 import java.io.IOException;
@@ -113,23 +107,6 @@ public class ImageSlide extends Slide {
   @Override
   public boolean hasImage() {
     return true;
-  }
-
-  @Override
-  public SMILRegionElement getSmilRegion(SMILDocument document) {
-    SMILRegionElement region = (SMILRegionElement) document.createElement("region");
-    region.setId("Image");
-    region.setLeft(0);
-    region.setTop(0);
-    region.setWidth(SmilUtil.ROOT_WIDTH);
-    region.setHeight(SmilUtil.ROOT_HEIGHT);
-    region.setFit("meet");
-    return region;
-  }
-
-  @Override
-  public SMILMediaElement getMediaElement(SMILDocument document) {
-    return SmilUtil.createMediaElement("img", document, new String(getPart().getName()));
   }
 
   private static PduPart constructPartFromUri(Uri uri)

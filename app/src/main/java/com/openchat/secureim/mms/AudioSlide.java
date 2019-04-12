@@ -6,10 +6,6 @@ import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.util.ListenableFutureTask;
 import com.openchat.secureim.util.ResUtil;
-import com.openchat.secureim.util.SmilUtil;
-import org.w3c.dom.smil.SMILDocument;
-import org.w3c.dom.smil.SMILMediaElement;
-import org.w3c.dom.smil.SMILRegionElement;
 
 import ws.com.google.android.mms.pdu.PduPart;
 import android.content.Context;
@@ -37,16 +33,6 @@ public class AudioSlide extends Slide {
   @Override
     public boolean hasAudio() {
     return true;
-  }
-
-  @Override
-  public SMILRegionElement getSmilRegion(SMILDocument document) {
-    return null;
-  }
-
-  @Override
-  public SMILMediaElement getMediaElement(SMILDocument document) {
-    return SmilUtil.createMediaElement("audio", document, new String(getPart().getName()));
   }
 
   @Override
