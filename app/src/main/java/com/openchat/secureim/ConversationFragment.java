@@ -1,7 +1,6 @@
 package com.openchat.secureim;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,6 +25,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.AlertDialogWrapper;
+
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsSmsDatabase;
@@ -36,11 +37,9 @@ import com.openchat.secureim.mms.Slide;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.sms.MessageSender;
-import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.DirectoryHelper;
 import com.openchat.secureim.util.FutureTaskListener;
 import com.openchat.secureim.util.ProgressDialogAsyncTask;
-import com.openchat.secureim.util.ResUtil;
 import com.openchat.secureim.util.SaveAttachmentTask;
 import com.openchat.secureim.util.SaveAttachmentTask.Attachment;
 
@@ -191,9 +190,9 @@ public class ConversationFragment extends ListFragment
   }
 
   private void handleDeleteMessages(final List<MessageRecord> messageRecords) {
-    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+    AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getActivity());
     builder.setTitle(R.string.ConversationFragment_confirm_message_delete);
-    builder.setIcon(ResUtil.getDrawable(getActivity(), R.attr.dialog_alert_icon));
+    builder.setIconAttribute(R.attr.dialog_alert_icon);
     builder.setCancelable(true);
     builder.setMessage(R.string.ConversationFragment_are_you_sure_you_want_to_permanently_delete_all_selected_messages);
     builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {

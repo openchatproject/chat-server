@@ -1,7 +1,6 @@
 package com.openchat.secureim.preferences;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +13,7 @@ import android.support.v4.preference.PreferenceFragment;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import com.openchat.secureim.ApplicationPreferencesActivity;
@@ -24,7 +24,6 @@ import com.openchat.secureim.contacts.ContactAccessor;
 import com.openchat.secureim.contacts.ContactIdentityManager;
 import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.util.ProgressDialogAsyncTask;
-import com.openchat.secureim.util.ResUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
@@ -173,8 +172,8 @@ public class AdvancedPreferenceFragment extends PreferenceFragment {
     @Override
     public boolean onPreferenceChange(final Preference preference, Object newValue) {
       if (((CheckBoxPreference)preference).isChecked()) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setIcon(ResUtil.getDrawable(getActivity(), R.attr.dialog_info_icon));
+        AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getActivity());
+        builder.setIconAttribute(R.attr.dialog_info_icon);
         builder.setTitle(R.string.ApplicationPreferencesActivity_disable_push_messages);
         builder.setMessage(R.string.ApplicationPreferencesActivity_this_will_disable_push_messages);
         builder.setNegativeButton(android.R.string.cancel, null);

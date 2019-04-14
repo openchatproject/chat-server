@@ -1,6 +1,5 @@
 package com.openchat.secureim.preferences;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +12,7 @@ import android.preference.PreferenceScreen;
 import android.support.v4.preference.PreferenceFragment;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.doomonafireball.betterpickers.hmspicker.HmsPickerBuilder;
 import com.doomonafireball.betterpickers.hmspicker.HmsPickerDialogFragment;
 
@@ -22,8 +22,6 @@ import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.MasterSecretUtil;
 import com.openchat.secureim.service.KeyCachingService;
-import com.openchat.secureim.util.Dialogs;
-import com.openchat.secureim.util.ResUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 
 import java.util.concurrent.TimeUnit;
@@ -121,10 +119,10 @@ public class AppProtectionPreferenceFragment extends PreferenceFragment {
     @Override
     public boolean onPreferenceChange(final Preference preference, Object newValue) {
       if (((CheckBoxPreference)preference).isChecked()) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getActivity());
         builder.setTitle(R.string.ApplicationPreferencesActivity_disable_storage_encryption);
         builder.setMessage(R.string.ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages);
-        builder.setIcon(ResUtil.getDrawable(getActivity(), R.attr.dialog_alert_icon));
+        builder.setIconAttribute(R.attr.dialog_alert_icon);
         builder.setPositiveButton(R.string.ApplicationPreferencesActivity_disable, new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {

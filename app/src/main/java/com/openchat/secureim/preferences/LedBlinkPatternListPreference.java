@@ -1,12 +1,9 @@
 package com.openchat.secureim.preferences;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Parcelable;
 import android.preference.ListPreference;
-import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +12,10 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.openchat.secureim.ApplicationPreferencesActivity;
+import com.afollestad.materialdialogs.AlertDialogWrapper;
+
 import com.openchat.secureim.R;
-import com.openchat.secureim.util.ResUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.secureim.util.Dialogs;
 
 public class LedBlinkPatternListPreference extends ListPreference implements OnSeekBarChangeListener {
 
@@ -60,14 +56,13 @@ public class LedBlinkPatternListPreference extends ListPreference implements OnS
   }
 
   private void initializeDialog(View view) {
-    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-    builder.setIcon(ResUtil.getDrawable(context, R.attr.dialog_info_icon));
+    AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context);
+    builder.setIconAttribute(R.attr.dialog_info_icon);
     builder.setTitle(R.string.preferences__pref_led_blink_custom_pattern_title);
     builder.setView(view);
     builder.setOnCancelListener(new CustomDialogCancelListener());
     builder.setNegativeButton(android.R.string.cancel, new CustomDialogCancelListener());
     builder.setPositiveButton(android.R.string.ok, new CustomDialogClickListener());
-    builder.setInverseBackgroundForced(true);
     builder.show();
   }
 

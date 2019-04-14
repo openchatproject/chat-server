@@ -1,7 +1,6 @@
 package com.openchat.secureim;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.melnykov.fab.FloatingActionButton;
 
 import com.openchat.secureim.components.DefaultSmsReminder;
@@ -37,7 +37,6 @@ import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.loaders.ConversationListLoader;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.recipients.Recipients;
-import com.openchat.secureim.util.ResUtil;
 
 import java.util.Set;
 
@@ -179,8 +178,8 @@ public class ConversationListFragment extends ListFragment
   }
 
   private void handleDeleteAllSelected() {
-    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-    alert.setIcon(ResUtil.getDrawable(getActivity(), R.attr.dialog_alert_icon));
+    AlertDialogWrapper.Builder alert = new AlertDialogWrapper.Builder(getActivity());
+    alert.setIconAttribute(R.attr.dialog_alert_icon);
     alert.setTitle(R.string.ConversationListFragment_delete_threads_question);
     alert.setMessage(R.string.ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads);
     alert.setCancelable(true);

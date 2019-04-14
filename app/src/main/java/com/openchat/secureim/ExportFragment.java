@@ -1,6 +1,5 @@
 package com.openchat.secureim;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -14,11 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.AlertDialogWrapper;
+
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.NoExternalStorageException;
 import com.openchat.secureim.database.PlaintextBackupExporter;
-import com.openchat.secureim.util.Dialogs;
-import com.openchat.secureim.util.ResUtil;
 
 import java.io.IOException;
 
@@ -50,8 +49,8 @@ public class ExportFragment extends Fragment {
   }
 
   private void handleExportPlaintextBackup() {
-    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-    builder.setIcon(ResUtil.getDrawable(getActivity(), R.attr.dialog_alert_icon));
+    AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getActivity());
+    builder.setIconAttribute(R.attr.dialog_alert_icon);
     builder.setTitle(getActivity().getString(R.string.ExportFragment_export_plaintext_to_sd_card));
     builder.setMessage(getActivity().getString(R.string.ExportFragment_warning_this_will_export_the_plaintext_contents));
     builder.setPositiveButton(getActivity().getString(R.string.ExportFragment_export), new Dialog.OnClickListener() {
