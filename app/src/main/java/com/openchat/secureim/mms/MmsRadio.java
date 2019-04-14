@@ -41,10 +41,6 @@ public class MmsRadio {
     this.wakeLock.setReferenceCounted(true);
   }
 
-  public String getApnInformation() {
-    return connectivityManager.getNetworkInfo(TYPE_MOBILE_MMS).getExtraInfo();
-  }
-
   public synchronized void disconnect() {
     Log.w("MmsRadio", "MMS Radio Disconnect Called...");
     wakeLock.release();

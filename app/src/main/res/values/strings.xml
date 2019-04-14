@@ -105,6 +105,8 @@
     <string name="ConversationActivity_get_with_it">Get with it: %s</string>
     <string name="ConversationActivity_lets_use_this_to_chat">Let\'s use this to chat: %s</string>
     <string name="ConversationActivity_error_leaving_group">Error leaving group...</string>
+    <string name="ConversationActivity_mms_not_supported_title">MMS not supported</string>
+    <string name="ConversationActivity_mms_not_supported_message">This message cannot be sent since your carrier doesn\'t support MMS.</string>
 
     <string name="ConversationFragment_message_details">Message details</string>
     <string name="ConversationFragment_transport_s_sent_received_s">Transport: %1$s\nSent/Received: %2$s</string>

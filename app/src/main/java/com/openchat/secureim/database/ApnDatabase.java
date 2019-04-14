@@ -7,8 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.openchat.secureim.mms.ApnUnavailableException;
-import com.openchat.secureim.mms.MmsConnection.Apn;
+import com.openchat.secureim.mms.LegacyMmsConnection.Apn;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
 import com.openchat.protocal.util.guava.Optional;

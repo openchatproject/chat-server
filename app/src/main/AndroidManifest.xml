@@ -296,6 +296,10 @@
               android:grantUriPermissions="true"
               android:authorities="com.openchat.secureim.provider" />
 
+    <provider android:name=".providers.MmsBodyProvider"
+              android:grantUriPermissions="true"
+              android:authorities="com.openchat.secureim.provider.mms" />
+
     <receiver android:name=".service.RegistrationNotifier"
               android:exported="false">
         <intent-filter>
@@ -321,5 +325,6 @@
             <action android:name="com.openchat.secureim.MessageNotifier.DELETE_REMINDER_ACTION"/>
         </intent-filter>
     </receiver>
+
 </application>
 </manifest>

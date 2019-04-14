@@ -10,7 +10,7 @@ import com.openchat.secureim.PassphraseRequiredActionBarActivity;
 import com.openchat.secureim.R;
 import com.openchat.secureim.components.CustomDefaultPreference;
 import com.openchat.secureim.database.ApnDatabase;
-import com.openchat.secureim.mms.MmsConnection;
+import com.openchat.secureim.mms.LegacyMmsConnection;
 import com.openchat.secureim.util.TelephonyUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 
@@ -35,10 +35,10 @@ public class MmsPreferencesFragment extends PreferenceFragment {
     new LoadApnDefaultsTask().execute();
   }
 
-  private class LoadApnDefaultsTask extends AsyncTask<Void, Void, MmsConnection.Apn> {
+  private class LoadApnDefaultsTask extends AsyncTask<Void, Void, LegacyMmsConnection.Apn> {
 
     @Override
-    protected MmsConnection.Apn doInBackground(Void... params) {
+    protected LegacyMmsConnection.Apn doInBackground(Void... params) {
       try {
         Context context = getActivity();
 
@@ -55,7 +55,7 @@ public class MmsPreferencesFragment extends PreferenceFragment {
     }
 
     @Override
-    protected void onPostExecute(MmsConnection.Apn apnDefaults) {
+    protected void onPostExecute(LegacyMmsConnection.Apn apnDefaults) {
       ((CustomDefaultPreference)findPreference(OpenchatServicePreferences.MMSC_HOST_PREF))
           .setValidator(new CustomDefaultPreference.UriValidator())
           .setDefaultValue(apnDefaults.getMmsc());
