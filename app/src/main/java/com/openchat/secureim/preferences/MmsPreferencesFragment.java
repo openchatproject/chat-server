@@ -73,6 +73,9 @@ public class MmsPreferencesFragment extends PreferenceFragment {
 
       ((CustomDefaultPreference)findPreference(OpenchatServicePreferences.MMSC_PASSWORD_PREF))
           .setDefaultValue(apnDefaults.getPassword());
+
+      ((CustomDefaultPreference)findPreference(OpenchatServicePreferences.MMS_USER_AGENT))
+          .setDefaultValue(LegacyMmsConnection.USER_AGENT);
     }
   }
 
