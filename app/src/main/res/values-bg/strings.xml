@@ -25,12 +25,15 @@
 Ще се наложи да регистрираш своя номер повторно, за да използваш интернет съобщения в бъдеще.
 </string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Грешка при свързване със сървъра!</string>
+  <string name="ApplicationPreferencesActivity_sms_enabled">SMS разрешени</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Натисни, за да зададеш SMS програма по подразбиране</string>
+  <string name="ApplicationPreferencesActivity_sms_disabled">SMS забранени</string>
   <string name="ApplicationPreferencesActivity_touch_to_make_openchatservice_your_default_sms_app">Натисни, за да зададеш OpenchatService като SMS програма по подразбиране</string>
   <string name="ApplicationPreferencesActivity_on">вкл</string>
   <string name="ApplicationPreferencesActivity_On">Включено</string>
   <string name="ApplicationPreferencesActivity_off">изкл</string>
   <string name="ApplicationPreferencesActivity_Off">Изключено</string>
+  <string name="ApplicationPreferencesActivity_sms_mms_summary">SMS %1$s, MMS %2$s</string>
   <string name="AppProtectionPreferenceFragment_minutes">%d минути</string>
   <string name="DraftDatabase_Draft_image_snippet">(изображение)</string>
   <string name="DraftDatabase_Draft_audio_snippet">(аудио)</string>
@@ -71,7 +74,6 @@
   <string name="ConversationActivity_sorry_the_selected_audio_exceeds_message_size_restrictions">За съжеление, избраното audio надвишава допустимия максимален размер (%1$skB).</string>
   <string name="ConversationActivity_recipient_is_not_a_valid_sms_or_email_address_exclamation">Получателя не е с валиден SMS или имейл!</string>
   <string name="ConversationActivity_message_is_empty_exclamation">Съобщението е празно!</string>
-  <string name="ConversationActivity_group_conversation_recipients">Участници в груповия разговор</string>
   <string name="ConversationActivity_group_conversation">Групов разговор</string>
   <string name="ConversationActivity_unnamed_group">Безименна група</string>
   <string name="ConversationActivity_d_recipients_in_group">%d участника</string>
@@ -86,7 +88,6 @@
   <string name="ConversationActivity_transport_insecure_mms">Некриптиран MMS</string>
   <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
   <string name="ConversationActivity_get_with_it">Започвай: %s</string>
-  <string name="ConversationActivity_install_openchatservice">Инсталирай OpenchatService: %s</string>
   <string name="ConversationActivity_error_leaving_group">Грешка при напускането на група...</string>
   <string name="ConversationFragment_message_details">Информация за съобщението</string>
   <string name="ConversationFragment_transport_s_sent_received_s">Транспорт: %1$s\nИзпратени/Получени: %2$s</string>
@@ -499,6 +500,8 @@ OpenchatService чака твърде дълго за SMS потвърждени
   <string name="preferences__sms_mms">SMS и MMS</string>
   <string name="preferences__pref_all_sms_title">Използвай за всички SMS-и</string>
   <string name="preferences__pref_all_mms_title">Използвай за всички MMS-и</string>
+  <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_text_messages">Използвай OpenchatService за всички входящи текстови съобщения</string>
+  <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_multimedia_messages">Използвай OpenchatService за всички входящи мултимедийни съобщения</string>
   <string name="preferences__input_settings">Настройки на въвеждането</string>
   <string name="preferences__enable_enter_key_title">Разреши клавиша Enter</string>
   <string name="preferences__replace_smiley_with_enter_key">Замени клавиша за емотикони с клавиша Enter</string>
@@ -581,6 +584,9 @@ OpenchatService чака твърде дълго за SMS потвърждени
   <string name="preferences__default">По подразбиране</string>
   <string name="preferences__language">Език</string>
   <string name="preferences__language_summary">Език %s</string>
+  <string name="preferences__openchatservice_messages">OpenchatService съобщения</string>
+  <string name="preferences__use_the_data_channel_for_communication_with_other_openchatservice_users">
+Безплатни, лични съобщебия до OpenchatService и Openchat потребители</string>
   <string name="preferences__submit_debug_log">Изпрати доклад</string>
   <string name="preferences__support_wifi_calling">Съвместим режим \'WiFi Calling\'</string>
   <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Включете ако устройството ти използва SMS/MMS през WiFi (използвай само, когато \'WiFi Calling\' e включено на устройството ти).</string>

@@ -26,7 +26,9 @@ Dette vil deaktivere \'push\' beskeder, og afregistrerer dig fra tjenesten.
 Du skal registrere dit telefonnummer påny hvis du vil bruge \'push\' beskeder i fremtiden.
 </string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Kunne ikke oprette forbindelse til serveren!</string>
+  <string name="ApplicationPreferencesActivity_sms_enabled">SMS slået til</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Brug som standard SMS program</string>
+  <string name="ApplicationPreferencesActivity_sms_disabled">SMS slået fra</string>
   <string name="ApplicationPreferencesActivity_touch_to_make_openchatservice_your_default_sms_app">Brug OpenchatService som dit standard SMS program</string>
   <string name="AppProtectionPreferenceFragment_minutes">%d minutter</string>
   <string name="DraftDatabase_Draft_image_snippet">(billede)</string>
@@ -61,7 +63,6 @@ denne kontakt.</string>
   <string name="ConversationActivity_sorry_there_was_an_error_setting_your_attachment">Beklager, der opstod en fejl ved vedhæftning af fil.</string>
   <string name="ConversationActivity_recipient_is_not_a_valid_sms_or_email_address_exclamation">Modtageren har ikke en gyldig SMS- eller e-mail adresse!</string>
   <string name="ConversationActivity_message_is_empty_exclamation">Beskeden er tom!</string>
-  <string name="ConversationActivity_group_conversation_recipients">Modtagere i gruppen</string>
   <string name="ConversationActivity_group_conversation">Gruppe beskeder</string>
   <string name="ConversationActivity_unnamed_group">Navnløs gruppe</string>
   <string name="ConversationActivity_d_recipients_in_group">%d modtagere</string>
@@ -75,7 +76,6 @@ denne kontakt.</string>
   <string name="ConversationActivity_transport_insecure_sms">Usikker (ikke krypteret) SMS</string>
   <string name="ConversationActivity_transport_insecure_mms">Usikker (ikke krypteret) MMS</string>
   <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
-  <string name="ConversationActivity_install_openchatservice">Installere OpenchatService: %s</string>
   <string name="ConversationActivity_error_leaving_group">Fejl, forlader gruppen...</string>
   <string name="ConversationFragment_message_details">Besked detaljer</string>
   <string name="ConversationFragment_transport_s_sent_received_s">Overførsel: %1$s\nSendt/Modtaget: %2$s</string>
