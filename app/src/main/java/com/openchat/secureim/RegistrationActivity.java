@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -31,7 +32,7 @@ import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
 import com.openchat.imservice.api.util.PhoneNumberFormatter;
 
-public class RegistrationActivity extends BaseActionBarActivity {
+public class RegistrationActivity extends PassphraseRequiredActionBarActivity {
 
   private static final int PICK_COUNTRY = 1;
 
@@ -46,8 +47,8 @@ public class RegistrationActivity extends BaseActionBarActivity {
   private MasterSecret masterSecret;
 
   @Override
-  public void onCreate(Bundle icicle) {
-    super.onCreate(icicle);
+  protected void onCreate(Bundle icicle, @NonNull MasterSecret masterSecret) {
+    this.masterSecret = masterSecret;
     setContentView(R.layout.registration_activity);
 
     getSupportActionBar().setTitle(getString(R.string.RegistrationActivity_connect_with_openchatservice));
@@ -67,7 +68,6 @@ public class RegistrationActivity extends BaseActionBarActivity {
   }
 
   private void initializeResources() {
-    this.masterSecret   = getIntent().getParcelableExtra("master_secret");
     this.countrySpinner = (Spinner)findViewById(R.id.country_spinner);
     this.countryCode    = (TextView)findViewById(R.id.country_code);
     this.number         = (TextView)findViewById(R.id.number);
