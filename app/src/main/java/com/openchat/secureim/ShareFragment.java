@@ -22,6 +22,12 @@ public class ShareFragment extends ListFragment implements LoaderManager.LoaderC
   private MasterSecret masterSecret;
 
   @Override
+  public void onCreate(Bundle icicle) {
+    super.onCreate(icicle);
+    masterSecret = getArguments().getParcelable("master_secret");
+  }
+
+  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
     return inflater.inflate(R.layout.share_fragment, container, false);
   }
@@ -47,13 +53,6 @@ public class ShareFragment extends ListFragment implements LoaderManager.LoaderC
 
       handleCreateConversation(headerView.getThreadId(), headerView.getRecipients(),
                                headerView.getDistributionType());
-    }
-  }
-
-  public void setMasterSecret(MasterSecret masterSecret) {
-    if (this.masterSecret != masterSecret) {
-      this.masterSecret = masterSecret;
-      initializeListAdapter();
     }
   }
 

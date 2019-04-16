@@ -17,10 +17,10 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.openchat.secureim.ApplicationContext;
+import com.openchat.secureim.ConversationListActivity;
 import com.openchat.secureim.DatabaseUpgradeActivity;
 import com.openchat.secureim.DummyActivity;
 import com.openchat.secureim.R;
-import com.openchat.secureim.RoutingActivity;
 import com.openchat.secureim.crypto.InvalidPassphraseException;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.MasterSecretUtil;
@@ -99,6 +99,7 @@ public class KeyCachingService extends Service {
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
     if (intent == null) return START_NOT_STICKY;
+    Log.w("KeyCachingService", "onStartCommand, " + intent.getAction());
 
     if (intent.getAction() != null) {
       switch (intent.getAction()) {
@@ -116,6 +117,7 @@ public class KeyCachingService extends Service {
 
   @Override
   public void onCreate() {
+    Log.w("KeyCachingService", "onCreate()");
     super.onCreate();
     this.pending = PendingIntent.getService(this, 0, new Intent(PASSPHRASE_EXPIRED_EVENT, null,
                                                                 this, KeyCachingService.class), 0);
@@ -161,7 +163,8 @@ public class KeyCachingService extends Service {
   }
 
   private void handleClearKey() {
-    this.masterSecret = null;
+    Log.w("KeyCachingService", "handleClearKey()");
+    KeyCachingService.masterSecret = null;
     stopForeground(true);
 
     Intent intent = new Intent(CLEAR_KEY_EVENT);
@@ -191,7 +194,7 @@ public class KeyCachingService extends Service {
   private void startTimeoutIfAppropriate() {
     boolean timeoutEnabled = OpenchatServicePreferences.isPassphraseTimeoutEnabled(this);
 
-    if ((activitiesRunning == 0) && (this.masterSecret != null) && timeoutEnabled && !OpenchatServicePreferences.isPasswordDisabled(this)) {
+    if ((activitiesRunning == 0) && (KeyCachingService.masterSecret != null) && timeoutEnabled && !OpenchatServicePreferences.isPasswordDisabled(this)) {
       long timeoutMinutes = OpenchatServicePreferences.getPassphraseTimeoutInterval(this);
       long timeoutMillis  = TimeUnit.MINUTES.toMillis(timeoutMinutes);
 
@@ -205,6 +208,7 @@ public class KeyCachingService extends Service {
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
   private void foregroundServiceModern() {
+    Log.w("KeyCachingService", "foregrounding KCS");
     NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
     builder.setContentTitle(getString(R.string.KeyCachingService_passphrase_cached));
@@ -267,7 +271,6 @@ public class KeyCachingService extends Service {
     Log.w("service", "Broadcasting new secret...");
 
     Intent intent = new Intent(NEW_KEY_EVENT);
-    intent.putExtra("master_secret", masterSecret);
     intent.setPackage(getApplicationContext().getPackageName());
 
     sendBroadcast(intent, KEY_PERMISSION);
@@ -281,7 +284,7 @@ public class KeyCachingService extends Service {
   }
 
   private PendingIntent buildLaunchIntent() {
-    Intent intent              = new Intent(this, RoutingActivity.class);
+    Intent intent              = new Intent(this, ConversationListActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     PendingIntent launchIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
     return launchIntent;

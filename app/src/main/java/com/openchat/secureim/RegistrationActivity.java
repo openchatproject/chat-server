@@ -25,9 +25,9 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.util.Util;
 import com.openchat.imservice.api.util.PhoneNumberFormatter;
 
@@ -277,7 +277,7 @@ public class RegistrationActivity extends BaseActionBarActivity {
       Intent nextIntent = getIntent().getParcelableExtra("next_intent");
 
       if (nextIntent == null) {
-        nextIntent = new Intent(RegistrationActivity.this, RoutingActivity.class);
+        nextIntent = new Intent(RegistrationActivity.this, ConversationListActivity.class);
       }
 
       startActivity(nextIntent);

@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.openchat.secureim.crypto.InvalidPassphraseException;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.MasterSecretUtil;
-import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 
 public class PassphraseChangeActivity extends PassphraseActivity {
@@ -81,10 +80,6 @@ public class PassphraseChangeActivity extends PassphraseActivity {
       } else {
         MasterSecret masterSecret = MasterSecretUtil.changeMasterSecretPassphrase(this, original, passphrase);
         OpenchatServicePreferences.setPasswordDisabled(this, false);
-
-        MemoryCleaner.clean(original);
-        MemoryCleaner.clean(passphrase);
-        MemoryCleaner.clean(passphraseRepeat);
 
         setMasterSecret(masterSecret);
       }

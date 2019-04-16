@@ -1,8 +1,10 @@
 package com.openchat.secureim;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.widget.TextView;
 
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.protocal.IdentityKey;
 import com.openchat.secureim.crypto.IdentityKeyParcelable;
 
@@ -15,8 +17,7 @@ public class ViewIdentityActivity extends KeyScanningActivity {
   private IdentityKey identityKey;
 
   @Override
-  public void onCreate(Bundle state) {
-    super.onCreate(state);
+  protected void onCreate(Bundle state, @NonNull MasterSecret masterSecret) {
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     setContentView(R.layout.view_identity_activity);
 

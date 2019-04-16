@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -34,7 +35,6 @@ import com.openchat.secureim.database.ThreadDatabase;
 import com.openchat.secureim.mms.OutgoingGroupMediaMessage;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
-import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.sms.MessageSender;
 import com.openchat.secureim.util.BitmapDecodingException;
@@ -53,7 +53,6 @@ import com.openchat.imservice.api.util.InvalidNumberException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -73,7 +72,6 @@ public class GroupCreateActivity extends PassphraseRequiredActionBarActivity {
 
   public static final String GROUP_RECIPIENT_EXTRA = "group_recipient";
   public static final String GROUP_THREAD_EXTRA    = "group_thread";
-  public static final String MASTER_SECRET_EXTRA   = "master_secret";
 
   private final DynamicTheme    dynamicTheme    = new DynamicTheme();
   private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
@@ -95,20 +93,24 @@ public class GroupCreateActivity extends PassphraseRequiredActionBarActivity {
   private String         existingTitle     = null;
   private Bitmap         existingAvatarBmp = null;
 
-  private MasterSecret masterSecret;
-  private Bitmap       avatarBmp;
+  private MasterSecret   masterSecret;
+  private Bitmap         avatarBmp;
   private Set<Recipient> selectedContacts;
 
   @Override
-  public void onCreate(Bundle state) {
+  protected void onPreCreate() {
     dynamicTheme.onCreate(this);
     dynamicLanguage.onCreate(this);
-    super.onCreate(state);
+  }
+
+  @Override
+  protected void onCreate(Bundle state, @NonNull MasterSecret masterSecret) {
+    this.masterSecret = masterSecret;
 
     setContentView(R.layout.group_create_activity);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-    selectedContacts = new HashSet<Recipient>();
+    selectedContacts = new HashSet<>();
     initializeResources();
   }
 
@@ -211,8 +213,6 @@ public class GroupCreateActivity extends PassphraseRequiredActionBarActivity {
         }
       }
     }
-
-    masterSecret = getIntent().getParcelableExtra(MASTER_SECRET_EXTRA);
 
     lv              = (ListView)            findViewById(R.id.selected_contacts_list);
     avatar          = (ImageView)           findViewById(R.id.avatar);
@@ -509,7 +509,6 @@ public class GroupCreateActivity extends PassphraseRequiredActionBarActivity {
     protected void onPostExecute(Long resultThread) {
       if (resultThread > -1) {
         Intent intent = new Intent(GroupCreateActivity.this, ConversationActivity.class);
-        intent.putExtra(ConversationActivity.MASTER_SECRET_EXTRA, masterSecret);
         intent.putExtra(ConversationActivity.THREAD_ID_EXTRA, resultThread.longValue());
         intent.putExtra(ConversationActivity.DISTRIBUTION_TYPE_EXTRA, ThreadDatabase.DistributionTypes.DEFAULT);
 
@@ -610,7 +609,6 @@ public class GroupCreateActivity extends PassphraseRequiredActionBarActivity {
       final Recipients recipients = groupInfo.second;
       if (threadId > -1) {
         Intent intent = new Intent(GroupCreateActivity.this, ConversationActivity.class);
-        intent.putExtra(ConversationActivity.MASTER_SECRET_EXTRA, masterSecret);
         intent.putExtra(ConversationActivity.THREAD_ID_EXTRA, threadId);
         intent.putExtra(ConversationActivity.DISTRIBUTION_TYPE_EXTRA, ThreadDatabase.DistributionTypes.DEFAULT);
         intent.putExtra(ConversationActivity.RECIPIENTS_EXTRA, recipients.getIds());

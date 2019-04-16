@@ -5,11 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.support.v7.app.ActionBarActivity;
 
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.service.KeyCachingService;
-import com.openchat.secureim.util.MemoryCleaner;
 
 public abstract class PassphraseActivity extends BaseActionBarActivity {
 
@@ -19,11 +17,8 @@ public abstract class PassphraseActivity extends BaseActionBarActivity {
   protected void setMasterSecret(MasterSecret masterSecret) {
     this.masterSecret = masterSecret;
     Intent bindIntent = new Intent(this, KeyCachingService.class);
+    startService(bindIntent);
     bindService(bindIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-  }
-
-  protected MasterSecret getMasterSecret() {
-    return masterSecret;
   }
 
   protected abstract void cleanup();
@@ -36,11 +31,12 @@ public abstract class PassphraseActivity extends BaseActionBarActivity {
 
         PassphraseActivity.this.unbindService(PassphraseActivity.this.serviceConnection);
 
-        MemoryCleaner.clean(masterSecret);
+        masterSecret = null;
         cleanup();
 
-        PassphraseActivity.this.setResult(RESULT_OK);
-        PassphraseActivity.this.finish();
+        Intent nextIntent = getIntent().getParcelableExtra("next_intent");
+        if (nextIntent != null) startActivity(nextIntent);
+        finish();
       }
 
       @Override

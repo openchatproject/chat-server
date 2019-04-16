@@ -7,7 +7,6 @@ import android.support.v7.app.ActionBar;
 import com.openchat.secureim.crypto.IdentityKeyUtil;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.MasterSecretUtil;
-import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.VersionTracker;
 
@@ -43,8 +42,6 @@ public class PassphraseCreateActivity extends PassphraseActivity {
       String passphrase = params[0];
       masterSecret      = MasterSecretUtil.generateMasterSecret(PassphraseCreateActivity.this,
                                                                 passphrase);
-
-      MemoryCleaner.clean(passphrase);
 
       MasterSecretUtil.generateAsymmetricMasterSecret(PassphraseCreateActivity.this, masterSecret);
       IdentityKeyUtil.generateIdentityKeys(PassphraseCreateActivity.this, masterSecret);

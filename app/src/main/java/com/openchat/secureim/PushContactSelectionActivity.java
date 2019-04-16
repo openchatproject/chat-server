@@ -2,11 +2,13 @@ package com.openchat.secureim;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.util.DirectoryHelper;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;
@@ -27,11 +29,13 @@ public class PushContactSelectionActivity extends PassphraseRequiredActionBarAct
   private PushContactSelectionListFragment contactsFragment;
 
   @Override
-  protected void onCreate(Bundle icicle) {
+  protected void onPreCreate() {
     dynamicTheme.onCreate(this);
     dynamicLanguage.onCreate(this);
-    super.onCreate(icicle);
+  }
 
+  @Override
+  protected void onCreate(Bundle icicle, @NonNull MasterSecret masterSecret) {
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     setContentView(R.layout.push_contact_selection_activity);

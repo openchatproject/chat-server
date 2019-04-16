@@ -1,6 +1,7 @@
 package com.openchat.secureim.preferences;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -10,24 +11,21 @@ import com.openchat.secureim.PassphraseRequiredActionBarActivity;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;
-import com.openchat.secureim.util.MemoryCleaner;
 
 public class MmsPreferencesActivity extends PassphraseRequiredActionBarActivity {
-
-  private MasterSecret masterSecret;
 
   private final DynamicTheme dynamicTheme       = new DynamicTheme();
   private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
 
   @Override
-  protected void onCreate(Bundle icicle) {
+  protected void onPreCreate() {
     dynamicTheme.onCreate(this);
     dynamicLanguage.onCreate(this);
-    super.onCreate(icicle);
+  }
 
+  @Override
+  protected void onCreate(Bundle icicle, @NonNull MasterSecret masterSecret) {
     this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-    masterSecret = getIntent().getParcelableExtra("master_secret");
 
     Fragment fragment = new MmsPreferencesFragment();
     FragmentManager fragmentManager = getSupportFragmentManager();
@@ -42,13 +40,6 @@ public class MmsPreferencesActivity extends PassphraseRequiredActionBarActivity 
     super.onResume();
     dynamicTheme.onResume(this);
     dynamicLanguage.onResume(this);
-  }
-
-  @Override
-  public void onDestroy() {
-    MemoryCleaner.clean(masterSecret);
-    MemoryCleaner.clean((MasterSecret) getIntent().getParcelableExtra("master_secret"));
-    super.onDestroy();
   }
 
   @Override

@@ -2,10 +2,12 @@ package com.openchat.secureim;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 
 import com.openchat.secureim.preferences.MmsPreferencesActivity;
+import com.openchat.secureim.crypto.MasterSecret;
 
 public class PromptMmsActivity extends PassphraseRequiredActionBarActivity {
 
@@ -13,9 +15,7 @@ public class PromptMmsActivity extends PassphraseRequiredActionBarActivity {
   private Button cancelButton;
 
   @Override
-  public void onCreate(Bundle bundle) {
-    super.onCreate(bundle);
-
+  protected void onCreate(Bundle bundle, @NonNull MasterSecret masterSecret) {
     setContentView(R.layout.prompt_apn_activity);
     initializeResources();
   }

@@ -27,6 +27,7 @@ import com.openchat.secureim.util.OpenchatServicePreferences;
 import java.util.concurrent.TimeUnit;
 
 public class AppProtectionPreferenceFragment extends PreferenceFragment {
+  private MasterSecret       masterSecret;
   private CheckBoxPreference disablePassphrase;
 
   @Override
@@ -34,6 +35,7 @@ public class AppProtectionPreferenceFragment extends PreferenceFragment {
     super.onCreate(paramBundle);
     addPreferencesFromResource(R.xml.preferences_app_protection);
 
+    masterSecret      = getArguments().getParcelable("master_secret");
     disablePassphrase = (CheckBoxPreference) this.findPreference("pref_enable_passphrase_temporary");
 
     this.findPreference(OpenchatServicePreferences.CHANGE_PASSPHRASE_PREF)
@@ -126,7 +128,6 @@ public class AppProtectionPreferenceFragment extends PreferenceFragment {
         builder.setPositiveButton(R.string.ApplicationPreferencesActivity_disable, new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-            MasterSecret masterSecret = getActivity().getIntent().getParcelableExtra("master_secret");
             MasterSecretUtil.changeMasterSecretPassphrase(getActivity(),
                                                           masterSecret,
                                                           MasterSecretUtil.UNENCRYPTED_PASSPHRASE);

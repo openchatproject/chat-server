@@ -3,35 +3,35 @@ package com.openchat.secureim;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.webkit.MimeTypeMap;
 
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;
-import com.openchat.secureim.util.MemoryCleaner;
+
+import ws.com.google.android.mms.ContentType;
 
 public class ShareActivity extends PassphraseRequiredActionBarActivity
     implements ShareFragment.ConversationSelectedListener
-  {
-  public final static String MASTER_SECRET_EXTRA = "master_secret";
-
+{
   private final DynamicTheme    dynamicTheme    = new DynamicTheme   ();
   private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
 
-  private ShareFragment fragment;
-  private MasterSecret  masterSecret;
-
   @Override
-  public void onCreate(Bundle icicle) {
+  protected void onPreCreate() {
     dynamicTheme.onCreate(this);
     dynamicLanguage.onCreate(this);
-    super.onCreate(icicle);
+  }
 
+  @Override
+  protected void onCreate(Bundle icicle, @NonNull MasterSecret masterSecret) {
     setContentView(R.layout.share_activity);
-    initializeResources();
+    initFragment(R.id.drawer_layout, new ShareFragment(), masterSecret);
   }
 
   @Override
@@ -55,12 +55,6 @@ public class ShareActivity extends PassphraseRequiredActionBarActivity
   }
 
   @Override
-  public void onDestroy() {
-    MemoryCleaner.clean(masterSecret);
-    super.onDestroy();
-  }
-
-  @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
     MenuInflater inflater = this.getMenuInflater();
     menu.clear();
@@ -78,12 +72,6 @@ public class ShareActivity extends PassphraseRequiredActionBarActivity
     case android.R.id.home:     finish();                return true;
     }
     return false;
-  }
-
-  @Override
-  public void onMasterSecretCleared() {
-    startActivity(new Intent(this, RoutingActivity.class));
-    super.onMasterSecretCleared();
   }
 
   private void handleNewConversation() {
@@ -105,29 +93,32 @@ public class ShareActivity extends PassphraseRequiredActionBarActivity
     startActivity(intent);
   }
 
-  private void initializeResources() {
-    this.masterSecret = getIntent().getParcelableExtra(MASTER_SECRET_EXTRA);
-
-    this.fragment = (ShareFragment)this.getSupportFragmentManager()
-        .findFragmentById(R.id.fragment_content);
-
-    this.fragment.setMasterSecret(masterSecret);
-  }
-
   private Intent getBaseShareIntent(final Class<?> target) {
-    final Intent intent = new Intent(this, target);
-    final Intent originalIntent = getIntent();
-    final String draftText  = originalIntent.getStringExtra(ConversationActivity.DRAFT_TEXT_EXTRA);
-    final Uri    draftImage = originalIntent.getParcelableExtra(ConversationActivity.DRAFT_IMAGE_EXTRA);
-    final Uri    draftAudio = originalIntent.getParcelableExtra(ConversationActivity.DRAFT_AUDIO_EXTRA);
-    final Uri    draftVideo = originalIntent.getParcelableExtra(ConversationActivity.DRAFT_VIDEO_EXTRA);
+    final Intent intent      = new Intent(this, target);
+    final String textExtra   = getIntent().getStringExtra(ConversationActivity.DRAFT_TEXT_EXTRA);
+    final Uri    streamExtra = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+    final String type        = streamExtra != null ? getMimeType(streamExtra) : getIntent().getType();
 
-    intent.putExtra(ConversationActivity.DRAFT_TEXT_EXTRA, draftText);
-    intent.putExtra(ConversationActivity.DRAFT_IMAGE_EXTRA, draftImage);
-    intent.putExtra(ConversationActivity.DRAFT_AUDIO_EXTRA, draftAudio);
-    intent.putExtra(ConversationActivity.DRAFT_VIDEO_EXTRA, draftVideo);
-    intent.putExtra(NewConversationActivity.MASTER_SECRET_EXTRA, masterSecret);
+    if (ContentType.isImageType(type)) {
+      intent.putExtra(ConversationActivity.DRAFT_IMAGE_EXTRA, streamExtra);
+    } else if (ContentType.isAudioType(type)) {
+      intent.putExtra(ConversationActivity.DRAFT_AUDIO_EXTRA, streamExtra);
+    } else if (ContentType.isVideoType(type)) {
+      intent.putExtra(ConversationActivity.DRAFT_VIDEO_EXTRA, streamExtra);
+    }
+    intent.putExtra(ConversationActivity.DRAFT_TEXT_EXTRA, textExtra);
 
     return intent;
+  }
+
+  private String getMimeType(Uri uri) {
+    String type = getContentResolver().getType(uri);
+
+    if (type == null) {
+      String extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString());
+      type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+    }
+
+    return type;
   }
 }

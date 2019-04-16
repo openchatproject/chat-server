@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
+import com.openchat.secureim.service.KeyCachingService;
 import com.openchat.secureim.service.RegistrationService;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.OpenchatServicePreferences;
@@ -328,7 +329,7 @@ public class RegistrationProgressActivity extends BaseActionBarActivity {
     }
 
     shutdownService();
-    startActivity(new Intent(this, RoutingActivity.class));
+    startActivity(new Intent(this, ConversationListActivity.class));
     finish();
   }
 

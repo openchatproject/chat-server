@@ -1,6 +1,7 @@
 package com.openchat.secureim;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,7 +13,6 @@ import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;
-import com.openchat.secureim.util.MemoryCleaner;
 import com.openchat.protocal.OpenchatAddress;
 import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.state.SessionRecord;
@@ -31,10 +31,14 @@ public class VerifyIdentityActivity extends KeyScanningActivity {
   private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
 
   @Override
-  public void onCreate(Bundle state) {
+  protected void onPreCreate() {
     dynamicTheme.onCreate(this);
     dynamicLanguage.onCreate(this);
-    super.onCreate(state);
+  }
+
+  @Override
+  protected void onCreate(Bundle state, @NonNull MasterSecret masterSecret) {
+    this.masterSecret = masterSecret;
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     setContentView(R.layout.verify_identity_activity);
 
@@ -49,12 +53,6 @@ public class VerifyIdentityActivity extends KeyScanningActivity {
     dynamicLanguage.onResume(this);
     getSupportActionBar().setTitle(R.string.AndroidManifest__verify_identity);
 
-  }
-
-  @Override
-  protected void onDestroy() {
-    MemoryCleaner.clean(masterSecret);
-    super.onDestroy();
   }
 
   private void initializeLocalIdentityKey() {
@@ -94,7 +92,6 @@ public class VerifyIdentityActivity extends KeyScanningActivity {
     this.localIdentityFingerprint  = (TextView)findViewById(R.id.you_read);
     this.remoteIdentityFingerprint = (TextView)findViewById(R.id.friend_reads);
     this.recipient                 = RecipientFactory.getRecipientForId(this, this.getIntent().getLongExtra("recipient", -1), true);
-    this.masterSecret              = this.getIntent().getParcelableExtra("master_secret");
   }
 
   @Override
