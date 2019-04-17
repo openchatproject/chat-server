@@ -4,15 +4,11 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Shader;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.provider.Telephony;
-import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -21,7 +17,6 @@ import android.text.style.StyleSpan;
 import android.widget.EditText;
 
 import com.openchat.secureim.BuildConfig;
-import com.openchat.secureim.OpenchatServiceExpiredException;
 import com.openchat.secureim.mms.OutgoingLegacyMmsConnection;
 import com.openchat.imservice.api.util.InvalidNumberException;
 import com.openchat.imservice.api.util.PhoneNumberFormatter;
@@ -183,6 +178,19 @@ public class Util {
     }
 
     return null;
+  }
+
+  public static <T> List<List<T>> partition(List<T> list, int partitionSize) {
+    List<List<T>> results = new LinkedList<>();
+
+    for (int index=0;index<list.size();index+=partitionSize) {
+      int offset      = index * partitionSize;
+      int subListSize = Math.min(partitionSize, list.size() - offset);
+
+      results.add(list.subList(offset, offset + subListSize));
+    }
+
+    return results;
   }
 
   public static List<String> split(String source, String delimiter) {
