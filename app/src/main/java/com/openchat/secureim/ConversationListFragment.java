@@ -79,8 +79,6 @@ public class ConversationListFragment extends ListFragment
     });
     initializeListAdapter();
     initializeBatchListener();
-
-    getLoaderManager().initLoader(0, null, this);
   }
 
   @Override
