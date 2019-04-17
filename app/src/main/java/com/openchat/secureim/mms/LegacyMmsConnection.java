@@ -224,7 +224,7 @@ public abstract class LegacyMmsConnection {
     }
 
     public boolean hasAuthentication() {
-      return !TextUtils.isEmpty(username) || !TextUtils.isEmpty(password);
+      return !TextUtils.isEmpty(username);
     }
 
     public String getUsername() {
