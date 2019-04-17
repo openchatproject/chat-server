@@ -11,8 +11,6 @@ import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.storage.OpenchatServiceSessionStore;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
-import com.openchat.secureim.util.DynamicLanguage;
-import com.openchat.secureim.util.DynamicTheme;
 import com.openchat.protocal.OpenchatAddress;
 import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.state.SessionRecord;
@@ -27,15 +25,6 @@ public class VerifyIdentityActivity extends KeyScanningActivity {
   private TextView localIdentityFingerprint;
   private TextView remoteIdentityFingerprint;
 
-  private final DynamicTheme    dynamicTheme    = new DynamicTheme   ();
-  private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
-
-  @Override
-  protected void onPreCreate() {
-    dynamicTheme.onCreate(this);
-    dynamicLanguage.onCreate(this);
-  }
-
   @Override
   protected void onCreate(Bundle state, @NonNull MasterSecret masterSecret) {
     this.masterSecret = masterSecret;
@@ -49,8 +38,6 @@ public class VerifyIdentityActivity extends KeyScanningActivity {
   @Override
   public void onResume() {
     super.onResume();
-    dynamicTheme.onResume(this);
-    dynamicLanguage.onResume(this);
     getSupportActionBar().setTitle(R.string.AndroidManifest__verify_identity);
 
   }
