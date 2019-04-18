@@ -13,7 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBarActivity;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
+import com.openchat.secureim.service.KeyCachingService;
 import com.openchat.secureim.service.RegistrationService;
 import com.openchat.secureim.util.Dialogs;
 import com.openchat.secureim.util.OpenchatServicePreferences;
@@ -45,7 +46,7 @@ import java.io.IOException;
 
 import static com.openchat.secureim.service.RegistrationService.RegistrationState;
 
-public class RegistrationProgressActivity extends PassphraseRequiredActionBarActivity {
+public class RegistrationProgressActivity extends BaseActionBarActivity {
 
   private static final int FOCUSED_COLOR   = Color.parseColor("#ff333333");
   private static final int UNFOCUSED_COLOR = Color.parseColor("#ff808080");
@@ -89,7 +90,8 @@ public class RegistrationProgressActivity extends PassphraseRequiredActionBarAct
   private volatile boolean visible;
 
   @Override
-  protected void onCreate(Bundle bundle, @NonNull MasterSecret masterSecret) {
+  public void onCreate(Bundle bundle) {
+    super.onCreate(bundle);
     getSupportActionBar().setTitle(getString(R.string.RegistrationProgressActivity_verifying_number));
     setContentView(R.layout.registration_progress_activity);
 
