@@ -22,6 +22,7 @@ import com.openchat.secureim.R;
 import com.openchat.secureim.RegistrationActivity;
 import com.openchat.secureim.contacts.ContactAccessor;
 import com.openchat.secureim.contacts.ContactIdentityManager;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.util.ProgressDialogAsyncTask;
 import com.openchat.secureim.util.OpenchatServicePreferences;
@@ -39,9 +40,12 @@ public class AdvancedPreferenceFragment extends PreferenceFragment {
 
   private static final int PICK_IDENTITY_CONTACT = 1;
 
+  private MasterSecret masterSecret;
+
   @Override
   public void onCreate(Bundle paramBundle) {
     super.onCreate(paramBundle);
+    masterSecret = getArguments().getParcelable("master_secret");
     addPreferencesFromResource(R.xml.preferences_advanced);
 
     initializePushMessagingToggle();
@@ -186,12 +190,11 @@ public class AdvancedPreferenceFragment extends PreferenceFragment {
         builder.show();
       } else {
         Intent nextIntent = new Intent(getActivity(), ApplicationPreferencesActivity.class);
-        nextIntent.putExtra("master_secret", getActivity().getIntent().getParcelableExtra("master_secret"));
 
         Intent intent = new Intent(getActivity(), RegistrationActivity.class);
         intent.putExtra("cancel_button", true);
         intent.putExtra("next_intent", nextIntent);
-        intent.putExtra("master_secret", getActivity().getIntent().getParcelableExtra("master_secret"));
+        intent.putExtra("master_secret", masterSecret);
         startActivity(intent);
       }
 
