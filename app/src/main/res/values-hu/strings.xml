@@ -358,7 +358,6 @@ Ismeretlen azonosító kulcsú üzenet érkezett. Kattints rá a feldolgozáshoz
   <string name="conversation_activity__attachment_thumbnail">Melléklet előnézet</string>
   <string name="conversation_item__mms_downloading_description">Média üzenet letöltése</string>
   <string name="conversation_item__mms_image_description">Média üzenet</string>
-  <string name="conversation_item__play_button_description">Lejátszás gomb</string>
   <string name="conversation_item__secure_message_description">Biztonságos üzenet</string>
   <string name="conversation_item_sent__download">Letölt</string>
   <string name="conversation_item_sent__downloading">Letöltés</string>
@@ -633,7 +632,6 @@ sikertelen.
   <string name="conversation_list_batch__menu_select_all">Minden kijelölése</string>
   <string name="conversation_list__menu_search">Keresés</string>
   <string name="conversation_list_item_view__contact_photo_image">Névjegyhez tartozó fénykép</string>
-  <string name="conversation_list_item_view__attachment_indicator">Melléklet jelző</string>
   <string name="conversation_list_item_view__error_alert">Hiba figyelmeztetés</string>
   <string name="conversation_list_fragment__fab_content_description">Új beszélgetés</string>
   <string name="conversation_secure_verified__menu_security">Biztonság</string>

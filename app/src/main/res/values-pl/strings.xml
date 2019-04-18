@@ -333,7 +333,6 @@ Otrzymano wiadomość z nieznanym kluczem tożsamości. Kliknij aby przetworzyć
   <string name="conversation_activity__attachment_thumbnail">Minaturka załącznika</string>
   <string name="conversation_item__mms_downloading_description">Trwa pobieranie wiadomości multimedialnej</string>
   <string name="conversation_item__mms_image_description">Wiadomość multimedialna</string>
-  <string name="conversation_item__play_button_description">Przycisk Play</string>
   <string name="conversation_item__secure_message_description">Bezpieczna wiadomość</string>
   <string name="conversation_item_sent__download">Pobierz</string>
   <string name="conversation_item_sent__downloading">Pobieranie</string>
@@ -583,7 +582,6 @@ Darmowe i prywatne wiadomości do użytkowników OpenchatService i Openchat</str
   <string name="conversation_list_batch__menu_select_all">Zaznacz wszystko</string>
   <string name="conversation_list__menu_search">Szukaj</string>
   <string name="conversation_list_item_view__contact_photo_image">Zdjęcie kontaktu</string>
-  <string name="conversation_list_item_view__attachment_indicator">Indykator załącznika</string>
   <string name="conversation_list_item_view__error_alert">Powiadomienie błedu</string>
   <string name="conversation_list_fragment__fab_content_description">Nowa konwersacja</string>
   <string name="conversation_secure_verified__menu_security">Bezpieczeństwo</string>

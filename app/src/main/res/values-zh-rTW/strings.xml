@@ -282,7 +282,6 @@
   <string name="conversation_activity__compose_description">編輯簡訊</string>
   <string name="conversation_activity__emoji_toggle_description">叫出「表情符號」列表</string>
   <string name="conversation_item__mms_image_description">媒體訊息</string>
-  <string name="conversation_item__play_button_description">播放按鈕</string>
   <string name="conversation_item__secure_message_description">安全的訊息</string>
   <string name="conversation_item_sent__download">下載</string>
   <string name="conversation_item_sent__downloading">正在下載</string>

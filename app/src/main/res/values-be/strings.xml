@@ -89,6 +89,8 @@
   <string name="ConversationActivity_get_with_it">Атрымай з гэтым: %s</string>
   <string name="ConversationActivity_lets_use_this_to_chat">Выкарыстайце гэта, каб пачаць гутарку: %s</string>
   <string name="ConversationActivity_error_leaving_group">Памылка выхаду з групы...</string>
+  <string name="ConversationActivity_mms_not_supported_title">MMS не падтрымліваюцца</string>
+  <string name="ConversationActivity_mms_not_supported_message">Гэтае паведамленне ня можа быць даслана, бо ваша мабільны аператар не падтрымлівае MMS</string>
   <string name="ConversationFragment_message_details">Дэталі паведамлення</string>
   <string name="ConversationFragment_transport_s_sent_received_s">Транспарт: %1$s\nДаслана/Атрымана: %2$s</string>
   <string name="ConversationFragment_sender_s_transport_s_sent_s_received_s">Адпраўшчык: %1$s\nТранспарт: %2$s\nДаслана: %3$s\nАтрымана: %4$s</string>
@@ -331,7 +333,6 @@
   <string name="conversation_activity__attachment_thumbnail">Дадатак мініяцюры</string>
   <string name="conversation_item__mms_downloading_description">Запампоўка медыя паведамлення</string>
   <string name="conversation_item__mms_image_description">Медыя паведамленне</string>
-  <string name="conversation_item__play_button_description">Кнопка Play</string>
   <string name="conversation_item__secure_message_description">Бяспечнае паведамленне</string>
   <string name="conversation_item_sent__download">Запампаваць</string>
   <string name="conversation_item_sent__downloading">Запампоўка</string>
@@ -534,6 +535,7 @@ OpenchatService не дачакаўся параверачная SMS.</string>
   <string name="preferences__custom">Пэўны</string>
   <string name="preferences__advanced">Прасунуты</string>
   <string name="preferences__app_protection">Абарона аплікацыі</string>
+  <string name="preferences__mms_user_agent">MMS User Agent</string>
   <string name="preferences__advanced_mms_access_point_names">Ручныя налады MMS</string>
   <string name="preferences__enable_manual_mms">Выкарыстоўваць ручныя налады MMS</string>
   <string name="preferences__override_system_mms_settings">Перапісаць сістэмныя налады MMS тымі, якія знаходзяцца ніжэй.</string>
@@ -584,7 +586,6 @@ OpenchatService не дачакаўся параверачная SMS.</string>
   <string name="conversation_list_batch__menu_select_all">Выбраць усё</string>
   <string name="conversation_list__menu_search">Пошук</string>
   <string name="conversation_list_item_view__contact_photo_image">Фота кантакта</string>
-  <string name="conversation_list_item_view__attachment_indicator">Індыкатар дадатку</string>
   <string name="conversation_list_item_view__error_alert">Папярэджванне пра памылкі</string>
   <string name="conversation_list_fragment__fab_content_description">Новая размова</string>
   <string name="conversation_secure_verified__menu_security">Бяспка</string>

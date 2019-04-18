@@ -4,6 +4,7 @@
   <string name="yes">כן</string>
   <string name="no">לא</string>
   <string name="delete">מחק</string>
+  <string name="please_wait">המתן בבקשה...</string>
   <string name="ApplicationPreferencesActivity_currently_s">עכשיו: %s</string>
   <string name="ApplicationPreferenceActivity_you_havent_set_a_passphrase_yet">עדיין לא הגדרת סיסמה!</string>
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">למחוק את כל ההודעות הישנות עכשיו?</string>

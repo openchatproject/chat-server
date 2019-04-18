@@ -72,6 +72,7 @@
   <string name="ConversationActivity_sorry_the_selected_audio_exceeds_message_size_restrictions">ಕ್ಷಮಿಸಿ, ಆಯ್ಕೆ ಮಾಡಿದ ಶ್ರಾವ್ಯ ಸಂದೇಶ ಗಾತ್ರ ನಿರ್ಬಂಧಗಳನ್ನು ಮೀರಿದೆ  (%1$skB).</string>
   <string name="ConversationActivity_recipient_is_not_a_valid_sms_or_email_address_exclamation">ಸ್ವೀಕರಿಸುವವರ ಎಸ್.ಎಮ್.ಎಸ್ ಅಥವಾ ಇಮೇಲ್ ವಿಳಾಸ ಮಾನ್ಯವಾದುದಲ್ಲ!</string>
   <string name="ConversationActivity_message_is_empty_exclamation">ಸಂದೇಶ ಖಾಲಿಯಾಗಿದೆ!</string>
+  <string name="ConversationActivity_group_members">ಸಮೂಹದ ಸದಸ್ಯರು</string>
   <string name="ConversationActivity_group_conversation">ಸಮೂಹ ಸಂವಾದ</string>
   <string name="ConversationActivity_unnamed_group">ಅನಾಮಧೇಯ ಸಮೂಹ</string>
   <string name="ConversationActivity_d_recipients_in_group">%d ಸದಸ್ಯರು </string>
@@ -327,7 +328,6 @@
   <string name="conversation_activity__compose_description">ಸಂದೇಶ ಸಂಯೋಜನೆ</string>
   <string name="conversation_activity__emoji_toggle_description">ಎಮೊಜಿಯ ಕೀಲಿಮಣೆಗೆ ಟಾಗಲ್ ಮಾಡಿ</string>
   <string name="conversation_item__mms_image_description">ಬಹುಮಾಧ್ಯಮ ಸಂದೇಶ</string>
-  <string name="conversation_item__play_button_description">ಪ್ಲೇ ಬಟನ್</string>
   <string name="conversation_item__secure_message_description">ಸುರಕ್ಷಿತ ಸಂದೇಶ</string>
   <string name="conversation_item_sent__download">ಡೌನ್ಲೋಡ್</string>
   <string name="conversation_item_sent__downloading">ಡೌನ್ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ</string>
@@ -364,6 +364,8 @@
   <string name="import_fragment__import_a_plaintext_backup_file">
 ಒಂದು ಸರಳಪಠ್ಯ ಬ್ಯಾಕಪ್ ಕಡತವನ್ನು ಆಮದು ಮಾಡಿಕೊಳ್ಳಿ . \'SMSBackup And Restore\' ಜೋತೆ ಹೊಂದಿಕೆಯಾಗುತ್ತದೆ.</string>
   <string name="media_overview_activity__no_images">ಯಾವುದೇ ಚಿತ್ರಗಳಿಲ್ಲ</string>
+  <string name="message_recipients_list_item__verify">ಪರಿಶೀಲಿಸಿ</string>
+  <string name="message_recipients_list_item__resend">ಪುನಃ ಕಳುಹಿಸಿ</string>
   <string name="MmsPreferencesFragment__manual_mms_settings_are_required">ನಿಮ್ಮ ದೂರವಾಣಿಗೆ ಹಸ್ತಚಾಲಿತ ಎಂ.ಎಂ.ಎಸ್ ಸೆಟ್ಟಿಂಗ್ಗಳ ಅಗತ್ಯವಿದೆ.</string>
   <string name="MmsPreferencesFragment__enabled">ಸಕ್ರಿಯಗೊಳಿಸು</string>
   <string name="MmsPreferencesFragment__disabled">ನಿಷ್ಕ್ರಿಯಗೊಳಿಸು</string>
@@ -427,6 +429,7 @@
   <string name="registration_progress_activity__sms_verification_failed">ಎಸ್ ಎಂ ಎಸ್ ಪರಿಶೀಲನೆ 
 ವಿಫಲವಾಗಿದೆ. </string>
   <string name="registration_progress_activity__generating_keys">ಕೀಲಿಗಳನ್ನು ರಚಿಸಲಾಗುತ್ತಿದೆ ...</string>
+  <string name="registration_progress_activity__alert">ಎಚ್ಚರಿಕೆ</string>
   <string name="registration_progress_activity__telephone">ದೂರವಾಣಿ</string>
   <string name="registration_progress_activity__check">ಪರಿಶೀಲಿಸು</string>
   <string name="recipients_panel__to"><small>ಹೆಸರು ಅಥವಾ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ</small></string>
@@ -492,6 +495,11 @@
   <string name="preferences__change_notification_sound">ಸೂಚನೆಯ ಶಬ್ದ ಬದಲಾಯಿಸಿ</string>
   <string name="preferences__inthread_notifications">ಎಳೆಗಳಲ್ಲಿನ ಸೂಚನೆಗಳು</string>
   <string name="preferences__play_inthread_notifications">ಸಕ್ರಿಯ ಸಂಭಾಷಣೆಯನ್ನು ನೋಡುವಾಗ ಸೂಚನೆ ಶಬ್ದವನ್ನು ನುಡಿಸಿ.</string>
+  <string name="preferences__one_time">ಒಮ್ಮೆ</string>
+  <string name="preferences__two_times">ಎರಡು ಬಾರಿ</string>
+  <string name="preferences__three_times">ಮೂರು ಬಾರಿ</string>
+  <string name="preferences__five_times">ಐದು ಬಾರಿ</string>
+  <string name="preferences__ten_times">ಹತ್ತು ಬಾರಿ</string>
   <string name="preferences__vibrate">ಕಂಪಿಸು</string>
   <string name="preferences__also_vibrate_when_notified">ಸೂಚನೆಗಾಗಿ  ಕಂಪಿಸು</string>
   <string name="preferences__minutes">ನಿಮಿಷಗಳು</string>
@@ -526,6 +534,7 @@
   <string name="preferences__theme">ವಿನ್ಯಾಸ</string>
   <string name="preferences__default">ಪೂರ್ವನಿಯೋಜಿತ</string>
   <string name="preferences__language">ಭಾಷೆ</string>
+  <string name="preferences__language_summary">ಭಾಷೆ  %s</string>
   <string name="preferences__submit_debug_log">ಡೀಬಗ್ ಲಾಗ್ ಸಲ್ಲಿಸಿ</string>
   <string name="preferences__support_wifi_calling">\'ವೈಫೈ ಕಾಲಿಂಗ್\' ಹೊಂದಾಣಿಕೆ ಮೋಡ್</string>
   <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">ನಿಮ್ಮ ಸಾಧನ ಎಸ್ಎಂಎಸ್ / ಎಂಎಂಎಸ್ನ್ನು ವೈಫೈ ಮೇಲೆ ಬಳಸಿದರೆ ಇದನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ (\'ವೈಫೈ ಕಾಲಿಂಗ್\' ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಸಕ್ರಿಯಗೊಳಿಸಿದ್ದಾಗ ಮಾತ್ರ) </string>
@@ -543,11 +552,13 @@
   <string name="conversation_context__menu_forward_message">ಸಂದೇಶವನ್ನು ರವಾನಿಸು</string>
   <string name="conversation_context__menu_resend_message">ಸಂದೇಶ ಪುನಃ ಕಳುಹಿಸಿ</string>
   <string name="conversation_context_image__save_attachment">ಲಗತ್ತು ಉಳಿಸು</string>
+  <string name="conversation_insecure__invite">ಆಹ್ವಾನ</string>
   <string name="conversation_insecure__menu_start_secure_session">ಸುರಕ್ಷಿತ ಸೆಷನ್ ಪ್ರಾರಂಭಿಸು</string>
   <string name="conversation_insecure__security">ಸುರಕ್ಷತೆ</string>
   <string name="conversation_list_batch__menu_delete_selected">ಆಯ್ಕೆಮಾಡಿದನ್ನು ಅಳಿಸಿ</string>
   <string name="conversation_list_batch__menu_select_all">ಎಲ್ಲಾ ಆಯ್ಕೆಮಾಡಿ</string>
   <string name="conversation_list__menu_search">ಹುಡುಕಿ</string>
+  <string name="conversation_list_fragment__fab_content_description">ಹೋಸ ಸಂಭಾಷಣೆ</string>
   <string name="conversation_secure_verified__menu_security">ಸುರಕ್ಷತೆ</string>
   <string name="conversation_secure_verified__menu_verify_identity">ಗುರುತನ್ನು ಪರಿಶೀಲಿಸಿ</string>
   <string name="conversation_secure_verified__menu_abort_secure_session">ಸುರಕ್ಷಿತ ಸೆಷನ್ ಕೊನೆಗೊಳಿಸು</string>

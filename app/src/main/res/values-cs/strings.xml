@@ -93,6 +93,9 @@ kontakt</string>
   <string name="ConversationActivity_get_with_it">Získat s ním: %s</string>
   <string name="ConversationActivity_lets_use_this_to_chat">Použít pro rozhovor: %s</string>
   <string name="ConversationActivity_error_leaving_group">Chyba při opouštění skupiny.</string>
+  <string name="ConversationActivity_mms_not_supported_title">MMS nejsou podporovány</string>
+  <string name="ConversationActivity_mms_not_supported_message">Zpráva nemůže být odeslána protože váš operátor nepodporuje MMS.</string>
+  <string name="ConversationActivity_specify_recipient">Vyberte prosím kontakt</string>
   <string name="ConversationFragment_message_details">Podrobnosti zprávy</string>
   <string name="ConversationFragment_transport_s_sent_received_s">Přenos: %1$s\nOdesláno/Přijato: %2$s</string>
   <string name="ConversationFragment_sender_s_transport_s_sent_s_received_s">Odesílatel: %1$s\nPřenos: %2$s\nOdesláno: %3$s\nPřijato: %4$s</string>
@@ -205,6 +208,11 @@ Poslat zprávy Vaším jménem.</string>
   <string name="PassphrasePromptActivity_watermark_content_description">Ikona OpenchatService</string>
   <string name="PassphrasePromptActivity_ok_button_content_description">Zadejte heslo</string>
   <string name="PassphrasePromptActivity_invalid_passphrase_exclamation">Chybné heslo!</string>
+  <string name="RatingManager_rate_this_app">Ohodnotit tuto aplikaci</string>
+  <string name="RatingManager_if_you_enjoy_using_this_app_please_take_a_moment">Pokud jste s aplikací spokojeni, prosím věnujte chvilku jejímu ohodnocení. Pomůže nám to.</string>
+  <string name="RatingManager_rate_now">Ohodnotit teď!</string>
+  <string name="RatingManager_no_thanks">Ne díky</string>
+  <string name="RatingManager_later">Později</string>
   <string name="ReceiveKeyActivity_the_signature_on_this_key_exchange_is_different">Podpis na této výměně klíčů je jiný, než jaký jste od tohoto kontaktu obdrželi dříve. To může
 znamenat, že se někdo pokouší zachytit vaši konverzaci, nebo jen že si váš kontakt
 přeinstaloval OpenchatService a má teď nový identifikační klíč.</string>
@@ -336,7 +344,6 @@ Obdržena zpráva s neznámým identifikačním klíčem. Klepněte pro její zp
   <string name="conversation_activity__attachment_thumbnail">Připojený náhled</string>
   <string name="conversation_item__mms_downloading_description">Stahuji multimediální zprávu</string>
   <string name="conversation_item__mms_image_description">Multimediální zpráva</string>
-  <string name="conversation_item__play_button_description">Tlačítko Play</string>
   <string name="conversation_item__secure_message_description">Zabezpečená zpráva</string>
   <string name="conversation_item_sent__download">Stažení</string>
   <string name="conversation_item_sent__downloading">Stahuji</string>
@@ -554,6 +561,7 @@ OpenchatService nyní automaticky ověří vaše telefonní číslo pomocí potv
   <string name="preferences__custom">Vlastní</string>
   <string name="preferences__advanced">Rozšířené možnosti</string>
   <string name="preferences__app_protection">Ochrana aplikace</string>
+  <string name="preferences__mms_user_agent">MMS  User Agent</string>
   <string name="preferences__advanced_mms_access_point_names">Manuální nastavení MMS</string>
   <string name="preferences__enable_manual_mms">Použijte manuální nastavení MMS</string>
   <string name="preferences__override_system_mms_settings">Zadat vlastní nastavení MMS</string>
@@ -604,7 +612,6 @@ Svobodná šifrovaná komunikace s uživateli OpenchatService a Openchat</string
   <string name="conversation_list_batch__menu_select_all">Označit vše</string>
   <string name="conversation_list__menu_search">Hledat</string>
   <string name="conversation_list_item_view__contact_photo_image">Fotografie kontaktu</string>
-  <string name="conversation_list_item_view__attachment_indicator">Indikátor přílohy</string>
   <string name="conversation_list_item_view__error_alert">Upozornění na chybu</string>
   <string name="conversation_list_fragment__fab_content_description">Nová konverzace</string>
   <string name="conversation_secure_verified__menu_security">Zabezpečení</string>

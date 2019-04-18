@@ -342,7 +342,6 @@ SMS-களை இறக்குமதி செய்திருந்தா�
   <string name="conversation_activity__attachment_thumbnail">இணைப்பின் சிறுபடம்</string>
   <string name="conversation_item__mms_downloading_description">மீடியா செய்தி பதிவிறக்கப்படுகிறது</string>
   <string name="conversation_item__mms_image_description">மீடியா செய்தி</string>
-  <string name="conversation_item__play_button_description">ஓட்டு பொத்தான்</string>
   <string name="conversation_item__secure_message_description">பாதுகாப்பான செய்தி</string>
   <string name="conversation_item_sent__download">பதிவிறக்கம்</string>
   <string name="conversation_item_sent__downloading">பதிவிறக்கப்படுகிறது </string>
@@ -604,7 +603,6 @@ OpenchatService சரிபார்ப்பு SMS-செய்திக்�
   <string name="conversation_list_batch__menu_select_all">அனைத்து தேர்வுசெய்</string>
   <string name="conversation_list__menu_search">தேடல்</string>
   <string name="conversation_list_item_view__contact_photo_image">தொடர்பின் புகைப்படம்</string>
-  <string name="conversation_list_item_view__attachment_indicator">இணைப்பு காட்டி</string>
   <string name="conversation_list_item_view__error_alert">பிழை எச்சரிக்கை</string>
   <string name="conversation_list_fragment__fab_content_description">புதிய உரையாடல்</string>
   <string name="conversation_secure_verified__menu_security">பாதுகாப்பு</string>

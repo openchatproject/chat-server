@@ -354,7 +354,6 @@ Bola prijatá správa s neznámou identou. Kliknite pre spracovanie a zobrazenie
   <string name="conversation_activity__attachment_thumbnail">Ikona prílohy</string>
   <string name="conversation_item__mms_downloading_description">Sťahovanie multimediálnej správy</string>
   <string name="conversation_item__mms_image_description">Multimediálna správa</string>
-  <string name="conversation_item__play_button_description">Prehrávacie tlačidlo</string>
   <string name="conversation_item__secure_message_description">Zašifrovaná správa</string>
   <string name="conversation_item_sent__download">Stiahnuť</string>
   <string name="conversation_item_sent__downloading">Sťahujem</string>
@@ -632,7 +631,6 @@ Bezplatné šifrované správy medzi používateľmi OpenchatService
   <string name="conversation_list_batch__menu_select_all">Označ všetko</string>
   <string name="conversation_list__menu_search">Hľadaj</string>
   <string name="conversation_list_item_view__contact_photo_image">Avatar kontaktu</string>
-  <string name="conversation_list_item_view__attachment_indicator">Symbol prílohy</string>
   <string name="conversation_list_item_view__error_alert">Chybová hláška</string>
   <string name="conversation_list_fragment__fab_content_description">Nová konverzácia</string>
   <string name="conversation_secure_verified__menu_security">Bezpečnosť</string>

@@ -333,7 +333,6 @@ Recebida mensagem com chave de identidade desconhecida. Clique para processar e 
   <string name="conversation_activity__compose_description">Composição da mensagem</string>
   <string name="conversation_activity__emoji_toggle_description">Teclado emoji</string>
   <string name="conversation_item__mms_image_description">Mensagem media</string>
-  <string name="conversation_item__play_button_description">Botão play</string>
   <string name="conversation_item__secure_message_description">Mensagem segura</string>
   <string name="conversation_item_sent__download">Transferir</string>
   <string name="conversation_item_sent__downloading">A transferir</string>

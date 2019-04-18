@@ -315,7 +315,6 @@ Primit mesaj trimis cu o cheie de identitate necunoscută. Faceți click pentru 
   <string name="conversation_activity__attachment_thumbnail">Pictogramă atașament</string>
   <string name="conversation_item__mms_downloading_description">Mesajul media se descarcă</string>
   <string name="conversation_item__mms_image_description">Mesaj media</string>
-  <string name="conversation_item__play_button_description">Buton redare</string>
   <string name="conversation_item__secure_message_description">Mesaj securizat</string>
   <string name="conversation_item_sent__download">Descarca</string>
   <string name="conversation_item_sent__downloading">Se descarca</string>
@@ -566,7 +565,6 @@ Operaţiunea iniţiată de OpenchatService a expirat în timpul aşteptării pri
   <string name="conversation_list_batch__menu_select_all">Selectează tot</string>
   <string name="conversation_list__menu_search">Caută</string>
   <string name="conversation_list_item_view__contact_photo_image">Poză contact</string>
-  <string name="conversation_list_item_view__attachment_indicator">Indicator atașament</string>
   <string name="conversation_list_fragment__fab_content_description">Conversație nouă</string>
   <string name="conversation_secure_verified__menu_security">Securitate</string>
   <string name="conversation_secure_verified__menu_verify_identity">Verifică identitatea</string>
