@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.openchat.secureim.components.RatingManager;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.notifications.MessageNotifier;
@@ -52,6 +53,7 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
     initializeContactUpdatesReceiver();
 
     DirectoryRefreshListener.schedule(this);
+    RatingManager.showRatingDialogIfNecessary(this);
   }
 
   @Override
