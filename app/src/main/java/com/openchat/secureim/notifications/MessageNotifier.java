@@ -24,6 +24,7 @@ import android.text.style.StyleSpan;
 import android.util.Log;
 
 import com.openchat.secureim.ConversationActivity;
+import com.openchat.secureim.ConversationListActivity;
 import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
@@ -204,7 +205,7 @@ public class MessageNotifier {
                                           notificationState.getMessageCount()));
     builder.setContentText(String.format(context.getString(R.string.MessageNotifier_most_recent_from_s),
                                          notifications.get(0).getIndividualRecipientName()));
-    builder.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, ConversationActivity.class), 0));
+    builder.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, ConversationListActivity.class), 0));
     
     builder.setContentInfo(String.valueOf(notificationState.getMessageCount()));
     builder.setNumber(notificationState.getMessageCount());
