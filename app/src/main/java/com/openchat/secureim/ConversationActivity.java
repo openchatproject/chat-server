@@ -945,7 +945,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     boolean refreshFragment = (threadId != this.threadId);
     this.threadId = threadId;
 
-    if (fragment == null) {
+    if (fragment == null || !fragment.isVisible() || isFinishing()) {
       return;
     }
 
