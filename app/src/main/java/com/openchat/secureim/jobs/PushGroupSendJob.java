@@ -11,11 +11,13 @@ import com.openchat.secureim.database.NoSuchMessageException;
 import com.openchat.secureim.database.documents.NetworkFailure;
 import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
+import com.openchat.secureim.mms.MediaConstraints;
 import com.openchat.secureim.mms.PartParser;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
+import com.openchat.secureim.transport.UndeliverableMessageException;
 import com.openchat.secureim.util.Base64;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.jobqueue.JobParameters;
@@ -83,7 +85,7 @@ public class PushGroupSendJob extends PushSendJob implements InjectableType {
       database.markAsPush(messageId);
       database.markAsSecure(messageId);
       database.markAsSent(messageId, "push".getBytes(), 0);
-    } catch (InvalidNumberException | RecipientFormattingException e) {
+    } catch (InvalidNumberException | RecipientFormattingException | UndeliverableMessageException e) {
       Log.w(TAG, e);
       database.markAsSentFailed(messageId);
       notifyMediaMessageDeliveryFailed(context, messageId);
@@ -121,8 +123,11 @@ public class PushGroupSendJob extends PushSendJob implements InjectableType {
   }
 
   private void deliver(MasterSecret masterSecret, SendReq message, long filterRecipientId)
-      throws IOException, RecipientFormattingException, InvalidNumberException, EncapsulatedExceptions
+      throws IOException, RecipientFormattingException, InvalidNumberException,
+      EncapsulatedExceptions, UndeliverableMessageException
   {
+    message = getResolvedMessage(masterSecret, message, MediaConstraints.PUSH_CONSTRAINTS, false);
+
     OpenchatServiceMessageSender    messageSender = messageSenderFactory.create(masterSecret);
     byte[]                     groupId       = GroupUtil.getDecodedId(message.getTo()[0].getString());
     Recipients                 recipients    = DatabaseFactory.getGroupDatabase(context).getGroupMembers(groupId, false);
