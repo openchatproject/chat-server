@@ -29,6 +29,8 @@ import com.openchat.secureim.util.OpenchatServicePreferences;
 public class ConversationListActivity extends PassphraseRequiredActionBarActivity
     implements ConversationListFragment.ConversationSelectedListener
 {
+  private static final String TAG = ConversationListActivity.class.getSimpleName();
+
   private final DynamicTheme    dynamicTheme    = new DynamicTheme   ();
   private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
 
@@ -192,14 +194,14 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
       @Override
       public void onChange(boolean selfChange) {
         super.onChange(selfChange);
-        Log.w("ConversationListActivity", "detected android contact data changed, refreshing cache");
+        Log.w(TAG, "detected android contact data changed, refreshing cache");
         RecipientFactory.clearCache();
         ConversationListActivity.this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-              ((ConversationListAdapter)fragment.getListAdapter()).notifyDataSetChanged();
-            }
-          });
+          @Override
+          public void run() {
+            fragment.getListAdapter().notifyDataSetChanged();
+          }
+        });
       }
     };
 
