@@ -10,7 +10,6 @@ import android.provider.ContactsContract.Contacts;
 
 import com.openchat.secureim.R;
 import com.openchat.secureim.recipients.Recipient;
-import com.openchat.secureim.util.BitmapUtil;
 import com.openchat.secureim.util.LRUCache;
 
 import java.io.InputStream;
@@ -60,12 +59,15 @@ public class ContactPhotoFactory {
     if (contactPhoto == null) {
       Cursor cursor = context.getContentResolver().query(uri, CONTENT_URI_PROJECTION,
                                                          null, null, null);
-
-      if (cursor != null && cursor.moveToFirst()) {
-        contactPhoto = getContactPhoto(context, Uri.withAppendedPath(Contacts.CONTENT_URI,
-                                       cursor.getLong(0) + ""));
-      } else {
-        contactPhoto = getDefaultContactPhoto(context);
+      try {
+        if (cursor != null && cursor.moveToFirst()) {
+          contactPhoto = getContactPhoto(context, Uri.withAppendedPath(Contacts.CONTENT_URI,
+                                                                       cursor.getLong(0) + ""));
+        } else {
+          contactPhoto = getDefaultContactPhoto(context);
+        }
+      } finally {
+        if (cursor != null) cursor.close();
       }
 
       localUserContactPhotoCache.put(uri, contactPhoto);
