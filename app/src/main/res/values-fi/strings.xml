@@ -20,8 +20,8 @@ jatkavat toimintaansa, mutta kuka tahansa, jolla on fyysinen pääsy laitteesees
   <string name="ApplicationPreferencesActivity_unregistering_for_data_based_communication">Tietoverkkovälitteiseen viestintään vaadittua rekisteröintiä puretaan</string>
   <string name="ApplicationPreferencesActivity_disable_push_messages">Poistetaanko pikaviestit käytöstä?</string>
   <string name="ApplicationPreferencesActivity_this_will_disable_push_messages">
-Tämä tulee lopettamaan pikaviestipalvelun poistamalla tietosi palvelimelta.
-Käyttääksesi pikaviestipalvelua tulevaisuudessa sinun täytyy rekisteröityä uudelleen.</string>
+Tämä lopettaa pikaviestipalvelun poistamalla tietosi palvelimelta.
+Jos haluat käyttää pikaviestipalvelua jatkossa, sinun täytyy rekisteröityä uudelleen.</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Virhe yhdistettäessä palvelimeen!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">Tekstiviestit käytössä</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Kosketa, jos haluat vaihtaa oletustekstiviestisovellustasi</string>
@@ -62,10 +62,10 @@ tämän yhteystiedon.</string>
   <string name="ConversationItem_click_to_approve_unencrypted_dialog_message">Tätä viestiä <b>ei</b> tulla salaamaan, koska vastaanottaja ei enää käytä OpenchatServicea.\n\nLähetä salaamaton viesti?</string>
   <string name="ConversationItem_unable_to_open_media">Median avaamiseen ei löytynyt sovellusta.</string>
   <string name="ConversationActivity_initiate_secure_session_question">Aloita salattu istunto?</string>
-  <string name="ConversationActivity_initiate_secure_session_with_s_question">Aloita salattu istunto %s:n kanssa?</string>
-  <string name="ConversationActivity_abort_secure_session_confirmation">Salatun istunnon lopetuksen vahvistus</string>
+  <string name="ConversationActivity_initiate_secure_session_with_s_question">Aloita salattu istunto yhteystiedon %s kanssa?</string>
+  <string name="ConversationActivity_abort_secure_session_confirmation">Varmista salatun istunnon lopetus</string>
   <string name="ConversationActivity_are_you_sure_that_you_want_to_abort_this_secure_session_question">Haluatko varmasti lopettaa salatun istunnon?</string>
-  <string name="ConversationActivity_delete_thread_confirmation">Viestiketjun poiston vahvistus</string>
+  <string name="ConversationActivity_delete_thread_confirmation">Varmista viestiketjun poisto</string>
   <string name="ConversationActivity_are_you_sure_that_you_want_to_permanently_delete_this_conversation_question">Haluatko varmasti poistaa pysyvästi tämän keskustelun?</string>
   <string name="ConversationActivity_add_attachment">Lisää liite</string>
   <string name="ConversationActivity_select_contact_info">Valitse yhteystieto</string>
@@ -122,8 +122,8 @@ Vastaanotettu: %4$s</string>
   <string name="ConversationListFragment_deleting">Poistetaan</string>
   <string name="ConversationListFragment_deleting_selected_threads">Valittuja viestiketjuja poistetaan...</string>
   <string name="ConversationListItem_key_exchange_message">Avaintenvaihtoviesti...</string>
-  <string name="CustomDefaultPreference_using_custom">Käyttäen mukautettua: %s</string>
-  <string name="CustomDefaultPreference_using_default">Käyttäen oletusta: %s</string>
+  <string name="CustomDefaultPreference_using_custom">Käytä mukautettua: %s</string>
+  <string name="CustomDefaultPreference_using_default">Käytä oletusta: %s</string>
   <string name="CustomDefaultPreference_none">Ei asetettu</string>
   <string name="DateUtils_now">Nyt</string>
   <string name="ShareActivity_share_with">Jaa</string>
@@ -237,10 +237,11 @@ puhelinnumero</string>
   <string name="RegistrationActivity_the_number_you_specified_s_is_invalid">Antamasi puhelinnumero
 (%s) on virheellinen.</string>
   <string name="RegistrationActivity_unsupported">Ei tuettu</string>
-  <string name="RegistrationActivity_sorry_this_device_is_not_supported_for_data_messaging">Pahoittelemme, 
-Tämä laite ei ole tuettu tietoverkkovälitteiseen viestintään. Laitteilla, joissa on Android vanhempi 
-kuin 4.0 täytyy olla rekisteröity Google-tili. Laitteilla, joissa on Android 4.0 tai uudempi ei 
-tarvitse olla Google-tiliä, mutta täytyy olla Play-kauppa asennettuna. </string>
+  <string name="RegistrationActivity_sorry_this_device_is_not_supported_for_data_messaging">Valitettavasti,
+tämä laite ei tue viestien lähettämistä tietoverkon kautta. Laitteissa, joissa on vanhempi kuin
+Android 4.0, täytyy olla rekisteröity Google-tili. Laitteissa, joissa on Android 4.0 tai uudempi
+ei tarvitse
+olla Google-tiliä, mutta täytyy olla Play-kauppa asennettuna. </string>
   <string name="RegistrationActivity_we_will_now_verify_that_the_following_number_is_associated_with_your_device_s">
 Tarkista vielä, että tämä on varmasti numerosi! Aiomme seuraavaksi vahvistaa sen lähettämällä siihen tekstiviestin.</string>
   <string name="RegistrationActivity_continue">Jatka</string>
@@ -268,7 +269,7 @@ Tarkista vielä, että tämä on varmasti numerosi! Aiomme seuraavaksi vahvistaa
   <string name="RegistrationProgressActivity_this_number_is_already_registered_on_a_different">Tämä numero on jo rekisteröitynä toisella OpenchatService-palvelimella (CyanogenMod?). Sinun täytyy purkaa rekisteröityminen siellä ennen kuin voit rekisteröityä täällä.</string>
   <string name="RegistrationService_registration_complete">Rekisteröinti suoritettu</string>
   <string name="RegistrationService_openchatservice_registration_has_successfully_completed">OpenchatServicen rekisteröityminen onnistui.</string>
-  <string name="RegistrationService_registration_error">Rekisteröintivirhe</string>
+  <string name="RegistrationService_registration_error">Rekisteröitymisvirhe</string>
   <string name="RegistrationService_openchatservice_registration_has_encountered_a_problem">Rekisteröitymisessä ilmeni ongelma.</string>
   <string name="SmsMessageRecord_received_corrupted_key_exchange_message">Vastaanotettu avaintenvaihtoviesti 
 on viallinen!</string>
@@ -340,7 +341,7 @@ Vastaanotettiin viesti tuntemattomalla identiteettiavaimella. Aloita käsittely 
   <string name="change_passphrase_activity__repeat_new_passphrase">TOISTA UUSI SALALAUSE:</string>
   <string name="contact_selection_group_activity__no_contacts">Ei yhteystietoja.</string>
   <string name="contact_selection_group_activity__finding_contacts">Ladataan yhteystietoja…</string>
-  <string name="SingleContactSelectionActivity_you_are_not_registered_with_the_push_service">Et olet rekisteröitynyt pikaviestipalveluun…</string>
+  <string name="SingleContactSelectionActivity_you_are_not_registered_with_the_push_service">Et ole rekisteröitynyt pikaviestipalveluun…</string>
   <string name="SingleContactSelectionActivity_updating_directory">Päivitetään hakemistoa</string>
   <string name="SingleContactSelectionActivity_updating_push_directory">Päivitetään pikaviestihakemistoa…</string>
   <string name="SingleContactSelectionActivity_contact_photo">Yhteystiedon kuva</string>
@@ -419,7 +420,7 @@ PUHELINNUMEROSI</string>
   <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">Rekisteröityminen siirtää joitakin yhteystietoja väliaikaisesti palvelimelle. Niitä ei kuitenkaan tallenneta sinne.</string>
   <string name="registration_problems__some_possible_problems_include">Mahdollisiin ongelmiin
 sisältyvät:</string>
-  <string name="registration_problems__sms_interceptors">Tekstiviestisieppaajia.</string>
+  <string name="registration_problems__sms_interceptors">Tekstiviestisieppaajat.</string>
   <string name="registration_problems__some_third_party_text_messaging_clients_such_as_handcent">
 Jotkin kolmansien osapuolten tekstiviestisovellukset, kuten Handcent ja GoSMS, käyttäytyvät
 huonosti ja sieppaavat kaikki saapuvat tekstiviestit. Tarkista että olet saanut tekstiviestin, joka alkaa
@@ -439,7 +440,7 @@ OpenchatService voi myös soittaa sinulle numerosi vahvistamiseksi. Napsauta \"S
   <string name="registration_progress_activity__edit_number">Muokkaa numeroa</string>
   <string name="registration_progress_activity__connectivity_error">Yhteysvirhe.</string>
   <string name="registration_progress_activity__openchatservice_was_unable_to_connect_to_the_push_service">
-OpenchatService ei voinut yhdistää pikaviestipalveluun.</string>
+OpenchatService ei saanut yhteyttä pikaviestipalveluun.</string>
   <string name="registration_progress_activity__some_possible_problems_include">Mahdollisiin ongelmiin
 sisältyvät:</string>
   <string name="registration_progress_activity__no_network_connectivity">Ei verkkoyhteyttä.</string>
@@ -485,6 +486,7 @@ epäonnistui.</string>
   <string name="AndroidManifest__media_preview">Median esikatselu</string>
   <string name="AndroidManifest__media_overview">Kaikki kuvat</string>
   <string name="AndroidManifest__media_overview_named">%1$s: kaikki kuvat</string>
+  <string name="AndroidManifest__message_details">Viestin tiedot</string>
   <string name="arrays__import_export">Tuo / vie</string>
   <string name="arrays__my_identity_key">Oma identiteettiavaimeni</string>
   <string name="arrays__use_default">Käytä oletusta</string>

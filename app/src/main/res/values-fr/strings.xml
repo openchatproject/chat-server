@@ -214,7 +214,7 @@ Merci de demander à l’expéditeur de mettre à jour OpenchatService dans sa v
   <string name="PassphrasePromptActivity_watermark_content_description">Icône OpenchatService</string>
   <string name="PassphrasePromptActivity_ok_button_content_description">Soumettre la phrase de passe</string>
   <string name="PassphrasePromptActivity_invalid_passphrase_exclamation">Phrase de passe incorrecte !</string>
-  <string name="RatingManager_rate_this_app">Noter cette app</string>
+  <string name="RatingManager_rate_this_app">Notez cette application</string>
   <string name="RatingManager_if_you_enjoy_using_this_app_please_take_a_moment">Si vous aimez cette application, aidez nous en prenant un moment pour la noter.</string>
   <string name="RatingManager_rate_now">Noter maintenant!</string>
   <string name="RatingManager_no_thanks">Non merci</string>
@@ -490,6 +490,7 @@ par SMS.</string>
   <string name="AndroidManifest__media_preview">Prévisualisation du média.</string>
   <string name="AndroidManifest__media_overview">Toutes les images</string>
   <string name="AndroidManifest__media_overview_named">Toutes les images avec %1$s</string>
+  <string name="AndroidManifest__message_details">Détails du message</string>
   <string name="arrays__import_export">Importer / exporter</string>
   <string name="arrays__my_identity_key">Ma clé d\'identité</string>
   <string name="arrays__use_default">Par défaut</string>

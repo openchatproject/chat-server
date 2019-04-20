@@ -89,6 +89,7 @@ Je zal je telefoonnummer opnieuw moeten registreren als je pushberichten weer wi
   <string name="ConversationActivity_error_leaving_group">Fout bij het verlaten van de groep...</string>
   <string name="ConversationActivity_mms_not_supported_title">MMS niet ondersteund</string>
   <string name="ConversationActivity_mms_not_supported_message">Dit bericht kan niet verzonden worden omdat je provider MMS niet ondersteund.</string>
+  <string name="ConversationActivity_specify_recipient">Kies alsjeblieft een contact</string>
   <string name="ConversationFragment_message_details">Berichtdetails</string>
   <string name="ConversationFragment_transport_s_sent_received_s">Overdracht: %1$s\nVerzonden/Ontvangen: %2$s</string>
   <string name="ConversationFragment_sender_s_transport_s_sent_s_received_s">Verzender: %1$s\nTransport: %2$s\nVerstuurd%3$s\n/Ontvangen:%4$s</string>
@@ -200,6 +201,11 @@ Herstellen van een versleutelde back-up zal je bestaande sleutels, voorkeuren en
   <string name="PassphrasePromptActivity_watermark_content_description">OpenchatService icoon</string>
   <string name="PassphrasePromptActivity_ok_button_content_description">Wachtwoord instellen</string>
   <string name="PassphrasePromptActivity_invalid_passphrase_exclamation">Ongeldig wachtwoord!</string>
+  <string name="RatingManager_rate_this_app">Beoordeel deze app</string>
+  <string name="RatingManager_if_you_enjoy_using_this_app_please_take_a_moment">Gebruik je deze app graag? Help ons dan een momentje en geef een beoordeling.</string>
+  <string name="RatingManager_rate_now">Nu beoordelen!</string>
+  <string name="RatingManager_no_thanks">Nee dankjewel</string>
+  <string name="RatingManager_later">Later</string>
   <string name="ReceiveKeyActivity_the_signature_on_this_key_exchange_is_different">De handtekening op deze sleuteluitwisseling is anders dan wat u eerder ontvangen heeft van dit contact. Dit kan betekenen dat iemand probeert uw communicatie the onderscheppen, of dat dit contact gewoon OpenchatService opnieuw geïnstalleerd heeft en nu een nieuwe identiteitssleutel heeft.</string>
   <string name="ReceiveKeyActivity_you_may_wish_to_verify_this_contact">Je wilt wellicht dit contact verifiëren.</string>
   <string name="ReceiveKeyActivity_processing">Aan het verwerken</string>
@@ -461,6 +467,7 @@ OpenchatService heeft te lang moeten wachten op het binnenkomen van de verificat
   <string name="AndroidManifest__media_preview">Media Voorvertoning</string>
   <string name="AndroidManifest__media_overview">Alle afbeeldingen</string>
   <string name="AndroidManifest__media_overview_named">Alle afbeeldingen met %1$s</string>
+  <string name="AndroidManifest__message_details">Bericht Details</string>
   <string name="arrays__import_export">Importeren / exporteren</string>
   <string name="arrays__my_identity_key">Mijn identiteitssleutel</string>
   <string name="arrays__use_default">Gebruik standaard</string>

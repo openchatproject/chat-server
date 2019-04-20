@@ -100,6 +100,7 @@
   <string name="ConversationActivity_error_leaving_group">Σφάλμα κατα την αποχώρηση από την ομάδα...</string>
   <string name="ConversationActivity_mms_not_supported_title">MMS δεν υποστηρίζεται</string>
   <string name="ConversationActivity_mms_not_supported_message">Αυτό το μήνυμα δεν μπορεί να αποσταλεί δεδομένου ότι φορέας σας δεν υποστηρίζει MMS.</string>
+  <string name="ConversationActivity_specify_recipient">Παρακαλώ επιλέξτε μια επαφή</string>
   <string name="ConversationFragment_message_details">Στοιχεία μηνύματος</string>
   <string name="ConversationFragment_transport_s_sent_received_s"> Μέσο μεταφοράς:  %1$s
 Απεστάλησαν/Παραλήφθηκαν:%2$s</string>
@@ -225,6 +226,11 @@ SMS της συσκευής σας στο OpenchatService. Αν έχετε ήδ�
   <string name="PassphrasePromptActivity_watermark_content_description">Εικονίδιο OpenchatService</string>
   <string name="PassphrasePromptActivity_ok_button_content_description">Καταχώρηση συνθηματικού</string>
   <string name="PassphrasePromptActivity_invalid_passphrase_exclamation">Άκυρο συνθηματικό!</string>
+  <string name="RatingManager_rate_this_app">Βαθμολογήστε αυτή την εφαρμογή</string>
+  <string name="RatingManager_if_you_enjoy_using_this_app_please_take_a_moment">Αν σας αρέσει να χρησιμοποιείτε αυτή την εφαρμογή, αφιερώστε λίγο χρόνο για να μας βοηθήσεte βαθμολογωντας την.</string>
+  <string name="RatingManager_rate_now">Βαθμολογήστε Τώρα!</string>
+  <string name="RatingManager_no_thanks">Οχι ευχαριστώ</string>
+  <string name="RatingManager_later">Αργότερα</string>
   <string name="ReceiveKeyActivity_the_signature_on_this_key_exchange_is_different">Το
         αποτύπωμα αυτής της ανταλλαγής κλειδιών είναι διαφορετικό από αυτό που λάβαμε πρωτύτερα από αυτή την
         επαφή. Αυτό σημαίνει είτε ότι κάποιος προσπαθεί να υποκλέψει τη συνομιλία σας, ή
@@ -502,6 +508,7 @@ SMS της συσκευής σας στο OpenchatService. Αν έχετε ήδ�
   <string name="AndroidManifest__media_preview">Προεπισκόπηση  Πολυμέσων</string>
   <string name="AndroidManifest__media_overview">Όλες οι εικόνες</string>
   <string name="AndroidManifest__media_overview_named">Όλες οι εικόνες με  %1$s</string>
+  <string name="AndroidManifest__message_details">Στοιχεία μηνύματος</string>
   <string name="arrays__import_export">Εισαγωγή / εξαγωγή</string>
   <string name="arrays__my_identity_key">Το Κλειδί Ταυτότητάς Μου</string>
   <string name="arrays__use_default">Χρήση προκαθορισμένου</string>

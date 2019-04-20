@@ -482,6 +482,7 @@ OpenchatService nyní automaticky ověří vaše telefonní číslo pomocí potv
   <string name="AndroidManifest__media_preview">Náhled dat</string>
   <string name="AndroidManifest__media_overview">Všechny obrázky</string>
   <string name="AndroidManifest__media_overview_named">Všechny obrázky s %1$s</string>
+  <string name="AndroidManifest__message_details">Podrobnosti zprávy</string>
   <string name="arrays__import_export">Import / export</string>
   <string name="arrays__my_identity_key">Můj identifikační klíč</string>
   <string name="arrays__use_default">Použít defualtní</string>
