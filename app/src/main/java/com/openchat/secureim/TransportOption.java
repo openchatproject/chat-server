@@ -2,9 +2,6 @@ package com.openchat.secureim;
 
 import com.openchat.secureim.util.CharacterCalculator;
 import com.openchat.secureim.util.CharacterCalculator.CharacterState;
-import com.openchat.secureim.util.EncryptedSmsCharacterCalculator;
-import com.openchat.secureim.util.PushCharacterCalculator;
-import com.openchat.secureim.util.SmsCharacterCalculator;
 
 public class TransportOption {
 
