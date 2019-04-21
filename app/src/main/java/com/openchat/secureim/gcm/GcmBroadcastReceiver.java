@@ -9,8 +9,8 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import com.openchat.secureim.ApplicationContext;
-import com.openchat.secureim.jobs.PushReceiveJob;
-import com.openchat.secureim.service.MessageRetrievalService;
+import com.openchat.secureim.jobs.PushContentReceiveJob;
+import com.openchat.secureim.jobs.PushNotificationReceiveJob;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 
 public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
@@ -42,12 +42,12 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
   private void handleReceivedMessage(Context context, String data) {
     ApplicationContext.getInstance(context)
                       .getJobManager()
-                      .add(new PushReceiveJob(context, data));
+                      .add(new PushContentReceiveJob(context, data));
   }
 
   private void handleReceivedNotification(Context context) {
-    Intent intent = new Intent(context, MessageRetrievalService.class);
-    intent.setAction(MessageRetrievalService.ACTION_PUSH_RECEIVED);
-    startWakefulService(context, intent);
+    ApplicationContext.getInstance(context)
+                      .getJobManager()
+                      .add(new PushNotificationReceiveJob(context));
   }
 }

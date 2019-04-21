@@ -9,7 +9,7 @@ import android.util.Log;
 import com.openchat.secureim.ApplicationContext;
 import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.secureim.gcm.GcmBroadcastReceiver;
-import com.openchat.secureim.jobs.PushReceiveJob;
+import com.openchat.secureim.jobs.PushContentReceiveJob;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.jobqueue.requirements.NetworkRequirementProvider;
@@ -85,7 +85,7 @@ public class MessageRetrievalService extends Service implements Runnable, Inject
                         public void onMessage(OpenchatServiceEnvelope envelope) {
                           Log.w(TAG, "Retrieved envelope! " + envelope.getSource());
 
-                          PushReceiveJob receiveJob = new PushReceiveJob(MessageRetrievalService.this);
+                          PushContentReceiveJob receiveJob = new PushContentReceiveJob(MessageRetrievalService.this);
                           receiveJob.handle(envelope, false);
 
                           decrementPushReceived();

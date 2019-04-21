@@ -5,60 +5,19 @@ import android.util.Log;
 
 import com.openchat.secureim.ApplicationContext;
 import com.openchat.secureim.database.DatabaseFactory;
-import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.secureim.database.NotInDirectoryException;
+import com.openchat.secureim.database.OpenchatServiceDirectory;
 import com.openchat.jobqueue.JobManager;
 import com.openchat.jobqueue.JobParameters;
-import com.openchat.protocal.InvalidVersionException;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
-import com.openchat.secureim.database.OpenchatServiceDirectory;
-import com.openchat.secureim.database.NotInDirectoryException;
 import com.openchat.imservice.api.push.ContactTokenDetails;
 
-import java.io.IOException;
+public abstract class PushReceivedJob extends ContextJob {
 
-public class PushReceiveJob extends ContextJob {
+  private static final String TAG = PushReceivedJob.class.getSimpleName();
 
-  private static final String TAG = PushReceiveJob.class.getSimpleName();
-
-  private final String data;
-
-  public PushReceiveJob(Context context) {
-    super(context, JobParameters.newBuilder().create());
-    this.data = null;
-  }
-
-  public PushReceiveJob(Context context, String data) {
-    super(context, JobParameters.newBuilder()
-                                .withPersistence()
-                                .withWakeLock(true)
-                                .create());
-
-    this.data = data;
-  }
-
-  @Override
-  public void onAdded() {}
-
-  @Override
-  public void onRun() {
-    try {
-      String             sessionKey = OpenchatServicePreferences.getOpenchatingKey(context);
-      OpenchatServiceEnvelope envelope   = new OpenchatServiceEnvelope(data, sessionKey);
-
-      handle(envelope, true);
-    } catch (IOException | InvalidVersionException e) {
-      Log.w(TAG, e);
-    }
-  }
-
-  @Override
-  public void onCanceled() {
-
-  }
-
-  @Override
-  public boolean onShouldRetry(Exception exception) {
-    return false;
+  protected PushReceivedJob(Context context, JobParameters parameters) {
+    super(context, parameters);
   }
 
   public void handle(OpenchatServiceEnvelope envelope, boolean sendExplicitReceipt) {

@@ -11,13 +11,12 @@ import com.openchat.secureim.jobs.CreateSignedPreKeyJob;
 import com.openchat.secureim.jobs.DeliveryReceiptJob;
 import com.openchat.secureim.jobs.PushGroupSendJob;
 import com.openchat.secureim.jobs.PushMediaSendJob;
+import com.openchat.secureim.jobs.PushContentReceiveJob;
+import com.openchat.secureim.jobs.PushNotificationReceiveJob;
 import com.openchat.secureim.jobs.PushTextSendJob;
 import com.openchat.secureim.jobs.RefreshPreKeysJob;
 import com.openchat.secureim.push.SecurityEventListener;
 import com.openchat.secureim.push.OpenchatServicePushTrustStore;
-import com.openchat.secureim.recipients.Recipient;
-import com.openchat.secureim.recipients.RecipientFactory;
-import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.service.MessageRetrievalService;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.protocal.util.guava.Optional;
@@ -37,7 +36,8 @@ import dagger.Provides;
                                      PushMediaSendJob.class,
                                      AttachmentDownloadJob.class,
                                      RefreshPreKeysJob.class,
-                                     MessageRetrievalService.class})
+                                     MessageRetrievalService.class,
+                                     PushNotificationReceiveJob.class})
 public class OpenchatServiceCommunicationModule {
 
   private final Context context;
