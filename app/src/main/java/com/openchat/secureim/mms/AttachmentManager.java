@@ -4,21 +4,17 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.util.Log;
 import android.provider.ContactsContract;
-import android.util.Pair;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.openchat.secureim.R;
+import com.openchat.secureim.components.ThumbnailView;
 import com.openchat.secureim.util.BitmapDecodingException;
-import com.openchat.secureim.util.FutureTaskListener;
 
 import java.io.IOException;
 
@@ -27,14 +23,14 @@ public class AttachmentManager {
 
   private final Context context;
   private final View attachmentView;
-  private final ImageView thumbnail;
+  private final ThumbnailView thumbnail;
   private final Button removeButton;
   private final SlideDeck slideDeck;
   private final AttachmentListener attachmentListener;
 
   public AttachmentManager(Activity view, AttachmentListener listener) {
     this.attachmentView     = (View)view.findViewById(R.id.attachment_editor);
-    this.thumbnail          = (ImageView)view.findViewById(R.id.attachment_thumbnail);
+    this.thumbnail          = (ThumbnailView)view.findViewById(R.id.attachment_thumbnail);
     this.removeButton       = (Button)view.findViewById(R.id.remove_image_button);
     this.slideDeck          = new SlideDeck();
     this.context            = view;
@@ -50,7 +46,7 @@ public class AttachmentManager {
   }
 
   public void setImage(Uri image) throws IOException, BitmapDecodingException {
-    setMedia(new ImageSlide(context, image), 345, 261);
+    setMedia(new ImageSlide(context, image));
   }
 
   public void setVideo(Uri video) throws IOException, MediaTooLargeException {
@@ -61,32 +57,11 @@ public class AttachmentManager {
     setMedia(new AudioSlide(context, audio));
   }
 
-  public void setMedia(final Slide slide, final int thumbnailWidth, final int thumbnailHeight) {
+  public void setMedia(final Slide slide) {
     slideDeck.clear();
     slideDeck.addSlide(slide);
-     slide.getThumbnail(context).addListener(new FutureTaskListener<Pair<Drawable, Boolean>>() {
-      @Override
-      public void onSuccess(final Pair<Drawable, Boolean> result) {
-        thumbnail.post(new Runnable() {
-          @Override
-          public void run() {
-            thumbnail.setImageDrawable(result.first);
-            attachmentView.setVisibility(View.VISIBLE);
-            attachmentListener.onAttachmentChanged();
-          }
-        });
-      }
-
-      @Override
-      public void onFailure(Throwable error) {
-        Log.w(TAG, error);
-        slideDeck.clear();
-      }
-    });
-  }
-
-  public void setMedia(Slide slide) {
-    setMedia(slide, thumbnail.getWidth(), thumbnail.getHeight());
+    attachmentView.setVisibility(View.VISIBLE);
+    thumbnail.setImageResource(slide);
   }
 
   public boolean isAttachmentPresent() {

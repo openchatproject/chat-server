@@ -3,25 +3,21 @@ package com.openchat.secureim;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import com.openchat.secureim.ImageMediaAdapter.ViewHolder;
-import com.openchat.secureim.components.ForegroundImageView;
+import com.openchat.secureim.components.ThumbnailView;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.CursorRecyclerViewAdapter;
 import com.openchat.secureim.database.PartDatabase.ImageRecord;
 import com.openchat.secureim.mms.Slide;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.Recipients;
-import com.openchat.secureim.util.FutureTaskListener;
 import com.openchat.secureim.util.MediaUtil;
 
 import ws.com.google.android.mms.pdu.PduPart;
@@ -30,21 +26,19 @@ public class ImageMediaAdapter extends CursorRecyclerViewAdapter<ViewHolder> {
   private static final String TAG = ImageMediaAdapter.class.getSimpleName();
 
   private final MasterSecret masterSecret;
-  private final int          gridSize;
 
   public static class ViewHolder extends RecyclerView.ViewHolder {
-    public ForegroundImageView imageView;
+    public ThumbnailView imageView;
 
     public ViewHolder(View v) {
       super(v);
-      imageView = (ForegroundImageView) v.findViewById(R.id.image);
+      imageView = (ThumbnailView) v.findViewById(R.id.image);
     }
   }
 
   public ImageMediaAdapter(Context context, MasterSecret masterSecret, Cursor c) {
     super(context, c);
     this.masterSecret = masterSecret;
-    this.gridSize     = context.getResources().getDimensionPixelSize(R.dimen.thumbnail_max_size);
   }
 
   @Override
@@ -55,8 +49,8 @@ public class ImageMediaAdapter extends CursorRecyclerViewAdapter<ViewHolder> {
 
   @Override
   public void onBindViewHolder(final ViewHolder viewHolder, final Cursor cursor) {
-    final ForegroundImageView imageView   = viewHolder.imageView;
-    final ImageRecord         imageRecord = ImageRecord.from(cursor);
+    final ThumbnailView imageView   = viewHolder.imageView;
+    final ImageRecord   imageRecord = ImageRecord.from(cursor);
 
     PduPart part = new PduPart();
 
@@ -64,25 +58,9 @@ public class ImageMediaAdapter extends CursorRecyclerViewAdapter<ViewHolder> {
     part.setContentType(imageRecord.getContentType().getBytes());
     part.setId(imageRecord.getPartId());
 
-    imageView.setVisibility(View.INVISIBLE);
     Slide slide = MediaUtil.getSlideForPart(getContext(), masterSecret, part, imageRecord.getContentType());
     if (slide != null) {
-      slide.getThumbnail(getContext()).addListener(new FutureTaskListener<Pair<Drawable, Boolean>>() {
-        @Override
-        public void onSuccess(final Pair<Drawable, Boolean> result) {
-          imageView.post(new Runnable() {
-            @Override
-            public void run() {
-              imageView.show(result.first, false);
-            }
-          });
-        }
-
-        @Override
-        public void onFailure(Throwable error) {
-          Log.w(TAG, error);
-        }
-      });
+      imageView.setImageResource(slide, masterSecret);
     }
 
     imageView.setOnClickListener(new OnMediaClickListener(imageRecord));

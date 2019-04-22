@@ -3,12 +3,7 @@ package com.openchat.secureim.mms;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.ImageView;
 
-import com.openchat.secureim.util.SmilUtil;
-import org.w3c.dom.smil.SMILDocument;
-import org.w3c.dom.smil.SMILMediaElement;
-import org.w3c.dom.smil.SMILRegionElement;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.util.LRUCache;
 
@@ -33,34 +28,6 @@ public class TextSlide extends Slide {
 
   public TextSlide(Context context, String message) {
     super(context, getPartForMessage(message));
-  }
-
-  @Override
-    public boolean hasText() {
-    return true;
-  }
-
-  @Override
-  public String getText() {
-    try {
-      SoftReference<String> reference = textCache.get(part.getDataUri());
-
-      if (reference != null) {
-        String cachedText = reference.get();
-
-        if (cachedText != null) {
-          return cachedText;
-        }
-      }
-
-      String text = new String(getPartData(), CharacterSets.getMimeName(part.getCharset()));
-      textCache.put(part.getDataUri(), new SoftReference<String>(text));
-
-      return text;
-    } catch (UnsupportedEncodingException uee) {
-      Log.w("TextSlide", uee);
-      return new String(getPartData());
-    }
   }
 
   private static PduPart getPartForMessage(String message) {

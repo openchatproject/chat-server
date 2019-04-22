@@ -2,34 +2,23 @@ package com.openchat.secureim.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 
 import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.secureim.database.DatabaseFactory;
-import com.openchat.secureim.database.PartDatabase;
 import com.openchat.secureim.mms.AudioSlide;
 import com.openchat.secureim.mms.ImageSlide;
-import com.openchat.secureim.mms.MediaConstraints;
-import com.openchat.secureim.mms.MediaTooLargeException;
 import com.openchat.secureim.mms.PartAuthority;
 import com.openchat.secureim.mms.Slide;
 import com.openchat.secureim.mms.VideoSlide;
-import com.openchat.secureim.transport.UndeliverableMessageException;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.concurrent.Callable;
 
 import ws.com.google.android.mms.ContentType;
-import ws.com.google.android.mms.MmsException;
 import ws.com.google.android.mms.pdu.PduPart;
-import ws.com.google.android.mms.pdu.SendReq;
 
 public class MediaUtil {
   private static final String TAG = MediaUtil.class.getSimpleName();
@@ -49,22 +38,6 @@ public class MediaUtil {
     }
 
     return data;
-  }
-
-  public static Bitmap getOrGenerateThumbnail(Context context, MasterSecret masterSecret, PduPart part)
-      throws IOException, BitmapDecodingException
-  {
-    if (part.getDataUri() != null && part.getId() > -1) {
-      return BitmapFactory.decodeStream(DatabaseFactory.getPartDatabase(context)
-                                                       .getThumbnailStream(masterSecret, part.getId()));
-    } else if (part.getDataUri() != null) {
-      Log.w(TAG, "generating thumbnail for new part");
-      Bitmap bitmap = MediaUtil.generateThumbnail(context, masterSecret, part.getDataUri(), Util.toIsoString(part.getContentType())).getBitmap();
-      part.setThumbnail(bitmap);
-      return bitmap;
-    } else {
-      throw new FileNotFoundException("no data location specified");
-    }
   }
 
   public static byte[] getPartData(Context context, MasterSecret masterSecret, PduPart part)

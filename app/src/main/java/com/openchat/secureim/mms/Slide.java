@@ -1,18 +1,16 @@
 package com.openchat.secureim.mms;
 
+import android.content.Context;
+import android.content.res.Resources.Theme;
+import android.net.Uri;
+import android.support.annotation.DrawableRes;
+import android.util.Log;
+
+import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.util.Util;
+
 import java.io.IOException;
 import java.io.InputStream;
-
-import com.openchat.secureim.util.ListenableFutureTask;
-import com.openchat.secureim.util.Util;
-import com.openchat.secureim.crypto.MasterSecret;
-
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.util.Log;
-import android.util.Pair;
 
 import ws.com.google.android.mms.pdu.PduPart;
 
@@ -52,10 +50,6 @@ public abstract class Slide {
     return part.getDataUri();
   }
 
-  public ListenableFutureTask<Pair<Drawable,Boolean>> getThumbnail(Context context) {
-    throw new AssertionError("getThumbnail() called on non-thumbnail producing slide!");
-  }
-
   public boolean hasImage() {
     return false;
   }
@@ -68,20 +62,20 @@ public abstract class Slide {
     return false;
   }
 
-  public Bitmap getImage() {
-    throw new AssertionError("getImage() called on non-image slide!");
-  }
-
-  public boolean hasText() {
-    return false;
-  }
-
-  public String getText() {
-    throw new AssertionError("getText() called on non-text slide!");
-  }
-
   public PduPart getPart() {
     return part;
+  }
+
+  public Uri getThumbnailUri() {
+    return null;
+  }
+
+  public @DrawableRes int getPlaceholderRes(Theme theme) {
+    throw new AssertionError("getPlaceholderRes() called for non-drawable slide");
+  }
+
+  public boolean isDraft() {
+    return getPart().getId() < 0;
   }
 
   protected static void assertMediaSize(Context context, Uri uri)

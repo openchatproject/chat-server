@@ -6,16 +6,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.QuickContact;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -27,7 +23,7 @@ import com.afollestad.materialdialogs.AlertDialogWrapper;
 
 import com.openchat.secureim.ConversationFragment.SelectionClickListener;
 import com.openchat.secureim.components.BubbleContainer;
-import com.openchat.secureim.components.ForegroundImageView;
+import com.openchat.secureim.components.ThumbnailView;
 import com.openchat.secureim.contacts.ContactPhotoFactory;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
@@ -42,12 +38,9 @@ import com.openchat.secureim.jobs.MmsSendJob;
 import com.openchat.secureim.jobs.SmsSendJob;
 import com.openchat.secureim.mms.PartAuthority;
 import com.openchat.secureim.mms.Slide;
-import com.openchat.secureim.mms.SlideDeck;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.util.DateUtils;
 import com.openchat.secureim.util.Emoji;
-import com.openchat.secureim.util.FutureTaskListener;
-import com.openchat.secureim.util.ListenableFutureTask;
 
 import java.util.Set;
 
@@ -73,15 +66,9 @@ public class ConversationItem extends LinearLayout {
 
   private Set<MessageRecord>     batchSelected;
   private SelectionClickListener selectionClickListener;
-  private ForegroundImageView    mediaThumbnail;
+  private ThumbnailView          mediaThumbnail;
   private Button                 mmsDownloadButton;
   private TextView               mmsDownloadingLabel;
-
-  private ListenableFutureTask<SlideDeck>               slideDeckFuture;
-  private ListenableFutureTask<Pair<Drawable, Boolean>> thumbnailFuture;
-  private SlideDeckListener                             slideDeckListener;
-  private ThumbnailListener                             thumbnailListener;
-  private Handler                                       handler;
 
   private final MmsDownloadClickListener    mmsDownloadClickListener    = new MmsDownloadClickListener();
   private final MmsPreferencesClickListener mmsPreferencesClickListener = new MmsPreferencesClickListener();
@@ -115,14 +102,14 @@ public class ConversationItem extends LinearLayout {
     this.bodyBubble          =            findViewById(R.id.body_bubble);
     this.pendingIndicator    = (ImageView)findViewById(R.id.pending_approval_indicator);
     this.bubbleContainer     = (BubbleContainer)findViewById(R.id.bubble);
-    this.mediaThumbnail      = (ForegroundImageView)findViewById(R.id.image_view);
-
-    slideDeckListener = new SlideDeckListener();
-    handler           = new Handler(Looper.getMainLooper());
+    this.mediaThumbnail      = (ThumbnailView)findViewById(R.id.image_view);
 
     setOnClickListener(clickListener);
     if (mmsDownloadButton != null) mmsDownloadButton.setOnClickListener(mmsDownloadClickListener);
-    if (mediaThumbnail != null)    mediaThumbnail.setOnLongClickListener(new MultiSelectLongClickListener());
+    if (mediaThumbnail != null) {
+      mediaThumbnail.setThumbnailClickListener(new ThumbnailClickListener());
+      mediaThumbnail.setOnLongClickListener(new MultiSelectLongClickListener());
+    }
   }
 
   public void set(@NonNull MasterSecret masterSecret,
@@ -153,13 +140,6 @@ public class ConversationItem extends LinearLayout {
   }
 
   public void unbind() {
-    if (slideDeckFuture != null && slideDeckListener != null) {
-      slideDeckFuture.removeListener(slideDeckListener);
-    }
-
-    if (thumbnailFuture != null && thumbnailListener != null) {
-      thumbnailFuture.removeListener(thumbnailListener);
-    }
   }
 
   public MessageRecord getMessageRecord() {
@@ -350,8 +330,7 @@ public class ConversationItem extends LinearLayout {
 
   private void resolveMedia(MediaMmsMessageRecord messageRecord) {
     if (hasMedia(messageRecord)) {
-      slideDeckFuture = messageRecord.getSlideDeckFuture();
-      slideDeckFuture.addListener(slideDeckListener);
+      mediaThumbnail.setImageResource(messageRecord.getSlideDeckFuture(), masterSecret);
     }
   }
 
@@ -399,14 +378,8 @@ public class ConversationItem extends LinearLayout {
     context.startActivity(intent);
   }
 
-  private class ThumbnailClickListener implements View.OnClickListener {
-    private final Slide slide;
-
-    public ThumbnailClickListener(Slide slide) {
-      this.slide = slide;
-    }
-
-    private void fireIntent() {
+  private class ThumbnailClickListener implements ThumbnailView.ThumbnailClickListener {
+    private void fireIntent(Slide slide) {
       Log.w(TAG, "Clicked: " + slide.getUri() + " , " + slide.getContentType());
       Intent intent = new Intent(Intent.ACTION_VIEW);
       intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -419,7 +392,7 @@ public class ConversationItem extends LinearLayout {
       }
     }
 
-    public void onClick(View v) {
+    public void onClick(final View v, final Slide slide) {
       if (!batchSelected.isEmpty()) {
         selectionClickListener.onItemClick(null, ConversationItem.this, -1, -1);
       } else if (MediaPreviewActivity.isContentTypeSupported(slide.getContentType())) {
@@ -438,7 +411,7 @@ public class ConversationItem extends LinearLayout {
         builder.setMessage(R.string.ConversationItem_this_media_has_been_stored_in_an_encrypted_database_external_viewer_warning);
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int which) {
-            fireIntent();
+            fireIntent(slide);
           }
         });
         builder.setNegativeButton(R.string.no, null);
@@ -556,74 +529,5 @@ public class ConversationItem extends LinearLayout {
       }
     });
     builder.show();
-  }
-
-  private class ThumbnailListener implements FutureTaskListener<Pair<Drawable, Boolean>> {
-    private final Object tag;
-
-    public ThumbnailListener(Object tag) {
-      this.tag = tag;
-    }
-
-    @Override
-    public void onSuccess(final Pair<Drawable, Boolean> result) {
-      handler.post(new Runnable() {
-        @Override
-        public void run() {
-          if (mediaThumbnail.getTag() == tag) {
-            Log.w(TAG, "displaying media thumbnail");
-            mediaThumbnail.show(result.first, result.second);
-          }
-        }
-      });
-    }
-
-    @Override
-    public void onFailure(Throwable error) {
-      Log.w(TAG, error);
-      handler.post(new Runnable() {
-        @Override
-        public void run() {
-          mediaThumbnail.hide();
-        }
-      });
-    }
-  }
-
-  private class SlideDeckListener implements FutureTaskListener<SlideDeck> {
-    @Override
-    public void onSuccess(final SlideDeck slideDeck) {
-      if (slideDeck == null) return;
-
-      handler.post(new Runnable() {
-        @Override
-        public void run() {
-          Slide slide = slideDeck.getThumbnailSlide(context);
-          if (slide != null) {
-            thumbnailFuture = slide.getThumbnail(context);
-            if (thumbnailFuture != null) {
-              Object tag = new Object();
-              mediaThumbnail.setTag(tag);
-              thumbnailListener = new ThumbnailListener(tag);
-              thumbnailFuture.addListener(thumbnailListener);
-              mediaThumbnail.setOnClickListener(new ThumbnailClickListener(slide));
-              return;
-            }
-          }
-          mediaThumbnail.hide();
-        }
-      });
-    }
-
-    @Override
-    public void onFailure(Throwable error) {
-      Log.w(TAG, error);
-      handler.post(new Runnable() {
-        @Override
-        public void run() {
-          mediaThumbnail.hide();
-        }
-      });
-    }
   }
 }
