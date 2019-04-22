@@ -1137,6 +1137,11 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   }
 
   @Override
+  public void setThreadId(long threadId) {
+    this.threadId = threadId;
+  }
+
+  @Override
   public void onAttachmentChanged() {
     initializeSecurity();
   }
