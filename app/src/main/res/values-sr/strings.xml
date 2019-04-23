@@ -323,8 +323,8 @@
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Додирните да отворите, или додирните браву да затворите.</string>
   <string name="KeyCachingService_passphrase_cached">Сигурне поруке су откључане</string>
   <string name="KeyCachingService_lock">Закључај лозинком</string>
-  <string name="MessageNotifier_d_new_messages">%d нових порука</string>
-  <string name="MessageNotifier_most_recent_from_s">Најскорија од: %s</string>
+  <string name="MessageNotifier_d_messages_in_d_conversations">%1$d порука у %2$d преписки</string>
+  <string name="MessageNotifier_most_recent_from_s">Најскорија од: %1$s</string>
   <string name="MessageNotifier_encrypted_message">Шифрована порука...</string>
   <string name="MessageNotifier_media_message_with_text">Мултимедијална порука: %s</string>
   <string name="MessageNotifier_no_subject">(Без предмета)</string>

@@ -312,8 +312,6 @@ Bilinmeyen kimlik anahtarı içeren bir mesaj alındı. İşlemek ve görüntül
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Açmak için dokun, veya kapatmak için kilide dokun.</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatService kilitsiz</string>
   <string name="KeyCachingService_lock">Parola ile kilitle</string>
-  <string name="MessageNotifier_d_new_messages">%d yeni mesaj</string>
-  <string name="MessageNotifier_most_recent_from_s">En yeni mesaj: %s</string>
   <string name="MessageNotifier_encrypted_message">Şifrelenmiş mesaj...</string>
   <string name="MessageNotifier_media_message_with_text">Medya mesajı: %s</string>
   <string name="MessageNotifier_no_subject">(Konusuz)</string>

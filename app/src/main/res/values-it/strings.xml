@@ -89,6 +89,8 @@ questo contatto.</string>
   <string name="ConversationActivity_get_with_it">Ottienilo con: %s</string>
   <string name="ConversationActivity_lets_use_this_to_chat">Vieni a chattare qui: %s</string>
   <string name="ConversationActivity_error_leaving_group">Errore nell\'abbandonare il gruppo...</string>
+  <string name="ConversationActivity_mms_not_supported_title">MMS non supportati</string>
+  <string name="ConversationActivity_mms_not_supported_message">Questo messaggio non può essere inviato perchè il tuo operatore non supporta gli MMS</string>
   <string name="ConversationActivity_specify_recipient">Scegli un contatto</string>
   <string name="ConversationFragment_message_details">Dettagli messaggio</string>
   <string name="ConversationFragment_transport_s_sent_received_s">Trasporto: %1$s\nInviato/Ricevuto: %2$s</string>
@@ -319,8 +321,8 @@ Ricevuto un messaggio con una chiave identificativa sconosciuta. Clicca per elab
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Tocca per aprire o tocca il lucchetto per chiudere.</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatService è sbloccato</string>
   <string name="KeyCachingService_lock">Chiudi con password</string>
-  <string name="MessageNotifier_d_new_messages">(%d) nuovi messaggi</string>
-  <string name="MessageNotifier_most_recent_from_s">Più recente da: %s</string>
+  <string name="MessageNotifier_d_messages_in_d_conversations">%1$d messaggi in %2$d conversazioni</string>
+  <string name="MessageNotifier_most_recent_from_s">Il più recente da: %1$s</string>
   <string name="MessageNotifier_encrypted_message">Messaggio cifrato...</string>
   <string name="MessageNotifier_media_message_with_text">Messaggio multimediale: %s</string>
   <string name="MessageNotifier_no_subject">(Nessun oggetto)</string>
@@ -499,6 +501,7 @@ non riuscita.
   <string name="AndroidManifest__media_preview">Anteprima media</string>
   <string name="AndroidManifest__media_overview">Tutte le immagini</string>
   <string name="AndroidManifest__media_overview_named">Tutte le immagini con %1$s</string>
+  <string name="AndroidManifest__message_details">Dettagli messaggio</string>
   <string name="arrays__import_export">Importa / Esporta</string>
   <string name="arrays__my_identity_key">La chiave della mia identità</string>
   <string name="arrays__use_default">Usa predefinito</string>
@@ -576,6 +579,7 @@ non riuscita.
   <string name="preferences__custom">Personalizzato</string>
   <string name="preferences__advanced">Avanzate</string>
   <string name="preferences__app_protection">Protezione app</string>
+  <string name="preferences__mms_user_agent">User agent MMS</string>
   <string name="preferences__advanced_mms_access_point_names">Impostazioni manuali MMS</string>
   <string name="preferences__enable_manual_mms">Usa le impostazioni manuali degli MMS</string>
   <string name="preferences__override_system_mms_settings">Sovrascrivi le impostazioni MMS di sistema con le seguenti informazioni</string>
@@ -599,6 +603,7 @@ non riuscita.
   <string name="preferences__default">Predefinito</string>
   <string name="preferences__language">Lingua</string>
   <string name="preferences__language_summary">Lingua %s</string>
+  <string name="preferences__openchatservice_messages">Messaggi OpenchatService</string>
   <string name="preferences__use_the_data_channel_for_communication_with_other_openchatservice_users">
 Chatta gratis con gli utenti OpenchatService e Openchat</string>
   <string name="preferences__submit_debug_log">Invia log di debug</string>

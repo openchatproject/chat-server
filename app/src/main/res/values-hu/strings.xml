@@ -338,8 +338,6 @@ Ismeretlen azonosító kulcsú üzenet érkezett. Kattints rá a feldolgozáshoz
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Érintsd meg a megnyitáshoz, vagy érintsd meg a zárat a bezáráshoz!</string>
   <string name="KeyCachingService_passphrase_cached">A OpenchatService feloldásra került.</string>
   <string name="KeyCachingService_lock">Lezárás jelszóval</string>
-  <string name="MessageNotifier_d_new_messages">%d új üzenet</string>
-  <string name="MessageNotifier_most_recent_from_s">Legutóbbi tőle: %s</string>
   <string name="MessageNotifier_encrypted_message">Biztonságos üzenet...</string>
   <string name="MessageNotifier_media_message_with_text">Média üzenet: %s</string>
   <string name="MessageNotifier_no_subject">(Nincs tárgy)</string>

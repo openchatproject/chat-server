@@ -285,8 +285,6 @@ Nortasun gako ezezagun batekin jaso da mezua. Klik egin prozesatzeko eta erakust
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Ukitu irekitzeko, edo sarraila ukitu ixteko.</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatService desblokeatuta dago</string>
   <string name="KeyCachingService_lock">Blokeatu pasahitz bat erabiliz</string>
-  <string name="MessageNotifier_d_new_messages">Mezu berrien kopurua: %d</string>
-  <string name="MessageNotifier_most_recent_from_s">Mezurik berriena bidali duena: %s</string>
   <string name="MessageNotifier_encrypted_message">Enkriptatuko mezua...</string>
   <string name="MessageNotifier_no_subject">(Ez dago gairik)</string>
   <string name="MessageNotifier_message_delivery_failed">Mezuaren banaketak huts egin du.</string>

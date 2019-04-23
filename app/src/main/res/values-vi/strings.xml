@@ -197,8 +197,6 @@ Nhận thông tin về chìa khóa nhận diện không rõ. Bấm để xử l�
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Chạm vào để mở, hoặc chạm vào ổ khóa để đóng lại.</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatService được mở khóa</string>
   <string name="KeyCachingService_lock">Khóa bằng mật khẩu</string>
-  <string name="MessageNotifier_d_new_messages">%d tin mới</string>
-  <string name="MessageNotifier_most_recent_from_s">Mới nhất đến từ: %s</string>
   <string name="MessageNotifier_encrypted_message">Mã hóa tin nhắn...</string>
   <string name="MessageNotifier_message_delivery_failed">Phân phối tin nhắn bị thất bại.</string>
   <string name="MessageNotifier_failed_to_deliver_message">Thất bại trong việc phân phối tin.</string>

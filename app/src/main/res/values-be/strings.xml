@@ -299,8 +299,6 @@
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Дакраніцеся каб адкрыць, альбо дакраніцеся да замка, каб закрыць.</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatService разблакіравана</string>
   <string name="KeyCachingService_lock">Замкнуць гэты пароль</string>
-  <string name="MessageNotifier_d_new_messages">%d новых паведамленняў</string>
-  <string name="MessageNotifier_most_recent_from_s">Самыя апошнія ад: %s</string>
   <string name="MessageNotifier_encrypted_message">Разшыфраванае паведамленне...</string>
   <string name="MessageNotifier_media_message_with_text">Мультымедыя паведамленне: %s</string>
   <string name="MessageNotifier_no_subject">(Няма тэмы)</string>

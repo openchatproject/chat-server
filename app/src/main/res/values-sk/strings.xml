@@ -320,8 +320,6 @@ Bola prijatá správa s neznámou identou. Kliknite pre spracovanie a zobrazenie
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Otvorte dotykom sem, alebo zavrite dotykom na symbol zámku.</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatService je otvorený</string>
   <string name="KeyCachingService_lock">Zamkni s heslom</string>
-  <string name="MessageNotifier_d_new_messages">(%d) nových správ</string>
-  <string name="MessageNotifier_most_recent_from_s">Najnovšia od: %s</string>
   <string name="MessageNotifier_encrypted_message">Kryptovaná správa...</string>
   <string name="MessageNotifier_media_message_with_text">Multimediálna správa: %s</string>
   <string name="MessageNotifier_no_subject">(bez predmetu)</string>

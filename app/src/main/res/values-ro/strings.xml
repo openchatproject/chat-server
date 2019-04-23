@@ -281,8 +281,6 @@ Primit mesaj trimis cu o cheie de identitate necunoscută. Faceți click pentru 
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Atingeți pentru a deschide, sau atingeți lacătul pentru a închide.</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatService e deblocat.</string>
   <string name="KeyCachingService_lock">Blocare acces cu parola</string>
-  <string name="MessageNotifier_d_new_messages">%d mesaje noi</string>
-  <string name="MessageNotifier_most_recent_from_s">Cel mai recent de la: %s</string>
   <string name="MessageNotifier_encrypted_message">Mesaj criptat...</string>
   <string name="MessageNotifier_media_message_with_text">Mesaje media: %s</string>
   <string name="MessageNotifier_no_subject">(Fără subiect)</string>

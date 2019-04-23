@@ -308,8 +308,6 @@ SMS-களை இறக்குமதி செய்திருந்தா�
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">திறக்க தொடவும், மூட பூட்டை தொடவும்.</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatService திறக்கப்பட்டுள்ளது </string>
   <string name="KeyCachingService_lock">கடவுச்சொல்லை வைத்து பூட்டவும் </string>
-  <string name="MessageNotifier_d_new_messages">%d புதிய செய்திகள்</string>
-  <string name="MessageNotifier_most_recent_from_s">மிக அண்மையில் இவரிடமிருந்து: %s</string>
   <string name="MessageNotifier_encrypted_message">மறையாக்கப்பட செய்தி...</string>
   <string name="MessageNotifier_media_message_with_text">மீடியா செய்தி: %s</string>
   <string name="MessageNotifier_no_subject">(தலைப்பு இல்லை)</string>

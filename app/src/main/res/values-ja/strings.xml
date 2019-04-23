@@ -309,8 +309,6 @@
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">タッチして開く、またはロックをタッチして閉じる</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatServiceは、アンロックされています</string>
   <string name="KeyCachingService_lock">パスワードでロックする</string>
-  <string name="MessageNotifier_d_new_messages">%d 新しいメッセージ</string>
-  <string name="MessageNotifier_most_recent_from_s">最新の送信者： %s</string>
   <string name="MessageNotifier_encrypted_message">暗号化されたメッセージ…</string>
   <string name="MessageNotifier_media_message_with_text">メディアメッセージ: %s</string>
   <string name="MessageNotifier_no_subject">（無題）</string>

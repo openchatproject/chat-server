@@ -320,8 +320,8 @@ SMS съобщенията от системната базата данни в 
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Натисни, за да отвориш, или натисни катинара, за да затвориш.</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatService е отключен</string>
   <string name="KeyCachingService_lock">Заключи паролата</string>
-  <string name="MessageNotifier_d_new_messages">%d нови съобщения</string>
-  <string name="MessageNotifier_most_recent_from_s">Най-скорошното от: %s</string>
+  <string name="MessageNotifier_d_messages_in_d_conversations">%1$d съобщения в %2$d чата</string>
+  <string name="MessageNotifier_most_recent_from_s">Най-скорошно от: %1$s</string>
   <string name="MessageNotifier_encrypted_message">Шифровано съобщение...</string>
   <string name="MessageNotifier_media_message_with_text">Медийно съобщение: %s</string>
   <string name="MessageNotifier_no_subject">(Няма зададена тема)</string>

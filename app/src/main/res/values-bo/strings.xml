@@ -70,8 +70,6 @@
   <string name="MmsMessageRecord_bad_encrypted_mms_message">མཁོ་མེད་གསང་སྡོམ་བྱས་བའི་བརྒྱུད་ལམ་སྣ་མང་ཅན་གྱི་འཕྲིན་ཐུང་MMS </string>
   <string name="MmsMessageRecord_mms_message_encrypted_for_non_existing_session">སྡེ་ཚན་མི་མངོན་པ་དེའི་ཆེད་དུ་།  བརྒྱུད་ལམ་སྣ་མང་ཅན་གྱི་འཕྲིན་ཐུང་MMS གསང་སྡོམ་བྱས་འདུག </string>
   <string name="ApplicationMigrationService_import_in_progress">ནང་འདྲེན་བྱེད་བཞིན་ཡོད། </string>
-  <string name="MessageNotifier_d_new_messages">(%d) ཡི་འཕྲིན་ཐུང་གསར་པ་རྣམས།</string>
-  <string name="MessageNotifier_most_recent_from_s">%s: ནས་ཉེ་ཆར་གྱི་དེ། </string>
   <string name="MessageNotifier_encrypted_message">གསང་སྡོམ་འཕྲིན་ཐུང་། </string>
   <string name="MessageNotifier_message_delivery_failed">འཕྲིན་ཐུང་བཏང་བ་དེ་འགྲོ་མི་འདུག </string>
   <string name="MessageNotifier_failed_to_deliver_message">འཕྲིན་ཐུང་གཏོང་ཐུབ་མ་སོང་། </string>

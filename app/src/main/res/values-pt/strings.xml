@@ -302,8 +302,6 @@ Recebida mensagem com chave de identidade desconhecida. Clique para processar e 
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Toque para abrir, ou toque no cadeado para fechar.</string>
   <string name="KeyCachingService_passphrase_cached">O OpenchatService está desbloqueado</string>
   <string name="KeyCachingService_lock">Bloquear com frase-chave</string>
-  <string name="MessageNotifier_d_new_messages">(%d) novas mensagens</string>
-  <string name="MessageNotifier_most_recent_from_s">Mais recente de: %s</string>
   <string name="MessageNotifier_encrypted_message">Mensagem cifrada...</string>
   <string name="MessageNotifier_no_subject">(Sem Assunto)</string>
   <string name="MessageNotifier_message_delivery_failed">A remessa de mensagem falhou.</string>

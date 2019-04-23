@@ -310,8 +310,6 @@ Otrzymano wiadomość z nieznanym kluczem tożsamości. Kliknij aby przetworzyć
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Dotknij, aby otworzyć lub dotknij zablokuj, aby zamknąć.</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatService jest odblokowany</string>
   <string name="KeyCachingService_lock">Zablokuj hasłem</string>
-  <string name="MessageNotifier_d_new_messages">%d nowych wiadomości</string>
-  <string name="MessageNotifier_most_recent_from_s">Najnowsze zaczynając od: %s</string>
   <string name="MessageNotifier_encrypted_message">Szyfrowana wiadomość...</string>
   <string name="MessageNotifier_media_message_with_text">Wiadomość multimedialna: %s</string>
   <string name="MessageNotifier_no_subject">(Brak tematu)</string>

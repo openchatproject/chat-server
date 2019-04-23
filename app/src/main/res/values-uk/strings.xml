@@ -143,8 +143,6 @@
   <string name="ApplicationMigrationService_import_in_progress">Триває імпортування</string>
   <string name="KeyCachingService_openchatservice_passphrase_cached">Фраза-ключ OpenchatService кешована</string>
   <string name="KeyCachingService_passphrase_cached">Фраза-ключ кешована</string>
-  <string name="MessageNotifier_d_new_messages">%d нових повідомлень</string>
-  <string name="MessageNotifier_most_recent_from_s">Останні від: %s</string>
   <string name="MessageNotifier_encrypted_message">Зашифроване повідомлення\u2026</string>
   <string name="MessageNotifier_message_delivery_failed">Збій доставки повідомлення.</string>
   <string name="MessageNotifier_failed_to_deliver_message">Не вдалось доставити повідомлення.</string>
