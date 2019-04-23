@@ -42,6 +42,7 @@ import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.util.DateUtils;
 import com.openchat.secureim.util.Emoji;
 
+import java.util.Locale;
 import java.util.Set;
 
 public class ConversationItem extends LinearLayout {
@@ -49,6 +50,7 @@ public class ConversationItem extends LinearLayout {
 
   private MessageRecord messageRecord;
   private MasterSecret  masterSecret;
+  private Locale        locale;
   private boolean       groupThread;
   private boolean       pushDestination;
 
@@ -114,12 +116,14 @@ public class ConversationItem extends LinearLayout {
 
   public void set(@NonNull MasterSecret masterSecret,
                   @NonNull MessageRecord messageRecord,
+                  @NonNull Locale locale,
                   @NonNull Set<MessageRecord> batchSelected,
                   @NonNull SelectionClickListener selectionClickListener,
                   boolean groupThread, boolean pushDestination)
   {
     this.masterSecret           = masterSecret;
     this.messageRecord          = messageRecord;
+    this.locale                 = locale;
     this.batchSelected          = batchSelected;
     this.selectionClickListener = selectionClickListener;
     this.groupThread            = groupThread;
@@ -261,7 +265,7 @@ public class ConversationItem extends LinearLayout {
     if (messageRecord.isPush()) timestamp = messageRecord.getDateSent();
     else                        timestamp = messageRecord.getDateReceived();
 
-    dateText.setText(DateUtils.getExtendedRelativeTimeSpanString(getContext(), timestamp));
+    dateText.setText(DateUtils.getExtendedRelativeTimeSpanString(getContext(), locale, timestamp));
   }
 
   private void setFailedStatusIcons() {

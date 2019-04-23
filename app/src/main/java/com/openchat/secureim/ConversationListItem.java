@@ -17,6 +17,7 @@ import com.openchat.secureim.util.DateUtils;
 import com.openchat.secureim.util.Emoji;
 import com.openchat.secureim.util.RecipientViewUtil;
 
+import java.util.Locale;
 import java.util.Set;
 
 import static com.openchat.secureim.util.SpanUtil.color;
@@ -63,7 +64,7 @@ public class ConversationListItem extends RelativeLayout
     initializeContactWidgetVisibility();
   }
 
-  public void set(ThreadRecord thread, Set<Long> selectedThreads, boolean batchMode) {
+  public void set(ThreadRecord thread, Locale locale, Set<Long> selectedThreads, boolean batchMode) {
     this.selectedThreads  = selectedThreads;
     this.recipients       = thread.getRecipients();
     this.threadId         = thread.getThreadId();
@@ -80,7 +81,7 @@ public class ConversationListItem extends RelativeLayout
     this.subjectView.setTypeface(read ? LIGHT_TYPEFACE : BOLD_TYPEFACE);
 
     if (thread.getDate() > 0) {
-      CharSequence date = DateUtils.getBriefRelativeTimeSpanString(context, thread.getDate());
+      CharSequence date = DateUtils.getBriefRelativeTimeSpanString(context, locale, thread.getDate());
       dateView.setText(read ? date : color(getResources().getColor(R.color.openchatservice_primary), date));
       dateView.setTypeface(read ? LIGHT_TYPEFACE : BOLD_TYPEFACE);
     }

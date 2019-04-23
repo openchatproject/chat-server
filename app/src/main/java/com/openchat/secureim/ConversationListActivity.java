@@ -50,7 +50,7 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
 
     getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
     getSupportActionBar().setTitle(R.string.app_name);
-    fragment = initFragment(android.R.id.content, new ConversationListFragment(), masterSecret);
+    fragment = initFragment(android.R.id.content, new ConversationListFragment(), masterSecret, dynamicLanguage.getCurrentLocale());
 
     initializeContactUpdatesReceiver();
 
