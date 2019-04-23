@@ -3,13 +3,20 @@ package com.openchat.secureim;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.Recipients;
+import com.openchat.secureim.util.Rfc5724Uri;
+
+import java.net.URISyntaxException;
 
 public class SmsSendtoActivity extends Activity {
+
+  private static final String TAG = SmsSendtoActivity.class.getSimpleName();
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     startActivity(getNextIntent(getIntent()));
@@ -18,8 +25,22 @@ public class SmsSendtoActivity extends Activity {
   }
 
   private Intent getNextIntent(Intent original) {
-    String     body       = original.getStringExtra("sms_body");
-    String     data       = original.getData().getSchemeSpecificPart();
+    String body = "";
+    String data = "";
+
+    if (original.getAction().equals(Intent.ACTION_SENDTO)) {
+      body = original.getStringExtra("sms_body");
+      data = original.getData().getSchemeSpecificPart();
+    } else {
+      try {
+        Rfc5724Uri smsUri = new Rfc5724Uri(original.getData().toString());
+        body = smsUri.getQueryParams().get("body");
+        data = smsUri.getPath();
+      } catch (URISyntaxException e) {
+        Log.w(TAG, "unable to parse RFC5724 URI from intent", e);
+      }
+    }
+
     Recipients recipients = RecipientFactory.getRecipientsFromString(this, data, false);
     long       threadId   = DatabaseFactory.getThreadDatabase(this).getThreadIdIfExistsFor(recipients);
 
