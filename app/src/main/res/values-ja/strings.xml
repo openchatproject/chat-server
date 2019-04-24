@@ -206,6 +206,7 @@
   <string name="PassphrasePromptActivity_watermark_content_description">OpenchatServiceアイコン</string>
   <string name="PassphrasePromptActivity_ok_button_content_description">パスワードを設定</string>
   <string name="PassphrasePromptActivity_invalid_passphrase_exclamation">無効なパスワード</string>
+  <string name="PlayServicesProblemFragment_the_version_of_google_play_services_you_have_installed_is_not_functioning">あなたのインストールしているGoogle Play Servicesのこのバージョンでは機能的に適切ではありません。Google Play Servicesを再インストールして再挑戦してみてください。</string>
   <string name="RatingManager_rate_this_app">アプリを評価</string>
   <string name="RatingManager_if_you_enjoy_using_this_app_please_take_a_moment">このアプリで楽しめたのなら、私達を助けるためとして評価をお願いします。</string>
   <string name="RatingManager_rate_now">今評価する!</string>
@@ -309,6 +310,8 @@
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">タッチして開く、またはロックをタッチして閉じる</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatServiceは、アンロックされています</string>
   <string name="KeyCachingService_lock">パスワードでロックする</string>
+  <string name="MessageNotifier_d_messages_in_d_conversations">%2$d 会話の中の %1$d メッセージ </string>
+  <string name="MessageNotifier_most_recent_from_s">最新の受信は次から: %1$s</string>
   <string name="MessageNotifier_encrypted_message">暗号化されたメッセージ…</string>
   <string name="MessageNotifier_media_message_with_text">メディアメッセージ: %s</string>
   <string name="MessageNotifier_no_subject">（無題）</string>
