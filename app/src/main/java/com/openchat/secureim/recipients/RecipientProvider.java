@@ -2,8 +2,7 @@ package com.openchat.secureim.recipients;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.PhoneLookup;
@@ -13,11 +12,10 @@ import com.openchat.secureim.contacts.ContactPhotoFactory;
 import com.openchat.secureim.database.CanonicalAddressDatabase;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.GroupDatabase;
-import com.openchat.secureim.util.BitmapUtil;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.LRUCache;
-import com.openchat.secureim.util.Util;
 import com.openchat.secureim.util.ListenableFutureTask;
+import com.openchat.secureim.util.Util;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -59,9 +57,9 @@ public class RecipientProvider {
     if (details != null) {
       recipient = new Recipient(details.name, details.number, recipientId, details.contactUri, details.avatar);
     } else {
-      final Bitmap defaultPhoto        = isGroupRecipient
+      final Drawable defaultPhoto        = isGroupRecipient
                                            ? ContactPhotoFactory.getDefaultGroupPhoto(context)
-                                           : ContactPhotoFactory.getDefaultContactPhoto(context);
+                                           : ContactPhotoFactory.getDefaultContactPhoto(null);
 
       recipient = new Recipient(null, number, recipientId, null, defaultPhoto);
     }
@@ -84,16 +82,16 @@ public class RecipientProvider {
       }
     };
 
-    ListenableFutureTask<RecipientDetails> future = new ListenableFutureTask<RecipientDetails>(task);
+    ListenableFutureTask<RecipientDetails> future = new ListenableFutureTask<>(task);
 
     asyncRecipientResolver.submit(future);
 
-    Bitmap contactPhoto;
+    Drawable contactPhoto;
 
     if (isGroupRecipient) {
       contactPhoto        = ContactPhotoFactory.getDefaultGroupPhoto(context);
     } else {
-      contactPhoto        = ContactPhotoFactory.getDefaultContactPhoto(context);
+      contactPhoto        = ContactPhotoFactory.getLoadingPhoto(context);
     }
 
     Recipient recipient = new Recipient(number, contactPhoto, recipientId, future);
@@ -118,9 +116,10 @@ public class RecipientProvider {
 
     try {
       if (cursor != null && cursor.moveToFirst()) {
-        Uri contactUri      = Contacts.getLookupUri(cursor.getLong(2), cursor.getString(1));
-        Bitmap contactPhoto = ContactPhotoFactory.getContactPhoto(context, Uri.withAppendedPath(Contacts.CONTENT_URI,
-                                                                                                cursor.getLong(2)+""));
+        Uri      contactUri   = Contacts.getLookupUri(cursor.getLong(2), cursor.getString(1));
+        Drawable contactPhoto = ContactPhotoFactory.getContactPhoto(context,
+                                                                    Uri.withAppendedPath(Contacts.CONTENT_URI, cursor.getLong(2)+""),
+                                                                    cursor.getString(0));
         return new RecipientDetails(cursor.getString(0), cursor.getString(3), contactUri, contactPhoto);
       }
     } finally {
@@ -128,7 +127,7 @@ public class RecipientProvider {
         cursor.close();
     }
 
-    return null;
+    return new RecipientDetails(null, number, null, ContactPhotoFactory.getDefaultContactPhoto(null));
   }
 
   private RecipientDetails getGroupRecipientDetails(Context context, String groupId) {
@@ -137,12 +136,7 @@ public class RecipientProvider {
                                                          .getGroup(GroupUtil.getDecodedId(groupId));
 
       if (record != null) {
-        byte[] avatarBytes = record.getAvatar();
-        Bitmap avatar;
-
-        if (avatarBytes == null) avatar = ContactPhotoFactory.getDefaultGroupPhoto(context);
-        else                     avatar = BitmapFactory.decodeByteArray(avatarBytes, 0, avatarBytes.length);
-
+        Drawable avatar = ContactPhotoFactory.getGroupContactPhoto(context, record.getAvatar());
         return new RecipientDetails(record.getTitle(), groupId, null, avatar);
       }
 
@@ -154,12 +148,12 @@ public class RecipientProvider {
   }
 
   public static class RecipientDetails {
-    public final String name;
-    public final String number;
-    public final Bitmap avatar;
-    public final Uri    contactUri;
+    public final String   name;
+    public final String   number;
+    public final Drawable avatar;
+    public final Uri      contactUri;
 
-    public RecipientDetails(String name, String number, Uri contactUri, Bitmap avatar) {
+    public RecipientDetails(String name, String number, Uri contactUri, Drawable avatar) {
       this.name          = name;
       this.number        = number;
       this.avatar        = avatar;

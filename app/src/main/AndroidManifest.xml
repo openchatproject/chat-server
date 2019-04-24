@@ -5,6 +5,8 @@
       android:versionCode="113"
       android:versionName="2.13.0">
 
+    <uses-sdk tools:overrideLibrary="com.amulyakhare.textdrawable"/>
+
     <permission android:name="com.openchat.secureim.ACCESS_SECRETS"
                 android:label="Access to OpenchatService Secrets"
                 android:protectionLevel="signature" />

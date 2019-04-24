@@ -8,9 +8,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -157,9 +157,9 @@ public class MessageNotifier {
     List<NotificationItem>     notifications  = notificationState.getNotifications();
     NotificationCompat.Builder builder        = new NotificationCompat.Builder(context);
     Recipient                  recipient      = notifications.get(0).getIndividualRecipient();
-    Bitmap                     recipientPhoto = recipient.getContactPhoto();
+    Drawable                   recipientPhoto = recipient.getContactPhoto();
 
-    if (recipientPhoto != null) builder.setLargeIcon(BitmapUtil.getCircleBitmap(recipientPhoto));
+    if (recipientPhoto != null) builder.setLargeIcon(BitmapUtil.createFromDrawable(recipientPhoto));
     builder.setSmallIcon(R.drawable.icon_notification);
     builder.setColor(context.getResources().getColor(R.color.openchatservice_primary));
     builder.setContentTitle(recipient.toShortString());

@@ -4,29 +4,25 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.makeramen.RoundedImageView;
-
+import com.openchat.secureim.components.AvatarImageView;
+import com.openchat.secureim.components.FromTextView;
 import com.openchat.secureim.database.model.ThreadRecord;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
-import com.openchat.secureim.util.RecipientViewUtil;
 
 public class ShareListItem extends RelativeLayout
                         implements Recipient.RecipientModifiedListener
 {
   private final static String TAG = ShareListItem.class.getSimpleName();
 
-  private Context    context;
-  private Recipients recipients;
-  private long       threadId;
-  private TextView   fromView;
+  private Context      context;
+  private Recipients   recipients;
+  private long         threadId;
+  private FromTextView fromView;
 
-  private RoundedImageView contactPhotoImage;
+  private AvatarImageView contactPhotoImage;
 
   private final Handler handler = new Handler();
   private int distributionType;
@@ -43,8 +39,8 @@ public class ShareListItem extends RelativeLayout
 
   @Override
   protected void onFinishInflate() {
-    this.fromView          = (TextView)  findViewById(R.id.from);
-    this.contactPhotoImage = (RoundedImageView) findViewById(R.id.contact_photo_image);
+    this.fromView          = (FromTextView)    findViewById(R.id.from);
+    this.contactPhotoImage = (AvatarImageView) findViewById(R.id.contact_photo_image);
   }
 
   public void set(ThreadRecord thread) {
@@ -53,10 +49,10 @@ public class ShareListItem extends RelativeLayout
     this.distributionType = thread.getDistributionType();
 
     this.recipients.addListener(this);
-    this.fromView.setText(RecipientViewUtil.formatFrom(getContext(), recipients));
+    this.fromView.setText(recipients);
 
     setBackground();
-    RecipientViewUtil.setContactPhoto(getContext(), contactPhotoImage, this.recipients.getPrimaryRecipient(), false);
+    this.contactPhotoImage.setAvatar(this.recipients.getPrimaryRecipient(), false);
   }
 
   public void unbind() {
@@ -89,8 +85,8 @@ public class ShareListItem extends RelativeLayout
     handler.post(new Runnable() {
       @Override
       public void run() {
-        fromView.setText(RecipientViewUtil.formatFrom(getContext(), recipients));
-        RecipientViewUtil.setContactPhoto(getContext(), contactPhotoImage, recipients.getPrimaryRecipient(), false);
+        fromView.setText(recipients);
+        contactPhotoImage.setAvatar(recipients.getPrimaryRecipient(), false);
       }
     });
   }

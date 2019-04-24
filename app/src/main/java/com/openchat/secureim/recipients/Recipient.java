@@ -2,13 +2,14 @@ package com.openchat.secureim.recipients;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 
 import com.openchat.secureim.contacts.ContactPhotoFactory;
 import com.openchat.secureim.recipients.RecipientProvider.RecipientDetails;
-import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.FutureTaskListener;
+import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.ListenableFutureTask;
 
 import java.util.HashSet;
@@ -17,25 +18,22 @@ public class Recipient {
 
   private final static String TAG = Recipient.class.getSimpleName();
 
-  private final HashSet<RecipientModifiedListener> listeners = new HashSet<RecipientModifiedListener>();
+  private final HashSet<RecipientModifiedListener> listeners = new HashSet<>();
 
   private final long recipientId;
 
   private String number;
   private String name;
 
-  private Bitmap contactPhoto;
-  private Bitmap generatedAvatar;
+  private Drawable contactPhoto;
+  private Uri      contactUri;
 
-  private Uri    contactUri;
-
-  Recipient(String number, Bitmap contactPhoto,
+  Recipient(String number, Drawable contactPhoto,
             long recipientId, ListenableFutureTask<RecipientDetails> future)
   {
     this.number                     = number;
     this.contactPhoto               = contactPhoto;
     this.recipientId                = recipientId;
-    this.generatedAvatar            = null;
 
     future.addListener(new FutureTaskListener<RecipientDetails>() {
       @Override
@@ -65,7 +63,7 @@ public class Recipient {
     });
   }
 
-  Recipient(String name, String number, long recipientId, Uri contactUri, Bitmap contactPhoto) {
+  Recipient(String name, String number, long recipientId, Uri contactUri, Drawable contactPhoto) {
     this.number                     = number;
     this.recipientId                = recipientId;
     this.contactUri                 = contactUri;
@@ -77,7 +75,7 @@ public class Recipient {
     return this.contactUri;
   }
 
-  public synchronized void setContactPhoto(Bitmap bitmap) {
+  public synchronized void setContactPhoto(Drawable bitmap) {
     this.contactPhoto = bitmap;
     notifyListeners();
   }
@@ -127,20 +125,13 @@ public class Recipient {
     return (name == null ? number : name);
   }
 
-  public synchronized Bitmap getContactPhoto() {
+  public synchronized Drawable getContactPhoto() {
     return contactPhoto;
-  }
-
-  public synchronized Bitmap getGeneratedAvatar(Context context) {
-    if (this.generatedAvatar == null)
-      this.generatedAvatar = AvatarGenerator.generateFor(context, this);
-
-    return this.generatedAvatar;
   }
 
   public static Recipient getUnknownRecipient(Context context) {
     return new Recipient("Unknown", "Unknown", -1, null,
-                         ContactPhotoFactory.getDefaultContactPhoto(context));
+                         ContactPhotoFactory.getDefaultContactPhoto(null));
   }
 
   @Override
@@ -158,7 +149,7 @@ public class Recipient {
     return 31 + (int)this.recipientId;
   }
 
-  public static interface RecipientModifiedListener {
+  public interface RecipientModifiedListener {
     public void onModified(Recipient recipient);
   }
 }
