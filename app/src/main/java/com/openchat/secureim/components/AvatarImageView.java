@@ -3,10 +3,12 @@ package com.openchat.secureim.components;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.openchat.secureim.contacts.ContactPhotoFactory;
 import com.openchat.secureim.recipients.Recipient;
 
 public class AvatarImageView extends ImageView {
@@ -21,9 +23,14 @@ public class AvatarImageView extends ImageView {
     setScaleType(ScaleType.CENTER_INSIDE);
   }
 
-  public void setAvatar(Recipient recipient, boolean quickContactEnabled) {
-    setImageDrawable(recipient.getContactPhoto());
-    setAvatarClickHandler(recipient, quickContactEnabled);
+  public void setAvatar(@Nullable Recipient recipient, boolean quickContactEnabled) {
+    if (recipient != null) {
+      setImageDrawable(recipient.getContactPhoto());
+      setAvatarClickHandler(recipient, quickContactEnabled);
+    } else {
+      setImageDrawable(ContactPhotoFactory.getDefaultContactPhoto(getContext(), null));
+      setOnClickListener(null);
+    }
   }
 
   private void setAvatarClickHandler(final Recipient recipient, boolean quickContactEnabled) {

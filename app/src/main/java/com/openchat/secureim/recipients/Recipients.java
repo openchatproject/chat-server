@@ -1,5 +1,6 @@
 package com.openchat.secureim.recipients;
 
+import android.support.annotation.Nullable;
 import android.util.Patterns;
 
 import com.openchat.secureim.recipients.Recipient.RecipientModifiedListener;
@@ -63,7 +64,7 @@ public class Recipients implements Iterable<Recipient> {
     return this.recipients.size() == 1;
   }
 
-  public Recipient getPrimaryRecipient() {
+  public @Nullable Recipient getPrimaryRecipient() {
     if (!isEmpty())
       return this.recipients.get(0);
     else
