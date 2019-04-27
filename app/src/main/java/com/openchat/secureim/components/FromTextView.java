@@ -8,13 +8,13 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import com.openchat.secureim.R;
+import com.openchat.secureim.components.emoji.EmojiTextView;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
 
-public class FromTextView extends TextView {
+public class FromTextView extends EmojiTextView {
 
   public FromTextView(Context context) {
     super(context);
