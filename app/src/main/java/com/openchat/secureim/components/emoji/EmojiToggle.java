@@ -1,4 +1,4 @@
-package com.openchat.secureim.components;
+package com.openchat.secureim.components.emoji;
 
 import android.content.Context;
 import android.content.res.TypedArray;

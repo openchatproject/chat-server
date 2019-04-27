@@ -37,7 +37,6 @@ import com.openchat.secureim.mms.PartAuthority;
 import com.openchat.secureim.mms.Slide;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.util.DateUtils;
-import com.openchat.secureim.util.Emoji;
 
 import java.util.Locale;
 import java.util.Set;
@@ -213,9 +212,7 @@ public class ConversationItem extends LinearLayout {
     if (isCaptionlessMms(messageRecord)) {
       bodyText.setVisibility(View.GONE);
     } else {
-      bodyText.setText(Emoji.getInstance(context).emojify(messageRecord.getDisplayBody(),
-                                                          new Emoji.InvalidatingPageLoadedListener(bodyText)),
-                       TextView.BufferType.SPANNABLE);
+      bodyText.setText(messageRecord.getDisplayBody());
       bodyText.setVisibility(View.VISIBLE);
     }
 
