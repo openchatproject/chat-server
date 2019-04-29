@@ -8,6 +8,8 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
@@ -35,6 +37,7 @@ public class EmojiProvider {
   private static volatile EmojiProvider                      instance = null;
   private static final    SparseArray<SoftReference<Bitmap>> bitmaps  = new SparseArray<>();
   private static final    Paint                              paint    = new Paint();
+  private static final    Handler                            handler  = new Handler(Looper.getMainLooper());
   static { paint.setFilterBitmap(true); }
 
   private final SparseArray<DrawInfo> offsets = new SparseArray<>();
@@ -82,7 +85,6 @@ public class EmojiProvider {
         try {
           loadPage(page);
           if (pageLoadListener != null) {
-            Log.w(TAG, "onPageLoaded("+page+")");
             pageLoadListener.onPageLoaded();
           }
         } catch (IOException ioe) {
@@ -105,6 +107,7 @@ public class EmojiProvider {
       final InputStream bitmapStream  = context.getAssets().open(file);
       final Bitmap      bitmap        = BitmapUtil.createScaledBitmap(measureStream, bitmapStream, (float) bigDrawSize / (float) EMOJI_RAW_SIZE);
       bitmaps.put(page, new SoftReference<>(bitmap));
+      Log.w(TAG, "onPageLoaded(" + page + ")");
     } catch (IOException ioe) {
       Log.w(TAG, ioe);
       throw ioe;
@@ -170,7 +173,11 @@ public class EmojiProvider {
       if (bitmaps.get(page) == null || bitmaps.get(page).get() == null) {
         preloadPage(page, new PageLoadedListener() {
           @Override public void onPageLoaded() {
-            invalidateSelf();
+            handler.post(new Runnable() {
+              @Override public void run() {
+                invalidateSelf();
+              }
+            });
           }
         });
         return;
