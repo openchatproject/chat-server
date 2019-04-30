@@ -175,7 +175,6 @@
     <string name="GroupCreateActivity_loading_group_details">Loading group details...</string>
 
     <string name="GroupMembersDialog_me">Me</string>
-    <string name="GroupMembersDialog_members">Members...</string>
 
     <string name="ImportExportActivity_import">Import</string>
     <string name="ImportExportActivity_export">Export</string>
