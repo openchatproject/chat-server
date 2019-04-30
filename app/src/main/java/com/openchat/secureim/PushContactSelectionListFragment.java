@@ -2,14 +2,12 @@ package com.openchat.secureim;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +16,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.openchat.secureim.contacts.ContactAccessor;
-import com.openchat.secureim.contacts.ContactAccessor.ContactData;
 import com.openchat.secureim.contacts.ContactSelectionListAdapter;
-import com.openchat.secureim.contacts.ContactSelectionListAdapter.ViewHolder;
-import com.openchat.secureim.contacts.ContactSelectionListAdapter.DataHolder;
-import com.openchat.secureim.contacts.ContactsDatabase;
+import com.openchat.secureim.contacts.ContactSelectionListItem;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -37,12 +32,12 @@ public class PushContactSelectionListFragment extends    Fragment
 
   private TextView emptyText;
 
-  private Map<Long, ContactData>    selectedContacts;
+  private Map<Long, String>         selectedContacts;
   private OnContactSelectedListener onContactSelectedListener;
-  private boolean                   multi = false;
   private StickyListHeadersListView listView;
-  private EditText                  filterEditText;
   private String                    cursorFilter;
+
+  private boolean multi = false;
 
   @Override
   public void onActivityCreated(Bundle icicle) {
@@ -66,10 +61,10 @@ public class PushContactSelectionListFragment extends    Fragment
     return inflater.inflate(R.layout.push_contact_selection_list_activity, container, false);
   }
 
-  public List<ContactData> getSelectedContacts() {
+  public List<String> getSelectedContacts() {
     if (selectedContacts == null) return null;
 
-    List<ContactData> selected = new LinkedList<ContactData>();
+    List<String> selected = new LinkedList<>();
     selected.addAll(selectedContacts.values());
 
     return selected;
@@ -77,23 +72,6 @@ public class PushContactSelectionListFragment extends    Fragment
 
   public void setMultiSelect(boolean multi) {
     this.multi = multi;
-  }
-
-  private void addContact(DataHolder data) {
-    final ContactData contactData = new ContactData(data.id, data.name);
-    final CharSequence label = ContactsContract.CommonDataKinds.Phone.getTypeLabel(getResources(),
-                                                                                   data.numberType, "");
-    contactData.numbers.add(new ContactAccessor.NumberData(label.toString(), data.number));
-    if (multi) {
-      selectedContacts.put(contactData.id, contactData);
-    }
-    if (onContactSelectedListener != null) {
-      onContactSelectedListener.onContactSelected(contactData);
-    }
-  }
-
-  private void removeContact(DataHolder contactData) {
-    selectedContacts.remove(contactData.id);
   }
 
   private void initializeCursor() {
@@ -110,7 +88,8 @@ public class PushContactSelectionListFragment extends    Fragment
     listView.setFastScrollEnabled(true);
     listView.setDrawingListUnderStickyHeader(false);
     listView.setOnItemClickListener(new ListClickListener());
-    filterEditText = (EditText) getView().findViewById(R.id.filter);
+
+    EditText filterEditText = (EditText) getView().findViewById(R.id.filter);
     filterEditText.addTextChangedListener(new TextWatcher() {
       @Override
       public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
@@ -160,20 +139,15 @@ public class PushContactSelectionListFragment extends    Fragment
   private class ListClickListener implements AdapterView.OnItemClickListener {
     @Override
     public void onItemClick(AdapterView<?> l, View v, int position, long id) {
-      final DataHolder contactData = (DataHolder) v.getTag(R.id.contact_info_tag);
-      final ViewHolder holder      = (ViewHolder) v.getTag(R.id.holder_tag);
+      ContactSelectionListItem contact = (ContactSelectionListItem)v;
 
-      if (holder == null) {
-        Log.w(TAG, "ViewHolder was null, can't proceed with click logic.");
-        return;
-      }
-
-      if (multi) holder.checkBox.toggle();
-
-      if (!multi || holder.checkBox.isChecked()) {
-        addContact(contactData);
-      } else if (multi) {
-        removeContact(contactData);
+      if (!multi || !selectedContacts.containsKey(contact.getContactId())) {
+        selectedContacts.put(contact.getContactId(), contact.getNumber());
+        contact.setChecked(true);
+        if (onContactSelectedListener != null) onContactSelectedListener.onContactSelected(contact.getNumber());
+      } else {
+        selectedContacts.remove(contact.getContactId());
+        contact.setChecked(false);
       }
     }
   }
@@ -183,6 +157,6 @@ public class PushContactSelectionListFragment extends    Fragment
   }
 
   public interface OnContactSelectedListener {
-    public void onContactSelected(ContactData contactData);
+    public void onContactSelected(String number);
   }
 }

@@ -8,25 +8,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.openchat.secureim.contacts.ContactAccessor;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.ThreadDatabase;
-import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
-import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.DirectoryHelper;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;
-import com.openchat.secureim.util.NumberUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.secureim.crypto.MasterSecret;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import static com.openchat.secureim.contacts.ContactAccessor.ContactData;
 
 public class NewConversationActivity extends PassphraseRequiredActionBarActivity {
   private static final String TAG = NewConversationActivity.class.getSimpleName();
@@ -45,7 +35,6 @@ public class NewConversationActivity extends PassphraseRequiredActionBarActivity
   @Override
   protected void onCreate(Bundle icicle, @NonNull MasterSecret masterSecret) {
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
     setContentView(R.layout.new_conversation_activity);
     initializeResources();
   }
@@ -72,7 +61,6 @@ public class NewConversationActivity extends PassphraseRequiredActionBarActivity
     super.onOptionsItemSelected(item);
     switch (item.getItemId()) {
     case R.id.menu_refresh_directory:  handleDirectoryRefresh();  return true;
-    case R.id.menu_selection_finished: handleSelectionFinished(); return true;
     case android.R.id.home:            finish();                  return true;
     }
     return false;
@@ -82,22 +70,12 @@ public class NewConversationActivity extends PassphraseRequiredActionBarActivity
     contactsFragment = (PushContactSelectionListFragment) getSupportFragmentManager().findFragmentById(R.id.contact_selection_list_fragment);
     contactsFragment.setOnContactSelectedListener(new PushContactSelectionListFragment.OnContactSelectedListener() {
       @Override
-      public void onContactSelected(ContactData contactData) {
+      public void onContactSelected(String number) {
         Log.i(TAG, "Choosing contact from list.");
-        Recipients recipients = contactDataToRecipients(contactData);
+        Recipients recipients = RecipientFactory.getRecipientsFromString(NewConversationActivity.this, number, true);
         openNewConversation(recipients);
       }
     });
-  }
-
-  private void handleSelectionFinished() {
-    final Intent resultIntent = getIntent();
-    final List<ContactData> selectedContacts = contactsFragment.getSelectedContacts();
-    if (selectedContacts != null) {
-      resultIntent.putParcelableArrayListExtra("contacts", new ArrayList<>(contactsFragment.getSelectedContacts()));
-    }
-    setResult(RESULT_OK, resultIntent);
-    finish();
   }
 
   private void handleDirectoryRefresh() {
@@ -107,20 +85,6 @@ public class NewConversationActivity extends PassphraseRequiredActionBarActivity
         contactsFragment.update();
       }
     });
-  }
-
-  private Recipients contactDataToRecipients(ContactData contactData) {
-    if (contactData == null || contactData.numbers == null) return null;
-    Recipients recipients = new Recipients(new LinkedList<Recipient>());
-    for (ContactAccessor.NumberData numberData : contactData.numbers) {
-      if (NumberUtil.isValidSmsOrEmailOrGroup(numberData.number)) {
-        Recipients recipientsForNumber = RecipientFactory.getRecipientsFromString(NewConversationActivity.this,
-                                                                                  numberData.number,
-                                                                                  false);
-        recipients.getRecipientsList().addAll(recipientsForNumber.getRecipientsList());
-      }
-    }
-    return recipients;
   }
 
   private void openNewConversation(Recipients recipients) {

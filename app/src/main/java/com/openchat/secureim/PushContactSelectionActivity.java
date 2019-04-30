@@ -3,7 +3,6 @@ package com.openchat.secureim;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,8 +15,6 @@ import com.openchat.secureim.util.OpenchatServicePreferences;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.openchat.secureim.contacts.ContactAccessor.ContactData;
 
 public class PushContactSelectionActivity extends PassphraseRequiredActionBarActivity {
   private final static String TAG             = "ContactSelectActivity";
@@ -75,21 +72,16 @@ public class PushContactSelectionActivity extends PassphraseRequiredActionBarAct
   private void initializeResources() {
     contactsFragment = (PushContactSelectionListFragment) getSupportFragmentManager().findFragmentById(R.id.contact_selection_list_fragment);
     contactsFragment.setMultiSelect(true);
-    contactsFragment.setOnContactSelectedListener(new PushContactSelectionListFragment.OnContactSelectedListener() {
-      @Override
-      public void onContactSelected(ContactData contactData) {
-        Log.i(TAG, "Choosing contact from list.");
-      }
-    });
   }
 
   private void handleSelectionFinished() {
+    Intent resultIntent = getIntent();
+    List<String> selectedContacts = contactsFragment.getSelectedContacts();
 
-    final Intent resultIntent = getIntent();
-    final List<ContactData> selectedContacts = contactsFragment.getSelectedContacts();
     if (selectedContacts != null) {
-      resultIntent.putParcelableArrayListExtra("contacts", new ArrayList<ContactData>(contactsFragment.getSelectedContacts()));
+      resultIntent.putStringArrayListExtra("contacts", new ArrayList<>(selectedContacts));
     }
+
     setResult(RESULT_OK, resultIntent);
     finish();
   }
