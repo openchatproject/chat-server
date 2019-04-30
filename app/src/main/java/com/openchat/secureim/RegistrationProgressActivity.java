@@ -30,6 +30,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.service.KeyCachingService;
@@ -169,9 +171,11 @@ public class RegistrationProgressActivity extends BaseActionBarActivity {
     spannableString.setSpan(new ClickableSpan() {
       @Override
       public void onClick(View widget) {
-        Intent intent = new Intent(RegistrationProgressActivity.this,
-                                   RegistrationProblemsActivity.class);
-        startActivity(intent);
+        new MaterialDialog.Builder(RegistrationProgressActivity.this)
+            .title(R.string.RegistrationProblemsActivity_possible_problems)
+            .customView(R.layout.registration_problems, true)
+            .neutralText(android.R.string.ok)
+            .show();
       }
     }, pretext.length() + 1, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
