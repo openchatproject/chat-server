@@ -2,11 +2,7 @@ package com.openchat.secureim.util;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.preference.PreferenceManager;
 
-import com.openchat.secureim.ApplicationPreferencesActivity;
-import com.openchat.secureim.ConversationActivity;
-import com.openchat.secureim.ConversationListActivity;
 import com.openchat.secureim.R;
 
 public class DynamicTheme {
@@ -28,7 +24,7 @@ public class DynamicTheme {
     }
   }
 
-  private static int getSelectedTheme(Activity activity) {
+  protected int getSelectedTheme(Activity activity) {
     String theme = OpenchatServicePreferences.getTheme(activity);
 
     if (theme.equals("dark")) return R.style.OpenchatService_DarkTheme;
