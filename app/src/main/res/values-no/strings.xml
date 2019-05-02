@@ -36,6 +36,7 @@ Du må registrere telefonnummeret ditt på nytt dersom du ønsker å benytte \'p
   <string name="DraftDatabase_Draft_audio_snippet">(lyd)</string>
   <string name="DraftDatabase_Draft_video_snippet">(video)</string>
   <string name="AttachmentManager_cant_open_media_selection">Finner ikke en applikasjon for å velge media.</string>
+  <string name="AttachmentTypeSelectorAdapter_take_photo">Ta bilde</string>
   <string name="AttachmentTypeSelectorAdapter_picture">Bilde</string>
   <string name="AttachmentTypeSelectorAdapter_video">Video</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Audio</string>
@@ -146,7 +147,6 @@ denne kontakten.</string>
   <string name="GroupCreateActivity_cannot_add_non_push_to_existing_group">Kan ikke legge til ikke-Textsecure kontakter til en eksisterende OpenchatService gruppe.</string>
   <string name="GroupCreateActivity_loading_group_details">Laster gruppedetaljer...</string>
   <string name="GroupMembersDialog_me">Meg</string>
-  <string name="GroupMembersDialog_members">Medlemmer...</string>
   <string name="ImportExportActivity_import">Importere</string>
   <string name="ImportExportActivity_export">Eksportere</string>
   <string name="ImportFragment_import_system_sms_database">Importer systemets SMS database?</string>
@@ -391,7 +391,7 @@ Importer en klartekst backup kompatibel med \'SMSBackup And Restore\'.</string>
   <string name="prompt_passphrase_activity__unlock">Lås opp</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService trenger MMS innstillinger for å levere media og gruppemeldinger via din telefonoperatør. Enheten din er ikke i stand til å oppgi denne informasjonen automatisk, noe som ofte skjer dersom den er låst til operatør eller er konfigurert med andre restriksjoner.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">For å sende media og gruppemeldinger, klikk \'OK\' og fullfør de forespurte instillingene. MMS oppsettet for din operatør kan ofte finnes ved å søke etter \'din operatørs APN\'. Du trenger kun å gjøre dette én gang.</string>
-  <string name="receive_key_activity__complete">Complete</string>
+  <string name="receive_key_dialog__complete">Ferdig</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
 Verifiser telefonnummeret dit for å koble til OpenchatService.
 </string>

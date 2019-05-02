@@ -152,7 +152,6 @@ exportera le contenu de vos messages OpenchatService en clair sur la carte SD.</
   <string name="GroupCreateActivity_cannot_add_non_push_to_existing_group">Impossible d’ajouter des contacts n\'utilisant pas OpenchatService à un groupe OpenchatService existant</string>
   <string name="GroupCreateActivity_loading_group_details">Chargement des détails du groupe...</string>
   <string name="GroupMembersDialog_me">Moi</string>
-  <string name="GroupMembersDialog_members">Membres...</string>
   <string name="ImportExportActivity_import">Importer</string>
   <string name="ImportExportActivity_export">Exporter</string>
   <string name="ImportFragment_import_system_sms_database">Importer la base de données SMS du système ?</string>
@@ -409,7 +408,7 @@ Importer un fichier de sauvegarde en texte clair. Compatible avec «SMSBackup An
   <string name="prompt_passphrase_activity__unlock">Déverrouiller</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService nécessite les paramètres MMS pour envoyer des médias et des messages groupés par votre fournisseur sans fil. Votre appareil ne fournit pas ces informations ; cela se produit parfois sur les appareils verrouillés et autres configurations restrictives.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Pour envoyer des médias et messages groupés, cliquez « OK » et renseignez les paramètres demandés. Les paramètres MMS de votre fournisseur peuvent en général être trouvés en recherchant « APN votre fournisseur ». Vous aurez besoin de faire cela seulement une fois.</string>
-  <string name="receive_key_activity__complete">Compléter</string>
+  <string name="receive_key_dialog__complete">Compléter</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
 Veuillez vérifier votre numéro de téléphone pour vous connecter avec OpenchatService.</string>
   <string name="registration_activity__your_country">VOTRE PAYS</string>

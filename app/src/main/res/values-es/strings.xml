@@ -38,6 +38,7 @@ Tendrá que volver a registrarse con su número de teléfono si quiere volver a 
   <string name="DraftDatabase_Draft_audio_snippet">(audio)</string>
   <string name="DraftDatabase_Draft_video_snippet">(vídeo)</string>
   <string name="AttachmentManager_cant_open_media_selection">No se pudo encontrar una aplicación para el contenido seleccionado.</string>
+  <string name="AttachmentTypeSelectorAdapter_take_photo">Tomar foto</string>
   <string name="AttachmentTypeSelectorAdapter_picture">Fotografía</string>
   <string name="AttachmentTypeSelectorAdapter_video">Vídeo</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Audio</string>
@@ -160,7 +161,6 @@ exportará a la tarjeta SD el contenido en texto plano de sus mensajes de Opench
   <string name="GroupCreateActivity_cannot_add_non_push_to_existing_group">No se pueden añadir contactos que no usan OpenchatService a un grupo existente de OpenchatService.</string>
   <string name="GroupCreateActivity_loading_group_details">Cargando detalles del grupo...</string>
   <string name="GroupMembersDialog_me">Yo</string>
-  <string name="GroupMembersDialog_members">Miembros...</string>
   <string name="ImportExportActivity_import">Importar</string>
   <string name="ImportExportActivity_export">Exportar</string>
   <string name="ImportFragment_import_system_sms_database">¿Importar base de datos de SMS del sistema?</string>
@@ -428,7 +428,7 @@ Importar una copia de seguridad en texto plano. Compatible con \'SMSBackup And R
   <string name="prompt_passphrase_activity__unlock">Desbloquear</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService necesita los datos de configuración de MMS para poder enviar mensajes de grupo a través de su proveedor de telefonía. Su dispositivo no hace pública esta información, cosa que ocurre ocasionalmente para dispositivos bloqueados y otras configuraciones restrictivas.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Para enviar contenido multimedia y mensajes de grupo haga click en \'OK\' y realice la configuración requerida. Las opciones de MMS de su proveedor de telefonía pueden ser encontradas normalmente buscando el \'APN de su proveedor\'. Solo necesitará hacer esto una vez.</string>
-  <string name="receive_key_activity__complete">Completo</string>
+  <string name="receive_key_dialog__complete">Completo</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
 Verifique su número de teléfono para conectar con OpenchatService.</string>
   <string name="registration_activity__your_country">SU PAÍS</string>

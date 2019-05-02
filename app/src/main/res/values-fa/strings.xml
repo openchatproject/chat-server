@@ -116,7 +116,6 @@
   <string name="GroupCreateActivity_updating_group">به روز رسانی %1$s...</string>
   <string name="GroupCreateActivity_loading_group_details">در حال بارگذاری جزئیات گروه...</string>
   <string name="GroupMembersDialog_me">به من</string>
-  <string name="GroupMembersDialog_members">کاربران...</string>
   <string name="ImportExportActivity_import">وارد کردن</string>
   <string name="ImportExportActivity_export">خروجی</string>
   <string name="ImportFragment_import_system_sms_database">سیستم وارد کردن پایگاه داده SMS؟</string>
@@ -314,7 +313,7 @@
   <string name="GroupUtil_group_updated">گروه به روز شد.</string>
   <string name="GroupUtil_title_is_now">عنوان در حال حاضر \'%1$s\'.</string>
   <string name="prompt_passphrase_activity__unlock">قفل باز شود</string>
-  <string name="receive_key_activity__complete">کامل</string>
+  <string name="receive_key_dialog__complete">کامل</string>
   <string name="registration_activity__your_country">کشور شما</string>
   <string name="registration_activity__your_country_code_and_phone_number">کد کشور شما و
 شماره تلفن</string>

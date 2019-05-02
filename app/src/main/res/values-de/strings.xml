@@ -36,6 +36,7 @@ Durch das Deaktivieren von OpenchatService-Nachrichten wird Ihre Registrierung b
   <string name="DraftDatabase_Draft_audio_snippet">(Audio)</string>
   <string name="DraftDatabase_Draft_video_snippet">(Video)</string>
   <string name="AttachmentManager_cant_open_media_selection">Keine App zur Dateiauswahl auffindbar.</string>
+  <string name="AttachmentTypeSelectorAdapter_take_photo">Foto aufnehmen</string>
   <string name="AttachmentTypeSelectorAdapter_picture">Bild</string>
   <string name="AttachmentTypeSelectorAdapter_video">Video</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Audio</string>
@@ -146,7 +147,6 @@ Dies könnte bedeuten, dass jemand versucht, Ihr Gespräch abzuhören. Vielleich
   <string name="GroupCreateActivity_cannot_add_non_push_to_existing_group">Es können keine Kontakte ohne OpenchatService-Registrierung zu einer existierenden OpenchatService-Gruppe hinzugefügt werden</string>
   <string name="GroupCreateActivity_loading_group_details">Gruppendetails werden geladen...</string>
   <string name="GroupMembersDialog_me">Ich</string>
-  <string name="GroupMembersDialog_members">Mitglieder...</string>
   <string name="ImportExportActivity_import">Import</string>
   <string name="ImportExportActivity_export">Export</string>
   <string name="ImportFragment_import_system_sms_database">SMS-Systemdatenbank importieren?</string>
@@ -178,7 +178,7 @@ Falls Sie bereits zuvor diese Datensicherung importiert haben, wird das zu gedop
   <string name="MessageDetailsRecipient_new_identity">Neue Identität</string>
   <string name="MmsDownloader_error_storing_mms">Fehler beim Speichern der MMS!</string>
   <string name="MmsDownloader_error_connecting_to_mms_provider">Verbindung zum MMS-Anbieter fehlgeschlagen...</string>
-  <string name="MmsDownloader_error_reading_mms_settings">Die Einstellungen des MMS-Anbieters konnten nicht gelesen werden...</string>
+  <string name="MmsDownloader_error_reading_mms_settings">MMS-Einstellungen des Mobilfunkanbieters konnten nicht gelesen werden...</string>
   <string name="NotificationMmsMessageRecord_multimedia_message">Mediennachricht</string>
   <string name="MessageRecord_message_encrypted_with_a_legacy_protocol_version_that_is_no_longer_supported">Die empfangene Nachricht wurde mit einer veralteten Version des OpenchatService-Protokolls verschlüsselt, welche nicht mehr unterstützt wird.
 Bitten Sie den Absender, OpenchatService zu aktualisieren und die Nachricht erneut zu senden.</string>
@@ -388,7 +388,7 @@ Eine mit \"SMS Backup + Restore\" kompatible Klartextsicherung importieren.</str
   <string name="prompt_passphrase_activity__unlock">Entsperren</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService benötigt MMS-Einstellungen, um Medien- und Gruppennachrichten zu versenden. Ihr Gerät stellt diese Informationen nicht zur Verfügung, was gelegentlich bei gesperrten oder anderweitig restriktiv konfigurierten Geräten der Fall ist.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Zum Versenden von Medien- und Gruppennachrichten bitte \"OK\" antippen und die geforderten Einstellungen vervollständigen. Die MMS-Einstellungen Ihres Anbieters können normalerweise  durch eine Internetsuche nach dem \"APN\" des Anbieters gefunden werden.</string>
-  <string name="receive_key_activity__complete">Fortfahren</string>
+  <string name="receive_key_dialog__complete">Abgeschlossen</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
 Überprüfen Sie zur Verbindung mit OpenchatService Ihre Rufnummer.</string>
   <string name="registration_activity__your_country">IHR LAND</string>
@@ -578,7 +578,7 @@ Kostenlos verschlüsselte Nachrichten mit OpenchatService- und Openchat-Nutzern 
   <string name="conversation_context__menu_forward_message">Nachricht weiterleiten</string>
   <string name="conversation_context__menu_resend_message">Nachricht erneut senden</string>
   <string name="conversation_context_image__save_attachment">Anhang speichern</string>
-  <string name="conversation_insecure__invite">Einladung</string>
+  <string name="conversation_insecure__invite">Einladen</string>
   <string name="conversation_insecure__menu_start_secure_session">Sichere Unterhaltung starten</string>
   <string name="conversation_insecure__security">Sicherheit</string>
   <string name="conversation_list_batch__menu_delete_selected">Ausgewählte löschen</string>
@@ -595,7 +595,7 @@ Kostenlos verschlüsselte Nachrichten mit OpenchatService- und Openchat-Nutzern 
   <string name="conversation__menu_leave_group">Gruppe verlassen</string>
   <string name="conversation__menu_delete_thread">Unterhaltung löschen</string>
   <string name="conversation__menu_view_media">Alle Bilder</string>
-  <string name="conversation_add_to_contacts__menu_add_to_contacts">Zu den Kontakten hinzufügen</string>
+  <string name="conversation_add_to_contacts__menu_add_to_contacts">Zu Kontakten hinzufügen</string>
   <string name="convesation_group_options__recipients_list">Teilnehmerliste</string>
   <string name="conversation_group_options__delivery">Zustellung</string>
   <string name="conversation_group_options__conversation">Unterhaltung</string>

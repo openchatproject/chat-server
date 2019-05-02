@@ -37,6 +37,7 @@ Bu işlem sunucudan kaydınızı silerek itilen mesajları etkisizleştirir. Gel
   <string name="DraftDatabase_Draft_audio_snippet">(ses)</string>
   <string name="DraftDatabase_Draft_video_snippet">(görüntü)</string>
   <string name="AttachmentManager_cant_open_media_selection">Seçtiğiniz medya için bir uygulama bulunamadı.</string>
+  <string name="AttachmentTypeSelectorAdapter_take_photo">Foto Çek</string>
   <string name="AttachmentTypeSelectorAdapter_picture">Resim</string>
   <string name="AttachmentTypeSelectorAdapter_video">Görüntü</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Ses</string>
@@ -149,7 +150,6 @@ Veri kanallarından iletişim etkisizleştirilmiş, OpenchatService ayarlar men�
   <string name="GroupCreateActivity_cannot_add_non_push_to_existing_group">Mevcut bir OpenchatService grubuna OpenchatService olmayan kişi eklenemez</string>
   <string name="GroupCreateActivity_loading_group_details">Grup detayları yükleniyor...</string>
   <string name="GroupMembersDialog_me">Ben</string>
-  <string name="GroupMembersDialog_members">Üyeler...</string>
   <string name="ImportExportActivity_import">İçe Aktar</string>
   <string name="ImportExportActivity_export">Dışarı Aktar</string>
   <string name="ImportFragment_import_system_sms_database">Sistem SMS veritabanı içe aktarılsın mı?</string>
@@ -206,6 +206,7 @@ kurulumunuzda bulunan ancak yüklenecek yedekte bulunmayan tüm bilgiler kaybolu
   <string name="PassphrasePromptActivity_watermark_content_description">OpenchatService ikonu</string>
   <string name="PassphrasePromptActivity_ok_button_content_description">Parola gönder</string>
   <string name="PassphrasePromptActivity_invalid_passphrase_exclamation">Geçersiz parola!</string>
+  <string name="PlayServicesProblemFragment_the_version_of_google_play_services_you_have_installed_is_not_functioning">Google Play Services\'in kurulu sürümü doğru çalışmıyor. Lütfen Google Play Services\'i tekrar kurun ve yeniden deneyin.</string>
   <string name="RatingManager_rate_this_app">Bu uygulamaya puan verin</string>
   <string name="RatingManager_if_you_enjoy_using_this_app_please_take_a_moment">Bu uygulamayı kullanmaktan hoşlanıyorsanız, lütfen bir dakikanızı ayırıp ona puan vererek bize yardımcı olun.</string>
   <string name="RatingManager_rate_now">Şimdi puan ver!</string>
@@ -312,6 +313,8 @@ Bilinmeyen kimlik anahtarı içeren bir mesaj alındı. İşlemek ve görüntül
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Açmak için dokun, veya kapatmak için kilide dokun.</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatService kilitsiz</string>
   <string name="KeyCachingService_lock">Parola ile kilitle</string>
+  <string name="MessageNotifier_d_messages_in_d_conversations">%2$d sohbette %1$d mesaj</string>
+  <string name="MessageNotifier_most_recent_from_s">En yeni mesaj: %1$s</string>
   <string name="MessageNotifier_encrypted_message">Şifrelenmiş mesaj...</string>
   <string name="MessageNotifier_media_message_with_text">Medya mesajı: %s</string>
   <string name="MessageNotifier_no_subject">(Konusuz)</string>
@@ -395,7 +398,7 @@ Daha önce dışa aktarılmış bir şifrelenmiş OpenchatService yedeğini yeni
   <string name="prompt_passphrase_activity__unlock">Kilidi aç</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService medya ve grup mesajlarının kablosuz taşıyıcınız aracılığı ile taşınabilmesi için MMS ayarlarınızı gerektirir. Cihazınız bu bilgiyi sağlamamaktadır. Bu durum bazen kilitli veya diğer kısıtlı yapılandırılmış cihazlar için geçerli olabilmektedir.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Medya veya grup mesajları gönderebilmek için \'Tamam\' a tıklayınız ve istenen ayarları tamamlayınız. Taşıyıcınızın MMS ayarları genellikle \'taşıyıcı APN\' araştırılarak bulunabilir. Bunu bir kez yapmanız gerekecektir.</string>
-  <string name="receive_key_activity__complete">Tamamlandı</string>
+  <string name="receive_key_dialog__complete">Tamamlandı</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
 OpenchatService\'a bağlanmak için telefon numaranızı doğrulayın</string>
   <string name="registration_activity__your_country">ÜLKENİZ</string>

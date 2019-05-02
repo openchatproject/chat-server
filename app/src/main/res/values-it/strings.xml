@@ -37,6 +37,7 @@ Avrai bisogno di registrare di nuovo il tuo numero di telefono per usare i messa
   <string name="DraftDatabase_Draft_audio_snippet">(audio)</string>
   <string name="DraftDatabase_Draft_video_snippet">(video)</string>
   <string name="AttachmentManager_cant_open_media_selection">Impossibile trovare un\'app per selezionare il file.</string>
+  <string name="AttachmentTypeSelectorAdapter_take_photo">Scatta foto</string>
   <string name="AttachmentTypeSelectorAdapter_picture">Immagine</string>
   <string name="AttachmentTypeSelectorAdapter_video">Video</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Audio</string>
@@ -149,7 +150,6 @@ questo contatto.</string>
   <string name="GroupCreateActivity_cannot_add_non_push_to_existing_group">Impossibile aggiungere utenti che non usano OpenchatService a un gruppo esistente</string>
   <string name="GroupCreateActivity_loading_group_details">Caricamennto dettagli del gruppo...</string>
   <string name="GroupMembersDialog_me">Io</string>
-  <string name="GroupMembersDialog_members">Membri...</string>
   <string name="ImportExportActivity_import">Importa</string>
   <string name="ImportExportActivity_export">Esporta</string>
   <string name="ImportFragment_import_system_sms_database">Importare gli SMS dal database di sistema?</string>
@@ -407,7 +407,7 @@ Importo una copia in chiaro. Compatibile con \"SMSBackup And Restore\"</string>
   <string name="prompt_passphrase_activity__unlock">Sblocca</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService ha bisogno delle impostazioni degli MMS per poter inviare messaggi multimediali e di gruppo con il tuo operatore. Il tuo dispositivo non fornisce queste impostazioni, probabilmente perché ha un operatore bloccato o altre configurazioni restrittive.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Per inviare contenuti multimediali e messaggi di gruppo, tocca \"OK\" e completa le impostazioni richieste. Le impostazioni MMS del proprio operatore possono essere trovate generalmente cercando \"APN proprio operatore\". Sarà necessario eseguire una sola volta questa procedura.</string>
-  <string name="receive_key_activity__complete">Completato</string>
+  <string name="receive_key_dialog__complete">Completa</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
         Verifica il tuo numero di telefono per connetterti a OpenchatService.
     </string>

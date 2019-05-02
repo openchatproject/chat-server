@@ -151,7 +151,6 @@ spara den okrypterad texten av din konversation till ditt minneskort.</string>
   <string name="GroupCreateActivity_cannot_add_non_push_to_existing_group">Kan inte lägga in annat än OpenchatService-kontakter i en OpenchatService-grupp</string>
   <string name="GroupCreateActivity_loading_group_details">Laddar gruppdetaljer...</string>
   <string name="GroupMembersDialog_me">Jag</string>
-  <string name="GroupMembersDialog_members">Medlemmar...</string>
   <string name="ImportExportActivity_import">Importera</string>
   <string name="ImportExportActivity_export">Exportera</string>
   <string name="ImportFragment_import_system_sms_database">Importera systemets SMS-databas?</string>
@@ -393,7 +392,7 @@ från systemets standardapp för meddelanden.</string>
   <string name="prompt_passphrase_activity__unlock">Lås upp</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService kräver MMS inställningar för att leverera medie- och gruppmeddelanden via din mobilöperatör. Din enhet gör inte den här informationen tillgänglig, vilket ibland stämmer för låsta enheter och andra restriktiva konfigurationer.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">För att skicka medie- och gruppmeddelande, klicka \'OK\' och fyll i de begärda inställningarna. MMS inställningarna för din operatör kan generellt hittas genom att söka efter \'din operatör APN\'. Du behöver bara göra det här en gång.</string>
-  <string name="receive_key_activity__complete">Klart</string>
+  <string name="receive_key_dialog__complete">Klart</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
 Verifiera ditt telefonnummer för att ansluta till OpenchatService.</string>
   <string name="registration_activity__your_country">DITT LAND</string>

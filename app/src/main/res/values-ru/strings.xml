@@ -146,7 +146,6 @@
   <string name="GroupCreateActivity_cannot_add_non_push_to_existing_group">Нельзя добавить в OpenchatService-группу собеседников, у которых OpenchatService не установлен</string>
   <string name="GroupCreateActivity_loading_group_details">Загружаем подробности о группе...</string>
   <string name="GroupMembersDialog_me">Я</string>
-  <string name="GroupMembersDialog_members">Участники...</string>
   <string name="ImportExportActivity_import">Импорт</string>
   <string name="ImportExportActivity_export">Экспорт</string>
   <string name="ImportFragment_import_system_sms_database">Импортировать системную базу SMS?</string>
@@ -388,7 +387,7 @@
   <string name="prompt_passphrase_activity__unlock">Открыть</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">Приложению OpenchatService необходимо знать настройки MMS вашего сотового оператора, чтобы отправлять и получать мультимедийные и групповые сообщения. Ваше устройство не даёт доступа к этой информации — так иногда бывает, если в телефоне запрещена смена SIM-карты и в некоторых иных случаях.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Чтобы отправлять мультимедийные и групповые сообщения, нажмите «ОК» и настройте MMS. Это нужно сделать только один раз. Настройки для вашего оператора можно узнать в службе техподдержки или в интернете по запросу «ваш оператор APN».</string>
-  <string name="receive_key_activity__complete">Выполнить</string>
+  <string name="receive_key_dialog__complete">Выполнить</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
 Подтвердите свой номер телефона, чтобы подключиться к OpenchatService</string>
   <string name="registration_activity__your_country">ВАША СТРАНА</string>

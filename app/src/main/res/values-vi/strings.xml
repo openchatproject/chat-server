@@ -244,7 +244,7 @@ Nhập tập tin sao lưu thường-không mã hóa. Tương thích với \'Sao 
   <string name="prompt_passphrase_activity__unlock">Mở khóa</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService </string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Để gửi tin nhắn đa phương tiện hoặc tin nhắn nhóm, bấm \'OK\' và hoàn tất các thiết đặt cần thiết. Thiết đặt MMS cho nhà mạng di động có thể tìm thấy bằng cách tìm \'your carrier APN\'. Bạn chỉ cần làm bước này một lần.</string>
-  <string name="receive_key_activity__complete">Hoàn tất</string>
+  <string name="receive_key_dialog__complete">Hoàn tất</string>
   <string name="registration_activity__your_country">QUỐC GIA BẠN</string>
   <string name="registration_activity__your_country_code_and_phone_number">MÃ SỐ QUỐC GIA VÀ
 SỐ ĐIỆN THOẠI BẠN</string>
