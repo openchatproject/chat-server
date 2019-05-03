@@ -5,10 +5,10 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
+import android.os.Handler;
 import android.os.Looper;
 import android.provider.Telephony;
 import android.support.annotation.Nullable;
@@ -44,10 +44,11 @@ import ws.com.google.android.mms.pdu.CharacterSets;
 import ws.com.google.android.mms.pdu.EncodedStringValue;
 
 public class Util {
+  public static Handler handler = new Handler(Looper.getMainLooper());
 
   public static String join(Collection<String> list, String delimiter) {
     StringBuilder result = new StringBuilder();
-    int i=0;
+    int i = 0;
 
     for (String item : list) {
       result.append(item);
@@ -284,10 +285,19 @@ public class Util {
     return (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) || OutgoingLegacyMmsConnection.isConnectionPossible(context);
   }
 
+  public static boolean isMainThread() {
+    return Looper.myLooper() == Looper.getMainLooper();
+  }
+
   public static void assertMainThread() {
-    if (Looper.myLooper() != Looper.getMainLooper()) {
+    if (!isMainThread()) {
       throw new AssertionError("Main-thread assertion failed.");
     }
+  }
+
+  public static void runOnMain(Runnable runnable) {
+    if (isMainThread()) runnable.run();
+    else                handler.post(runnable);
   }
 
   public static boolean equals(@Nullable Object a, @Nullable Object b) {
@@ -297,5 +307,4 @@ public class Util {
   public static int hashCode(@Nullable Object... objects) {
     return Arrays.hashCode(objects);
   }
-
 }
