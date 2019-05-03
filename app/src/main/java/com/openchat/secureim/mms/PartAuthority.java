@@ -9,7 +9,6 @@ import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.PartDatabase;
 import com.openchat.secureim.providers.PartProvider;
-import com.openchat.secureim.util.Hex;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,11 +39,11 @@ public class PartAuthority {
     try {
       switch (match) {
       case PART_ROW:
-        PartUri partUri = new PartUri(uri);
-        return partDatabase.getPartStream(masterSecret, partUri.getId(), partUri.getContentId());
+        PartUriParser partUri = new PartUriParser(uri);
+        return partDatabase.getPartStream(masterSecret, partUri.getPartId());
       case THUMB_ROW:
-        partUri = new PartUri(uri);
-        return partDatabase.getThumbnailStream(masterSecret, partUri.getId(), partUri.getContentId());
+        partUri = new PartUriParser(uri);
+        return partDatabase.getThumbnailStream(masterSecret, partUri.getPartId());
       default:
         return context.getContentResolver().openInputStream(uri);
       }
@@ -54,17 +53,17 @@ public class PartAuthority {
   }
 
   public static Uri getPublicPartUri(Uri uri) {
-    PartUri partUri = new PartUri(uri);
-    return PartProvider.getContentUri(partUri.getId(), partUri.getContentId());
+    PartUriParser partUri = new PartUriParser(uri);
+    return PartProvider.getContentUri(partUri.getPartId());
   }
 
-  public static Uri getPartUri(long partId, byte[] contentId) {
-    Uri uri = Uri.withAppendedPath(PART_CONTENT_URI, Hex.toStringCondensed(contentId));
-    return ContentUris.withAppendedId(uri, partId);
+  public static Uri getPartUri(PartDatabase.PartId partId) {
+    Uri uri = Uri.withAppendedPath(PART_CONTENT_URI, String.valueOf(partId.getUniqueId()));
+    return ContentUris.withAppendedId(uri, partId.getRowId());
   }
 
-  public static Uri getThumbnailUri(long partId, byte[] contentId) {
-    Uri uri = Uri.withAppendedPath(THUMB_CONTENT_URI, Hex.toStringCondensed(contentId));
-    return ContentUris.withAppendedId(uri, partId);
+  public static Uri getThumbnailUri(PartDatabase.PartId partId) {
+    Uri uri = Uri.withAppendedPath(THUMB_CONTENT_URI, String.valueOf(partId.getUniqueId()));
+    return ContentUris.withAppendedId(uri, partId.getRowId());
   }
 }
