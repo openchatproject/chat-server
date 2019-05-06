@@ -1,7 +1,6 @@
 package com.openchat.secureim;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -81,7 +80,7 @@ public class ConversationListItem extends RelativeLayout
       dateView.setTypeface(read ? LIGHT_TYPEFACE : BOLD_TYPEFACE);
     }
 
-    setBackground(read, batchMode);
+    setBatchState(batchMode);
     this.contactPhotoImage.setAvatar(recipients.getPrimaryRecipient(), true);
   }
 
@@ -94,22 +93,8 @@ public class ConversationListItem extends RelativeLayout
     contactPhotoImage.setVisibility(View.VISIBLE);
   }
 
-  private void setBackground(boolean read, boolean batch) {
-    int[]      attributes = new int[]{R.attr.conversation_list_item_background_selected,
-                                      R.attr.conversation_list_item_background_read,
-                                      R.attr.conversation_list_item_background_unread};
-
-    TypedArray drawables  = context.obtainStyledAttributes(attributes);
-
-    if (batch && selectedThreads.contains(threadId)) {
-      setBackgroundDrawable(drawables.getDrawable(0));
-    } else if (read) {
-      setBackgroundDrawable(drawables.getDrawable(1));
-    } else {
-      setBackgroundDrawable(drawables.getDrawable(2));
-    }
-
-    drawables.recycle();
+  private void setBatchState(boolean batch) {
+    setSelected(batch && selectedThreads.contains(threadId));
   }
 
   public Recipients getRecipients() {
