@@ -130,6 +130,8 @@
     <string name="ConversationFragment_deleting">Deleting...</string>
     <string name="ConversationFragment_deleting_messages">Deleting messages...</string>
 
+    <string name="ConversationListActivity_search">Search...</string>
+
     <string name="ConversationListFragment_delete_threads_question">Delete threads?</string>
     <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Are you sure you wish to delete ALL selected conversation threads?</string>
     <string name="ConversationListFragment_deleting">Deleting</string>
