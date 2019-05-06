@@ -39,6 +39,7 @@ import com.openchat.secureim.mms.Slide;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.util.DateUtils;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -341,20 +342,16 @@ public class ConversationItem extends LinearLayout {
     contactPhoto.setAvatar(recipient, true);
     contactPhoto.setVisibility(View.VISIBLE);
   }
+  
 
-  private IdentityKeyMismatch getKeyMismatch(final MessageRecord record) {
-    if (record.isIdentityMismatchFailure()) {
-      for (final IdentityKeyMismatch mismatch : record.getIdentityKeyMismatches()) {
-        if (mismatch.getRecipientId() == record.getIndividualRecipient().getRecipientId()) {
-          return mismatch;
-        }
-      }
+  private void handleApproveIdentity() {
+    List<IdentityKeyMismatch> mismatches = messageRecord.getIdentityKeyMismatches();
+
+    if (mismatches.size() != 1) {
+      throw new AssertionError("Identity mismatch count: " + mismatches.size());
     }
-    return null;
-  }
 
-  private void handleKeyExchangeClicked() {
-    new ConfirmIdentityDialog(context, masterSecret, messageRecord, getKeyMismatch(messageRecord)).show();
+    new ConfirmIdentityDialog(context, masterSecret, messageRecord, mismatches.get(0)).show();
   }
 
   private class ThumbnailClickListener implements ThumbnailView.ThumbnailClickListener {
@@ -432,12 +429,8 @@ public class ConversationItem extends LinearLayout {
         intent.putExtra(MessageDetailsActivity.TYPE_EXTRA, messageRecord.isMms() ? MmsSmsDatabase.MMS_TRANSPORT : MmsSmsDatabase.SMS_TRANSPORT);
         intent.putExtra(MessageDetailsActivity.IS_PUSH_GROUP_EXTRA, groupThread && pushDestination);
         context.startActivity(intent);
-      } else if (messageRecord.isKeyExchange()           &&
-                 !messageRecord.isOutgoing()             &&
-                 !messageRecord.isProcessedKeyExchange() &&
-                 !messageRecord.isStaleKeyExchange())
-      {
-        handleKeyExchangeClicked();
+      } else if (!messageRecord.isOutgoing() && messageRecord.isIdentityMismatchFailure()) {
+        handleApproveIdentity();
       } else if (messageRecord.isPendingInsecureSmsFallback()) {
         handleMessageApproval();
       }
