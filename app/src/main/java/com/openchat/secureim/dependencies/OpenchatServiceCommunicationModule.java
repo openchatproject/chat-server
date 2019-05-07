@@ -2,7 +2,7 @@ package com.openchat.secureim.dependencies;
 
 import android.content.Context;
 
-import com.openchat.secureim.Release;
+import com.openchat.secureim.BuildConfig;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.storage.OpenchatServiceOpenchatStore;
 import com.openchat.secureim.jobs.AttachmentDownloadJob;
@@ -47,7 +47,7 @@ public class OpenchatServiceCommunicationModule {
   }
 
   @Provides OpenchatServiceAccountManager provideOpenchatServiceAccountManager() {
-    return new OpenchatServiceAccountManager(Release.PUSH_URL,
+    return new OpenchatServiceAccountManager(BuildConfig.PUSH_URL,
                                         new OpenchatServicePushTrustStore(context),
                                         OpenchatServicePreferences.getLocalNumber(context),
                                         OpenchatServicePreferences.getPushServerPassword(context));
@@ -57,7 +57,7 @@ public class OpenchatServiceCommunicationModule {
     return new OpenchatServiceMessageSenderFactory() {
       @Override
       public OpenchatServiceMessageSender create(MasterSecret masterSecret) {
-        return new OpenchatServiceMessageSender(Release.PUSH_URL,
+        return new OpenchatServiceMessageSender(BuildConfig.PUSH_URL,
                                            new OpenchatServicePushTrustStore(context),
                                            OpenchatServicePreferences.getLocalNumber(context),
                                            OpenchatServicePreferences.getPushServerPassword(context),
@@ -69,7 +69,7 @@ public class OpenchatServiceCommunicationModule {
   }
 
   @Provides OpenchatServiceMessageReceiver provideOpenchatServiceMessageReceiver() {
-    return new OpenchatServiceMessageReceiver(Release.PUSH_URL,
+    return new OpenchatServiceMessageReceiver(BuildConfig.PUSH_URL,
                                          new OpenchatServicePushTrustStore(context),
                                          new DynamicCredentialsProvider(context));
   }

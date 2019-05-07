@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 
-import com.openchat.secureim.Release;
+import com.openchat.secureim.BuildConfig;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.GroupDatabase;
@@ -95,7 +95,7 @@ public class AvatarDownloadJob extends MasterSecretJob {
   }
 
   private File downloadAttachment(String relay, long contentLocation) throws IOException {
-    PushServiceSocket socket = new PushServiceSocket(Release.PUSH_URL,
+    PushServiceSocket socket = new PushServiceSocket(BuildConfig.PUSH_URL,
                                                      new OpenchatServicePushTrustStore(context),
                                                      new StaticCredentialsProvider(OpenchatServicePreferences.getLocalNumber(context),
                                                                                    OpenchatServicePreferences.getPushServerPassword(context),
