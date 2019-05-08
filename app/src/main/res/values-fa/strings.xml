@@ -14,7 +14,6 @@
   <string name="ApplicationPreferencesActivity_disable_storage_encryption">غیر فعال کردن رمزگذاری ذخیره سازی؟</string>
   <string name="ApplicationPreferencesActivity_disable">غیرفعال کردن</string>
   <string name="ApplicationPreferencesActivity_unregistering">لغو ثبت ...</string>
-  <string name="ApplicationPreferencesActivity_disable_push_messages">غیر فعال کردن پیام های فشار؟</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">خطا در اتصال به سرور!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">اس ام اس فعال</string>
   <string name="ApplicationPreferencesActivity_sms_disabled">اس ام اس غیر فعال</string>
@@ -163,10 +162,6 @@
   <string name="RatingManager_rate_now">اکنون بسنجید!</string>
   <string name="RatingManager_no_thanks">نه ممنون</string>
   <string name="RatingManager_later">بعد</string>
-  <string name="ReceiveKeyActivity_you_may_wish_to_verify_this_contact">شما ممکن است مایل به منظور بررسی
-تماس با ما</string>
-  <string name="ReceiveKeyActivity_processing">در حال پردازش</string>
-  <string name="ReceiveKeyActivity_processing_key_exchange">در حال پردازش فرایند تبادل کلید...</string>
   <string name="RegistrationActivity_connect_with_openchatservice">اتصال با OpenchatService</string>
   <string name="RegistrationActivity_select_your_country">کشور خود را انتخاب کنید</string>
   <string name="RegistrationActivity_you_must_specify_your_country_code">شما باید کد کشور خود را
@@ -313,7 +308,6 @@
   <string name="GroupUtil_group_updated">گروه به روز شد.</string>
   <string name="GroupUtil_title_is_now">عنوان در حال حاضر \'%1$s\'.</string>
   <string name="prompt_passphrase_activity__unlock">قفل باز شود</string>
-  <string name="receive_key_dialog__complete">کامل</string>
   <string name="registration_activity__your_country">کشور شما</string>
   <string name="registration_activity__your_country_code_and_phone_number">کد کشور شما و
 شماره تلفن</string>
@@ -369,9 +363,6 @@
   <string name="arrays__my_identity_key">کلید هویت من</string>
   <string name="arrays__use_default">استفاده از پیش فرض</string>
   <string name="arrays__use_custom">استفاده از سفارشی</string>
-  <plurals name="minutes_ago">
-    <item quantity="other">%d دقیقه</item>
-  </plurals>
   <plurals name="hours_ago">
     <item quantity="other">%d ساعت</item>
   </plurals>

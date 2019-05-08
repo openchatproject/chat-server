@@ -16,11 +16,11 @@
 Let op, dit schakelt opslagversleuteling uit voor alle berichten en sleutels. Je versleutelde sessies zullen blijven werken, maar iedereen met fysieke toegang tot je apparaat zal er toegang toe hebben.</string>
   <string name="ApplicationPreferencesActivity_disable">Uitschakelen</string>
   <string name="ApplicationPreferencesActivity_unregistering">Afmelden...</string>
-  <string name="ApplicationPreferencesActivity_unregistering_for_data_based_communication">Afmelden voor datagebaseerde communicatie.</string>
-  <string name="ApplicationPreferencesActivity_disable_push_messages">Pushberichten uitschakelen?</string>
-  <string name="ApplicationPreferencesActivity_this_will_disable_push_messages">
-Dit zal push berichten uitzetten door uw registratie bij de server ongedaan te maken.
-Je zal je telefoonnummer opnieuw moeten registreren als je pushberichten weer wilt gebruiken.</string>
+  <string name="ApplicationPreferencesActivity_unregistering_from_openchatservice_messages">Afmelden voor OpenchatService berichten</string>
+  <string name="ApplicationPreferencesActivity_disable_openchatservice_messages">OpenchatService berichten uitschakelen?</string>
+  <string name="ApplicationPreferencesActivity_this_will_disable_openchatservice_messages">
+Dit schakelt OpenchatService berichten uit door je af te melden bij de server. 
+Indien je in de toekomst weer OpenchatService berichten wilt gebruiken zul je je telefoonnummer opnieuw moeten registreren.</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Fout bij verbinden met de server!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">SMS ingeschakeld</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Aanraken om je standaard SMS-applicatie te veranderen</string>
@@ -36,12 +36,14 @@ Je zal je telefoonnummer opnieuw moeten registreren als je pushberichten weer wi
   <string name="DraftDatabase_Draft_audio_snippet">(audio)</string>
   <string name="DraftDatabase_Draft_video_snippet">(video)</string>
   <string name="AttachmentManager_cant_open_media_selection">Geen app gevonden om media te selecteren.</string>
+  <string name="AttachmentTypeSelectorAdapter_take_photo">Foto nemen</string>
   <string name="AttachmentTypeSelectorAdapter_picture">Afbeelding</string>
   <string name="AttachmentTypeSelectorAdapter_video">Video</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Audio</string>
   <string name="AttachmentTypeSelectorAdapter_contact">Contact info</string>
   <string name="ConfirmIdentityDialog_the_signature_on_this_key_exchange_is_different">De identificerende sleutel van %1$s is veranderd. Dit kan betekenen dat iemand je communicatie probeert te onderscheppen of dat %2$s simpelweg OpenchatService opnieuw geïnstalleerd heeft en nu een nieuwe identiteit heeft.</string>
   <string name="ConfirmIdentityDialog_you_may_wish_to_verify_this_contact">Je wilt wellicht dit contact verifiëren.</string>
+  <string name="ConfirmIdentityDialog_accept">Accepteren</string>
   <string name="ConversationItem_message_size_d_kb">Berichtgrootte: %d KB</string>
   <string name="ConversationItem_expires_s">Verloopt: %s</string>
   <string name="ConversationItem_error_not_delivered">Niet bezorgd</string>
@@ -108,6 +110,7 @@ Je zal je telefoonnummer opnieuw moeten registreren als je pushberichten weer wi
   <string name="ConversationFragment_sms">SMS</string>
   <string name="ConversationFragment_deleting">Verwijderen...</string>
   <string name="ConversationFragment_deleting_messages">Berichten verwijderen...</string>
+  <string name="ConversationListActivity_search">Zoeken...</string>
   <string name="ConversationListFragment_delete_threads_question">Gesprekken verwijderen?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Weet je zeker dat je ALLE geselecteerde gesprekken wilt verwijderen?</string>
   <string name="ConversationListFragment_deleting">Aan het verwijderen</string>
@@ -117,6 +120,7 @@ Je zal je telefoonnummer opnieuw moeten registreren als je pushberichten weer wi
   <string name="CustomDefaultPreference_using_default">Standaard gebruiken: %s</string>
   <string name="CustomDefaultPreference_none">Niets</string>
   <string name="DateUtils_now">Nu</string>
+  <string name="DateUtils_minutes_ago">%d min</string>
   <string name="ShareActivity_share_with">Delen met</string>
   <string name="ExportFragment_export">Exporteer</string>
   <string name="ExportFragment_export_plaintext_to_sd_card">Onversleutelde tekst exporteren naar SD-kaart?</string>
@@ -206,10 +210,6 @@ Herstellen van een versleutelde back-up zal je bestaande sleutels, voorkeuren en
   <string name="RatingManager_rate_now">Nu beoordelen!</string>
   <string name="RatingManager_no_thanks">Nee dankjewel</string>
   <string name="RatingManager_later">Later</string>
-  <string name="ReceiveKeyActivity_the_signature_on_this_key_exchange_is_different">De handtekening op deze sleuteluitwisseling is anders dan wat u eerder ontvangen heeft van dit contact. Dit kan betekenen dat iemand probeert uw communicatie the onderscheppen, of dat dit contact gewoon OpenchatService opnieuw geïnstalleerd heeft en nu een nieuwe identiteitssleutel heeft.</string>
-  <string name="ReceiveKeyActivity_you_may_wish_to_verify_this_contact">Je wilt wellicht dit contact verifiëren.</string>
-  <string name="ReceiveKeyActivity_processing">Aan het verwerken</string>
-  <string name="ReceiveKeyActivity_processing_key_exchange">Sleuteluitwisseling verwerken...</string>
   <string name="RegistrationActivity_connect_with_openchatservice">Verbind met OpenchatService</string>
   <string name="RegistrationActivity_select_your_country">Selecteer je land</string>
   <string name="RegistrationActivity_you_must_specify_your_country_code">Je moet je
@@ -388,7 +388,6 @@ Importeer een niet-versleutelde back-up voor \'SMS Back-up En Herstellen\'.</str
   <string name="prompt_passphrase_activity__unlock">Ontgrendel</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService heeft MMS-instellingen nodig om mediaberichten te kunnen versturen via uw telefoonprovider. Je toestel heeft deze informatie niet beschikbaar. Dit komt vaker voor bij gelockte toestellen en andere beperkende configuraties.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Om mediaberichten en groepsberichten te versturen, drukt u op \'OK\' en voert u de gevraagde gegevens in. De MMS-instellingen voor uw provider kunnen meestal gevonden worden door te zoeken naar \'&amp;lt;uw provider&amp;gt; APN\'. U hoeft dit maar eenmaal te doen.</string>
-  <string name="receive_key_dialog__complete">Voltooid</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
         Verifieer je telefoonnummer om met OpenchatService verbinding te maken.
     </string>
@@ -472,10 +471,6 @@ OpenchatService heeft te lang moeten wachten op het binnenkomen van de verificat
   <string name="arrays__my_identity_key">Mijn identiteitssleutel</string>
   <string name="arrays__use_default">Gebruik standaard</string>
   <string name="arrays__use_custom">Gebruik handmatig</string>
-  <plurals name="minutes_ago">
-    <item quantity="one">%d minuut</item>
-    <item quantity="other">%d minuten</item>
-  </plurals>
   <plurals name="hours_ago">
     <item quantity="one">%d uur</item>
     <item quantity="other">%d uren</item>

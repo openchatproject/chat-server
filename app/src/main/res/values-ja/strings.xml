@@ -17,11 +17,6 @@
 通信上（セッション）の暗号化は引き続き行われますが、お使いの携帯端末それ自体に、誰かが物理的な接触を試みた場合、メッセージや鍵などの情報が入手されてしまう可能性があります。</string>
   <string name="ApplicationPreferencesActivity_disable">無効</string>
   <string name="ApplicationPreferencesActivity_unregistering">登録破棄中…</string>
-  <string name="ApplicationPreferencesActivity_unregistering_for_data_based_communication">データ通信を行うために登録を取消しています</string>
-  <string name="ApplicationPreferencesActivity_disable_push_messages">プッシュメッセージを無効化しますか？</string>
-  <string name="ApplicationPreferencesActivity_this_will_disable_push_messages">
-サーバーから登録を取消し、プッシュメッセージを無効化します。
-再びプッシュメッセージを使用するには、</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">サーバー接続中にエラーが発生しました！</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">SMS 有効</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">タッチしてデフォルトSMSアプリを変更</string>
@@ -123,6 +118,7 @@
   <string name="CustomDefaultPreference_using_default">デフォルト利用: %s</string>
   <string name="CustomDefaultPreference_none">無し</string>
   <string name="DateUtils_now">今</string>
+  <string name="DateUtils_minutes_ago">%d 分</string>
   <string name="ShareActivity_share_with">共有</string>
   <string name="ExportFragment_export">エクスポート</string>
   <string name="ExportFragment_export_plaintext_to_sd_card">SDカードへエクスポートしますか？</string>
@@ -212,14 +208,6 @@
   <string name="RatingManager_rate_now">今評価する!</string>
   <string name="RatingManager_no_thanks">しません</string>
   <string name="RatingManager_later">後で</string>
-  <string name="ReceiveKeyActivity_the_signature_on_this_key_exchange_is_different">この
-鍵交換の電子署名は、以前この連絡先から受信したものと違っています。
-誰かがあなたの通信を傍受しようとしているか、もしくは
-単にこの連絡先がOpenchatServiceを再インストールしたため、認証キーが新しくなった可能性があります。</string>
-  <string name="ReceiveKeyActivity_you_may_wish_to_verify_this_contact">この連絡先を
-照合することが推奨されています。</string>
-  <string name="ReceiveKeyActivity_processing">処理中</string>
-  <string name="ReceiveKeyActivity_processing_key_exchange">鍵交換を処理中...</string>
   <string name="RegistrationActivity_connect_with_openchatservice">OpenchatServiceで接続</string>
   <string name="RegistrationActivity_select_your_country">国を選択</string>
   <string name="RegistrationActivity_you_must_specify_your_country_code">国番号を入力して下さい</string>
@@ -395,7 +383,6 @@
   <string name="prompt_passphrase_activity__unlock">ロック解除</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatServiceでは、無線通信事業者からファイル付きメッセージを配信するのに、APN設定が必要です。お使いの携帯端末では、この設定のための情報が取得できません。ロックされた端末であるか、その他の制限設定があるとこのような状況が生じます。</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">ファイル付き及びグループ・メッセージを配信するのに、OKをクリックして設定を完了してください。お使いの通信事業者への設定値は通常、\"通信事業者APN”で検索すると設定できます。この作業の実行は一度だけでいいです。</string>
-  <string name="receive_key_dialog__complete">完了</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
         あなたの電話番号をOpenchatServiceに接続するための検証。
     </string>
@@ -472,9 +459,6 @@ Wi-Fiに接続している場合、ファイアウォールがOpenchatServiceサ
   <string name="arrays__my_identity_key">自分の認証キー</string>
   <string name="arrays__use_default">デフォルトを利用する</string>
   <string name="arrays__use_custom">カスタムを利用する</string>
-  <plurals name="minutes_ago">
-    <item quantity="other">%d 分</item>
-  </plurals>
   <plurals name="hours_ago">
     <item quantity="other">%d 時間</item>
   </plurals>

@@ -18,12 +18,11 @@
 има достъп до тях. </string>
   <string name="ApplicationPreferencesActivity_disable">Изключи</string>
   <string name="ApplicationPreferencesActivity_unregistering">Отписване...</string>
-  <string name="ApplicationPreferencesActivity_unregistering_for_data_based_communication">Отписване от комуникации изискващи интернет</string>
-  <string name="ApplicationPreferencesActivity_disable_push_messages">Забрани интернет съобщения?</string>
-  <string name="ApplicationPreferencesActivity_this_will_disable_push_messages">
-Това ще забрани интернет съобщения като те отпише от сървъра.
-Ще се наложи да регистрираш своя номер повторно, за да използваш интернет съобщения в бъдеще.
-</string>
+  <string name="ApplicationPreferencesActivity_unregistering_from_openchatservice_messages">Дерегистриране от OpenchatService съобщения</string>
+  <string name="ApplicationPreferencesActivity_disable_openchatservice_messages">Забрани OpenchatService съобщения?</string>
+  <string name="ApplicationPreferencesActivity_this_will_disable_openchatservice_messages">
+Това ще забрани OpenchatService съобщения като те дерегистрира от сървъра.
+Ще трябва да регистрираш повторно своя телефонен номер, за да изпращаш и получаваш OpenchatService съобщения в бъдеще.</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Грешка при свързване със сървъра!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">SMS разрешени</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Натисни, за да зададеш SMS програма по подразбиране</string>
@@ -47,6 +46,7 @@
   <string name="ConfirmIdentityDialog_the_signature_on_this_key_exchange_is_different">Индефициращият материал за %1$s е променен. Това означава или че някой се опитва да прехване комуникацията ви, или просто че %2$s е преинсталирал OpenchatService и има нов ключ.</string>
   <string name="ConfirmIdentityDialog_you_may_wish_to_verify_this_contact">Може би е добре да се провери ⏎
 този контакт. ⏎</string>
+  <string name="ConfirmIdentityDialog_accept">Приемам</string>
   <string name="ConversationItem_message_size_d_kb">Размер на съобщението: %d KB</string>
   <string name="ConversationItem_expires_s">Изтича: %s</string>
   <string name="ConversationItem_error_not_delivered">Недоставен</string>
@@ -113,6 +113,7 @@
   <string name="ConversationFragment_sms">SMS</string>
   <string name="ConversationFragment_deleting">Изтриване...</string>
   <string name="ConversationFragment_deleting_messages">Изтриване на съобщения...</string>
+  <string name="ConversationListActivity_search">Търсене...</string>
   <string name="ConversationListFragment_delete_threads_question">Изтрий разговорите?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Сигурен ли си, че искаш да изтриеш ВСИЧКИ избрани разговори?</string>
   <string name="ConversationListFragment_deleting">Изтриване</string>
@@ -122,6 +123,7 @@
   <string name="CustomDefaultPreference_using_default">Използване на подразбиращ се: %s</string>
   <string name="CustomDefaultPreference_none">Няма</string>
   <string name="DateUtils_now">Сега</string>
+  <string name="DateUtils_minutes_ago">%d мин</string>
   <string name="ShareActivity_share_with">Сподели с</string>
   <string name="ExportFragment_export">Изнасяне</string>
   <string name="ExportFragment_export_plaintext_to_sd_card">Разшифрован запис на SD карта?</string>
@@ -217,14 +219,6 @@ SMS съобщенията от системната базата данни в 
   <string name="RatingManager_rate_now">Оцени сега!</string>
   <string name="RatingManager_no_thanks">Не благодаря</string>
   <string name="RatingManager_later">По-късно</string>
-  <string name="ReceiveKeyActivity_the_signature_on_this_key_exchange_is_different"> 
-Подписът получен при обмяната на ключове е по-различен от този, който си получавал преди от същия
-контакт. Това може да означава, че някой се опитва да прихване комуникацията ти, или 
-че този контакт просто е преинсталирал OpenchatService и сега има нов ключ за самоличност. </string>
-  <string name="ReceiveKeyActivity_you_may_wish_to_verify_this_contact">Може би е добре да се провери ⏎
-този контакт. ⏎</string>
-  <string name="ReceiveKeyActivity_processing">Обработване</string>
-  <string name="ReceiveKeyActivity_processing_key_exchange">Извършване на обмяна на ключове...</string>
   <string name="RegistrationActivity_connect_with_openchatservice">Свържи се с OpenchatService</string>
   <string name="RegistrationActivity_select_your_country">Избери държавата си</string>
   <string name="RegistrationActivity_you_must_specify_your_country_code">Трябва да въведеш своя
@@ -406,7 +400,6 @@ SMS съобщенията от системната базата данни в 
   <string name="prompt_passphrase_activity__unlock">Отключи</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService се нуждае от MMS настройки, за да може да достави медийни и групови съобщения през мрежата. Устройството ти не прави тази информация достъпна, което се случва понякога за заключени устройва и други ограничени конфигурации.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">За да изптратиш медийни и групови съобщения, избери \'ОК\' и нагласи изискваните настройки. MMS настройките на твоя мобилен оператор могат да бъдат намерени като потърсиш \'APN настройки\'. Нужно е да изпълниш тази стъпка само веднъж.</string>
-  <string name="receive_key_dialog__complete">Приключи</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
 Потвърди своя телфонен номер, за да се свържеш с OpenchatService</string>
   <string name="registration_activity__your_country">ТВОЯТА ДЪРЖАВА</string>
@@ -500,10 +493,6 @@ OpenchatService чака твърде дълго за SMS потвърждени
   <string name="arrays__my_identity_key">Моят ключ за самоличност</string>
   <string name="arrays__use_default">Използвай подразбиращ се</string>
   <string name="arrays__use_custom">Използвай специален</string>
-  <plurals name="minutes_ago">
-    <item quantity="one">%d минута</item>
-    <item quantity="other">%d минути</item>
-  </plurals>
   <plurals name="hours_ago">
     <item quantity="one">%d час</item>
     <item quantity="other">%d часа</item>

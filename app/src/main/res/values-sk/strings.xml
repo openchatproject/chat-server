@@ -20,12 +20,6 @@ získa aj prístup k týmto odosieaným informáciám.
 </string>
   <string name="ApplicationPreferencesActivity_disable">Vypnúť</string>
   <string name="ApplicationPreferencesActivity_unregistering">Prebieha odhlasovanie...</string>
-  <string name="ApplicationPreferencesActivity_unregistering_for_data_based_communication">Vypína sa prenos dát</string>
-  <string name="ApplicationPreferencesActivity_disable_push_messages">Vypnúť správy \"push\"?</string>
-  <string name="ApplicationPreferencesActivity_this_will_disable_push_messages">
-Týmto sa odhlásite zo serveru a vypnete príjem správ typu \"push\".
-Ak budete v budúcnosti chcieť dostávať upozornenia zo serveru,
-budete musieť znovu zaregistrovať vaše telefónne číslo.</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Chyba pripojenia na server!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">SMS zapnuté</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Dotykom sem môžete zmeniť Vašu predvolenú aplikáciu pre SMS.</string>
@@ -210,15 +204,6 @@ opätovným importom zduplikujete správy.
   <string name="PassphrasePromptActivity_watermark_content_description">OpenchatService ikona</string>
   <string name="PassphrasePromptActivity_ok_button_content_description">Odošli heslo</string>
   <string name="PassphrasePromptActivity_invalid_passphrase_exclamation">Nesprávne heslo!</string>
-  <string name="ReceiveKeyActivity_the_signature_on_this_key_exchange_is_different">Elektronický podpis použítý pri tejto výmene šifrovacích kľúčov sa líši od podpisu,
-ktorý bol v minulosti použitý týmto kontaktom. To môže znamenať buď to,
-že sa niekto snaží odpočúvať Vašu komunikáciu, alebo to,
-že tento kontakt jednoducho preinštaloval OpenchatService a teraz má nový elektronický podpis.
-</string>
-  <string name="ReceiveKeyActivity_you_may_wish_to_verify_this_contact">Možno by ste mali overiť
-identitu tohto kontaktu.</string>
-  <string name="ReceiveKeyActivity_processing">Spracováva sa</string>
-  <string name="ReceiveKeyActivity_processing_key_exchange">Spracovávajú sa kľúče vymeny</string>
   <string name="RegistrationActivity_connect_with_openchatservice">Pripojiť s OpenchatService</string>
   <string name="RegistrationActivity_select_your_country">Vyber svoju krajinu</string>
   <string name="RegistrationActivity_you_must_specify_your_country_code">Ty musíš zadať tvoj
@@ -402,7 +387,6 @@ Importovať nezakryptovanú zálohu. Kompatibilné so \'SMSBackup And Restore\'.
   <string name="prompt_passphrase_activity__unlock">Odomkni</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService potrebuje nastavenia MMS pre doručenie médií a skupinových správ s pomocou Vášho operátora. Vaše zariadenie nedalo tieto informácie k dispozícií, čo sa niekedy stáva u zablokovaných zariadení alebo kvôli príliš obmedzujúcim nastaveniam.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Pre odosielanie multimédií a skupinových správ vyberte \'OK\' a preveďte potrebné nastavenia. Nastavenia MMS pre Vášho operátora sa väčšinou dajú nájsť zadaním \'Váš operátor APN\' do vyhľadávača na internete. Toto nastavenie je potrebné dokončiť iba prvykrát.</string>
-  <string name="receive_key_dialog__complete">Dokončené</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
 Pre spojenie s OpenchatService overte Vaše telefónne číslo.
 </string>
@@ -502,11 +486,6 @@ zlyhalo.
   <string name="arrays__my_identity_key">Môj kľúč totožnosti</string>
   <string name="arrays__use_default">Použiť predvolené</string>
   <string name="arrays__use_custom">Použiť vlastné</string>
-  <plurals name="minutes_ago">
-    <item quantity="one">%d minúta</item>
-    <item quantity="few">%d minúty</item>
-    <item quantity="other">%d minút</item>
-  </plurals>
   <plurals name="hours_ago">
     <item quantity="one">%d hodina</item>
     <item quantity="few">%d hodiny</item>

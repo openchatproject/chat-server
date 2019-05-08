@@ -13,7 +13,6 @@
   <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">Увага, це відключить шифрування для всіх повідомлень і ключів. Ваші шифровані сесії продовжать працювати, але будь-яка особа з фізичним доступом до вашого пристрою може переглянути їх.</string>
   <string name="ApplicationPreferencesActivity_disable">Вимкнути</string>
   <string name="ApplicationPreferencesActivity_unregistering">Видалення реєстрації\u2026</string>
-  <string name="ApplicationPreferencesActivity_unregistering_for_data_based_communication">Видалення реєстрації для обміну повідомленнями через Інтернет</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Помилка підключення до сервера!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">SMS Вимкнено</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Торкніться, щоб змінити типову програму для SMS</string>
@@ -80,10 +79,6 @@
   <string name="MmsDownloader_error_connecting_to_mms_provider">Помилка підключення до MMS провайдеру\u2026</string>
   <string name="MmsDownloader_error_reading_mms_settings">Помилка читання налаштувань MMS провайдера\u2026</string>
   <string name="PassphraseChangeActivity_incorrect_old_passphrase_exclamation">Невірна стара фраза!</string>
-  <string name="ReceiveKeyActivity_the_signature_on_this_key_exchange_is_different">Підпис цього обміну ключами відрізняється від отриманого раніше від цього контакту. Це може означати, що хтось намагається перехопити вашу переписку, або цей контакт перевстановив OpenchatService і тепер у нього новий ідентифікаційний ключ.</string>
-  <string name="ReceiveKeyActivity_you_may_wish_to_verify_this_contact">Можливо, вам потрібно перевірити цей контакт.</string>
-  <string name="ReceiveKeyActivity_processing">Обробка</string>
-  <string name="ReceiveKeyActivity_processing_key_exchange">Виконується обмін ключами...</string>
   <string name="RegistrationActivity_connect_with_openchatservice">Підключитися до OpenchatService</string>
   <string name="RegistrationActivity_you_must_specify_your_country_code">Ви маєте вказати код країни</string>
   <string name="RegistrationActivity_you_must_specify_your_phone_number">Ви маєте вказати свій номер телефону</string>
@@ -180,7 +175,6 @@
   <string name="prompt_passphrase_activity__unlock">Розблокувати</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">Для надсилання MMS-повідомлень OpenchatService необхідно знати настройки APN вашого оператора. Однак ваш пристрій не надає цієї інформації - так іноді буває, якщо воно заблоковане або відповідним чином налаштоване.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Щоб мати можливість відправляти MMS-повідомлення, введіть інформацію про APN нижче. Потрібні значення для вашого оператора можна знайти в інтернеті за запитом \'оператор APN\' або в його службі підтримки. Це потрібно зробити тільки один раз.</string>
-  <string name="receive_key_dialog__complete">Виконати</string>
   <string name="registration_activity__your_country">ВАША КРАЇНА</string>
   <string name="registration_activity__your_country_code_and_phone_number">КОД ВАШОЇ КРАЇНИ ТА НОМЕР ТЕЛЕФОНУ
     </string>

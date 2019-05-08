@@ -20,12 +20,6 @@
     </string>
   <string name="ApplicationPreferencesActivity_disable">Απενεργοποίηση</string>
   <string name="ApplicationPreferencesActivity_unregistering">Κατάργηση Εγγραφής...</string>
-  <string name="ApplicationPreferencesActivity_unregistering_for_data_based_communication">Κατάργηση εγγραφής για την επικοινωνία μέσω δεδομένων</string>
-  <string name="ApplicationPreferencesActivity_disable_push_messages">Απενεργοποίηση μηνυμάτων push (μέσω Internet);</string>
-  <string name="ApplicationPreferencesActivity_this_will_disable_push_messages">
-Αυτή η επιλογή θα απενεργοποιήσει τα μηνύματα push, καταργώντας την εγγραφή σας στον διακομιστή.
-Αν θελήσετε να χρησιμοποιήσετε μηνύματα push στο μέλλον, θα πρέπει να επανεγγραφείτε.
- </string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Σφάλμα κατά τη σύνδεση με τον διακομιστή!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">Ενεργοποίηση SMS</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Πιέστε για να αλλάξετε την προεπιλεγμένη εφαρμογή για SMS</string>
@@ -231,16 +225,6 @@ SMS της συσκευής σας στο OpenchatService. Αν έχετε ήδ�
   <string name="RatingManager_rate_now">Βαθμολογήστε Τώρα!</string>
   <string name="RatingManager_no_thanks">Οχι ευχαριστώ</string>
   <string name="RatingManager_later">Αργότερα</string>
-  <string name="ReceiveKeyActivity_the_signature_on_this_key_exchange_is_different">Το
-        αποτύπωμα αυτής της ανταλλαγής κλειδιών είναι διαφορετικό από αυτό που λάβαμε πρωτύτερα από αυτή την
-        επαφή. Αυτό σημαίνει είτε ότι κάποιος προσπαθεί να υποκλέψει τη συνομιλία σας, ή
-        ότι αυτή η επαφή απλά επανεγκτέστησε το OpenchatService και τώρα έχει νέο κλειδί ταυτότητας.
-    </string>
-  <string name="ReceiveKeyActivity_you_may_wish_to_verify_this_contact">Προτείνεται να επιβεβαιώσετε
-        αυτήν την επαφή.
-    </string>
-  <string name="ReceiveKeyActivity_processing">Γίνεται επεξεργασία</string>
-  <string name="ReceiveKeyActivity_processing_key_exchange">Γίνεται επεξεργασία της ανταλλαγής κλειδιών...</string>
   <string name="RegistrationActivity_connect_with_openchatservice">Σύνδεση Με OpenchatService</string>
   <string name="RegistrationActivity_select_your_country">Επιλέξτε χώρα</string>
   <string name="RegistrationActivity_you_must_specify_your_country_code">Πρέπει να καθορίσετε
@@ -423,7 +407,6 @@ SMS της συσκευής σας στο OpenchatService. Αν έχετε ήδ�
   <string name="prompt_passphrase_activity__unlock">Ξεκλείδωμα</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">Το OpenchatService χρειάζεται τις ρυθμίσεις MMS για να στείλει μηνύματα πολυμέσων μέσω του πάροχού σας. Η συσκευή σας δεν παρέχει αυτές τις ρυθμίσεις, κάτι που ισχύει σε κλειδωμένες συσκευές και άλλες περιοριστικές διαμορφώσεις.</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">Για να στείλετε μηνύματα πολυμέσων, πατήστε «ΟΚ» και συμπληρώστε τις ρυθμίσεις APN. Θα βρείτε τις σωστές ρυθμίσεις APN για τον πάροχό σας ψάχνοντας online για «το όνομα του πάροχού σας» + APN. Αυτές οι ρυθμίσεις θα χρειαστούν μόνο μία φορά.</string>
-  <string name="receive_key_dialog__complete">Ολοκληρώθηκε</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
 Επιβεβαιώστε τον αριθμό τηλεφώνου σας για να συνδεθείτε με το OpenchatService.</string>
   <string name="registration_activity__your_country">Η ΧΩΡΑ ΣΑΣ</string>
@@ -513,10 +496,6 @@ SMS της συσκευής σας στο OpenchatService. Αν έχετε ήδ�
   <string name="arrays__my_identity_key">Το Κλειδί Ταυτότητάς Μου</string>
   <string name="arrays__use_default">Χρήση προκαθορισμένου</string>
   <string name="arrays__use_custom">Χρήση προσαρμοσμένου</string>
-  <plurals name="minutes_ago">
-    <item quantity="one">%d λεπτο</item>
-    <item quantity="other">%d λεπτά</item>
-  </plurals>
   <plurals name="hours_ago">
     <item quantity="one">%d ώρα</item>
     <item quantity="other">%d ώρες</item>
