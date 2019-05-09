@@ -1,17 +1,22 @@
 package com.openchat.secureim.mms;
 
+import android.content.Context;
+
+import com.openchat.secureim.util.Util;
+
 public class MmsMediaConstraints extends MediaConstraints {
-  private static final int MAX_IMAGE_DIMEN  = 1024;
-  public  static final int MAX_MESSAGE_SIZE = 280 * 1024;
+  private static final int MAX_IMAGE_DIMEN_LOWMEM = 768;
+  private static final int MAX_IMAGE_DIMEN        = 1024;
+  public  static final int MAX_MESSAGE_SIZE       = 280 * 1024;
 
   @Override
-  public int getImageMaxWidth() {
-    return MAX_IMAGE_DIMEN;
+  public int getImageMaxWidth(Context context) {
+    return Util.isLowMemory(context) ? MAX_IMAGE_DIMEN_LOWMEM : MAX_IMAGE_DIMEN;
   }
 
   @Override
-  public int getImageMaxHeight() {
-    return MAX_IMAGE_DIMEN;
+  public int getImageMaxHeight(Context context) {
+    return getImageMaxWidth(context);
   }
 
   @Override
