@@ -100,7 +100,12 @@ public class MessageNotifier {
   }
 
   public static void updateNotification(Context context, MasterSecret masterSecret, long threadId) {
-    if (!OpenchatServicePreferences.isNotificationsEnabled(context)) {
+    Recipients recipients = DatabaseFactory.getThreadDatabase(context)
+                                           .getRecipientsForThreadId(threadId);
+
+    if (!OpenchatServicePreferences.isNotificationsEnabled(context) ||
+        (recipients != null && recipients.isMuted()))
+    {
       return;
     }
 
