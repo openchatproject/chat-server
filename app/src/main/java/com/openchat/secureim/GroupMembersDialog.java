@@ -12,6 +12,7 @@ import com.afollestad.materialdialogs.AlertDialogWrapper;
 
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.recipients.Recipient;
+import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
@@ -45,7 +46,7 @@ public class GroupMembersDialog extends AsyncTask<Void, Void, Recipients> {
                             .getGroupMembers(GroupUtil.getDecodedId(groupId), true);
     } catch (IOException e) {
       Log.w(TAG, e);
-      return new Recipients(new LinkedList<Recipient>());
+      return RecipientFactory.getRecipientsFor(context, new LinkedList<Recipient>(), true);
     }
   }
 

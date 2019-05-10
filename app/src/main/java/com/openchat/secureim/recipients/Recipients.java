@@ -1,45 +1,154 @@
 package com.openchat.secureim.recipients;
 
+import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.util.Patterns;
 
+import com.openchat.secureim.database.RecipientPreferenceDatabase.RecipientsPreferences;
+import com.openchat.secureim.database.RecipientPreferenceDatabase.VibrateState;
 import com.openchat.secureim.recipients.Recipient.RecipientModifiedListener;
+import com.openchat.secureim.util.FutureTaskListener;
 import com.openchat.secureim.util.GroupUtil;
+import com.openchat.secureim.util.ListenableFutureTask;
 import com.openchat.secureim.util.NumberUtil;
 import com.openchat.secureim.util.Util;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.WeakHashMap;
 
-public class Recipients implements Iterable<Recipient> {
+public class Recipients implements Iterable<Recipient>, RecipientModifiedListener {
 
-  private List<Recipient> recipients;
+  private static final String TAG = Recipients.class.getSimpleName();
 
-  public Recipients(List<Recipient> recipients) {
+  private final Set<RecipientsModifiedListener> listeners = Collections.newSetFromMap(new WeakHashMap<RecipientsModifiedListener, Boolean>());
+  private final List<Recipient> recipients;
+
+  private Uri          ringtone          = null;
+  private long         mutedUntil        = 0;
+  private boolean      blocked           = false;
+  private VibrateState vibrate           = VibrateState.DEFAULT;
+
+  Recipients() {
+    this(new LinkedList<Recipient>(), (RecipientsPreferences)null);
+  }
+
+  Recipients(List<Recipient> recipients, @Nullable RecipientsPreferences preferences) {
     this.recipients = recipients;
-  }
 
-  public Recipients(final Recipient recipient) {
-    this.recipients = new LinkedList<Recipient>() {{
-      add(recipient);
-    }};
-  }
-
-  public void append(Recipients recipients) {
-    this.recipients.addAll(recipients.getRecipientsList());
-  }
-
-  public void addListener(RecipientModifiedListener listener) {
-    for (Recipient recipient : recipients) {
-      recipient.addListener(listener);
+    if (preferences != null) {
+      ringtone   = preferences.getRingtone();
+      mutedUntil = preferences.getMuteUntil();
+      vibrate    = preferences.getVibrateState();
+      blocked    = preferences.isBlocked();
     }
   }
 
-  public void removeListener(RecipientModifiedListener listener) {
-    for (Recipient recipient : recipients) {
-      recipient.removeListener(listener);
+  Recipients(List<Recipient> recipients, ListenableFutureTask<RecipientsPreferences> preferences) {
+    this.recipients = recipients;
+
+    preferences.addListener(new FutureTaskListener<RecipientsPreferences>() {
+      @Override
+      public void onSuccess(RecipientsPreferences result) {
+        if (result != null) {
+
+          Set<RecipientsModifiedListener> localListeners;
+
+          synchronized (Recipients.this) {
+            ringtone   = result.getRingtone();
+            mutedUntil = result.getMuteUntil();
+            vibrate    = result.getVibrateState();
+            blocked    = result.isBlocked();
+
+            localListeners = new HashSet<>(listeners);
+          }
+
+          for (RecipientsModifiedListener listener : localListeners) {
+            listener.onModified(Recipients.this);
+          }
+        }
+      }
+
+      @Override
+      public void onFailure(Throwable error) {
+        Log.w(TAG, error);
+      }
+    });
+  }
+
+  public synchronized @Nullable Uri getRingtone() {
+    return ringtone;
+  }
+
+  public void setRingtone(Uri ringtone) {
+    synchronized (this) {
+      this.ringtone = ringtone;
+    }
+
+    notifyListeners();
+  }
+
+  public synchronized boolean isMuted() {
+    return System.currentTimeMillis() <= mutedUntil;
+  }
+
+  public void setMuted(long mutedUntil) {
+    synchronized (this) {
+      this.mutedUntil = mutedUntil;
+    }
+
+    notifyListeners();
+  }
+
+  public synchronized boolean isBlocked() {
+    return blocked;
+  }
+
+  public void setBlocked(boolean blocked) {
+    synchronized (this) {
+      this.blocked = blocked;
+    }
+
+    notifyListeners();
+  }
+
+  public synchronized VibrateState getVibrate() {
+    return vibrate;
+  }
+
+  public void setVibrate(VibrateState vibrate) {
+    synchronized (this) {
+      this.vibrate = vibrate;
+    }
+
+    notifyListeners();
+  }
+
+  public synchronized void addListener(RecipientsModifiedListener listener) {
+    if (listeners.isEmpty()) {
+      for (Recipient recipient : recipients) {
+        recipient.addListener(this);
+      }
+    }
+
+    synchronized (this) {
+      listeners.add(listener);
+    }
+  }
+
+  public synchronized void removeListener(RecipientsModifiedListener listener) {
+    listeners.remove(listener);
+
+    if (listeners.isEmpty()) {
+      for (Recipient recipient : recipients) {
+        recipient.removeListener(this);
+      }
     }
   }
 
@@ -83,6 +192,25 @@ public class Recipients implements Iterable<Recipient> {
     return ids;
   }
 
+  public String getSortedIdsString() {
+    Set<Long> recipientSet  = new HashSet<>();
+
+    for (Recipient recipient : this.recipients) {
+      recipientSet.add(recipient.getRecipientId());
+    }
+
+    long[] recipientArray = new long[recipientSet.size()];
+    int i                 = 0;
+
+    for (Long recipientId : recipientSet) {
+      recipientArray[i++] = recipientId;
+    }
+
+    Arrays.sort(recipientArray);
+
+    return Util.join(recipientArray, " ");
+  }
+
   public String[] toNumberStringArray(boolean scrub) {
     String[] recipientsArray     = new String[recipients.size()];
     Iterator<Recipient> iterator = recipients.iterator();
@@ -117,12 +245,30 @@ public class Recipients implements Iterable<Recipient> {
     return fromString;
   }
 
-  public int describeContents() {
-    return 0;
-  }
-
   @Override
   public Iterator<Recipient> iterator() {
     return recipients.iterator();
   }
+
+  @Override
+  public void onModified(Recipient recipient) {
+    notifyListeners();
+  }
+
+  private void notifyListeners() {
+    Set<RecipientsModifiedListener> localListeners;
+
+    synchronized (this) {
+      localListeners = new HashSet<>(listeners);
+    }
+
+    for (RecipientsModifiedListener listener : localListeners) {
+      listener.onModified(this);
+    }
+  }
+
+  public interface RecipientsModifiedListener {
+    public void onModified(Recipients recipient);
+  }
+
 }

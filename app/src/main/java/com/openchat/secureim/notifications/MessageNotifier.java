@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Action;
 import android.support.v4.app.NotificationCompat.BigTextStyle;
@@ -33,7 +34,9 @@ import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsSmsDatabase;
 import com.openchat.secureim.database.PushDatabase;
+import com.openchat.secureim.database.RecipientPreferenceDatabase.VibrateState;
 import com.openchat.secureim.database.SmsDatabase;
+import com.openchat.secureim.database.ThreadDatabase;
 import com.openchat.secureim.database.model.MessageRecord;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
@@ -64,7 +67,7 @@ public class MessageNotifier {
 
   public static void notifyMessageDeliveryFailed(Context context, Recipients recipients, long threadId) {
     if (visibleThread == threadId) {
-      sendInThreadNotification(context);
+      sendInThreadNotification(context, recipients);
     } else {
       Intent intent = new Intent(context, ConversationActivity.class);
       intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -81,7 +84,7 @@ public class MessageNotifier {
       builder.setTicker(context.getString(R.string.MessageNotifier_error_delivering_message));
       builder.setContentIntent(PendingIntent.getActivity(context, 0, intent, 0));
       builder.setAutoCancel(true);
-      setNotificationAlarms(context, builder, true);
+      setNotificationAlarms(context, builder, true, null, VibrateState.DEFAULT);
 
       ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE))
         .notify((int)threadId, builder.build());
@@ -102,8 +105,9 @@ public class MessageNotifier {
     }
 
     if (visibleThread == threadId) {
-      DatabaseFactory.getThreadDatabase(context).setRead(threadId);
-      sendInThreadNotification(context);
+      ThreadDatabase threads = DatabaseFactory.getThreadDatabase(context);
+      threads.setRead(threadId);
+      sendInThreadNotification(context, threads.getRecipientsForThreadId(threadId));
     } else {
       updateNotification(context, masterSecret, true, 0);
     }
@@ -201,7 +205,9 @@ public class MessageNotifier {
 
     builder.setStyle(new BigTextStyle().bigText(content));
 
-    setNotificationAlarms(context, builder, openchat);
+    setNotificationAlarms(context, builder, openchat,
+                          notificationState.getRingtone(),
+                          notificationState.getVibrate());
 
     if (openchat) {
       builder.setTicker(notifications.get(0).getTickerText());
@@ -259,7 +265,9 @@ public class MessageNotifier {
 
     builder.setStyle(style);
 
-    setNotificationAlarms(context, builder, openchat);
+    setNotificationAlarms(context, builder, openchat,
+                          notificationState.getRingtone(),
+                          notificationState.getVibrate());
 
     if (openchat) {
       builder.setTicker(notifications.get(0).getTickerText());
@@ -269,23 +277,27 @@ public class MessageNotifier {
       .notify(NOTIFICATION_ID, builder.build());
   }
 
-  private static void sendInThreadNotification(Context context) {
+  private static void sendInThreadNotification(Context context, Recipients recipients) {
     try {
       if (!OpenchatServicePreferences.isInThreadNotifications(context)) {
         return;
       }
 
-      String ringtone = OpenchatServicePreferences.getNotificationRingtone(context);
-
-      if (ringtone == null) {
-        Log.w(TAG, "ringtone preference was null.");
-        return;
-      }
-
-      Uri uri = Uri.parse(ringtone);
+      Uri uri = recipients.getRingtone();
 
       if (uri == null) {
-        Log.w(TAG, "couldn't parse ringtone uri " + ringtone);
+        String ringtone = OpenchatServicePreferences.getNotificationRingtone(context);
+
+        if (ringtone == null) {
+          Log.w(TAG, "ringtone preference was null.");
+          return;
+        } else {
+          uri = Uri.parse(ringtone);
+        }
+      }
+
+      if (uri == null) {
+        Log.w(TAG, "couldn't parse ringtone uri " + OpenchatServicePreferences.getNotificationRingtone(context));
         return;
       }
 
@@ -334,7 +346,9 @@ public class MessageNotifier {
         SpannableString body       = new SpannableString(context.getString(R.string.MessageNotifier_encrypted_message));
         body.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), 0, body.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        notificationState.addNotification(new NotificationItem(recipient, recipients, null, threadId, body, null, 0));
+        if (!recipients.isMuted()) {
+          notificationState.addNotification(new NotificationItem(recipient, recipients, null, threadId, body, null, 0));
+        }
       }
     } finally {
       if (reader != null)
@@ -379,7 +393,9 @@ public class MessageNotifier {
         body = SpanUtil.italic(message, italicLength);
       }
 
-      notificationState.addNotification(new NotificationItem(recipient, recipients, threadRecipients, threadId, body, image, timestamp));
+      if (threadRecipients == null || !threadRecipients.isMuted()) {
+        notificationState.addNotification(new NotificationItem(recipient, recipients, threadRecipients, threadId, body, image, timestamp));
+      }
     }
 
     reader.close();
@@ -388,18 +404,23 @@ public class MessageNotifier {
 
   private static void setNotificationAlarms(Context context,
                                             NotificationCompat.Builder builder,
-                                            boolean openchat)
+                                            boolean openchat,
+                                            @Nullable Uri ringtone,
+                                            VibrateState vibrate)
+
   {
-    String ringtone              = OpenchatServicePreferences.getNotificationRingtone(context);
-    boolean vibrate              = OpenchatServicePreferences.isNotificationVibrateEnabled(context);
+    String defaultRingtoneName   = OpenchatServicePreferences.getNotificationRingtone(context);
+    boolean defaultVibrate       = OpenchatServicePreferences.isNotificationVibrateEnabled(context);
     String ledColor              = OpenchatServicePreferences.getNotificationLedColor(context);
     String ledBlinkPattern       = OpenchatServicePreferences.getNotificationLedPattern(context);
     String ledBlinkPatternCustom = OpenchatServicePreferences.getNotificationLedPatternCustom(context);
     String[] blinkPatternArray   = parseBlinkPattern(ledBlinkPattern, ledBlinkPatternCustom);
 
-    builder.setSound(TextUtils.isEmpty(ringtone) || !openchat ? null : Uri.parse(ringtone));
+    if      (openchat && ringtone != null)                        builder.setSound(ringtone);
+    else if (openchat && !TextUtils.isEmpty(defaultRingtoneName)) builder.setSound(Uri.parse(defaultRingtoneName));
+    else                                                        builder.setSound(null);
 
-    if (openchat && vibrate) {
+    if (openchat && (vibrate == VibrateState.ENABLED || (vibrate == VibrateState.DEFAULT && defaultVibrate))) {
       builder.setDefaults(Notification.DEFAULT_VIBRATE);
     }
 

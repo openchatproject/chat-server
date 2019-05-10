@@ -25,6 +25,7 @@ import com.openchat.secureim.database.SmsDatabase;
 import com.openchat.secureim.database.loaders.MessageDetailsLoader;
 import com.openchat.secureim.database.model.MessageRecord;
 import com.openchat.secureim.recipients.Recipient;
+import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.DateUtils;
 import com.openchat.secureim.util.DirectoryHelper;
@@ -256,7 +257,7 @@ public class MessageDetailsActivity extends PassphraseRequiredActionBarActivity 
                                       .getGroupMembers(GroupUtil.getDecodedId(groupId), false);
         } catch (IOException e) {
           Log.w(TAG, e);
-         recipients = new Recipients(new LinkedList<Recipient>());
+         recipients = RecipientFactory.getRecipientsFor(MessageDetailsActivity.this, new LinkedList<Recipient>(), false);
         }
       }
 

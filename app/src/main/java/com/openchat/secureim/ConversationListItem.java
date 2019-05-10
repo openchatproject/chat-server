@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.openchat.secureim.components.AvatarImageView;
 import com.openchat.secureim.components.FromTextView;
 import com.openchat.secureim.database.model.ThreadRecord;
-import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.DateUtils;
 
@@ -21,7 +20,7 @@ import java.util.Set;
 import static com.openchat.secureim.util.SpanUtil.color;
 
 public class ConversationListItem extends RelativeLayout
-                                  implements Recipient.RecipientModifiedListener
+                                  implements Recipients.RecipientsModifiedListener
 {
   private final static String TAG = ConversationListItem.class.getSimpleName();
 
@@ -53,12 +52,11 @@ public class ConversationListItem extends RelativeLayout
 
   @Override
   protected void onFinishInflate() {
+    super.onFinishInflate();
     this.subjectView       = (TextView) findViewById(R.id.subject);
     this.fromView          = (FromTextView) findViewById(R.id.from);
     this.dateView          = (TextView) findViewById(R.id.date);
     this.contactPhotoImage = (AvatarImageView) findViewById(R.id.contact_photo_image);
-
-    initializeContactWidgetVisibility();
   }
 
   public void set(ThreadRecord thread, Locale locale, Set<Long> selectedThreads, boolean batchMode) {
@@ -89,10 +87,6 @@ public class ConversationListItem extends RelativeLayout
       this.recipients.removeListener(this);
   }
 
-  private void initializeContactWidgetVisibility() {
-    contactPhotoImage.setVisibility(View.VISIBLE);
-  }
-
   private void setBatchState(boolean batch) {
     setSelected(batch && selectedThreads.contains(threadId));
   }
@@ -110,7 +104,7 @@ public class ConversationListItem extends RelativeLayout
   }
 
   @Override
-  public void onModified(Recipient recipient) {
+  public void onModified(final Recipients recipients) {
     handler.post(new Runnable() {
       @Override
       public void run() {

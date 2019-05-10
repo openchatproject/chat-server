@@ -7,6 +7,9 @@ import android.util.Pair;
 import com.openchat.secureim.ApplicationContext;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsDatabase;
+import com.openchat.secureim.recipients.RecipientFactory;
+import com.openchat.secureim.recipients.Recipients;
+import com.openchat.secureim.util.Util;
 import com.openchat.jobqueue.JobParameters;
 
 import ws.com.google.android.mms.pdu.GenericPdu;
@@ -49,7 +52,7 @@ public class MmsReceiveJob extends ContextJob {
       Log.w(TAG, e);
     }
 
-    if (pdu != null && pdu.getMessageType() == PduHeaders.MESSAGE_TYPE_NOTIFICATION_IND) {
+    if (isNotification(pdu) && !isBlocked(pdu)) {
       MmsDatabase database                = DatabaseFactory.getMmsDatabase(context);
       Pair<Long, Long> messageAndThreadId = database.insertMessageInbox((NotificationInd)pdu);
 
@@ -61,6 +64,8 @@ public class MmsReceiveJob extends ContextJob {
                                                 messageAndThreadId.first,
                                                 messageAndThreadId.second,
                                                 true));
+    } else if (isNotification(pdu)) {
+      Log.w(TAG, "*** Received blocked MMS, ignoring...");
     }
   }
 
@@ -71,5 +76,18 @@ public class MmsReceiveJob extends ContextJob {
   @Override
   public boolean onShouldRetry(Exception exception) {
     return false;
+  }
+
+  private boolean isBlocked(GenericPdu pdu) {
+    if (pdu.getFrom() != null && pdu.getFrom().getTextString() != null) {
+      Recipients recipients = RecipientFactory.getRecipientsFromString(context, Util.toIsoString(pdu.getFrom().getTextString()), false);
+      return recipients.isBlocked();
+    }
+
+    return false;
+  }
+
+  private boolean isNotification(GenericPdu pdu) {
+    return pdu != null && pdu.getMessageType() == PduHeaders.MESSAGE_TYPE_NOTIFICATION_IND;
   }
 }

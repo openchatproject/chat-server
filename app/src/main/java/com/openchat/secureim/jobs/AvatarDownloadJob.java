@@ -2,7 +2,6 @@ package com.openchat.secureim.jobs;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 
 import com.openchat.secureim.BuildConfig;
@@ -11,19 +10,15 @@ import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.GroupDatabase;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
 import com.openchat.secureim.push.OpenchatServicePushTrustStore;
-import com.openchat.secureim.recipients.Recipient;
-import com.openchat.secureim.recipients.RecipientFactory;
-import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.util.BitmapDecodingException;
 import com.openchat.secureim.util.BitmapUtil;
-import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.imservice.api.crypto.AttachmentCipherInputStream;
-import com.openchat.imservice.internal.push.PushServiceSocket;
 import com.openchat.imservice.api.push.exceptions.NonSuccessfulResponseCodeException;
+import com.openchat.imservice.internal.push.PushServiceSocket;
 import com.openchat.imservice.internal.util.StaticCredentialsProvider;
 
 import java.io.File;
@@ -72,10 +67,6 @@ public class AvatarDownloadJob extends MasterSecretJob {
         Bitmap      avatar             = BitmapUtil.createScaledBitmap(measureInputStream, scaleInputStream, 500, 500);
 
         database.updateAvatar(groupId, avatar);
-
-        Recipient groupRecipient = RecipientFactory.getRecipientsFromString(context, GroupUtil.getEncodedId(groupId), true)
-                                                   .getPrimaryRecipient();
-        groupRecipient.setContactPhoto(new BitmapDrawable(avatar));
       }
     } catch (InvalidMessageException | BitmapDecodingException | NonSuccessfulResponseCodeException e) {
       Log.w(TAG, e);

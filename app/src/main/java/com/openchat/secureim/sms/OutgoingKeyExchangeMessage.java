@@ -1,11 +1,11 @@
 package com.openchat.secureim.sms;
 
-import com.openchat.secureim.recipients.Recipient;
+import com.openchat.secureim.recipients.Recipients;
 
 public class OutgoingKeyExchangeMessage extends OutgoingTextMessage {
 
-  public OutgoingKeyExchangeMessage(Recipient recipient, String message) {
-    super(recipient, message);
+  public OutgoingKeyExchangeMessage(Recipients recipients, String message) {
+    super(recipients, message);
   }
 
   private OutgoingKeyExchangeMessage(OutgoingKeyExchangeMessage base, String body) {

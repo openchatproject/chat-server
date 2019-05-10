@@ -51,6 +51,8 @@
     <string name="AttachmentTypeSelectorAdapter_audio">Audio</string>
     <string name="AttachmentTypeSelectorAdapter_contact">Contact info</string>
 
+    <string name="BlockedContactsActivity_blocked_contacts">Blocked contacts</string>
+
     <string name="ConfirmIdentityDialog_the_signature_on_this_key_exchange_is_different">The
         identifying key material for %1$s has changed. This could either mean that someone is trying to
         intercept your communication, or that %2$s simply re-installed OpenchatService and now has a new
@@ -110,6 +112,9 @@
     <string name="ConversationActivity_mms_not_supported_title">MMS not supported</string>
     <string name="ConversationActivity_mms_not_supported_message">This message cannot be sent since your carrier doesn\'t support MMS.</string>
     <string name="ConversationActivity_specify_recipient">Please choose a contact</string>
+    <string name="ConversationActivity_unblock_question">Unblock?</string>
+    <string name="ConversationActivity_are_you_sure_you_want_to_unblock_this_contact">Are you sure you want to unblock this contact?</string>
+    <string name="ConversationActivity_unblock">Unblock</string>
 
     <string name="ConversationFragment_message_details">Message details</string>
     <string name="ConversationFragment_transport_s_sent_received_s">Transport: %1$s\nSent/Received: %2$s</string>
@@ -263,6 +268,13 @@
     <string name="RatingManager_no_thanks">No thanks</string>
     <string name="RatingManager_later">Later</string>
 
+    <string name="RecipientPreferenceActivity_block_this_contact_question">Block this contact?</string>
+    <string name="RecipientPreferenceActivity_you_will_no_longer_see_messages_from_this_user">You will no longer see messages sent from this user.</string>
+    <string name="RecipientPreferenceActivity_block">Block</string>
+    <string name="RecipientPreferenceActivity_unblock_this_contact_question">Unblock this contact?</string>
+    <string name="RecipientPreferenceActivity_are_you_sure_you_want_to_unblock_this_contact">Are you sure you want to unblock this contact?</string>
+    <string name="RecipientPreferenceActivity_unblock">Unblock</string>
+
     <string name="RegistrationActivity_connect_with_openchatservice">Connect With OpenchatService</string>
     <string name="RegistrationActivity_select_your_country">Select your country</string>
     <string name="RegistrationActivity_you_must_specify_your_country_code">You must specify your
@@ -411,7 +423,11 @@
 
     <string name="ContactSelectionlistFragment_select_for">Select for</string>
 
+    <string name="blocked_contacts_fragment__no_blocked_contacts">No blocked contacts...</string>
+
     <string name="contact_selection_recent_activity__no_recent_calls">No recent calls.</string>
+
+    <string name="conversation_title_view__conversation_muted">Conversation muted</string>
 
     <string name="conversation_activity__type_message_push">Send OpenchatService message</string>
     <string name="conversation_activity__type_message_sms_insecure">Send unsecured SMS</string>
@@ -492,6 +508,14 @@
 
     <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService requires MMS settings to deliver media and group messages through your wireless carrier. Your device does not make this information available, which is occasionally true for locked devices and other restrictive configurations.</string>
     <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">To send media and group messages, click \'OK\' and complete the requested settings. The MMS settings for your carrier can generally be located by searching for \'your carrier APN\'. You will only need to do this once.</string>
+
+    <string name="recipient_preference_activity__blocked">BLOCKED</string>
+
+    <string name="recipient_preferences__mute_conversation">Mute conversation</string>
+    <string name="recipient_preferences__disable_notifications_for_this_conversation">Disable notifications for this conversation</string>
+    <string name="recipient_preferences__ringtone">Ringtone</string>
+    <string name="recipient_preferences__vibrate">Vibrate</string>
+    <string name="recipient_preferences__block">Block</string>
 
     <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
         Verify your phone number to connect with OpenchatService.
@@ -606,6 +630,15 @@
     <string name="arrays__use_default">Use default</string>
     <string name="arrays__use_custom">Use custom</string>
 
+    <string name="arrays__mute_for_one_hour">Mute for 1 hour</string>
+    <string name="arrays__mute_for_two_hours">Mute for 2 hours</string>
+    <string name="arrays__mute_for_one_day">Mute for 1 day</string>
+    <string name="arrays__mute_for_seven_days">Mute for 7 days</string>
+
+    <string name="arrays__settings_default">Settings default</string>
+    <string name="arrays__enabled">Enabled</string>
+    <string name="arrays__disabled">Disabled</string>
+
     <plurals name="hours_ago">
         <item quantity="one">%d hour</item>
         <item quantity="other">%d hours</item>
@@ -707,6 +740,8 @@
     <string name="preferences__submit_debug_log">Submit debug log</string>
     <string name="preferences__support_wifi_calling">\'WiFi Calling\' compatibility mode</string>
     <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Enable if your device uses SMS/MMS delivery over WiFi (only enable when \'WiFi Calling\' is enabled on your device)</string>
+    <string name="preferences__privacy">Privacy</string>
+    <string name="preferences_app_protection__blocked_contacts">Blocked contacts</string>
 
     <string name="contact_selection_list__menu_select_all">Select all</string>
     <string name="contact_selection_list__menu_unselect_all">Unselect all</string>
@@ -746,6 +781,10 @@
     <string name="conversation_secure_verified__menu_security">Security</string>
     <string name="conversation_secure_verified__menu_verify_identity">Verify identity</string>
     <string name="conversation_secure_verified__menu_abort_secure_session">End secure session</string>
+
+    <string name="conversation_muted__unmute">Unmute</string>
+
+    <string name="conversation_unmuted__mute_notifications">Mute notifications</string>
 
     <string name="conversation__menu_add_attachment">Add attachment</string>
     <string name="conversation__menu_update_group">Update group</string>
@@ -792,5 +831,6 @@
     <string name="trimmer__old_messages_successfully_deleted">Old messages successfully deleted</string>
 
     <string name="transport_selection_list_item__transport_icon">Transport icon</string>
+    <string name="MuteDialog_mute_notifications">Mute notifications</string>
 
 </resources>

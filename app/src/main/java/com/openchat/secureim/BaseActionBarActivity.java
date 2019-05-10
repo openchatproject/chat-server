@@ -2,14 +2,14 @@ package com.openchat.secureim;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.ViewConfiguration;
 
 import java.lang.reflect.Field;
 
-public abstract class BaseActionBarActivity extends ActionBarActivity {
+public abstract class BaseActionBarActivity extends AppCompatActivity {
   private static final String TAG = BaseActionBarActivity.class.getSimpleName();
 
   @Override
@@ -43,7 +43,9 @@ public abstract class BaseActionBarActivity extends ActionBarActivity {
         menuKeyField.setAccessible(true);
         menuKeyField.setBoolean(config, false);
       }
-    } catch (IllegalAccessException | NoSuchFieldException e) {
+    } catch (IllegalAccessException e) {
+      Log.w(TAG, "Failed to force overflow menu.");
+    } catch (NoSuchFieldException e) {
       Log.w(TAG, "Failed to force overflow menu.");
     }
   }
