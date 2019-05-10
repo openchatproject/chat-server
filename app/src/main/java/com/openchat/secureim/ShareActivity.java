@@ -14,6 +14,8 @@ import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;
 
+import java.net.URLDecoder;
+
 import ws.com.google.android.mms.ContentType;
 
 public class ShareActivity extends PassphraseRequiredActionBarActivity
@@ -93,10 +95,23 @@ public class ShareActivity extends PassphraseRequiredActionBarActivity
     startActivity(intent);
   }
 
+  private Uri getStreamExtra() {
+    Uri streamUri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+    if (streamUri.getAuthority().equals("com.google.android.apps.photos.contentprovider") &&
+        streamUri.toString().endsWith("/ACTUAL"))
+    {
+      String[] parts = streamUri.toString().split("/");
+      if (parts.length > 3) {
+        return Uri.parse(URLDecoder.decode(parts[parts.length - 2]));
+      }
+    }
+    return streamUri;
+  }
+
   private Intent getBaseShareIntent(final Class<?> target) {
     final Intent intent      = new Intent(this, target);
     final String textExtra   = getIntent().getStringExtra(Intent.EXTRA_TEXT);
-    final Uri    streamExtra = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+    final Uri    streamExtra = getStreamExtra();
     final String type        = streamExtra != null ? getMimeType(streamExtra) : getIntent().getType();
 
     if (ContentType.isImageType(type)) {
