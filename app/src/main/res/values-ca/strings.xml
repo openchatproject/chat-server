@@ -12,7 +12,6 @@
   <string name="ApplicationPreferencesActivity_disable_storage_encryption">Desactivar l\'encriptació del magatzem de dades?</string>
   <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">Alerta, això desactivarà l\'emmagatzematge encriptat per a tots els missatges i claus. Les teves sessions continuaran funcionant, però qualsevol persona amb accés físic al teu dispositiu podrà accedir-hi.</string>
   <string name="ApplicationPreferencesActivity_disable">Desactiva</string>
-  <string name="ApplicationPreferencesActivity_unregistering">Des-registrant...</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Error connectant amb el servidor!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">SMS Habilitats</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Toca per canviar la teva app d\'SMS predeterminada</string>
@@ -71,7 +70,6 @@
   <string name="ImportFragment_restore">Restaura</string>
   <string name="ImportFragment_this_will_import_messages_from_a_plaintext_backup">Això importarà els missatges des d\'una còpia de seguretat en text pla. Si has importat prèviament la base de dades SMS del sistema, importar-la de nou provocarà la generació de missatges duplicats.</string>
   <string name="ImportFragment_importing">Important</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">Importa còpia de seguretat en text pla...</string>
   <string name="ImportFragment_no_plaintext_backup_found">No s\'ha trobat la còpia de seguretat en text pla!</string>
   <string name="ImportFragment_error_importing_backup">Error important la còpia de seguretat!</string>
   <string name="ImportFragment_import_complete">Importació completada!</string>
@@ -235,7 +233,6 @@ des de l\'app de missatgeria predeterminada del sistema.</string>
   <string name="preferences__sound">So</string>
   <string name="preferences__change_notification_sound">Canvia el so de notificació</string>
   <string name="preferences__inthread_notifications">Notificacions dins del fil</string>
-  <string name="preferences__play_inthread_notifications">Reprodueix un so de notificació quan s\'estigui mirant una conversació activa</string>
   <string name="preferences__vibrate">Vibra</string>
   <string name="preferences__also_vibrate_when_notified">Vibra també en notificar</string>
   <string name="preferences__minutes">minuts</string>

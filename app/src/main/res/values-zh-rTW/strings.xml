@@ -16,7 +16,6 @@
         讀取未加密的訊息紀錄和金鑰。
     </string>
   <string name="ApplicationPreferencesActivity_disable">解除</string>
-  <string name="ApplicationPreferencesActivity_unregistering">正在取消註冊...</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">與伺服器的連線發生錯誤！</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">按這裡來變更您預設的手機簡訊APP</string>
   <string name="ApplicationPreferencesActivity_touch_to_make_openchatservice_your_default_sms_app">按這裡將 OpenchatService 設為預設的手機簡訊APP</string>
@@ -70,7 +69,7 @@
   <string name="ConversationFragment_unable_to_write_to_sd_card_exclamation">無法寫入儲存裝置！</string>
   <string name="ConversationFragment_saving_attachment">正在儲存附件檔案</string>
   <string name="ConversationFragment_saving_attachment_to_sd_card">正在寫入儲存裝置中...</string>
-  <string name="ConversationFragment_deleting">刪除中...</string>
+  <string name="ConversationFragment_deleting">正在刪除</string>
   <string name="ConversationListFragment_delete_threads_question">刪除對話群組？</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">您確定要刪除已選擇的對話群組？</string>
   <string name="ConversationListFragment_deleting">正在刪除</string>
@@ -124,7 +123,6 @@
        再匯入一次訊息紀錄將會使 OpenchatService 中出現重複的訊息紀錄。
     </string>
   <string name="ImportFragment_importing">匯入中</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">匯入未加密的備份...</string>
   <string name="ImportFragment_no_plaintext_backup_found">找不到任何未加密的備份檔案！</string>
   <string name="ImportFragment_error_importing_backup">匯入備份時發生錯誤！</string>
   <string name="ImportFragment_import_complete">匯入完成！</string>
@@ -305,6 +303,7 @@
   <string name="prompt_passphrase_activity__unlock">解鎖</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService 需要您通信業者的 MMS多媒體簡訊設定以發送媒體檔案與群組訊息。目前您的裝置並未提供完整的相關資訊，有時是因為裝置出廠時即被鎖定／限制該方面的功能。</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">傳送媒體檔案或群組訊息，請按下 \"OK\" 並完成必要的設定。您所使用電信業者相關的MMS多媒體簡訊設定可能羅列在 \'無線與網路／行動網路\'的設定項目內。且您只需設定一次。</string>
+  <string name="recipient_preferences__vibrate">震動</string>
   <string name="registration_activity__your_country">您的國家／區域</string>
   <string name="registration_activity__your_country_code_and_phone_number">您的國碼與
 手機號碼</string>
@@ -404,7 +403,6 @@ OpenchatService 等候驗證用的手機簡訊已逾時。</string>
   <string name="preferences__sound">提示音效</string>
   <string name="preferences__change_notification_sound">變更通知音效</string>
   <string name="preferences__inthread_notifications">聊天中的提示音效</string>
-  <string name="preferences__play_inthread_notifications">當進行聊天時，收到新通知所要播放的音效。</string>
   <string name="preferences__vibrate">震動</string>
   <string name="preferences__also_vibrate_when_notified">通知時一併啟用震動</string>
   <string name="preferences__minutes">分</string>
@@ -479,7 +477,7 @@ OpenchatService 等候驗證用的手機簡訊已逾時。</string>
   <string name="MediaPreviewActivity_you">您</string>
   <string name="media_preview__save_title">儲存</string>
   <string name="media_preview_activity__image_content_description">預覽圖片</string>
-  <string name="trimmer__deleting">刪除中...</string>
+  <string name="trimmer__deleting">正在刪除</string>
   <string name="trimmer__deleting_old_messages">正在刪除舊訊息...</string>
   <string name="trimmer__old_messages_successfully_deleted">已完成刪除舊訊息。</string>
 </resources>

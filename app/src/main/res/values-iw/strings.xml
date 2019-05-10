@@ -67,7 +67,6 @@
 </string>
   <string name="ImportFragment_restore">שחזר</string>
   <string name="ImportFragment_importing">מייבא</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">יבא גיבוי לא מוצפן...</string>
   <string name="ImportFragment_no_plaintext_backup_found">לא נמצא גיבוי לא מוצפן!</string>
   <string name="ImportFragment_error_importing_backup">שגיאה בייבוא הגיבוי!</string>
   <string name="ImportFragment_import_complete">הייבוא הסתיים!</string>
@@ -167,7 +166,6 @@
   <string name="preferences__pref_led_blink_title">תבנית הבהוב ה- LED</string>
   <string name="preferences__sound">קול</string>
   <string name="preferences__inthread_notifications">התראות תוך-שרשוריות</string>
-  <string name="preferences__play_inthread_notifications">נגן צליל התראות כשצופים בשיחה פעילה.</string>
   <string name="preferences__vibrate">רטט</string>
   <string name="preferences__also_vibrate_when_notified">הפעל רטט בקבלת התראה</string>
   <string name="preferences__minutes">דקות</string>

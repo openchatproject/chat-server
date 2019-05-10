@@ -12,7 +12,6 @@
   <string name="ApplicationPreferencesActivity_disable_storage_encryption">Вимкнути шифрування сховища?</string>
   <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">Увага, це відключить шифрування для всіх повідомлень і ключів. Ваші шифровані сесії продовжать працювати, але будь-яка особа з фізичним доступом до вашого пристрою може переглянути їх.</string>
   <string name="ApplicationPreferencesActivity_disable">Вимкнути</string>
-  <string name="ApplicationPreferencesActivity_unregistering">Видалення реєстрації\u2026</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Помилка підключення до сервера!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">SMS Вимкнено</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Торкніться, щоб змінити типову програму для SMS</string>
@@ -66,7 +65,6 @@
   <string name="ImportFragment_restore">Відновити</string>
   <string name="ImportFragment_this_will_import_messages_from_a_plaintext_backup">Це імпортує повідомлення з текстової резервної копії. Якщо ви до цього імпортували SMS з системної бази даних, повторний імпорт призведе до дублювання повідомлень.</string>
   <string name="ImportFragment_importing">Імпортування</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">Імпорт текстової резервної копії\u2026</string>
   <string name="ImportFragment_no_plaintext_backup_found">Незашифрована резервна копія не знайдена!</string>
   <string name="ImportFragment_error_importing_backup">Помилка при імпорті!</string>
   <string name="ImportFragment_import_complete">Імпортування завершено!</string>
@@ -222,7 +220,6 @@
   <string name="preferences__sound">Звук</string>
   <string name="preferences__change_notification_sound">Змінити звук сповіщення</string>
   <string name="preferences__inthread_notifications">Повідомлення при розмові</string>
-  <string name="preferences__play_inthread_notifications">Програвати мелодію сповіщень навіть під час активного листування.</string>
   <string name="preferences__vibrate">Вібрувати</string>
   <string name="preferences__also_vibrate_when_notified">Також вібрувати під час сповіщення</string>
   <string name="preferences__minutes">хвилин</string>

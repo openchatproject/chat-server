@@ -17,8 +17,6 @@ Varování: Tímto znemožníte šifrování všech uložených zpráv a klíč�
 bude i nadále šifrována, ale bude si ji moci přečíst kdokoliv s fyzickým přístupem
 k vašemu zařízení.</string>
   <string name="ApplicationPreferencesActivity_disable">Deaktivovat</string>
-  <string name="ApplicationPreferencesActivity_unregistering">Rušení registrace...</string>
-  <string name="ApplicationPreferencesActivity_unregistering_from_openchatservice_messages">Probíhá odregistrování ze služby OpenchatService</string>
   <string name="ApplicationPreferencesActivity_disable_openchatservice_messages">Zakázat OpenchatService zprávy?</string>
   <string name="ApplicationPreferencesActivity_this_will_disable_openchatservice_messages">
 Tímto zakážete openchatService zprávy odregistrací tohoto telefonního čísla ze serveru.
@@ -114,7 +112,6 @@ kontakt</string>
   <string name="ConversationFragment_push">Data (OpenchatService)</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
-  <string name="ConversationFragment_deleting">Mažu...</string>
   <string name="ConversationFragment_deleting_messages">Mažu zprávy...</string>
   <string name="ConversationListActivity_search">Vyhhledávám...</string>
   <string name="ConversationListFragment_delete_threads_question">Smazat konverzace?</string>
@@ -170,7 +167,6 @@ Obnova zašifrované zálohy zcela nahradí vaše současné klíče, nastavení
   <string name="ImportFragment_this_will_import_messages_from_a_plaintext_backup">Tímto importujete zprávy z nešifrované zálohy. Pokud jste již někdy
 tuto zálohu importovali, mohou se některé zprávy objevit vícekrát.</string>
   <string name="ImportFragment_importing">Importuji</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">Import zálohy ve formě prostého textu...</string>
   <string name="ImportFragment_no_plaintext_backup_found">Nenalezena záloha ve formě prostého textu!</string>
   <string name="ImportFragment_error_importing_backup">Chyba při importování zálohy!</string>
   <string name="ImportFragment_import_complete">Import dokončen!</string>
@@ -201,7 +197,6 @@ tuto zálohu importovali, mohou se některé zprávy objevit vícekrát.</string
   <string name="DeviceProvisioningActivity_content_bullets">
 Přečíst všechny zprávy
 Poslat zprávy Vaším jménem.</string>
-  <string name="DeviceProvisioningActivity_content_progress_title">Zařízení se přidává ...</string>
   <string name="DeviceProvisioningActivity_content_progress_content">Přidává se nové zařízení</string>
   <string name="DeviceProvisioningActivity_content_progress_success">Zařízení přidáno.</string>
   <string name="DeviceProvisioningActivity_content_progress_no_device">Nenalezeno žádné zařízení.</string>
@@ -527,7 +522,6 @@ OpenchatService nyní automaticky ověří vaše telefonní číslo pomocí potv
   <string name="preferences__sound">Zvuk</string>
   <string name="preferences__change_notification_sound">Změnit zvuk upozornění</string>
   <string name="preferences__inthread_notifications">Upozornění v konverzaci</string>
-  <string name="preferences__play_inthread_notifications">Upozornit i v případě, že se právě nacházite v aktivní konverzaci</string>
   <string name="preferences__repeat_alerts">Opakovat upozornění</string>
   <string name="preferences__never">Nikdy</string>
   <string name="preferences__one_time">Jednou</string>
@@ -582,7 +576,6 @@ OpenchatService nyní automaticky ověří vaše telefonní číslo pomocí potv
 Svobodná šifrovaná komunikace s uživateli OpenchatService a Openchat</string>
   <string name="preferences__submit_debug_log">Odeslat ladící log</string>
   <string name="preferences__support_wifi_calling">\'Wifi volání\' kompatibilní mód</string>
-  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Povolte pokud vaše zařízení používá k doručování SMS/MMS Wifi (povoleno pouze pokud je \'Wifi volání\' povoleno na vašem zařízení).</string>
   <string name="contact_selection_list__menu_select_all">Označit vše</string>
   <string name="contact_selection_list__menu_unselect_all">Odznačit vše</string>
   <string name="contact_selection_list__header_openchatservice_users">OPENCHAT UŽIVATELÉ</string>
@@ -640,7 +633,6 @@ Svobodná šifrovaná komunikace s uživateli OpenchatService a Openchat</string
   <string name="MediaPreviewActivity_unssuported_media_type">Nepodporovaný typ dat.</string>
   <string name="media_preview__save_title">Uložit</string>
   <string name="media_preview_activity__image_content_description">Náhled obrázku</string>
-  <string name="trimmer__deleting">Mazání...</string>
   <string name="trimmer__deleting_old_messages">Mazání starých zpráv...</string>
   <string name="trimmer__old_messages_successfully_deleted">Staré zprávy byly úspěšně smazány.</string>
   <string name="transport_selection_list_item__transport_icon">Ikona přenosu</string>

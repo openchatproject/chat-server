@@ -16,7 +16,6 @@
 Увага, гэта адключыць шыфраванне захаванай інфармацыі для ўсіх паведамленняў ды ключоў. Шыфраванне вашых дадзеных пры перадачы будзе працягвацца, але любы хто атрымае фізічны доступ да вашага смартфона, будзе мець доступ і да перапіскі.
     </string>
   <string name="ApplicationPreferencesActivity_disable">Выключыць</string>
-  <string name="ApplicationPreferencesActivity_unregistering">Працэс адмены рэгістрацыі...</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Памылка падлучэння да сервера!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">SMS уключаны</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Націсніце, каб змяніць стандартную праграму для SMS</string>
@@ -102,7 +101,6 @@
   <string name="ConversationFragment_push">Дадзеныя (OpenchatService)</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
-  <string name="ConversationFragment_deleting">Выдаленне...</string>
   <string name="ConversationFragment_deleting_messages">Выдаленне паведамлення...</string>
   <string name="ConversationListFragment_delete_threads_question">Выдаліць гутарку?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Вы ўпэўнены, што хочаце выдаліць УСЕ абраныя гутаркі?</string>
@@ -158,7 +156,6 @@
   <string name="ImportFragment_this_will_import_messages_from_a_plaintext_backup">Гэты працэс прывядзе да імпарта паведамленняў простым тэкстам з рэзервнай копіі.
 Калі раней Вы ўжо рабілі гэта, цяперашні імпарт можа прывесці да з\'яўлення SMS дублікатаў.</string>
   <string name="ImportFragment_importing">Імпартаванне</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">Імпартаванне рэзервнай копіі простым тэкстам...</string>
   <string name="ImportFragment_no_plaintext_backup_found">Ня знойдзена рэзервных копій простым тэкстам!</string>
   <string name="ImportFragment_error_importing_backup">Памылка імпарта рэзервнай копіі!</string>
   <string name="ImportFragment_import_complete">Імпарт выкананы!</string>
@@ -190,7 +187,6 @@
         - Прачытаць усе вашыя паведамленні
         \n- Даслаць паведамленне на Ваша імя
     </string>
-  <string name="DeviceProvisioningActivity_content_progress_title">Дабаўленне дэвайса...</string>
   <string name="DeviceProvisioningActivity_content_progress_content">Дабаўленне новага дэвайса...</string>
   <string name="DeviceProvisioningActivity_content_progress_success">Дэвайс дададзены!</string>
   <string name="DeviceProvisioningActivity_content_progress_no_device">Ня знойдзена дэвайсаў.</string>
@@ -489,7 +485,6 @@ OpenchatService не дачакаўся параверачная SMS.</string>
   <string name="preferences__sound">Гук</string>
   <string name="preferences__change_notification_sound">Змяніць гук апавяшчэння</string>
   <string name="preferences__inthread_notifications">Апавяшчэнне ў гутарцы</string>
-  <string name="preferences__play_inthread_notifications">Граць мелодыю апавяшчэння падчас прагляду актыўнай гутаркі.</string>
   <string name="preferences__repeat_alerts">Паўтарыць папярэджанні</string>
   <string name="preferences__never">Ніколі</string>
   <string name="preferences__one_time">Адзін раз</string>
@@ -544,7 +539,6 @@ OpenchatService не дачакаўся параверачная SMS.</string>
 Бясплатнае паведамленне для карыстальнікаў OpenchatService альбо Openchat</string>
   <string name="preferences__submit_debug_log">Выслаць debug log</string>
   <string name="preferences__support_wifi_calling">Рэжым сумяшчальнасці \'WiFi выклік\' </string>
-  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Уключыце, калі ваша прылада выкарыстоўвае SMS / MMS дастаўка праз WiFi (толькі калі рэжым \' Wi-Fi выклік\'  ўключана на прыладзе).</string>
   <string name="contact_selection_list__menu_select_all">Абраць усё</string>
   <string name="contact_selection_list__menu_unselect_all">Ачысціць усё</string>
   <string name="contact_selection_list__header_openchatservice_users">КАРЫСТАЛЬНІКІ OPENCHAT</string>
@@ -602,7 +596,6 @@ OpenchatService не дачакаўся параверачная SMS.</string>
   <string name="MediaPreviewActivity_unssuported_media_type">Гэты медыя тып не падтрымліваецца</string>
   <string name="media_preview__save_title">Захаваць</string>
   <string name="media_preview_activity__image_content_description">Перадпрагляд выявы</string>
-  <string name="trimmer__deleting">Выдаленне...</string>
   <string name="trimmer__deleting_old_messages">Выдаленне старых паведамленняў...</string>
   <string name="trimmer__old_messages_successfully_deleted">Старыя паведамленні паспяхова выдалены</string>
   <string name="transport_selection_list_item__transport_icon">Транспартны значок</string>

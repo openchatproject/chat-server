@@ -17,8 +17,6 @@
         funcionarán pero cualquiera con acceso físico a su dispositivo podrá acceder a ellas.
     </string>
   <string name="ApplicationPreferencesActivity_disable">Desactivar</string>
-  <string name="ApplicationPreferencesActivity_unregistering">Cancelando registro...</string>
-  <string name="ApplicationPreferencesActivity_unregistering_from_openchatservice_messages">Desregistrándose de los mensajes OpenchatService</string>
   <string name="ApplicationPreferencesActivity_disable_openchatservice_messages">¿Deshabilitar los mensajes de OpenchatService?</string>
   <string name="ApplicationPreferencesActivity_this_will_disable_openchatservice_messages">
 Esto deshabilitará los mensajes de OpenchatService desregistrándolos de su servidor.
@@ -119,7 +117,6 @@ Recibido:%4$s</string>
   <string name="ConversationFragment_push">Datos (OpenchatService)</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
-  <string name="ConversationFragment_deleting">Borrando...</string>
   <string name="ConversationFragment_deleting_messages">Borrando mensajes...</string>
   <string name="ConversationListActivity_search">Buscar...</string>
   <string name="ConversationListFragment_delete_threads_question">¿Borrar conversaciones?</string>
@@ -185,7 +182,6 @@ exportará a la tarjeta SD el contenido en texto plano de sus mensajes de Opench
 mensajes desde una copia de respaldo en texto plano. Si ha importado previamente esta copia de respaldo,
 importarla de nuevo dará como resultado mensajes duplicados.</string>
   <string name="ImportFragment_importing">Importando</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">Importando copia de seguridad de mensajes en claro...</string>
   <string name="ImportFragment_no_plaintext_backup_found">¡No se encontró una copia de seguridad de los mensajes en claro!</string>
   <string name="ImportFragment_error_importing_backup">¡Error importando copia de seguridad!</string>
   <string name="ImportFragment_import_complete">¡Se ha importado correctamente!</string>
@@ -218,7 +214,6 @@ Por favor pida al remitente que actualice a la versión más reciente y reenvíe
         - Leer todos sus mensajes
         \n- Enviar mensajes en su nombre
     </string>
-  <string name="DeviceProvisioningActivity_content_progress_title">Añadiendo dispositivo...</string>
   <string name="DeviceProvisioningActivity_content_progress_content">Añadiendo nuevo dispositivo...</string>
   <string name="DeviceProvisioningActivity_content_progress_success">¡Dispositivo añadido!</string>
   <string name="DeviceProvisioningActivity_content_progress_no_device">No se encontró ningun dispositivo.</string>
@@ -577,7 +572,6 @@ por SMS.
   <string name="preferences__sound">Sonido</string>
   <string name="preferences__change_notification_sound">Cambiar sonido de notificación</string>
   <string name="preferences__inthread_notifications">Notificaciones dentro de conversación</string>
-  <string name="preferences__play_inthread_notifications">Reproducir sonido de notificación cuando esté viendo una conversación activa.</string>
   <string name="preferences__repeat_alerts">Repetir alertas</string>
   <string name="preferences__never">Nunca</string>
   <string name="preferences__one_time">Una vez</string>
@@ -632,7 +626,6 @@ por SMS.
 Mensajería privada gratuita con usuarios de OpenchatService y Openchat</string>
   <string name="preferences__submit_debug_log">Enviar registro de depuración</string>
   <string name="preferences__support_wifi_calling">Modo de compatibilidad \'Llamada por WiFi\'</string>
-  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Habilítelo si su dispositivo utiliza entrega de SMS/MMS vía WiFi (actívelo sólo cuando \'Llamada por WiFi\' esté activada en su dispositivo).</string>
   <string name="contact_selection_list__menu_select_all">Seleccionar todos</string>
   <string name="contact_selection_list__menu_unselect_all">Deseleccionar todos</string>
   <string name="contact_selection_list__header_openchatservice_users">USUARIOS DE OPENCHAT</string>
@@ -690,7 +683,6 @@ Mensajería privada gratuita con usuarios de OpenchatService y Openchat</string>
   <string name="MediaPreviewActivity_unssuported_media_type">Formato de contenido no compatible</string>
   <string name="media_preview__save_title">Guardar</string>
   <string name="media_preview_activity__image_content_description">Previsualización de la imagen</string>
-  <string name="trimmer__deleting">Borrando...</string>
   <string name="trimmer__deleting_old_messages">Borrando mensajes antiguos...</string>
   <string name="trimmer__old_messages_successfully_deleted">Mensajes antiguos borrados con éxito</string>
   <string name="transport_selection_list_item__transport_icon">Icono de transporte</string>

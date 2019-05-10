@@ -17,7 +17,6 @@ Kontuz, honek desgaituko du biltegiaren enkriptaketa mezu eta gako guztietarako.
 Zure enkriptatutako saioek funtzionatzen jarraituko dute, baina zure gailua fisikoki uki dezakeen edonor
 gai izango da saiootan sartzeko.</string>
   <string name="ApplicationPreferencesActivity_disable">Desgaitu</string>
-  <string name="ApplicationPreferencesActivity_unregistering">Deserregistratzen...</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Errorea zerbitzariarekin konektatzerakoan!</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Ukitu zure SMS aplikazio lehenetsia aldatzeko</string>
   <string name="ApplicationPreferencesActivity_touch_to_make_openchatservice_your_default_sms_app">Ukitu OpenchatService zure SMS aplikazio lehenetsia bihurtzeko</string>
@@ -89,7 +88,6 @@ gai izango da saiootan sartzeko.</string>
   <string name="ConversationFragment_saving_attachment_to_sd_card">Eranskina biltegian gordetzen...</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
-  <string name="ConversationFragment_deleting">Ezabatzen...</string>
   <string name="ConversationFragment_deleting_messages">Mezuak ezabatzen...</string>
   <string name="ConversationListFragment_delete_threads_question">Hariak ezabatu?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Ziur zaude aukeratutako solasaldi hari GUZTIAK ezabatu nahi izateaz?</string>
@@ -147,7 +145,6 @@ batetik mezuak inportatuko dira.
 Babeskopia hau lehenago inportatu baduzu, mezu bikoiztuak sortu daitezke.
 </string>
   <string name="ImportFragment_importing">Inportatzen</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">Inportatu enkriptatuko gabeko babeskopia...</string>
   <string name="ImportFragment_no_plaintext_backup_found">Ez da enkriptatu gabeko babeskopiarik topatu!</string>
   <string name="ImportFragment_error_importing_backup">Errorea babeskopia inportatzerakoan!</string>
   <string name="ImportFragment_import_complete">Inportaketa bukatuta!</string>
@@ -452,7 +449,6 @@ huts egin du.
   <string name="preferences__sound">Soinua</string>
   <string name="preferences__change_notification_sound">Aldatu jakinarazpenaren soinua</string>
   <string name="preferences__inthread_notifications">Hari barruko jakinarazpenak</string>
-  <string name="preferences__play_inthread_notifications">Jakinarazpen soinua erreproduzitu indarrean dagoen solasaldi bat ikustean</string>
   <string name="preferences__vibrate">Bibratu</string>
   <string name="preferences__also_vibrate_when_notified">Jakinarazpena denean ere bibratu</string>
   <string name="preferences__minutes">minutuak</string>
@@ -489,7 +485,6 @@ huts egin du.
   <string name="preferences__language">Hizkuntza</string>
   <string name="preferences__submit_debug_log">Arazketaren log-a bidali</string>
   <string name="preferences__support_wifi_calling">\'\"WiFi Calling\' modu bateragarria</string>
-  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Gaitu zure gailuak WiFi bidezko SMS/MMS banaketa erabiltzen badu (bakarrik gaitu \'WiFi Calling\' gaituta badago zure gailuan).</string>
   <string name="contact_selection_list__menu_select_all">Denak hautatu</string>
   <string name="contact_selection_list__menu_unselect_all">Denak ez-hautatu</string>
   <string name="contact_selection_list__header_openchatservice_users">OPENCHAT-eko ERABILTZAILEAK</string>
@@ -537,7 +532,6 @@ huts egin du.
   <string name="MediaPreviewActivity_unssuported_media_type">Euskarri mota ez-onartua</string>
   <string name="media_preview__save_title">Gorde</string>
   <string name="media_preview_activity__image_content_description">Irudiaren Aurrebista</string>
-  <string name="trimmer__deleting">Ezabatzen...</string>
   <string name="trimmer__deleting_old_messages">Mezu zaharrak ezabatzen...</string>
   <string name="trimmer__old_messages_successfully_deleted">Mezu zaharrak ondo ezabatu dira</string>
 </resources>

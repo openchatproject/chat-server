@@ -13,7 +13,6 @@
   <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
 Cảnh báo, điều này tắt mã hóa lưu trữ cho tất cả tin nhắn và chìa khóa. Phiên mã hóa vẫn tiếp tục hoạt động, nhưng bất cứ ai vào được máy bạn sẽ truy cập được nội dung.</string>
   <string name="ApplicationPreferencesActivity_disable">Tắt</string>
-  <string name="ApplicationPreferencesActivity_unregistering">Gỡ đăng ký...</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Có lỗi kết nối vào máy chủ!</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Chạm vào để đổi ứng dụng SMS mặc định</string>
   <string name="ApplicationPreferencesActivity_touch_to_make_openchatservice_your_default_sms_app">Chạm vào để chọn OpenchatService làm ứng dụng SMS mặc định</string>
@@ -98,7 +97,6 @@ Phục hồi bản sao lưu có mã hóa sẽ thay thế hoàn toàn các chìa 
   <string name="ImportFragment_import_plaintext_backup">Xuất dữ liệu sao lưu dạng thuần văn bản?</string>
   <string name="ImportFragment_this_will_import_messages_from_a_plaintext_backup">Thao tác này sẽ nhập các tin nhắn từ bản sao lưu thường (không mã hóa). Nếu bạn đã nhập sao lưu này trước đó, nhập lần nữa sẽ dẫn đến việc có tin nhắn trùng lập.</string>
   <string name="ImportFragment_importing">Đang nhập</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">Nhập sao lưu thường-không mã hóa</string>
   <string name="ImportFragment_no_plaintext_backup_found">Không tìm thấy sao lưu thường-không mã hóa</string>
   <string name="ImportFragment_error_importing_backup">Có lỗi khi nhập sao lưu!</string>
   <string name="ImportFragment_import_complete">Nhập hoàn tất!</string>
@@ -299,7 +297,6 @@ OpenchatService hết hạn chờ trong lúc đợi tin nhắn SMS xác nhận.<
   <string name="preferences__sound">Âm thanh</string>
   <string name="preferences__change_notification_sound">Đổi âm thanh thông báo</string>
   <string name="preferences__inthread_notifications">Thông báo trong-luồng</string>
-  <string name="preferences__play_inthread_notifications">Phát âm thanh thông báo khi xem một cuộc chuyện trò đang diễn ra.</string>
   <string name="preferences__vibrate">Rung</string>
   <string name="preferences__also_vibrate_when_notified">Cũng rung khi thông báo</string>
   <string name="preferences__minutes">phút</string>

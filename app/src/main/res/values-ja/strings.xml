@@ -16,7 +16,6 @@
 警告、この作業によって、携帯端末に保存されるすべてのメッセージと鍵の暗号化が無効になります！
 通信上（セッション）の暗号化は引き続き行われますが、お使いの携帯端末それ自体に、誰かが物理的な接触を試みた場合、メッセージや鍵などの情報が入手されてしまう可能性があります。</string>
   <string name="ApplicationPreferencesActivity_disable">無効</string>
-  <string name="ApplicationPreferencesActivity_unregistering">登録破棄中…</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">サーバー接続中にエラーが発生しました！</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">SMS 有効</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">タッチしてデフォルトSMSアプリを変更</string>
@@ -107,7 +106,6 @@
   <string name="ConversationFragment_push">データ (OpenchatService)</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
-  <string name="ConversationFragment_deleting">削除...</string>
   <string name="ConversationFragment_deleting_messages">メッセージの削除...</string>
   <string name="ConversationListFragment_delete_threads_question">スレッドを削除しますか？</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">選択したすべての会話スレッドを、本当に削除してもよろしいですか？</string>
@@ -160,7 +158,6 @@
   <string name="ImportFragment_import_plaintext_backup">平文のバックアップをインポートしますか？</string>
   <string name="ImportFragment_this_will_import_messages_from_a_plaintext_backup">暗号化されていないテキストのバックアップ・ファイルからメッセージをインポートします。以前に同じバックアップ・ファイルをインポートしたことがある場合、メッセージが重複することになります。</string>
   <string name="ImportFragment_importing">インポート中…</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">非暗号テキストのバックアップ・ファイルをインポート中…</string>
   <string name="ImportFragment_no_plaintext_backup_found">非暗号テキストのバックアップ・ファイルが見つかりませんでした。</string>
   <string name="ImportFragment_error_importing_backup">バックアップ・ファイルのインポート中にエラーが発生しました。</string>
   <string name="ImportFragment_import_complete">インポート完了！</string>
@@ -192,7 +189,6 @@
         - あなたへのすべてのメッセージを読むこと
         \n- あなたの名前でメッセージを送ること
     </string>
-  <string name="DeviceProvisioningActivity_content_progress_title">デバイスの追加...</string>
   <string name="DeviceProvisioningActivity_content_progress_content">新規デバイスの追加...</string>
   <string name="DeviceProvisioningActivity_content_progress_success">デバイスを追加!</string>
   <string name="DeviceProvisioningActivity_content_progress_no_device">デバイスがありません。</string>
@@ -502,7 +498,6 @@ Wi-Fiに接続している場合、ファイアウォールがOpenchatServiceサ
   <string name="preferences__sound">着信音</string>
   <string name="preferences__change_notification_sound">通知音を変更</string>
   <string name="preferences__inthread_notifications">スレッド内通知</string>
-  <string name="preferences__play_inthread_notifications">会話を表示している間、通知音を再生する。</string>
   <string name="preferences__repeat_alerts">アラートの繰り返し</string>
   <string name="preferences__never">なし</string>
   <string name="preferences__one_time">1回</string>
@@ -558,7 +553,6 @@ Wi-Fiに接続している場合、ファイアウォールがOpenchatServiceサ
     </string>
   <string name="preferences__submit_debug_log">デバッグログを提出</string>
   <string name="preferences__support_wifi_calling">\'WiFi Calling\' 互換モード</string>
-  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">あなたのデバイスで  WiFi (ただし \'WiFi Calling\' があなたのデバイスで有効になっている場合のみ)での SMS/MMS の配送を有効にする。</string>
   <string name="contact_selection_list__menu_select_all">すべて選択</string>
   <string name="contact_selection_list__menu_unselect_all">すべての選択を解除</string>
   <string name="contact_selection_list__header_openchatservice_users">OpenchatServiceユーザ</string>
@@ -616,7 +610,6 @@ Wi-Fiに接続している場合、ファイアウォールがOpenchatServiceサ
   <string name="MediaPreviewActivity_unssuported_media_type">サポートされないメディア種別</string>
   <string name="media_preview__save_title">保存</string>
   <string name="media_preview_activity__image_content_description">画像プレビュー表示</string>
-  <string name="trimmer__deleting">削除...</string>
   <string name="trimmer__deleting_old_messages">古いメッセージを削除...</string>
   <string name="trimmer__old_messages_successfully_deleted">古いメッセージの削除に成功</string>
   <string name="transport_selection_list_item__transport_icon">転送アイコン</string>

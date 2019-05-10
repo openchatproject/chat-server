@@ -15,8 +15,6 @@
   <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
 Pozor, s tem boste onemogočili šifriranje sporočil in ključev v pomnilniku naprave. Vaše šifrirane komunikacije bodo še vedno varne, toda vsakdo s fizičnim dostopom do vaše naprave bo lahko dostopal do njih.</string>
   <string name="ApplicationPreferencesActivity_disable">Onemogoči</string>
-  <string name="ApplicationPreferencesActivity_unregistering">Odjava poteka...</string>
-  <string name="ApplicationPreferencesActivity_unregistering_from_openchatservice_messages">Izklop sporočil OpenchatService</string>
   <string name="ApplicationPreferencesActivity_disable_openchatservice_messages">Izklopim sporočila OpenchatService?</string>
   <string name="ApplicationPreferencesActivity_this_will_disable_openchatservice_messages">
 S tem boste izključili sporočila OpenchatService in se odjavili s strežnika.
@@ -109,7 +107,6 @@ preveriti ta stik.</string>
   <string name="ConversationFragment_push">Podatkovno (OpenchatService)</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
-  <string name="ConversationFragment_deleting">Brišem...</string>
   <string name="ConversationFragment_deleting_messages">Brišem sporočila...</string>
   <string name="ConversationListActivity_search">Iščem...</string>
   <string name="ConversationListFragment_delete_threads_question">Izbris pogovorov?</string>
@@ -162,7 +159,6 @@ preveriti ta stik.</string>
   <string name="ImportFragment_import_plaintext_backup">Uvozim iz nešifrirane varnostne kopije?</string>
   <string name="ImportFragment_this_will_import_messages_from_a_plaintext_backup">S tem boste uvozili sporočila iz nešifrirane varnostne kopije. Če ste predhodno že uvozili sporočila iz iste varnostne kopije, bodo ta sporočila podvojena.</string>
   <string name="ImportFragment_importing">Uvažam</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">Uvažam iz nešifrirane varnostne kopije...</string>
   <string name="ImportFragment_no_plaintext_backup_found">Ne najdem nobene nešifrirane varnostne kopije!</string>
   <string name="ImportFragment_error_importing_backup">Napaka pri uvozu iz varnostne kopije!</string>
   <string name="ImportFragment_import_complete">Uvoz dokončan!</string>
@@ -193,7 +189,6 @@ preveriti ta stik.</string>
   <string name="DeviceProvisioningActivity_content_bullets">
 - prebirala vsa vaša sporočila
 \n- pošiljala sporočila v vašem imenu</string>
-  <string name="DeviceProvisioningActivity_content_progress_title">Dodajam napravo...</string>
   <string name="DeviceProvisioningActivity_content_progress_content">Dodajam novo napravo...</string>
   <string name="DeviceProvisioningActivity_content_progress_success">Naprava dodana!</string>
   <string name="DeviceProvisioningActivity_content_progress_no_device">Nobena naprava ni bila najdena.</string>
@@ -508,7 +503,6 @@ bila uspešna.</string>
   <string name="preferences__sound">Zvok</string>
   <string name="preferences__change_notification_sound">Spremeni zvok za obvestila</string>
   <string name="preferences__inthread_notifications">Notranja obvestila</string>
-  <string name="preferences__play_inthread_notifications">Predvajanje zvočnih obvestil med pregledovanjem sporočil</string>
   <string name="preferences__repeat_alerts">Ponavljanje alarma</string>
   <string name="preferences__never">Nikoli</string>
   <string name="preferences__one_time">Enkrat</string>
@@ -563,7 +557,6 @@ bila uspešna.</string>
 Brezplačno zasebno sporočanje za OpenchatService in Openchat</string>
   <string name="preferences__submit_debug_log">Oddaj sistemsko zabeležbo</string>
   <string name="preferences__support_wifi_calling">Združljivostni način \'Klicanje WiFi\'</string>
-  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Aktivirajte, če vaša naprava dostavlja sporočila SMS/MMS preko povezave WiFi (samo, če imate vklopljeno \'WiFi klicanje/WiFi Calling\')</string>
   <string name="contact_selection_list__menu_select_all">Označi vse</string>
   <string name="contact_selection_list__menu_unselect_all">Odznači vse</string>
   <string name="contact_selection_list__header_openchatservice_users">UPORABNIKI OPENCHAT</string>
@@ -621,7 +614,6 @@ Brezplačno zasebno sporočanje za OpenchatService in Openchat</string>
   <string name="MediaPreviewActivity_unssuported_media_type">Nepodprt medij</string>
   <string name="media_preview__save_title">Shrani</string>
   <string name="media_preview_activity__image_content_description">Ogled slike</string>
-  <string name="trimmer__deleting">Brišem...</string>
   <string name="trimmer__deleting_old_messages">Brišem stara sporočila...</string>
   <string name="trimmer__old_messages_successfully_deleted">Stara sporočila so bila uspešno izbrisana</string>
   <string name="transport_selection_list_item__transport_icon">Ikona transporta</string>

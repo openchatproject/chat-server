@@ -19,7 +19,10 @@ ale hocikto s fyzickým prístupom k Vášmu zariadeniu
 získa aj prístup k týmto odosieaným informáciám.
 </string>
   <string name="ApplicationPreferencesActivity_disable">Vypnúť</string>
-  <string name="ApplicationPreferencesActivity_unregistering">Prebieha odhlasovanie...</string>
+  <string name="ApplicationPreferencesActivity_disable_openchatservice_messages">Zakázať OpenchatService správy?</string>
+  <string name="ApplicationPreferencesActivity_this_will_disable_openchatservice_messages">
+Týmto sa odregistrujete zo serveru a zakážete OpenchatService správy.
+Pokiaľ v budúcnosti budete chcieť používať OpenchatService správy, budete sa musieť znovu zaregistrovať.</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Chyba pripojenia na server!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">SMS zapnuté</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Dotykom sem môžete zmeniť Vašu predvolenú aplikáciu pre SMS.</string>
@@ -35,6 +38,7 @@ získa aj prístup k týmto odosieaným informáciám.
   <string name="DraftDatabase_Draft_audio_snippet">(zvuk)</string>
   <string name="DraftDatabase_Draft_video_snippet">(video)</string>
   <string name="AttachmentManager_cant_open_media_selection">Nepodarilo sa nájsť aplikáciu pre výber médií.</string>
+  <string name="AttachmentTypeSelectorAdapter_take_photo">Odfotiť</string>
   <string name="AttachmentTypeSelectorAdapter_picture">Obrázok</string>
   <string name="AttachmentTypeSelectorAdapter_video">Video</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Audio</string>
@@ -46,6 +50,7 @@ nové identifikačné údaje.</string>
   <string name="ConfirmIdentityDialog_you_may_wish_to_verify_this_contact">Možno by ste mali overiť
 identitu tohto kontaktu.
 </string>
+  <string name="ConfirmIdentityDialog_accept">Potvrdiť</string>
   <string name="ConversationItem_message_size_d_kb">Veľkosť správy: %d KB</string>
   <string name="ConversationItem_expires_s">Expirácia: %s</string>
   <string name="ConversationItem_error_not_delivered">Nedoručené</string>
@@ -74,6 +79,7 @@ identitu tohto kontaktu.
   <string name="ConversationActivity_sorry_the_selected_audio_exceeds_message_size_restrictions">Bohužiaľ, vybraná nahrávka presahuje maximálnu veľkosť správy (%1$skB).</string>
   <string name="ConversationActivity_recipient_is_not_a_valid_sms_or_email_address_exclamation">Príjemca nie je platná SMS alebo emailová adresa!</string>
   <string name="ConversationActivity_message_is_empty_exclamation">Správa je prázdna!</string>
+  <string name="ConversationActivity_group_members">Členovia skupiny</string>
   <string name="ConversationActivity_group_conversation">Skupinová konverzácia</string>
   <string name="ConversationActivity_unnamed_group">Nepomenovaná skupina</string>
   <string name="ConversationActivity_d_recipients_in_group">%d členovia</string>
@@ -88,7 +94,11 @@ identitu tohto kontaktu.
   <string name="ConversationActivity_transport_insecure_mms">Nezašifrovaná MMS</string>
   <string name="ConversationActivity_transport_openchatservice">OpenchatService</string>
   <string name="ConversationActivity_get_with_it">Prijať s tým: %s</string>
+  <string name="ConversationActivity_lets_use_this_to_chat">Použiť tento chat: %s</string>
   <string name="ConversationActivity_error_leaving_group">Chyba pri opúšťaní skupiny...</string>
+  <string name="ConversationActivity_mms_not_supported_title">MMS nie sú podporované</string>
+  <string name="ConversationActivity_mms_not_supported_message">Táto správa nemohla byť odoslaná keďže váš operátor nepodporuje MMS.</string>
+  <string name="ConversationActivity_specify_recipient">Prosím vyberte kontakt</string>
   <string name="ConversationFragment_message_details">Detaily správy</string>
   <string name="ConversationFragment_transport_s_sent_received_s">Prenos: %1$s\nodoslané/prijaté: %2$s</string>
   <string name="ConversationFragment_sender_s_transport_s_sent_s_received_s">Odosielateľ: %1$s\nPrenos: %2$s\nOdoslané: %3$s\nPrijaté: %4$s</string>
@@ -105,8 +115,8 @@ identitu tohto kontaktu.
   <string name="ConversationFragment_push">Dáta (OpenchatService)</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
-  <string name="ConversationFragment_deleting">Maže sa...</string>
   <string name="ConversationFragment_deleting_messages">Mažú sa správy...</string>
+  <string name="ConversationListActivity_search">Hľadaj...</string>
   <string name="ConversationListFragment_delete_threads_question">Zmazať vlákna?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Ste si istí, že chcete naozaj zmazať VŠETKY označené vlákna konverzácií?</string>
   <string name="ConversationListFragment_deleting">Vymazanie</string>
@@ -116,6 +126,7 @@ identitu tohto kontaktu.
   <string name="CustomDefaultPreference_using_default">Používa sa predvolené: %s</string>
   <string name="CustomDefaultPreference_none">Žiadna</string>
   <string name="DateUtils_now">Teraz</string>
+  <string name="DateUtils_minutes_ago">%d min</string>
   <string name="ShareActivity_share_with">Zdieľaj s</string>
   <string name="ExportFragment_export">Export</string>
   <string name="ExportFragment_export_plaintext_to_sd_card">Exportuj čistý text na SD kartu?</string>
@@ -163,7 +174,6 @@ správy z nešifrovanej zálohy. Ak ste predtým imprtovali túto zalohu,
 opätovným importom zduplikujete správy.
 </string>
   <string name="ImportFragment_importing">Import</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">Importujem nešifrovanú zálohu...</string>
   <string name="ImportFragment_no_plaintext_backup_found">Nenašiel som nešifrovanú zálohu!</string>
   <string name="ImportFragment_error_importing_backup">Chyba pri importovaní zálohy!</string>
   <string name="ImportFragment_import_complete">Import dokončený!</string>
@@ -185,6 +195,7 @@ opätovným importom zduplikujete správy.
   <string name="MessageRecord_updated_group">Skupina bola aktualizovaná.</string>
   <string name="PassphraseChangeActivity_passphrases_dont_match_exclamation">Heslá sa nezhodujú!</string>
   <string name="PassphraseChangeActivity_incorrect_old_passphrase_exclamation">Nesprávne staré heslo!</string>
+  <string name="PassphraseChangeActivity_enter_new_passphrase_exclamation">Zadajte nové heslo!</string>
   <string name="DeviceProvisioningActivity_link_this_device">Pridať toto zariadenie?</string>
   <string name="DeviceProvisioningActivity_cancel">ZRUŠIŤ</string>
   <string name="DeviceProvisioningActivity_continue">POKRAČOVAŤ</string>
@@ -194,7 +205,6 @@ opätovným importom zduplikujete správy.
 - Čítať všetky Vaše správy\n
 - Odosielať správy vo Vašom mene
 </string>
-  <string name="DeviceProvisioningActivity_content_progress_title">Pridáva sa zariadenie...</string>
   <string name="DeviceProvisioningActivity_content_progress_content">Pridáva sa nové zariadenie...</string>
   <string name="DeviceProvisioningActivity_content_progress_success">Zariadenie bolo pridané!</string>
   <string name="DeviceProvisioningActivity_content_progress_no_device">Nebolo nájdené žiadne zariadenie!</string>
@@ -204,6 +214,12 @@ opätovným importom zduplikujete správy.
   <string name="PassphrasePromptActivity_watermark_content_description">OpenchatService ikona</string>
   <string name="PassphrasePromptActivity_ok_button_content_description">Odošli heslo</string>
   <string name="PassphrasePromptActivity_invalid_passphrase_exclamation">Nesprávne heslo!</string>
+  <string name="PlayServicesProblemFragment_the_version_of_google_play_services_you_have_installed_is_not_functioning">Verzia aplikácie Google Play Services ktorú ste nainštalovali nefunguje správne. Prosím reinštalujte Google Play Services a skúste znova.</string>
+  <string name="RatingManager_rate_this_app">Ohodnotiť túto aplikáciu</string>
+  <string name="RatingManager_if_you_enjoy_using_this_app_please_take_a_moment">Ak sa vám táto aplikácia páči, nájdite si chvíľu pomôžte nám tým, že ju ohodnotíte.</string>
+  <string name="RatingManager_rate_now">Ohodnotiť teraz!</string>
+  <string name="RatingManager_no_thanks">Nie ďakujem</string>
+  <string name="RatingManager_later">Neskôr</string>
   <string name="RegistrationActivity_connect_with_openchatservice">Pripojiť s OpenchatService</string>
   <string name="RegistrationActivity_select_your_country">Vyber svoju krajinu</string>
   <string name="RegistrationActivity_you_must_specify_your_country_code">Ty musíš zadať tvoj
@@ -304,6 +320,8 @@ Bola prijatá správa s neznámou identou. Kliknite pre spracovanie a zobrazenie
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Otvorte dotykom sem, alebo zavrite dotykom na symbol zámku.</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatService je otvorený</string>
   <string name="KeyCachingService_lock">Zamkni s heslom</string>
+  <string name="MessageNotifier_d_messages_in_d_conversations">%1$d správ v %2$d konverzáciách</string>
+  <string name="MessageNotifier_most_recent_from_s">Najnovšie od: %1$s</string>
   <string name="MessageNotifier_encrypted_message">Kryptovaná správa...</string>
   <string name="MessageNotifier_media_message_with_text">Multimediálna správa: %s</string>
   <string name="MessageNotifier_no_subject">(bez predmetu)</string>
@@ -482,6 +500,7 @@ zlyhalo.
   <string name="AndroidManifest__media_preview">Náhľad</string>
   <string name="AndroidManifest__media_overview">Všetky obrázky</string>
   <string name="AndroidManifest__media_overview_named">Všetky obrázky s %1$s</string>
+  <string name="AndroidManifest__message_details">Detaily správy</string>
   <string name="arrays__import_export">Import / export</string>
   <string name="arrays__my_identity_key">Môj kľúč totožnosti</string>
   <string name="arrays__use_default">Použiť predvolené</string>
@@ -530,7 +549,6 @@ zlyhalo.
   <string name="preferences__sound">Zvuk</string>
   <string name="preferences__change_notification_sound">Zmeňiť zvuk notifikácie</string>
   <string name="preferences__inthread_notifications">Notifikácie počas konverzácie</string>
-  <string name="preferences__play_inthread_notifications">Prehrať zvuk notifikácie počas aktívnej konverzácie.</string>
   <string name="preferences__repeat_alerts">Opakovať hlášky</string>
   <string name="preferences__never">Nikdy</string>
   <string name="preferences__one_time">Raz</string>
@@ -556,6 +574,7 @@ zlyhalo.
   <string name="preferences__custom">Vlastné</string>
   <string name="preferences__advanced">Rozšírené</string>
   <string name="preferences__app_protection">Ochrana aplikácie</string>
+  <string name="preferences__mms_user_agent">MMS User Agent</string>
   <string name="preferences__advanced_mms_access_point_names">Manuálne MMS nastavenia</string>
   <string name="preferences__enable_manual_mms">Použť manuálne MMS nastavenia</string>
   <string name="preferences__override_system_mms_settings">Použiť nižšie uvedené parametre namiesto systémových MMS nastavení</string>
@@ -585,7 +604,6 @@ Bezplatné šifrované správy medzi používateľmi OpenchatService
 </string>
   <string name="preferences__submit_debug_log">Odošli ladiaci log</string>
   <string name="preferences__support_wifi_calling">Režim kompatibility \'WiFi volania\'</string>
-  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Zapnite pokiaľ Vaše zariadenie používa WiFi pre doručovanie SMS/MMS správ (použite iba v prípade, že na Vašom zariadení máte nastavené \'Volanie pomocou WiFi\').</string>
   <string name="contact_selection_list__menu_select_all">Vybrať všetko</string>
   <string name="contact_selection_list__menu_unselect_all">Zrušiť celý výber</string>
   <string name="contact_selection_list__header_openchatservice_users">OPENCHAT POUŽÍVATELIA</string>
@@ -643,7 +661,6 @@ Bezplatné šifrované správy medzi používateľmi OpenchatService
   <string name="MediaPreviewActivity_unssuported_media_type">Nepodporovaný typ súboru</string>
   <string name="media_preview__save_title">Uložiť</string>
   <string name="media_preview_activity__image_content_description">Náhľad obrázku</string>
-  <string name="trimmer__deleting">Vymazávanie...</string>
   <string name="trimmer__deleting_old_messages">Mažú sa staré správy...</string>
   <string name="trimmer__old_messages_successfully_deleted">Staré správy úspešne vymazané</string>
   <string name="transport_selection_list_item__transport_icon">Ikona prenosu</string>

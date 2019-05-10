@@ -18,7 +18,11 @@
         пристапи до нив.
     </string>
   <string name="ApplicationPreferencesActivity_disable">Оневозможи</string>
-  <string name="ApplicationPreferencesActivity_unregistering">Бришење на контото...</string>
+  <string name="ApplicationPreferencesActivity_disable_openchatservice_messages">Оневозможи OpenchatService пораки</string>
+  <string name="ApplicationPreferencesActivity_this_will_disable_openchatservice_messages">
+        Со деактивирање на OpenchatService-пораките ќе се избрише вашата регистрација од серверот.
+        Ќе мора повторно да го регистрирате вашиот број за да може да добивате пораки.
+    </string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Грешка при поврзување со серверот!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">SMS активиран</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Промена на стандардната SMS апликација</string>
@@ -34,6 +38,7 @@
   <string name="DraftDatabase_Draft_audio_snippet">(звук)</string>
   <string name="DraftDatabase_Draft_video_snippet">(видео)</string>
   <string name="AttachmentManager_cant_open_media_selection">Не постои апликација за избор на датотеки.</string>
+  <string name="AttachmentTypeSelectorAdapter_take_photo">Сликај</string>
   <string name="AttachmentTypeSelectorAdapter_picture">Слика</string>
   <string name="AttachmentTypeSelectorAdapter_video">Видео</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Звук</string>
@@ -41,6 +46,7 @@
   <string name="ConfirmIdentityDialog_the_signature_on_this_key_exchange_is_different">Клучот за идентификација од %1$s е променет.
 Ова може или да значи дека некој сака да ја пресретне вашата комуникација, или пак %2$s ја преинсталирал OpenchatService и сега има нов клуч.</string>
   <string name="ConfirmIdentityDialog_you_may_wish_to_verify_this_contact">Овој контакт би требало да го верфивикувате.</string>
+  <string name="ConfirmIdentityDialog_accept">Прифати</string>
   <string name="ConversationItem_message_size_d_kb">Големина на порака: %d KB</string>
   <string name="ConversationItem_expires_s">Истекува: %s</string>
   <string name="ConversationItem_error_not_delivered">Не е доставено</string>
@@ -105,8 +111,8 @@
   <string name="ConversationFragment_push">Податоци (OpenchatService)</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
-  <string name="ConversationFragment_deleting">Бришење...</string>
   <string name="ConversationFragment_deleting_messages">Бришење на пораките...</string>
+  <string name="ConversationListActivity_search">Барај...</string>
   <string name="ConversationListFragment_delete_threads_question">Избриши теми на разговор?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Дали сте сигурни дека сакате да се избришат СИТЕ избрани теми?</string>
   <string name="ConversationListFragment_deleting">Бришење</string>
@@ -116,6 +122,7 @@
   <string name="CustomDefaultPreference_using_default">Користејќи стандардно: %s</string>
   <string name="CustomDefaultPreference_none">Ниедна</string>
   <string name="DateUtils_now">Сега</string>
+  <string name="DateUtils_minutes_ago">%d минути</string>
   <string name="ShareActivity_share_with">Сподели со</string>
   <string name="ExportFragment_export">Експортирај</string>
   <string name="ExportFragment_export_plaintext_to_sd_card">Експортирај нешифрирано на SD картичка?</string>
@@ -165,7 +172,6 @@
         повторното импортирање ќе резултира со дуплирање на пораките.
     </string>
   <string name="ImportFragment_importing">Се импортира</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">Импортирање на нешифрирана копија...</string>
   <string name="ImportFragment_no_plaintext_backup_found">Не е најдена нешифрирана копија!</string>
   <string name="ImportFragment_error_importing_backup">Грешка при импортирање на копијата!</string>
   <string name="ImportFragment_import_complete">Импортирањето е завршено!</string>
@@ -197,7 +203,6 @@
         - Чита сите ваши пораки
         \n- Праќа пораки во ваше име
     </string>
-  <string name="DeviceProvisioningActivity_content_progress_title">Додавање уред...</string>
   <string name="DeviceProvisioningActivity_content_progress_content">Додавање нов уред...</string>
   <string name="DeviceProvisioningActivity_content_progress_success">Уредот е додаден!</string>
   <string name="DeviceProvisioningActivity_content_progress_no_device">Уредот не е пронајден.</string>
@@ -526,7 +531,6 @@ OpenchatService автоматски ќе го провери вашиот бр�
   <string name="preferences__sound">Звук</string>
   <string name="preferences__change_notification_sound">Променете го звукот за известување</string>
   <string name="preferences__inthread_notifications">Извествања секогаш</string>
-  <string name="preferences__play_inthread_notifications">Пушти звук за известување за време на активен разговор</string>
   <string name="preferences__repeat_alerts">Повтори известувања</string>
   <string name="preferences__never">Никогаш</string>
   <string name="preferences__one_time">Еднаш</string>
@@ -581,7 +585,6 @@ OpenchatService автоматски ќе го провери вашиот бр�
 Бесплатно допишување со корисниците на OpenchatService и Openchat</string>
   <string name="preferences__submit_debug_log">Испратете протокол за дијагноза</string>
   <string name="preferences__support_wifi_calling">\'WiFi Calling\' мод за компатибилност</string>
-  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Овозможете доколку вашиот уред користи SMS/MMS испраќање преку WiFi (овозможете само доколку \'WiFi Calling\' е овозможено на вашиот уред).</string>
   <string name="contact_selection_list__menu_select_all">Изберете се</string>
   <string name="contact_selection_list__menu_unselect_all">Отстрани избрано</string>
   <string name="contact_selection_list__header_openchatservice_users">OPENCHAT КОРИСНИЦИ</string>
@@ -639,7 +642,6 @@ OpenchatService автоматски ќе го провери вашиот бр�
   <string name="MediaPreviewActivity_unssuported_media_type">Неподдржан тип на датотека</string>
   <string name="media_preview__save_title">Зачувај</string>
   <string name="media_preview_activity__image_content_description">Приказ на слика</string>
-  <string name="trimmer__deleting">Бришење...</string>
   <string name="trimmer__deleting_old_messages">Бришење на старите пораки...</string>
   <string name="trimmer__old_messages_successfully_deleted">Старите пораки се успешно избришани</string>
   <string name="transport_selection_list_item__transport_icon">Симбол за транспорт</string>

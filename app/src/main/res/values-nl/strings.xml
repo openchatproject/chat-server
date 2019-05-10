@@ -15,8 +15,6 @@
   <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
 Let op, dit schakelt opslagversleuteling uit voor alle berichten en sleutels. Je versleutelde sessies zullen blijven werken, maar iedereen met fysieke toegang tot je apparaat zal er toegang toe hebben.</string>
   <string name="ApplicationPreferencesActivity_disable">Uitschakelen</string>
-  <string name="ApplicationPreferencesActivity_unregistering">Afmelden...</string>
-  <string name="ApplicationPreferencesActivity_unregistering_from_openchatservice_messages">Afmelden voor OpenchatService berichten</string>
   <string name="ApplicationPreferencesActivity_disable_openchatservice_messages">OpenchatService berichten uitschakelen?</string>
   <string name="ApplicationPreferencesActivity_this_will_disable_openchatservice_messages">
 Dit schakelt OpenchatService berichten uit door je af te melden bij de server. 
@@ -108,7 +106,6 @@ Indien je in de toekomst weer OpenchatService berichten wilt gebruiken zul je je
   <string name="ConversationFragment_push">Data (OpenchatService)</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
-  <string name="ConversationFragment_deleting">Verwijderen...</string>
   <string name="ConversationFragment_deleting_messages">Berichten verwijderen...</string>
   <string name="ConversationListActivity_search">Zoeken...</string>
   <string name="ConversationListFragment_delete_threads_question">Gesprekken verwijderen?</string>
@@ -162,7 +159,6 @@ Herstellen van een versleutelde back-up zal je bestaande sleutels, voorkeuren en
   <string name="ImportFragment_import_plaintext_backup">Onversleutelde back-up importeren?</string>
   <string name="ImportFragment_this_will_import_messages_from_a_plaintext_backup">Dit zal berichten importeren uit een platte tekstbackup. Als je deze backup eerder al eens hebt geimporteerd, zal het opnieuw importeren resulteren in dubbele berichten.</string>
   <string name="ImportFragment_importing">Importeren</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">Niet-versleutelde back-up importeren...</string>
   <string name="ImportFragment_no_plaintext_backup_found">Geen niet-versleutelde back-up gevonden!</string>
   <string name="ImportFragment_error_importing_backup">Fout bij het importeren van back-up!</string>
   <string name="ImportFragment_import_complete">Importeren voltooid!</string>
@@ -194,7 +190,6 @@ Herstellen van een versleutelde back-up zal je bestaande sleutels, voorkeuren en
         - Al je berichten lezen
         \n- Berichten versturen namens jou
     </string>
-  <string name="DeviceProvisioningActivity_content_progress_title">Apparaat aan het koppelen...</string>
   <string name="DeviceProvisioningActivity_content_progress_content">Nieuw apparaat aan het toevoegen...</string>
   <string name="DeviceProvisioningActivity_content_progress_success">Apparaat toegevoegd!</string>
   <string name="DeviceProvisioningActivity_content_progress_no_device">Geen apparaat gevonden.</string>
@@ -514,7 +509,6 @@ OpenchatService heeft te lang moeten wachten op het binnenkomen van de verificat
   <string name="preferences__sound">Geluid</string>
   <string name="preferences__change_notification_sound">Verander notificatiegeluid</string>
   <string name="preferences__inthread_notifications">Notificaties in een gesprek</string>
-  <string name="preferences__play_inthread_notifications">Notificatiegeluid afspelen tijdens het bekijken van een actief gesprek.</string>
   <string name="preferences__repeat_alerts">Herhaal meldingen</string>
   <string name="preferences__never">Nooit</string>
   <string name="preferences__one_time">Eén keer</string>
@@ -570,7 +564,6 @@ OpenchatService heeft te lang moeten wachten op het binnenkomen van de verificat
     </string>
   <string name="preferences__submit_debug_log">Dien debug log in</string>
   <string name="preferences__support_wifi_calling">\'Bellen via WiFi\' compatibiliteitsmodus</string>
-  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Aanzetten als je toestel SMS/MMS ontvangst via WiFi gebruikt (enkel aanzetten als \'Bellen via WiFi\' aan staat).</string>
   <string name="contact_selection_list__menu_select_all">Alles selecteren</string>
   <string name="contact_selection_list__menu_unselect_all">Alles deselecteren</string>
   <string name="contact_selection_list__header_openchatservice_users">OPENCHAT GEBRUIKERS</string>
@@ -628,7 +621,6 @@ OpenchatService heeft te lang moeten wachten op het binnenkomen van de verificat
   <string name="MediaPreviewActivity_unssuported_media_type">Niet ondersteund mediatype</string>
   <string name="media_preview__save_title">Opslaan</string>
   <string name="media_preview_activity__image_content_description">Afbeelding Voorvertoning</string>
-  <string name="trimmer__deleting">Verwijderen...</string>
   <string name="trimmer__deleting_old_messages">Oude berichten verwijderen...</string>
   <string name="trimmer__old_messages_successfully_deleted">Oude berichten succesvol verwijderd</string>
   <string name="transport_selection_list_item__transport_icon">Transportkanaal icoon</string>

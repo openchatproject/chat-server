@@ -15,8 +15,6 @@
   <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
 Внимание, вы собираетесь отключить шифрование базы данных, в которой хранятся все ваши сообщения и ключи. При переписке шифрование продолжит работать, однако любой, кто имеет физический доступ к вашему устройству, сможет прочитать ваши сообщения.</string>
   <string name="ApplicationPreferencesActivity_disable">Отключить</string>
-  <string name="ApplicationPreferencesActivity_unregistering">Отмена регистрации...</string>
-  <string name="ApplicationPreferencesActivity_unregistering_from_openchatservice_messages">Удалить регистрацию OpenchatService</string>
   <string name="ApplicationPreferencesActivity_disable_openchatservice_messages">Выключить общение через OpenchatService?</string>
   <string name="ApplicationPreferencesActivity_this_will_disable_openchatservice_messages">
 Это отключит сообщения OpenchatService, отменив вашу регистрацию на сервере.
@@ -109,7 +107,6 @@
   <string name="ConversationFragment_push">Данные (OpenchatService)</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
-  <string name="ConversationFragment_deleting">Удаление...</string>
   <string name="ConversationFragment_deleting_messages">Удаляем сообщения...</string>
   <string name="ConversationListActivity_search">Поиск...</string>
   <string name="ConversationListFragment_delete_threads_question">Удалить разговоры?</string>
@@ -163,7 +160,6 @@
   <string name="ImportFragment_import_plaintext_backup">Импортировать из простой резервной копии?</string>
   <string name="ImportFragment_this_will_import_messages_from_a_plaintext_backup">Вы собираетесь импортировать сообщения из простой резервной копии. Если вы ранее уже импортировали сообщения из этой копии, повторный импорт приведёт к их дублированию.</string>
   <string name="ImportFragment_importing">Импорт</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">Импортируем из простой резервной копии...</string>
   <string name="ImportFragment_no_plaintext_backup_found">Простая резервная копия не найдена!</string>
   <string name="ImportFragment_error_importing_backup">Ошибка при импорте!</string>
   <string name="ImportFragment_import_complete">Импорт завершён.</string>
@@ -194,7 +190,6 @@
   <string name="DeviceProvisioningActivity_content_bullets">
 - читать все ваши сообщения
 \n - отправлять сообщения от вашего имени</string>
-  <string name="DeviceProvisioningActivity_content_progress_title">Добавляем устройств...</string>
   <string name="DeviceProvisioningActivity_content_progress_content">Добавляем нового устройства...</string>
   <string name="DeviceProvisioningActivity_content_progress_success">Устройство добавлено!</string>
   <string name="DeviceProvisioningActivity_content_progress_no_device">Устройство не найдено.</string>
@@ -519,7 +514,6 @@ SMS-подтверждения...
   <string name="preferences__sound">Мелодия</string>
   <string name="preferences__change_notification_sound">Изменить мелодию уведомления</string>
   <string name="preferences__inthread_notifications">Уведомления при разговоре</string>
-  <string name="preferences__play_inthread_notifications">Проигрывать мелодию уведомления, даже когда вы просматриваете текущий разговор.</string>
   <string name="preferences__repeat_alerts">Повторять сигналы</string>
   <string name="preferences__never">Никогда</string>
   <string name="preferences__one_time">Один раз</string>
@@ -574,7 +568,6 @@ SMS-подтверждения...
 Бесплатные приватные сообщения пользователям OpenchatService и Openchat</string>
   <string name="preferences__submit_debug_log">Отправить лог отладки</string>
   <string name="preferences__support_wifi_calling">Совместимость с Wi-Fi звонками</string>
-  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Включите, если ваше устройство отправляет и принимает SMS и MMS через Wi-Fi (и если Wi-Fi звонки включены)</string>
   <string name="contact_selection_list__menu_select_all">Выбрать все</string>
   <string name="contact_selection_list__menu_unselect_all">Снять выделение</string>
   <string name="contact_selection_list__header_openchatservice_users">ПОЛЬЗОВАТЕЛИ OPENCHAT</string>
@@ -632,7 +625,6 @@ SMS-подтверждения...
   <string name="MediaPreviewActivity_unssuported_media_type">Тип медиа-файла не поддерживается</string>
   <string name="media_preview__save_title">Сохранить</string>
   <string name="media_preview_activity__image_content_description">Предпросмотр</string>
-  <string name="trimmer__deleting">Удаляем...</string>
   <string name="trimmer__deleting_old_messages">Удаляем старые сообщения</string>
   <string name="trimmer__old_messages_successfully_deleted">Старые сообщения успешно удалены</string>
   <string name="transport_selection_list_item__transport_icon">Иконка транспорта</string>

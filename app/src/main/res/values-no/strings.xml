@@ -15,7 +15,10 @@
   <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
 Advarsel! Dette vil deaktivere kryptert lagring av alle meldinger og nøkler. Dine krypterte sesjoner vil fortsette å fungere, men alle med fysisk tilgang til enheten din vil kunne få tilgang til dem.</string>
   <string name="ApplicationPreferencesActivity_disable">Deaktiver</string>
-  <string name="ApplicationPreferencesActivity_unregistering">Avregistrerer...</string>
+  <string name="ApplicationPreferencesActivity_disable_openchatservice_messages">Deaktivere OpenchatService meldinger?</string>
+  <string name="ApplicationPreferencesActivity_this_will_disable_openchatservice_messages">
+Dette vil deaktivere OpenchatService meldinger ved å avregistrere deg fra serveren.
+Om du vil benytte OpenchatService meldinger igjen i fremtiden må du registrere telefonnummeret ditt på nytt.</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Feil ved tilkobling til meldingstjener!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">SMS aktivert</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Klikk for å endre standard SMS applikasjon</string>
@@ -39,6 +42,7 @@ Advarsel! Dette vil deaktivere kryptert lagring av alle meldinger og nøkler. Di
   <string name="ConfirmIdentityDialog_the_signature_on_this_key_exchange_is_different">Det identifiserende nøkkelmaterialet for %1$s har endret seg. Dette kan enten bety at noen prøver å avlytte kommunikasjonen din, eller at %2$s har reinstallert OpenchatService og nå har en ny identitetsnøkkel.</string>
   <string name="ConfirmIdentityDialog_you_may_wish_to_verify_this_contact">Du bør verifisere
 denne kontakten.</string>
+  <string name="ConfirmIdentityDialog_accept">Godta</string>
   <string name="ConversationItem_message_size_d_kb">Meldingsstørrelse: %d KB</string>
   <string name="ConversationItem_expires_s">Utløper: %s</string>
   <string name="ConversationItem_error_not_delivered">Ikke levert</string>
@@ -103,8 +107,8 @@ denne kontakten.</string>
   <string name="ConversationFragment_push">Data (OpenchatService)</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
-  <string name="ConversationFragment_deleting">Sletter...</string>
   <string name="ConversationFragment_deleting_messages">Sletter meldinger...</string>
+  <string name="ConversationListActivity_search">Søk...</string>
   <string name="ConversationListFragment_delete_threads_question">Slette trådene?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Er du sikker på at du vil slette ALLE valgte samtaletråder?</string>
   <string name="ConversationListFragment_deleting">Sletter</string>
@@ -156,7 +160,6 @@ Gjenoppretting av en kryptert backup vil overskrive eksisterende nøkler, innsti
   <string name="ImportFragment_import_plaintext_backup">Importere klartekst backup?</string>
   <string name="ImportFragment_this_will_import_messages_from_a_plaintext_backup">Dette vil importere meldinger fra en klartekst backup. Dersom du har gjort en import tidligere, vil dette føre til dupliserte meldinger.</string>
   <string name="ImportFragment_importing">Importerer</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">Importerer klartekst backup...</string>
   <string name="ImportFragment_no_plaintext_backup_found">Ingen klartekst backup funnet!</string>
   <string name="ImportFragment_error_importing_backup">Feil oppstod ved import av backup!</string>
   <string name="ImportFragment_import_complete">Import fullført!</string>
@@ -188,7 +191,6 @@ Gjenoppretting av en kryptert backup vil overskrive eksisterende nøkler, innsti
 - Lese alle meldingene dine
 \n- Sende meldinger i ditt navn
  </string>
-  <string name="DeviceProvisioningActivity_content_progress_title">Legger til enhet...</string>
   <string name="DeviceProvisioningActivity_content_progress_content">Legger til ny enhet...</string>
   <string name="DeviceProvisioningActivity_content_progress_success">Enhet lagt til!</string>
   <string name="DeviceProvisioningActivity_content_progress_no_device">Ingen enhet funnet.</string>
@@ -502,7 +504,6 @@ feilet.</string>
   <string name="preferences__sound">Lyd</string>
   <string name="preferences__change_notification_sound">Endre lyd på meldingsvarsling</string>
   <string name="preferences__inthread_notifications">Varsling i aktiv tråd</string>
-  <string name="preferences__play_inthread_notifications">Spill av varslingslyd ved visning av en aktiv samtaletråd. </string>
   <string name="preferences__repeat_alerts">Gjenta varsling</string>
   <string name="preferences__never">Aldri</string>
   <string name="preferences__one_time">En gang</string>
@@ -558,7 +559,6 @@ Gratis og private meldinger til OpenchatService og Openchat brukere
  </string>
   <string name="preferences__submit_debug_log">Send debug logg</string>
   <string name="preferences__support_wifi_calling">\'WiFi anrop\' kompatibilititetsmodus</string>
-  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Aktiver dersom din enhet benytter WiFi for å levere SMS/MMS  (velges kun dersom \'WiFi anrop\' er aktivert).</string>
   <string name="contact_selection_list__menu_select_all">Merk alt</string>
   <string name="contact_selection_list__menu_unselect_all">Avmarker alt</string>
   <string name="contact_selection_list__header_openchatservice_users">OPENCHAT BRUKERE</string>
@@ -616,7 +616,6 @@ Gratis og private meldinger til OpenchatService og Openchat brukere
   <string name="MediaPreviewActivity_unssuported_media_type">Media typen er ikke støttet.</string>
   <string name="media_preview__save_title">Lagre</string>
   <string name="media_preview_activity__image_content_description">Forhåndsvisning av bilde</string>
-  <string name="trimmer__deleting">Sletter...</string>
   <string name="trimmer__deleting_old_messages">Sletter gamle meldinger...</string>
   <string name="trimmer__old_messages_successfully_deleted">Sletting av gamle meldinger vellykket</string>
   <string name="transport_selection_list_item__transport_icon">Transportikon</string>

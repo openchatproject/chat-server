@@ -17,7 +17,9 @@ Uyarı, bu tüm mesaj ve anahtarlar için depolama alanı şifrelemesini etkisiz
 oturumlarınız işlevlerini sürdürür, fakat cihazınıza fiziksel erişimi olan herhangi biri onlara
 erişebilir.</string>
   <string name="ApplicationPreferencesActivity_disable">Etkisizleştir</string>
-  <string name="ApplicationPreferencesActivity_unregistering">Kayıt siliniyor...</string>
+  <string name="ApplicationPreferencesActivity_disable_openchatservice_messages">OpenchatService mesajları etkisizleştirilsin mi?</string>
+  <string name="ApplicationPreferencesActivity_this_will_disable_openchatservice_messages">Bu işlem sunucudan kaydınızı silerek OpenchatService mesajlarını etkisizleştirir. 
+Gelecekte OpenchatService mesajlarını tekrar kullanmak isterseniz telefon numaranızı yeniden kaydettirmeniz gerekir.</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Sunucu bağlantı hatası!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">SMS Etkinleştirildi</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Varsayılan SMS uygulamanızı değiştirmek için dokunun</string>
@@ -41,6 +43,7 @@ erişebilir.</string>
   <string name="ConfirmIdentityDialog_the_signature_on_this_key_exchange_is_different">%1$s için tanımlayan anahtar bilgileri değişmiş. Bu başka birinin iletişiminizi dinlemeye çalıştığı veya basitçe %2$s \'nin OpenchatService\'u yeniden kurduğu ve yeni kimlik anahtarı aldığı anlamına gelebilir. </string>
   <string name="ConfirmIdentityDialog_you_may_wish_to_verify_this_contact">Bu kişiyi doğrulamak 
 isteyebilirsiniz.</string>
+  <string name="ConfirmIdentityDialog_accept">Kabul et</string>
   <string name="ConversationItem_message_size_d_kb">Mesaj boyutu: %d KB</string>
   <string name="ConversationItem_expires_s">Ömrü: %s</string>
   <string name="ConversationItem_error_not_delivered">Gönderilemedi</string>
@@ -105,8 +108,8 @@ isteyebilirsiniz.</string>
   <string name="ConversationFragment_push">Veri (OpenchatService)</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
-  <string name="ConversationFragment_deleting">Siliniyor...</string>
   <string name="ConversationFragment_deleting_messages">Mesajlar siliniyor...</string>
+  <string name="ConversationListActivity_search">Ara...</string>
   <string name="ConversationListFragment_delete_threads_question">Başlıkları sil?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Seçili bütün konuşmaları silmek istediğinizden emin misiniz?</string>
   <string name="ConversationListFragment_deleting">Siliniyor</string>
@@ -162,7 +165,6 @@ kurulumunuzda bulunan ancak yüklenecek yedekte bulunmayan tüm bilgiler kaybolu
   <string name="ImportFragment_import_plaintext_backup">Şifresiz metin yedeği içe aktarılsın mı?</string>
   <string name="ImportFragment_this_will_import_messages_from_a_plaintext_backup">Bu mesajları açık metin bir yedekten OpenchatService\'a aktarır. Eğer bu yedeği daha önce aktardı iseniz, yeniden aktarım çifte mesajlarla sonuçlanabilir.</string>
   <string name="ImportFragment_importing">İçe aktarılıyor</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">Şifresiz metin yedeğinden içe aktar</string>
   <string name="ImportFragment_no_plaintext_backup_found">Şifresiz metin yedeği bulunamadı!</string>
   <string name="ImportFragment_error_importing_backup">Yedek içe aktarımında hata!</string>
   <string name="ImportFragment_import_complete">İçe aktarma tamamlandı!</string>
@@ -193,7 +195,6 @@ kurulumunuzda bulunan ancak yüklenecek yedekte bulunmayan tüm bilgiler kaybolu
   <string name="DeviceProvisioningActivity_content_bullets">
 - Tüm mesajlarınızı okuyunuz
 \n-Mesajları adınızla gönderiniz</string>
-  <string name="DeviceProvisioningActivity_content_progress_title">Cihaz ekleniyor...</string>
   <string name="DeviceProvisioningActivity_content_progress_content">Yeni cihaz ekleniyor...</string>
   <string name="DeviceProvisioningActivity_content_progress_success">Cihaz eklendi!</string>
   <string name="DeviceProvisioningActivity_content_progress_no_device">Hiç cihaz bulanamadı.</string>
@@ -516,7 +517,6 @@ başarısız.</string>
   <string name="preferences__sound">Zil Sesi</string>
   <string name="preferences__change_notification_sound">Bildirim sesini değiştir</string>
   <string name="preferences__inthread_notifications">Başlık içi bildirimler</string>
-  <string name="preferences__play_inthread_notifications">Bir aktif sohbet görüntülenirken bildirim sesini çal</string>
   <string name="preferences__repeat_alerts">Uyarıları tekrarla</string>
   <string name="preferences__never">Asla</string>
   <string name="preferences__one_time">Bir kez</string>
@@ -571,7 +571,6 @@ başarısız.</string>
 OpenchatService ve Openchat kullanıcıları ile ücretsiz gizli mesajlaşma</string>
   <string name="preferences__submit_debug_log">Hata ayıklama kaydı gönder</string>
   <string name="preferences__support_wifi_calling">\'WiFi Calling\' uyumluluk modu</string>
-  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Eğer cihazınız WiFi üzerinden SMS/MMS iletimi kullanıyorsa etkinleştir (sadece cihazınızda \'WiFi Calling\' etkinleştirildiğinde etkinleştirin)</string>
   <string name="contact_selection_list__menu_select_all">Hepsini seç</string>
   <string name="contact_selection_list__menu_unselect_all">Tüm seçimleri kaldır</string>
   <string name="contact_selection_list__header_openchatservice_users">OPENCHAT KULLANICILARI</string>
@@ -629,7 +628,6 @@ OpenchatService ve Openchat kullanıcıları ile ücretsiz gizli mesajlaşma</st
   <string name="MediaPreviewActivity_unssuported_media_type">Desteklenmeyen medya türü</string>
   <string name="media_preview__save_title">Kaydet</string>
   <string name="media_preview_activity__image_content_description">Resim Önizleme</string>
-  <string name="trimmer__deleting">Siliniyor...</string>
   <string name="trimmer__deleting_old_messages">Eski mesajlar siliniyor...</string>
   <string name="trimmer__old_messages_successfully_deleted">Eski mesajlar silindi</string>
   <string name="transport_selection_list_item__transport_icon">Taşıma simgesi</string>

@@ -18,7 +18,6 @@ Dine krypterede sessioner vil fortsætte med at fungere,
 men alle med fysisk adgang til din enhed kan få adgang til dem.
 </string>
   <string name="ApplicationPreferencesActivity_disable">Deaktivere</string>
-  <string name="ApplicationPreferencesActivity_unregistering">Afregistrerer...</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Kunne ikke oprette forbindelse til serveren!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">SMS slået til</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Brug som standard SMS program</string>
@@ -80,7 +79,6 @@ denne kontakt.</string>
   <string name="ConversationFragment_saving_attachment">Gem vedhæftning</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
-  <string name="ConversationFragment_deleting">Sletter...</string>
   <string name="ConversationFragment_deleting_messages">Sletter beskeder...</string>
   <string name="ConversationListFragment_delete_threads_question">Slet tråde?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Er du sikker på at du vil slette ALLE valgte samtaletråde?</string>
@@ -126,7 +124,6 @@ Genoprettelse af en krypteret backup vil overskrive eksisterende nøgler, indsti
   <string name="ImportFragment_import_plaintext_backup">Importer klartekst backup?</string>
   <string name="ImportFragment_this_will_import_messages_from_a_plaintext_backup">Dette vil importere beskeder fra en klartekst backup. Hvis du tidligere har importeret den samme backup, vil det resultere i dupletter.</string>
   <string name="ImportFragment_importing">Importerer</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">Importerer klartekst backup...</string>
   <string name="ImportFragment_no_plaintext_backup_found">Der blev ikke fundet en klartekst backup!</string>
   <string name="ImportFragment_error_importing_backup">Fejl opstod ved import af backup!</string>
   <string name="ImportFragment_import_complete">Import fuldført!</string>
@@ -402,7 +399,6 @@ fejlede.
   <string name="preferences__sound">Lyd</string>
   <string name="preferences__change_notification_sound">Ændre notifikations-lyd</string>
   <string name="preferences__inthread_notifications">I beskeder</string>
-  <string name="preferences__play_inthread_notifications">Afspil en notifikationslyd når den viste samtale opdateres.</string>
   <string name="preferences__vibrate">Vibrér</string>
   <string name="preferences__also_vibrate_when_notified">Vibrér også ved tilbagemelding</string>
   <string name="preferences__minutes">Minutter</string>

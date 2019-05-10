@@ -17,8 +17,6 @@
 сесии ще продължат да функционират, но всеки, който има физически достъп до твоето устройство ще
 има достъп до тях. </string>
   <string name="ApplicationPreferencesActivity_disable">Изключи</string>
-  <string name="ApplicationPreferencesActivity_unregistering">Отписване...</string>
-  <string name="ApplicationPreferencesActivity_unregistering_from_openchatservice_messages">Дерегистриране от OpenchatService съобщения</string>
   <string name="ApplicationPreferencesActivity_disable_openchatservice_messages">Забрани OpenchatService съобщения?</string>
   <string name="ApplicationPreferencesActivity_this_will_disable_openchatservice_messages">
 Това ще забрани OpenchatService съобщения като те дерегистрира от сървъра.
@@ -111,7 +109,6 @@
   <string name="ConversationFragment_push">Данни (OpenchatService)</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
-  <string name="ConversationFragment_deleting">Изтриване...</string>
   <string name="ConversationFragment_deleting_messages">Изтриване на съобщения...</string>
   <string name="ConversationListActivity_search">Търсене...</string>
   <string name="ConversationListFragment_delete_threads_question">Изтрий разговорите?</string>
@@ -172,7 +169,6 @@ SMS съобщенията от системната базата данни в 
 съобщенията от разшифровано архивно копие. Ако веднъж вече си възстановил това архивно копие, 
 повторно въстановяване ще доведе до дублиране на съобщенията.</string>
   <string name="ImportFragment_importing">Внасяне</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">Внасяне на разшифрован архив...</string>
   <string name="ImportFragment_no_plaintext_backup_found">Не е намерен разшифрован архив!</string>
   <string name="ImportFragment_error_importing_backup">Грешка при внасяне на архива!</string>
   <string name="ImportFragment_import_complete">Внасянето приключи!</string>
@@ -203,7 +199,6 @@ SMS съобщенията от системната базата данни в 
   <string name="DeviceProvisioningActivity_content_bullets">
 Чете всичките ти съобщения
 \n - Изпраща съобщения от твое име</string>
-  <string name="DeviceProvisioningActivity_content_progress_title">Добавяне на устройство...</string>
   <string name="DeviceProvisioningActivity_content_progress_content">Добавяне на ново устройство...</string>
   <string name="DeviceProvisioningActivity_content_progress_success">Устройството добавено!</string>
   <string name="DeviceProvisioningActivity_content_progress_no_device">Не е открито устройство.</string>
@@ -536,7 +531,6 @@ OpenchatService чака твърде дълго за SMS потвърждени
   <string name="preferences__sound">Мелодия</string>
   <string name="preferences__change_notification_sound">Промени звуков сигнал за известие</string>
   <string name="preferences__inthread_notifications">Известия по време на разговор</string>
-  <string name="preferences__play_inthread_notifications">Използвай звуков сигнал по време на активен разговор.</string>
   <string name="preferences__repeat_alerts">Повтарящи се аларми</string>
   <string name="preferences__never">Никога</string>
   <string name="preferences__one_time">Само веднъж</string>
@@ -591,7 +585,6 @@ OpenchatService чака твърде дълго за SMS потвърждени
 Безплатни, лични съобщебия до OpenchatService и Openchat потребители</string>
   <string name="preferences__submit_debug_log">Изпрати доклад</string>
   <string name="preferences__support_wifi_calling">Съвместим режим \'WiFi Calling\'</string>
-  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Включете ако устройството ти използва SMS/MMS през WiFi (използвай само, когато \'WiFi Calling\' e включено на устройството ти).</string>
   <string name="contact_selection_list__menu_select_all">Избери всичко</string>
   <string name="contact_selection_list__menu_unselect_all">Не избирай нищо</string>
   <string name="contact_selection_list__header_openchatservice_users">OPENCHAT ПОТРЕБИТЕЛИ</string>
@@ -649,7 +642,6 @@ OpenchatService чака твърде дълго за SMS потвърждени
   <string name="MediaPreviewActivity_unssuported_media_type">Неподдържан медиен формат.</string>
   <string name="media_preview__save_title">Запази</string>
   <string name="media_preview_activity__image_content_description">Преглед на изображение</string>
-  <string name="trimmer__deleting">Изтриване...</string>
   <string name="trimmer__deleting_old_messages">Изтриване на стари съобщения...</string>
   <string name="trimmer__old_messages_successfully_deleted">Старите съобщения бяха успешно изтрити</string>
   <string name="transport_selection_list_item__transport_icon">Икона за транспорт</string>

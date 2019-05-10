@@ -17,7 +17,6 @@
 மறையாக்கப்பட்ட அமர்வுகள் செயல்பட தொடரும், ஆனால் உங்கள் தொலைபேசியை 
 கையாளகக்கூடிபவர் எவரும் அவற்றை அணுகலாம்.</string>
   <string name="ApplicationPreferencesActivity_disable">முடக்கு</string>
-  <string name="ApplicationPreferencesActivity_unregistering">பதிவுநீக்கப்படுகிறது...</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">சர்வருடன் இணைவதில் பிழை!</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">இதை உங்கள் இயல்புநிலை SMS மென்பொருளாக்க தொடவும் </string>
   <string name="ApplicationPreferencesActivity_touch_to_make_openchatservice_your_default_sms_app">OpenchatService-ஐ உங்கள் இயல்புநிலை SMS மென்பொருளாக்க தொடவும்</string>
@@ -100,7 +99,6 @@
   <string name="ConversationFragment_push">Data (OpenchatService)</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
-  <string name="ConversationFragment_deleting">நீக்கப்படுகிறது...</string>
   <string name="ConversationFragment_deleting_messages">செய்திகள் நீக்கப்படுகிறது...</string>
   <string name="ConversationListFragment_delete_threads_question">செய்திநூல்கள் நீக்கப்படலாமா?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">நீங்கள் தேர்ந்தெடுத்த எல்லா உரையாடல்நூல்களையும்  நீக்க விரும்புகிறீர்களா?</string>
@@ -159,7 +157,6 @@ SMS-களை இறக்குமதி செய்திருந்தா�
 கோப்பிலிருந்து இறக்குமதிசெய்யும். நீங்கள் முன்பே இதனை இறக்குமதி செய்திருந்தால், 
 மீண்டும் செய்வது நகல் செய்திகளை ஏற்படுத்தும்.</string>
   <string name="ImportFragment_importing">இறக்குமதி செய்யப்படுகிறது</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">முன்சேமித்த இயல்புஉரை கோப்பிலிருந்து இறக்குமதிசெய்...</string>
   <string name="ImportFragment_no_plaintext_backup_found">முன்சேமித்த இயல்புஉரை கோப்பு காணப்படவில்லை!</string>
   <string name="ImportFragment_error_importing_backup">இறக்குமதி செய்வதில் பிழை!</string>
   <string name="ImportFragment_import_complete">இறக்குமதி முடிந்தது!</string>
@@ -189,7 +186,6 @@ SMS-களை இறக்குமதி செய்திருந்தா�
   <string name="DeviceProvisioningActivity_content_bullets">
 - அனைத்த்து குறுஞ்செய்திகளை படிக்கமுடியும்
 \n- உங்கள் பெயர்கொண்டு செய்திகளை அனுப்பமுடியும்</string>
-  <string name="DeviceProvisioningActivity_content_progress_title">சாதனம் சேர்க்கப்படுகிறது...</string>
   <string name="DeviceProvisioningActivity_content_progress_content">புதிய சாதனம் சேர்க்கப்படுகிறது...</string>
   <string name="DeviceProvisioningActivity_content_progress_success">சாதனம் சேர்க்கப்பட்டது!</string>
   <string name="DeviceProvisioningActivity_content_progress_no_device">எந்த சாதனமும் காணப்படவில்லை.</string>
@@ -512,7 +508,6 @@ OpenchatService சரிபார்ப்பு SMS-செய்திக்�
   <string name="preferences__sound">ஒலி</string>
   <string name="preferences__change_notification_sound">அறிவிப்பு ஒலியை மாற்று</string>
   <string name="preferences__inthread_notifications">உரையாடல்நூலில் உள்ளிருக்கும் போது அறிவிப்புகள்</string>
-  <string name="preferences__play_inthread_notifications">ஒரு உரையாடல்நூலை பார்க்கும் போதும் அறிவிப்பு ஒலியை கொடு.</string>
   <string name="preferences__repeat_alerts">பலமுறை எச்சரிக்கைகள்</string>
   <string name="preferences__never">ஒருபோதுமில்லை</string>
   <string name="preferences__one_time">ஒரு முறை</string>
@@ -563,7 +558,6 @@ OpenchatService சரிபார்ப்பு SMS-செய்திக்�
   <string name="preferences__language_summary">மொழி %s</string>
   <string name="preferences__submit_debug_log">பிழைத்திருத்த பதிவுகளை சமர்ப்பி</string>
   <string name="preferences__support_wifi_calling">\'WiFi அழைப்புகள்\' பொருந்தக்கூடிய முறை</string>
-  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">உங்கள் சாதனம் SMS/MMS விநியோகத்தை WiFi வழியில் பயன்படுத்துகிறது என்றால் இதை செயல்படுத்தவும் (உங்கள் சாதனத்தில் \'Wifi அழைப்புகள்\' செயல்படுத்தப்படும் போது மட்டுமே செயல்படுத்தவும்).</string>
   <string name="contact_selection_list__menu_select_all">அனைத்து தேர்வுசெய்</string>
   <string name="contact_selection_list__menu_unselect_all">அனைத்தையும் கைவிடு</string>
   <string name="contact_selection_list__header_openchatservice_users">OPENCHAT பயனர்கள்</string>
@@ -621,7 +615,6 @@ OpenchatService சரிபார்ப்பு SMS-செய்திக்�
   <string name="MediaPreviewActivity_unssuported_media_type">ஆதரிக்கப்படாத மீடியா வகை</string>
   <string name="media_preview__save_title">சேமி</string>
   <string name="media_preview_activity__image_content_description">பட முன்னோட்டம்</string>
-  <string name="trimmer__deleting">நீக்கப்படுகிறது...</string>
   <string name="trimmer__deleting_old_messages">நான் பழையசெய்திகள் நீக்கப்படுகிறது...</string>
   <string name="trimmer__old_messages_successfully_deleted">பழையசெய்திகள் நீக்கப்பட்டது</string>
   <string name="transport_selection_list_item__transport_icon">போக்குவரத்து குறும்படம்</string>

@@ -15,7 +15,6 @@
   <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
 تحذير: سيتم إلغاء تشفير مساحة تخزين الرسائل والمفاتيح. سوف تستمر محادثاتك المشفرة في العمل، ولكن سيكون أي شخص قادر على النفاذ إليهم إذا تمكن من الوصول إلى الهاتف.</string>
   <string name="ApplicationPreferencesActivity_disable">تعطيل</string>
-  <string name="ApplicationPreferencesActivity_unregistering">إلغاء التسجيل جارٍ...</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">خطأ في الاتصال بالخادم!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">الرسائل النصية مفعلة</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">أضغط لتغيير التطبيق الافتراضي للرسائل</string>
@@ -102,7 +101,6 @@
   <string name="ConversationFragment_push">بيانات (تيكست سيكيور)</string>
   <string name="ConversationFragment_mms">رسالة وسائط متعددة</string>
   <string name="ConversationFragment_sms">رسالة نصية</string>
-  <string name="ConversationFragment_deleting">الحذف جارٍ...</string>
   <string name="ConversationFragment_deleting_messages">حذف الرسائل جارٍ...</string>
   <string name="ConversationListFragment_delete_threads_question">حذف رسائل المحادثة؟</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">هل تريد حذف كل المحادثات المختارة نهائياَ؟</string>
@@ -154,7 +152,6 @@
   <string name="ImportFragment_import_plaintext_backup">استيارد نسخة احتياطية غير مشفرة؟</string>
   <string name="ImportFragment_this_will_import_messages_from_a_plaintext_backup">سيتم استيراد رسائل ظاهرة من نسخة احتياطية. إذا قمت سابقا باستيراد هذه النسخة الاحتياطية فسوف يؤدي اسيترادها مرة أخرى إلى تكرار الرسائل.</string>
   <string name="ImportFragment_importing">الاستيراد جارٍ...</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">استيراد النسخ الاحتياطية الغير المشفرة جارٍ...</string>
   <string name="ImportFragment_no_plaintext_backup_found">لم يتم العثور على نسخ احتياطية غير مشفرة!</string>
   <string name="ImportFragment_error_importing_backup">خطأ باستيراد النسخة الاحتياطية!</string>
   <string name="ImportFragment_import_complete">تم الاستيراد!</string>
@@ -185,7 +182,6 @@
   <string name="DeviceProvisioningActivity_content_bullets">
 قراءة كل رسائلك.
 \n- استخدام أسمك للإرسال</string>
-  <string name="DeviceProvisioningActivity_content_progress_title">جارٍ إضافة الجهاز...</string>
   <string name="DeviceProvisioningActivity_content_progress_content">جارٍ إضافة جهاز جديد...</string>
   <string name="DeviceProvisioningActivity_content_progress_success">تم إضافة الجهاز!</string>
   <string name="DeviceProvisioningActivity_content_progress_no_device">لم يتم العثور على جهاز.</string>
@@ -496,7 +492,6 @@
   <string name="preferences__sound">صوت</string>
   <string name="preferences__change_notification_sound">تغيير صوت التنبيه</string>
   <string name="preferences__inthread_notifications">تنبيهات داخل المحادثة</string>
-  <string name="preferences__play_inthread_notifications">تشغيل صوت التنبيهات أثناء متابعة محادثة نشطة.</string>
   <string name="preferences__repeat_alerts">تكرار التنبيهات</string>
   <string name="preferences__never">أبدا</string>
   <string name="preferences__one_time">مرة واحدة</string>
@@ -551,7 +546,6 @@
 رسائل مجانية وآمنة مع مستخدمي تيكست سيكيور وسيجنال</string>
   <string name="preferences__submit_debug_log">إرسال سجل التصحيح</string>
   <string name="preferences__support_wifi_calling">وضع التوافق مع \'مكالمات الواي فاي\'</string>
-  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">مكن في حال كان جهازك يستخدم خاصية الرسالة القصيرة أو الرسائل الوسائط المتعددة بإستخدام الواي-فاي (مكن فقط في حال تفعيل خاصية \'مكالمات الواي-فاي\' في جهزك)</string>
   <string name="contact_selection_list__menu_select_all">أختر الكل</string>
   <string name="contact_selection_list__menu_unselect_all">إلغاء التحديد</string>
   <string name="contact_selection_list__header_openchatservice_users">مستخدمين تيكست سيكيور</string>
@@ -609,7 +603,6 @@
   <string name="MediaPreviewActivity_unssuported_media_type">غير مدعوم.</string>
   <string name="media_preview__save_title">أحفظ</string>
   <string name="media_preview_activity__image_content_description">معاينة الصورة</string>
-  <string name="trimmer__deleting">جار الحذف...</string>
   <string name="trimmer__deleting_old_messages">جار حذف الرسائل القديمة...</string>
   <string name="trimmer__old_messages_successfully_deleted">تم حذف الرسائل القديمة بنجاح</string>
   <string name="transport_selection_list_item__transport_icon">أيقونة النقل.</string>

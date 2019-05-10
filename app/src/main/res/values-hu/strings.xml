@@ -18,7 +18,11 @@ Figyelmeztetés, ez letiltja a titkosított tárolást minden üzenethez és kul
 hozzáférhet az üzenetekhez és a kulcsokhoz!
  </string>
   <string name="ApplicationPreferencesActivity_disable">Tiltás</string>
-  <string name="ApplicationPreferencesActivity_unregistering">Regisztráció törlése...</string>
+  <string name="ApplicationPreferencesActivity_disable_openchatservice_messages">OpenchatService üzenetek tiltása?</string>
+  <string name="ApplicationPreferencesActivity_this_will_disable_openchatservice_messages">
+        Ez letiltja a OpenchatService üzeneteket azáltal, hogy megszünteti a regisztrációdat a szerveren.
+        Újra kell regisztrálnod a telefonszámod, hogy a OpenchatService üzeneteket a jövőben újra használhasd.
+    </string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Hiba a kiszolgálóhoz való kapcsolódáskor!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">SMS engedélyezett</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Érintsd meg az alapértelmezett SMS alkalmazás megváltoztatásához</string>
@@ -45,6 +49,7 @@ azonosító kulcs %1$s vonatkozásában megváltozott. Ez jelentheti, hogy valak
   <string name="ConfirmIdentityDialog_you_may_wish_to_verify_this_contact">Talán érdemes ellenőrizni
 ezt a névjegyet.
  </string>
+  <string name="ConfirmIdentityDialog_accept">Elfogad</string>
   <string name="ConversationItem_message_size_d_kb">Üzenet mérete: %d kB</string>
   <string name="ConversationItem_expires_s">Lejár: %s</string>
   <string name="ConversationItem_error_not_delivered">Nincs kézbesítve</string>
@@ -111,8 +116,8 @@ Elküldöd a titkosítatlan üzenetet?</string>
   <string name="ConversationFragment_push">Adat (TS)</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">SMS</string>
-  <string name="ConversationFragment_deleting">Törlés...</string>
   <string name="ConversationFragment_deleting_messages">Üzenetek törlése...</string>
+  <string name="ConversationListActivity_search">Keresés...</string>
   <string name="ConversationListFragment_delete_threads_question">Töröljük az üzenetfolyamot?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">Biztosan törölni szeretnéd az összes kiválasztott üzenetváltást?</string>
   <string name="ConversationListFragment_deleting">Törlés</string>
@@ -174,7 +179,6 @@ nincs a biztonsági mentésben.
 az üzeneteket egy titkosítatlan biztonsági mentésből. Ha már korábban importáltad ezt a biztonsági mentést,
 akkor az újbóli importálás duplikált üzeneteket eredményez.</string>
   <string name="ImportFragment_importing">Importálás</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">Titkosítatlan biztonsági mentés importálása...</string>
   <string name="ImportFragment_no_plaintext_backup_found">Nem található kódolatlan biztonsági mentés!</string>
   <string name="ImportFragment_error_importing_backup">Hiba a biztonsági mentés importálásakor!</string>
   <string name="ImportFragment_import_complete">Importálás befejezve!</string>
@@ -205,7 +209,6 @@ akkor az újbóli importálás duplikált üzeneteket eredményez.</string>
   <string name="DeviceProvisioningActivity_content_bullets">
 - Az összes üzenet olvasása
 \n- Üzenetek küldése a nevedben</string>
-  <string name="DeviceProvisioningActivity_content_progress_title">Eszköz hozzáadása...</string>
   <string name="DeviceProvisioningActivity_content_progress_content">Új eszköz hozzáadása...</string>
   <string name="DeviceProvisioningActivity_content_progress_success">Eszköz hozzáadása megtörtént!</string>
   <string name="DeviceProvisioningActivity_content_progress_no_device">Nem található eszköz</string>
@@ -558,7 +561,6 @@ sikertelen.
   <string name="preferences__sound">Hang</string>
   <string name="preferences__change_notification_sound">Értesítési hang megváltoztatása</string>
   <string name="preferences__inthread_notifications">Értesítések a beszélgetések során.</string>
-  <string name="preferences__play_inthread_notifications">Értesítési hang megszólaltatása aktív beszélgetés megtekintésekor.</string>
   <string name="preferences__repeat_alerts">Figyelmeztetések megismétlése</string>
   <string name="preferences__never">Soha</string>
   <string name="preferences__one_time">Egyszer</string>
@@ -613,7 +615,6 @@ sikertelen.
 Ingyenes biztonságos üzenet küldés OpenchatService és Openchat felhasználóknak</string>
   <string name="preferences__submit_debug_log">Hibakeresési napló küldése</string>
   <string name="preferences__support_wifi_calling">\'WiFi hívás\' kompatibilitási mód</string>
-  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Engedélyezd, ha az eszköz SMS/MMS kézbesítése WiFi-n keresztül végzi (csak akkor engedélyezd ha a \'WiFi hívás\' opció engedélyezve van az eszközön).</string>
   <string name="contact_selection_list__menu_select_all">Minden kijelölése</string>
   <string name="contact_selection_list__menu_unselect_all">Az összes elem kijelölésének megszüntetése</string>
   <string name="contact_selection_list__header_openchatservice_users">OPENCHAT FELHASZNÁLÓK</string>
@@ -671,7 +672,6 @@ Ingyenes biztonságos üzenet küldés OpenchatService és Openchat felhasznál�
   <string name="MediaPreviewActivity_unssuported_media_type">Nem támogatott média típus</string>
   <string name="media_preview__save_title">Mentés</string>
   <string name="media_preview_activity__image_content_description">Kép előnézet</string>
-  <string name="trimmer__deleting">Törlés...</string>
   <string name="trimmer__deleting_old_messages">Régi üzenetek törlése...</string>
   <string name="trimmer__old_messages_successfully_deleted">A régi üzenetek sikeresen törlődtek</string>
   <string name="transport_selection_list_item__transport_icon">Átvitel ikon</string>
