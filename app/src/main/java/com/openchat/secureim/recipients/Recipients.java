@@ -1,10 +1,13 @@
 package com.openchat.secureim.recipients;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.Patterns;
 
+import com.openchat.secureim.contacts.ContactPhotoFactory;
 import com.openchat.secureim.database.RecipientPreferenceDatabase.RecipientsPreferences;
 import com.openchat.secureim.database.RecipientPreferenceDatabase.VibrateState;
 import com.openchat.secureim.recipients.Recipient.RecipientModifiedListener;
@@ -128,6 +131,11 @@ public class Recipients implements Iterable<Recipient>, RecipientModifiedListene
     }
 
     notifyListeners();
+  }
+
+  public Drawable getContactPhoto(Context context) {
+    if (recipients.size() == 1) return recipients.get(0).getContactPhoto();
+    else                        return ContactPhotoFactory.getDefaultGroupPhoto(context);
   }
 
   public synchronized void addListener(RecipientsModifiedListener listener) {
