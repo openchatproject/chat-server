@@ -21,7 +21,6 @@ import com.openchat.secureim.jobs.GcmRefreshJob;
 import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
-import com.openchat.secureim.recipients.RecipientFormattingException;
 import com.openchat.secureim.util.DirectoryHelper;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
@@ -34,6 +33,7 @@ import com.openchat.imservice.api.OpenchatServiceAccountManager;
 import com.openchat.imservice.api.push.exceptions.ExpectationFailedException;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -58,7 +58,7 @@ public class RegistrationService extends Service {
 
   private volatile RegistrationState registrationState = new RegistrationState(RegistrationState.STATE_IDLE);
 
-  private volatile Handler                 registrationStateHandler;
+  private volatile WeakReference<Handler>  registrationStateHandler;
   private volatile ChallengeReceiver       challengeReceiver;
   private          String                  challenge;
   private          long                    verificationStartTime;
@@ -279,6 +279,8 @@ public class RegistrationService extends Service {
   private void setState(RegistrationState state) {
     this.registrationState = state;
 
+    Handler registrationStateHandler = this.registrationStateHandler.get();
+
     if (registrationStateHandler != null) {
       registrationStateHandler.obtainMessage(state.state, state).sendToTarget();
     }
@@ -300,7 +302,7 @@ public class RegistrationService extends Service {
   }
 
   public void setRegistrationStateHandler(Handler registrationStateHandler) {
-    this.registrationStateHandler = registrationStateHandler;
+    this.registrationStateHandler = new WeakReference<>(registrationStateHandler);
   }
 
   public class RegistrationServiceBinder extends Binder {

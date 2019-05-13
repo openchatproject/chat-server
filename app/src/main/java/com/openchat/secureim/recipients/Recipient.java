@@ -1,7 +1,6 @@
 package com.openchat.secureim.recipients;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
@@ -12,13 +11,16 @@ import com.openchat.secureim.util.FutureTaskListener;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.ListenableFutureTask;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 public class Recipient {
 
   private final static String TAG = Recipient.class.getSimpleName();
 
-  private final HashSet<RecipientModifiedListener> listeners = new HashSet<>();
+  private final Set<RecipientModifiedListener> listeners = Collections.newSetFromMap(new WeakHashMap<RecipientModifiedListener, Boolean>());
 
   private final long recipientId;
 
@@ -39,7 +41,7 @@ public class Recipient {
       @Override
       public void onSuccess(RecipientDetails result) {
         if (result != null) {
-          HashSet<RecipientModifiedListener> localListeners;
+          Set<RecipientModifiedListener> localListeners;
 
           synchronized (Recipient.this) {
             Recipient.this.name                      = result.name;
@@ -47,7 +49,7 @@ public class Recipient {
             Recipient.this.contactUri                = result.contactUri;
             Recipient.this.contactPhoto              = result.avatar;
 
-            localListeners                           = (HashSet<RecipientModifiedListener>) listeners.clone();
+            localListeners                           = new HashSet<>(listeners);
             listeners.clear();
           }
 
@@ -97,18 +99,6 @@ public class Recipient {
 
   public synchronized void removeListener(RecipientModifiedListener listener) {
     listeners.remove(listener);
-  }
-
-  public void notifyListeners() {
-    HashSet<RecipientModifiedListener> localListeners;
-
-    synchronized (this) {
-      localListeners = (HashSet<RecipientModifiedListener>)listeners.clone();
-    }
-
-    for (RecipientModifiedListener listener : localListeners) {
-      listener.onModified(this);
-    }
   }
 
   public synchronized String toShortString() {

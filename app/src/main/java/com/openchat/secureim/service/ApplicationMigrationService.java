@@ -23,6 +23,7 @@ import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.SmsMigrator;
 import com.openchat.secureim.database.SmsMigrator.ProgressDescription;
 
+import java.lang.ref.WeakReference;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -39,9 +40,9 @@ public class ApplicationMigrationService extends Service
   private final Binder binder                       = new ApplicationMigrationBinder();
   private final Executor executor                   = Executors.newSingleThreadExecutor();
 
-  private Handler handler                         = null;
+  private WeakReference<Handler>     handler      = null;
   private NotificationCompat.Builder notification = null;
-  private ImportState state                       = new ImportState(ImportState.STATE_IDLE, null);
+  private ImportState                state        = new ImportState(ImportState.STATE_IDLE, null);
 
   @Override
   public void onCreate() {
@@ -70,7 +71,7 @@ public class ApplicationMigrationService extends Service
   }
 
   public void setImportStateHandler(Handler handler) {
-    this.handler = handler;
+    this.handler = new WeakReference<>(handler);
   }
 
   private void registerCompletedReceiver() {
@@ -102,6 +103,8 @@ public class ApplicationMigrationService extends Service
 
   private void setState(ImportState state) {
     this.state = state;
+
+    Handler handler = this.handler.get();
 
     if (handler != null) {
       handler.obtainMessage(state.state, state.progress).sendToTarget();
