@@ -15,7 +15,7 @@ import android.widget.ImageView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
-import com.makeramen.RoundedDrawable;
+import com.makeramen.roundedimageview.RoundedDrawable;
 
 import com.openchat.secureim.R;
 import com.openchat.secureim.recipients.Recipient;
