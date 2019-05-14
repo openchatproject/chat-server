@@ -15,6 +15,12 @@
   <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
 警告：这将会禁用所有信息和密钥的存储加密。您的加密会话继续有效，但是任何能物理接触到此设备的人都能够访问这些数据。</string>
   <string name="ApplicationPreferencesActivity_disable">禁用</string>
+  <string name="ApplicationPreferencesActivity_unregistering">反注册</string>
+  <string name="ApplicationPreferencesActivity_unregistering_from_openchatservice_messages">正在反注册来自 OpenchatService 的信息...</string>
+  <string name="ApplicationPreferencesActivity_disable_openchatservice_messages">禁用 OpenchatService 信息？</string>
+  <string name="ApplicationPreferencesActivity_this_will_disable_openchatservice_messages">
+通过反注册，您将会禁用在当前服务器的 OpenchatService 信息。
+您将会需要重新注册您的手机号码以便使用 OpenchatService 信息的功能。</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">连接服务器错误！</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">已开启短信</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">点击来改变默认的短信应用</string>
@@ -35,9 +41,11 @@
   <string name="AttachmentTypeSelectorAdapter_video">视频</string>
   <string name="AttachmentTypeSelectorAdapter_audio">音频</string>
   <string name="AttachmentTypeSelectorAdapter_contact">联系人信息</string>
+  <string name="BlockedContactsActivity_blocked_contacts">已屏蔽的联系人</string>
   <string name="ConfirmIdentityDialog_the_signature_on_this_key_exchange_is_different">%1$s 的身份密钥已经改变，这可能是有人正在尝试拦截您的通信，或 %2$s 只是重新安装了 OpenchatService ，并且获得了一个新的身份密钥。</string>
   <string name="ConfirmIdentityDialog_you_may_wish_to_verify_this_contact">您可能希望验证
 这个联系人。</string>
+  <string name="ConfirmIdentityDialog_accept">接受</string>
   <string name="ConversationItem_message_size_d_kb">信息大小： %d KB</string>
   <string name="ConversationItem_expires_s">到期： %s</string>
   <string name="ConversationItem_error_not_delivered">未送达</string>
@@ -86,6 +94,9 @@
   <string name="ConversationActivity_mms_not_supported_title">彩信不被支持</string>
   <string name="ConversationActivity_mms_not_supported_message">此信息无法发送，因为您的运营商不支持彩信。</string>
   <string name="ConversationActivity_specify_recipient">请选择一个联系人</string>
+  <string name="ConversationActivity_unblock_question">解除屏蔽？</string>
+  <string name="ConversationActivity_are_you_sure_you_want_to_unblock_this_contact">您确定想要解除对此联系人的屏蔽？</string>
+  <string name="ConversationActivity_unblock">解除屏蔽</string>
   <string name="ConversationFragment_message_details">信息详情</string>
   <string name="ConversationFragment_transport_s_sent_received_s">传输：%1$s\n 发送/接收：%2$s</string>
   <string name="ConversationFragment_sender_s_transport_s_sent_s_received_s">发送者： %1$s\n传输： %2$s\n已发送： %3$s\n已接收： %4$s</string>
@@ -102,7 +113,9 @@
   <string name="ConversationFragment_push">数据（OpenchatService）</string>
   <string name="ConversationFragment_mms">彩信</string>
   <string name="ConversationFragment_sms">短信</string>
+  <string name="ConversationFragment_deleting">删除中</string>
   <string name="ConversationFragment_deleting_messages">正在删除信息…</string>
+  <string name="ConversationListActivity_search">搜索中...</string>
   <string name="ConversationListFragment_delete_threads_question">删除线程？</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">是否确定要删除所有选定对话线程？</string>
   <string name="ConversationListFragment_deleting">正在删除</string>
@@ -112,6 +125,7 @@
   <string name="CustomDefaultPreference_using_default">使用默认：%s</string>
   <string name="CustomDefaultPreference_none">没有</string>
   <string name="DateUtils_now">现在</string>
+  <string name="DateUtils_minutes_ago">%d 分钟</string>
   <string name="ShareActivity_share_with">共享给</string>
   <string name="ExportFragment_export">导出</string>
   <string name="ExportFragment_export_plaintext_to_sd_card">导出明文到SD卡？</string>
@@ -154,6 +168,7 @@
 来自明文备份的信息。如果您以前已经导入过该备份，
 再次导入将会出现重复信息。</string>
   <string name="ImportFragment_importing">导入中</string>
+  <string name="ImportFragment_import_plaintext_backup_elipse">正在导入明文备份...</string>
   <string name="ImportFragment_no_plaintext_backup_found">没有发现明文备份！</string>
   <string name="ImportFragment_error_importing_backup">导入备份的过程中发生错误！</string>
   <string name="ImportFragment_import_complete">导入完成！</string>
@@ -184,6 +199,7 @@
   <string name="DeviceProvisioningActivity_content_bullets">
 - 读取你所有的信息
 \n - 以你的名义发送信息</string>
+  <string name="DeviceProvisioningActivity_content_progress_title">添加设备</string>
   <string name="DeviceProvisioningActivity_content_progress_content">正在添加新设备…</string>
   <string name="DeviceProvisioningActivity_content_progress_success">设备已添加！</string>
   <string name="DeviceProvisioningActivity_content_progress_no_device">没有找到设备。</string>
@@ -199,6 +215,14 @@
   <string name="RatingManager_rate_now">立刻评价！</string>
   <string name="RatingManager_no_thanks">不，谢谢。</string>
   <string name="RatingManager_later">稍后</string>
+  <string name="RecipientPreferenceActivity_block_this_contact_question">屏蔽此联系人？</string>
+  <string name="RecipientPreferenceActivity_you_will_no_longer_see_messages_from_this_user">您将会不会再看到来自此联系人的发送的信息。</string>
+  <string name="RecipientPreferenceActivity_block">屏蔽</string>
+  <string name="RecipientPreferenceActivity_unblock_this_contact_question">解除此联系人的屏蔽？</string>
+  <string name="RecipientPreferenceActivity_are_you_sure_you_want_to_unblock_this_contact">您确定想要解除对此联系人的屏蔽？</string>
+  <string name="RecipientPreferenceActivity_unblock">解除屏蔽</string>
+  <string name="RecipientPreferenceActivity_enabled">启用</string>
+  <string name="RecipientPreferenceActivity_disabled">禁用</string>
   <string name="RegistrationActivity_connect_with_openchatservice">通过OpenchatService连接</string>
   <string name="RegistrationActivity_select_your_country">选择您的国家</string>
   <string name="RegistrationActivity_you_must_specify_your_country_code">您必须指定您的
@@ -316,7 +340,9 @@
   <string name="SingleContactSelectionActivity_updating_push_directory">正在更新推送目录…</string>
   <string name="SingleContactSelectionActivity_contact_photo">联系人照片</string>
   <string name="ContactSelectionlistFragment_select_for">选择</string>
+  <string name="blocked_contacts_fragment__no_blocked_contacts">没有已屏蔽的联系人...</string>
   <string name="contact_selection_recent_activity__no_recent_calls">没有最近呼叫。</string>
+  <string name="conversation_title_view__conversation_muted">会话已静音</string>
   <string name="conversation_activity__type_message_push">发送 OpenchatService 信息</string>
   <string name="conversation_activity__type_message_sms_insecure">发送未加密的短信</string>
   <string name="conversation_activity__type_message_mms_insecure">发送未加密的彩信</string>
@@ -377,6 +403,12 @@
   <string name="prompt_passphrase_activity__unlock">解锁</string>
   <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService需要通过运营商获取您的彩信设置才能接受彩信或组播信息，但是您的设备没有这些信息，可能是由于设备被锁定或者访问受到限制。</string>
   <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">想发送多媒体和组播信息，需点击“好”来完成所需的设置。您可以通过搜索“您的运营商 APN”（如百度／谷歌：中国移动 APN）来获取这些信息。通常，您只需要设置一次。</string>
+  <string name="recipient_preference_activity__blocked">已屏蔽</string>
+  <string name="recipient_preferences__mute_conversation">静音会话</string>
+  <string name="recipient_preferences__disable_notifications_for_this_conversation">禁用此会话的通知</string>
+  <string name="recipient_preferences__ringtone">铃声</string>
+  <string name="recipient_preferences__vibrate">振动</string>
+  <string name="recipient_preferences__block">屏蔽</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
 通过验证您的手机号码来连接到 OpenchatService 。</string>
   <string name="registration_activity__your_country">国家或地区</string>
@@ -465,6 +497,11 @@ OpenchatService 在等待短信验证时超时。</string>
   <string name="arrays__my_identity_key">我的身份密钥</string>
   <string name="arrays__use_default">使用默认</string>
   <string name="arrays__use_custom">使用定制</string>
+  <string name="arrays__mute_for_one_hour">静音 1 小时</string>
+  <string name="arrays__mute_for_two_hours">静音 2 小时</string>
+  <string name="arrays__mute_for_one_day">静音 1 天</string>
+  <string name="arrays__mute_for_seven_days">静音 7 天</string>
+  <string name="arrays__settings_default">设为默认</string>
   <string name="arrays__enabled">启用</string>
   <string name="arrays__disabled">禁用</string>
   <plurals name="hours_ago">
@@ -509,6 +546,7 @@ OpenchatService 在等待短信验证时超时。</string>
   <string name="preferences__sound">声音</string>
   <string name="preferences__change_notification_sound">改变提示音</string>
   <string name="preferences__inthread_notifications">线程内通知</string>
+  <string name="preferences__play_inthread_notifications">在查看活动的会话时播放提示音</string>
   <string name="preferences__repeat_alerts">重复警报</string>
   <string name="preferences__never">永不</string>
   <string name="preferences__one_time">一次</string>
@@ -533,7 +571,7 @@ OpenchatService 在等待短信验证时超时。</string>
   <string name="preferences__slow">缓慢</string>
   <string name="preferences__custom">自定义</string>
   <string name="preferences__advanced">高级</string>
-  <string name="preferences__app_protection">应用保护</string>
+  <string name="preferences__privacy">隐私</string>
   <string name="preferences__mms_user_agent">彩信用户代理</string>
   <string name="preferences__advanced_mms_access_point_names">手动设置彩信</string>
   <string name="preferences__enable_manual_mms">使用手动设置彩信</string>
@@ -563,6 +601,8 @@ OpenchatService 在等待短信验证时超时。</string>
 免费的私密短信至 OpenchatService 和单个用户</string>
   <string name="preferences__submit_debug_log">提交调试日志</string>
   <string name="preferences__support_wifi_calling">“Wifi呼叫”兼容模式</string>
+  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">如果您的设备使用WiFi发送彩信或短信，请启用此选项(仅当\"WiFi 语音呼叫\"在您的设备上启用时才可用)</string>
+  <string name="preferences_app_protection__blocked_contacts">已屏蔽的联系人</string>
   <string name="contact_selection_list__menu_select_all">全选</string>
   <string name="contact_selection_list__menu_unselect_all">全部取消选择</string>
   <string name="contact_selection_list__header_openchatservice_users">OPENCHAT 用户</string>
@@ -589,6 +629,8 @@ OpenchatService 在等待短信验证时超时。</string>
   <string name="conversation_secure_verified__menu_security">安全性</string>
   <string name="conversation_secure_verified__menu_verify_identity">验证身份</string>
   <string name="conversation_secure_verified__menu_abort_secure_session">结束安全会话</string>
+  <string name="conversation_muted__unmute">解除静音</string>
+  <string name="conversation_unmuted__mute_notifications">静音通知</string>
   <string name="conversation__menu_add_attachment">添加附件</string>
   <string name="conversation__menu_update_group">更新群组</string>
   <string name="conversation__menu_leave_group">离开群组</string>
@@ -620,7 +662,9 @@ OpenchatService 在等待短信验证时超时。</string>
   <string name="MediaPreviewActivity_unssuported_media_type">不支持的媒体类型。</string>
   <string name="media_preview__save_title">保存</string>
   <string name="media_preview_activity__image_content_description">图片预览</string>
+  <string name="trimmer__deleting">正在删除</string>
   <string name="trimmer__deleting_old_messages">正在删除旧信息…</string>
   <string name="trimmer__old_messages_successfully_deleted">旧信息已被成功删除。</string>
   <string name="transport_selection_list_item__transport_icon">传输图标</string>
+  <string name="MuteDialog_mute_notifications">静音通知</string>
 </resources>
