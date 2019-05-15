@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.text.SpannableStringBuilder;
 
 import com.openchat.secureim.ConversationActivity;
+import com.openchat.secureim.ConversationPopupActivity;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.Util;
@@ -81,12 +82,22 @@ public class NotificationItem {
   }
 
   public PendingIntent getPendingIntent(Context context) {
-    Intent intent = new Intent(context, ConversationActivity.class);
-
+    Intent     intent           = new Intent(context, ConversationActivity.class);
     Recipients notifyRecipients = threadRecipients != null ? threadRecipients : recipients;
     if (notifyRecipients != null) intent.putExtra("recipients", notifyRecipients.getIds());
 
     intent.putExtra("thread_id", threadId);
+    intent.setData((Uri.parse("custom://"+System.currentTimeMillis())));
+
+    return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+  }
+
+  public PendingIntent getReplyIntent(Context context) {
+    Intent     intent           = new Intent(context, ConversationPopupActivity.class);
+    Recipients notifyRecipients = threadRecipients != null ? threadRecipients : recipients;
+    if (notifyRecipients != null) intent.putExtra(ConversationActivity.RECIPIENTS_EXTRA, notifyRecipients.getIds());
+
+    intent.putExtra(ConversationActivity.THREAD_ID_EXTRA, threadId);
     intent.setData((Uri.parse("custom://"+System.currentTimeMillis())));
 
     return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
