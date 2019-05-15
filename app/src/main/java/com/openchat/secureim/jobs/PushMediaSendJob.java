@@ -19,7 +19,7 @@ import com.openchat.secureim.transport.UndeliverableMessageException;
 import com.openchat.imservice.api.OpenchatServiceMessageSender;
 import com.openchat.imservice.api.crypto.UntrustedIdentityException;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
-import com.openchat.imservice.api.messages.OpenchatServiceMessage;
+import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.api.push.exceptions.UnregisteredUserException;
 import com.openchat.imservice.api.util.InvalidNumberException;
@@ -108,11 +108,11 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
       OpenchatServiceAddress          address      = getPushAddress(destination);
       List<OpenchatServiceAttachment> attachments  = getAttachments(masterSecret, message);
       String                     body         = PartParser.getMessageText(message.getBody());
-      OpenchatServiceMessage          mediaMessage = OpenchatServiceMessage.newBuilder()
-                                                                 .withBody(body)
-                                                                 .withAttachments(attachments)
-                                                                 .withTimestamp(message.getSentTimestamp())
-                                                                 .build();
+      OpenchatServiceDataMessage      mediaMessage = OpenchatServiceDataMessage.newBuilder()
+                                                                     .withBody(body)
+                                                                     .withAttachments(attachments)
+                                                                     .withTimestamp(message.getSentTimestamp())
+                                                                     .build();
 
       messageSender.sendMessage(address, mediaMessage);
     } catch (InvalidNumberException | UnregisteredUserException e) {

@@ -26,12 +26,12 @@ import com.openchat.imservice.api.OpenchatServiceMessageSender;
 import com.openchat.imservice.api.crypto.UntrustedIdentityException;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
-import com.openchat.imservice.api.messages.OpenchatServiceMessage;
+import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.api.push.exceptions.EncapsulatedExceptions;
 import com.openchat.imservice.api.push.exceptions.NetworkFailureException;
 import com.openchat.imservice.api.util.InvalidNumberException;
-import com.openchat.imservice.internal.push.PushMessageProtos;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -143,18 +143,18 @@ public class PushGroupSendJob extends PushSendJob implements InjectableType {
       String content = PartParser.getMessageText(message.getBody());
 
       if (content != null && !content.trim().isEmpty()) {
-        PushMessageProtos.PushMessageContent.GroupContext groupContext = PushMessageProtos.PushMessageContent.GroupContext.parseFrom(Base64.decode(content));
-        OpenchatServiceAttachment avatar       = attachments.isEmpty() ? null : attachments.get(0);
-        OpenchatServiceGroup.Type type         = MmsSmsColumns.Types.isGroupQuit(message.getDatabaseMessageBox()) ? OpenchatServiceGroup.Type.QUIT : OpenchatServiceGroup.Type.UPDATE;
-        OpenchatServiceGroup      group        = new OpenchatServiceGroup(type, groupId, groupContext.getName(), groupContext.getMembersList(), avatar);
-        OpenchatServiceMessage groupMessage = new OpenchatServiceMessage(message.getSentTimestamp(), group, null, null);
+        GroupContext          groupContext = GroupContext.parseFrom(Base64.decode(content));
+        OpenchatServiceAttachment  avatar       = attachments.isEmpty() ? null : attachments.get(0);
+        OpenchatServiceGroup.Type  type         = MmsSmsColumns.Types.isGroupQuit(message.getDatabaseMessageBox()) ? OpenchatServiceGroup.Type.QUIT : OpenchatServiceGroup.Type.UPDATE;
+        OpenchatServiceGroup       group        = new OpenchatServiceGroup(type, groupId, groupContext.getName(), groupContext.getMembersList(), avatar);
+        OpenchatServiceDataMessage groupMessage = new OpenchatServiceDataMessage(message.getSentTimestamp(), group, null, null);
 
         messageSender.sendMessage(addresses, groupMessage);
       }
     } else {
-      String            body         = PartParser.getMessageText(message.getBody());
-      OpenchatServiceGroup   group        = new OpenchatServiceGroup(groupId);
-      OpenchatServiceMessage groupMessage = new OpenchatServiceMessage(message.getSentTimestamp(), group, attachments, body);
+      String                body         = PartParser.getMessageText(message.getBody());
+      OpenchatServiceGroup       group        = new OpenchatServiceGroup(groupId);
+      OpenchatServiceDataMessage groupMessage = new OpenchatServiceDataMessage(message.getSentTimestamp(), group, attachments, body);
 
       messageSender.sendMessage(addresses, groupMessage);
     }

@@ -31,7 +31,7 @@ import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.sms.MessageSender;
 import com.openchat.secureim.util.Base64;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
-import com.openchat.imservice.internal.push.PushMessageProtos;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos;
 
 import java.io.IOException;
 
@@ -162,11 +162,12 @@ public class ConfirmIdentityDialog extends AlertDialog {
                                                  mismatch.getRecipientId(),
                                                  mismatch.getIdentityKey());
 
-            OpenchatServiceEnvelope envelope = new OpenchatServiceEnvelope(PushMessageProtos.IncomingPushMessageOpenchat.Type.PREKEY_BUNDLE_VALUE,
+            OpenchatServiceEnvelope envelope = new OpenchatServiceEnvelope(OpenchatServiceProtos.Envelope.Type.PREKEY_BUNDLE_VALUE,
                                                                  messageRecord.getIndividualRecipient().getNumber(),
                                                                  messageRecord.getRecipientDeviceId(), "",
                                                                  messageRecord.getDateSent(),
-                                                                 Base64.decode(messageRecord.getBody().getBody()));
+                                                                 Base64.decode(messageRecord.getBody().getBody()),
+                                                                 null);
 
             long pushId = pushDatabase.insert(envelope);
 

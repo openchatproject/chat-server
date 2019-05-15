@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.openchat.secureim.R;
-import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.GroupContext;
+import static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext;
 
 public class GroupUtil {
 

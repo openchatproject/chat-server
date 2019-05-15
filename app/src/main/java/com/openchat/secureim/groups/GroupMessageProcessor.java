@@ -20,7 +20,7 @@ import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
-import com.openchat.imservice.api.messages.OpenchatServiceMessage;
+import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.Set;
 
 import static com.openchat.secureim.database.GroupDatabase.GroupRecord;
-import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.AttachmentPointer;
-import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.GroupContext;
+import static com.openchat.imservice.internal.push.OpenchatServiceProtos.AttachmentPointer;
+import static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext;
 
 public class GroupMessageProcessor {
 
@@ -38,7 +38,7 @@ public class GroupMessageProcessor {
   public static void process(Context context,
                              MasterSecret masterSecret,
                              OpenchatServiceEnvelope envelope,
-                             OpenchatServiceMessage message)
+                             OpenchatServiceDataMessage message)
   {
     if (!message.getGroupInfo().isPresent() || message.getGroupInfo().get().getGroupId() == null) {
       Log.w(TAG, "Received group message with no id! Ignoring...");

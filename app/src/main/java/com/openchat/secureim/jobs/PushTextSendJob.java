@@ -18,7 +18,7 @@ import com.openchat.secureim.transport.InsecureFallbackApprovalException;
 import com.openchat.secureim.transport.RetryLaterException;
 import com.openchat.imservice.api.OpenchatServiceMessageSender;
 import com.openchat.imservice.api.crypto.UntrustedIdentityException;
-import com.openchat.imservice.api.messages.OpenchatServiceMessage;
+import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.api.push.exceptions.UnregisteredUserException;
 import com.openchat.imservice.api.util.InvalidNumberException;
@@ -103,11 +103,11 @@ public class PushTextSendJob extends PushSendJob implements InjectableType {
     try {
       OpenchatServiceAddress       address           = getPushAddress(message.getIndividualRecipient().getNumber());
       OpenchatServiceMessageSender messageSender     = messageSenderFactory.create(masterSecret);
-      OpenchatServiceMessage       openchatServiceMessage = OpenchatServiceMessage.newBuilder()
-                                                                   .withTimestamp(message.getDateSent())
-                                                                   .withBody(message.getBody().getBody())
-                                                                   .asEndSessionMessage(message.isEndSession())
-                                                                   .build();
+      OpenchatServiceDataMessage   openchatServiceMessage = OpenchatServiceDataMessage.newBuilder()
+                                                                       .withTimestamp(message.getDateSent())
+                                                                       .withBody(message.getBody().getBody())
+                                                                       .asEndSessionMessage(message.isEndSession())
+                                                                       .build();
 
       messageSender.sendMessage(address, openchatServiceMessage);
     } catch (InvalidNumberException | UnregisteredUserException e) {

@@ -1,6 +1,6 @@
 package com.openchat.secureim.sms;
 
-import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.GroupContext;
+import static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext;
 
 public class IncomingGroupMessage extends IncomingTextMessage {
 

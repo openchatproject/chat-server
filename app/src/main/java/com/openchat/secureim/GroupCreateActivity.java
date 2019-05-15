@@ -27,10 +27,12 @@ import com.google.protobuf.ByteString;
 import com.soundcloud.android.crop.Crop;
 
 import com.openchat.secureim.components.PushRecipientsPanel;
-import com.openchat.secureim.contacts.ContactAccessor;
 import com.openchat.secureim.contacts.RecipientsEditor;
+import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.GroupDatabase;
+import com.openchat.secureim.database.NotInDirectoryException;
+import com.openchat.secureim.database.OpenchatServiceDirectory;
 import com.openchat.secureim.database.ThreadDatabase;
 import com.openchat.secureim.mms.OutgoingGroupMediaMessage;
 import com.openchat.secureim.recipients.Recipient;
@@ -46,10 +48,8 @@ import com.openchat.secureim.util.ProgressDialogAsyncTask;
 import com.openchat.secureim.util.SelectedRecipientsAdapter;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
-import com.openchat.secureim.crypto.MasterSecret;
-import com.openchat.secureim.database.OpenchatServiceDirectory;
-import com.openchat.secureim.database.NotInDirectoryException;
 import com.openchat.imservice.api.util.InvalidNumberException;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -62,9 +62,6 @@ import java.util.List;
 import java.util.Set;
 
 import ws.com.google.android.mms.MmsException;
-
-import static com.openchat.secureim.contacts.ContactAccessor.ContactData;
-import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.GroupContext;
 
 public class GroupCreateActivity extends PassphraseRequiredActionBarActivity {
 

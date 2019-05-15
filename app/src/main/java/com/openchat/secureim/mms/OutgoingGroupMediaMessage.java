@@ -5,12 +5,11 @@ import android.content.Context;
 import com.openchat.secureim.database.ThreadDatabase;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.Base64;
+import com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext;
 
 import ws.com.google.android.mms.ContentType;
 import ws.com.google.android.mms.pdu.PduBody;
 import ws.com.google.android.mms.pdu.PduPart;
-
-import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.GroupContext;
 
 public class OutgoingGroupMediaMessage extends OutgoingSecureMediaMessage {
 

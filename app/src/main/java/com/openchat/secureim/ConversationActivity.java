@@ -93,7 +93,7 @@ import java.util.List;
 
 import static com.openchat.secureim.TransportOption.Type;
 import static com.openchat.secureim.database.GroupDatabase.GroupRecord;
-import static com.openchat.imservice.internal.push.PushMessageProtos.PushMessageContent.GroupContext;
+import static com.openchat.imservice.internal.push.OpenchatServiceProtos.GroupContext;
 
 public class ConversationActivity extends PassphraseRequiredActionBarActivity
     implements ConversationFragment.ConversationFragmentListener,
