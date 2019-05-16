@@ -11,6 +11,7 @@ import com.openchat.secureim.jobs.CleanPreKeysJob;
 import com.openchat.secureim.jobs.CreateSignedPreKeyJob;
 import com.openchat.secureim.jobs.DeliveryReceiptJob;
 import com.openchat.secureim.jobs.MultiDeviceContactUpdateJob;
+import com.openchat.secureim.jobs.MultiDeviceGroupUpdateJob;
 import com.openchat.secureim.jobs.PushGroupSendJob;
 import com.openchat.secureim.jobs.PushMediaSendJob;
 import com.openchat.secureim.jobs.PushNotificationReceiveJob;
@@ -40,6 +41,7 @@ import dagger.Provides;
                                      MessageRetrievalService.class,
                                      PushNotificationReceiveJob.class,
                                      MultiDeviceContactUpdateJob.class,
+                                     MultiDeviceGroupUpdateJob.class,
                                      DeviceListActivity.DeviceListFragment.class})
 public class OpenchatServiceCommunicationModule {
 

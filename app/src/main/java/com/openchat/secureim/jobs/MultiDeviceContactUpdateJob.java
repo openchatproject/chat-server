@@ -23,6 +23,8 @@ import com.openchat.imservice.api.crypto.UntrustedIdentityException;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentStream;
 import com.openchat.imservice.api.messages.multidevice.DeviceContact;
 import com.openchat.imservice.api.messages.multidevice.DeviceContactsOutputStream;
+import com.openchat.imservice.api.messages.multidevice.OpenchatServiceSyncMessage;
+import com.openchat.imservice.api.push.exceptions.PushNetworkException;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -79,7 +81,7 @@ public class MultiDeviceContactUpdateJob extends MasterSecretJob implements Inje
 
   @Override
   public boolean onShouldRetryThrowable(Exception exception) {
-    if (exception instanceof NetworkException) return true;
+    if (exception instanceof PushNetworkException) return true;
     return false;
   }
 
@@ -102,7 +104,7 @@ public class MultiDeviceContactUpdateJob extends MasterSecretJob implements Inje
                                                                                    contactsFile.length());
 
     try {
-      messageSender.sendMultiDeviceContactsUpdate(attachmentStream);
+      messageSender.sendMessage(OpenchatServiceSyncMessage.forContacts(attachmentStream));
     } catch (IOException ioe) {
       throw new NetworkException(ioe);
     }
