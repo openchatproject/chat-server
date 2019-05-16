@@ -3,6 +3,7 @@ package com.openchat.secureim.dependencies;
 import android.content.Context;
 
 import com.openchat.secureim.BuildConfig;
+import com.openchat.secureim.DeviceListActivity;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.storage.OpenchatServiceOpenchatStore;
 import com.openchat.secureim.jobs.AttachmentDownloadJob;
@@ -12,7 +13,6 @@ import com.openchat.secureim.jobs.DeliveryReceiptJob;
 import com.openchat.secureim.jobs.MultiDeviceContactUpdateJob;
 import com.openchat.secureim.jobs.PushGroupSendJob;
 import com.openchat.secureim.jobs.PushMediaSendJob;
-import com.openchat.secureim.jobs.PushContentReceiveJob;
 import com.openchat.secureim.jobs.PushNotificationReceiveJob;
 import com.openchat.secureim.jobs.PushTextSendJob;
 import com.openchat.secureim.jobs.RefreshPreKeysJob;
@@ -39,7 +39,8 @@ import dagger.Provides;
                                      RefreshPreKeysJob.class,
                                      MessageRetrievalService.class,
                                      PushNotificationReceiveJob.class,
-                                     MultiDeviceContactUpdateJob.class})
+                                     MultiDeviceContactUpdateJob.class,
+                                     DeviceListActivity.DeviceListFragment.class})
 public class OpenchatServiceCommunicationModule {
 
   private final Context context;

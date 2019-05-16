@@ -50,6 +50,7 @@ import com.openchat.imservice.api.messages.OpenchatServiceContent;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 import com.openchat.imservice.api.messages.OpenchatServiceGroup;
 import com.openchat.imservice.api.messages.OpenchatServiceDataMessage;
+import com.openchat.imservice.api.messages.multidevice.RequestMessage;
 import com.openchat.imservice.api.messages.multidevice.SentTranscriptMessage;
 import com.openchat.imservice.api.messages.multidevice.OpenchatServiceSyncMessage;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
@@ -126,7 +127,8 @@ public class PushDecryptJob extends MasterSecretJob {
       } else if (content.getSyncMessage().isPresent()) {
         OpenchatServiceSyncMessage syncMessage = content.getSyncMessage().get();
 
-        if (syncMessage.getSent().isPresent()) handleSynchronizeSentMessage(masterSecret, syncMessage.getSent().get(), smsMessageId);
+        if      (syncMessage.getSent().isPresent())    handleSynchronizeSentMessage(masterSecret, syncMessage.getSent().get(), smsMessageId);
+        else if (syncMessage.getRequest().isPresent()) handleSynchronizeRequestMessage(masterSecret, syncMessage.getRequest().get());
       }
 
       if (envelope.isPreKeyOpenchatMessage()) {
@@ -195,6 +197,14 @@ public class PushDecryptJob extends MasterSecretJob {
       handleSynchronizeSentMediaMessage(masterSecret, message, smsMessageId);
     } else {
       handleSynchronizeSentTextMessage(masterSecret, message, smsMessageId);
+    }
+  }
+
+  private void handleSynchronizeRequestMessage(MasterSecret masterSecret, RequestMessage message) {
+    if (message.isContactsRequest()) {
+      ApplicationContext.getInstance(context)
+                        .getJobManager()
+                        .add(new MultiDeviceContactUpdateJob(getContext()));
     }
   }
 

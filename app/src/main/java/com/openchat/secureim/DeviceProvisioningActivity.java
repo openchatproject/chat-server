@@ -6,13 +6,11 @@ import android.content.DialogInterface.OnDismissListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.MaterialDialog.Builder;
 import com.afollestad.materialdialogs.MaterialDialog.ButtonCallback;
@@ -28,6 +26,7 @@ import com.openchat.protocal.ecc.Curve;
 import com.openchat.protocal.ecc.ECPublicKey;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
 import com.openchat.imservice.api.push.exceptions.NotFoundException;
+import com.openchat.imservice.internal.push.DeviceLimitExceededException;
 
 import java.io.IOException;
 
@@ -94,10 +93,11 @@ public class DeviceProvisioningActivity extends PassphraseRequiredActionBarActiv
                                                      R.string.DeviceProvisioningActivity_content_progress_title,
                                                      R.string.DeviceProvisioningActivity_content_progress_content)
     {
-      private static final int SUCCESS       = 0;
-      private static final int NO_DEVICE     = 1;
-      private static final int NETWORK_ERROR = 2;
-      private static final int KEY_ERROR     = 3;
+      private static final int SUCCESS        = 0;
+      private static final int NO_DEVICE      = 1;
+      private static final int NETWORK_ERROR  = 2;
+      private static final int KEY_ERROR      = 3;
+      private static final int LIMIT_EXCEEDED = 4;
 
       @Override
       protected Integer doInBackground(Void... params) {
@@ -116,6 +116,9 @@ public class DeviceProvisioningActivity extends PassphraseRequiredActionBarActiv
         } catch (NotFoundException e) {
           Log.w(TAG, e);
           return NO_DEVICE;
+        } catch (DeviceLimitExceededException e) {
+          Log.w(TAG, e);
+          return LIMIT_EXCEEDED;
         } catch (IOException e) {
           Log.w(TAG, e);
           return NETWORK_ERROR;
@@ -143,6 +146,9 @@ public class DeviceProvisioningActivity extends PassphraseRequiredActionBarActiv
             break;
           case KEY_ERROR:
             Toast.makeText(context, R.string.DeviceProvisioningActivity_content_progress_key_error, Toast.LENGTH_LONG).show();
+            break;
+          case LIMIT_EXCEEDED:
+            Toast.makeText(context, R.string.DeviceProvisioningActivity_sorry_you_have_too_many_devices_registered_already, Toast.LENGTH_LONG).show();
             break;
         }
         dialog.dismiss();
