@@ -6,8 +6,6 @@ import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
 import android.os.StrictMode.VmPolicy;
 
-import com.squareup.leakcanary.LeakCanary;
-
 import com.openchat.secureim.crypto.PRNGFixes;
 import com.openchat.secureim.dependencies.OpenchatStorageModule;
 import com.openchat.secureim.dependencies.InjectableType;
@@ -58,7 +56,6 @@ public class ApplicationContext extends Application implements DependencyInjecto
 
   private void initializeDeveloperBuild() {
     if (BuildConfig.DEV_BUILD) {
-      LeakCanary.install(this);
       StrictMode.setThreadPolicy(new ThreadPolicy.Builder().detectAll()
                                                            .penaltyLog()
                                                            .build());
