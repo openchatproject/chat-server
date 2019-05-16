@@ -126,6 +126,16 @@ preveriti ta stik.</string>
   <string name="CustomDefaultPreference_none">Brez</string>
   <string name="DateUtils_now">Ravnokar</string>
   <string name="DateUtils_minutes_ago">%d min</string>
+  <string name="DeviceListActivity_disconnect_s">Odstranim \'%s\'?</string>
+  <string name="DeviceListActivity_by_disconnecting_this_device_it_will_no_longer_be_able_to_send_or_receive">Z odstranitvijo naprave ta ne bo več mogla pošiljati ali prejemati sporočil.</string>
+  <string name="DeviceListActivity_network_connection_failed">Omrežno povezovanje ni bilo uspešno...</string>
+  <string name="DeviceListActivity_try_again">Poskusite znova</string>
+  <string name="DeviceListActivity_disconnecting_device">Odstranjujem napravo...</string>
+  <string name="DeviceListActivity_disconnecting_device_no_ellipse">Odklapljam napravo...</string>
+  <string name="DeviceListActivity_network_failed">Povezovanje ni uspelo!</string>
+  <string name="DeviceListItem_unnamed_device">Nepoimenovana naprava</string>
+  <string name="DeviceListItem_created_s">Ustvarjena %s</string>
+  <string name="DeviceListItem_last_active_s">Zadnja aktivna %s</string>
   <string name="ShareActivity_share_with">Deli z</string>
   <string name="ExportFragment_export">Izvozi</string>
   <string name="ExportFragment_export_plaintext_to_sd_card">Izvozim na kartico SD v nešifrirani obliki?</string>
@@ -203,6 +213,7 @@ preveriti ta stik.</string>
   <string name="DeviceProvisioningActivity_content_progress_no_device">Nobena naprava ni bila najdena.</string>
   <string name="DeviceProvisioningActivity_content_progress_network_error">Napaka omrežja.</string>
   <string name="DeviceProvisioningActivity_content_progress_key_error">Neveljavna koda QR.</string>
+  <string name="DeviceProvisioningActivity_sorry_you_have_too_many_devices_registered_already">Imate preveč registriranih naprav, poskusite kakšno odstraniti...</string>
   <string name="PassphrasePromptActivity_enter_passphrase">Vnesite geslo</string>
   <string name="PassphrasePromptActivity_watermark_content_description">Ikona OpenchatService</string>
   <string name="PassphrasePromptActivity_ok_button_content_description">Vnesite geslo</string>
@@ -305,6 +316,7 @@ Prejeto sporočilo z neznanim identifikacijskim ključem. Kliknite za obdelavo i
   <string name="MmsMessageRecord_decrypting_mms_please_wait">Dešifriranje sporočila MMS, počakajte...</string>
   <string name="MmsMessageRecord_bad_encrypted_mms_message">Okvarjeno šifrirano sporočilo MMS...</string>
   <string name="MmsMessageRecord_mms_message_encrypted_for_non_existing_session">Sporočilo MMS šifrirano za neobstoječo sejo...</string>
+  <string name="MuteDialog_mute_notifications">Utišaj obvestila</string>
   <string name="ApplicationMigrationService_import_in_progress">Uvoz v teku</string>
   <string name="ApplicationMigrationService_importing_text_messages">Uvažam kratka sporočila</string>
   <string name="KeyCachingService_openchatservice_passphrase_cached">Odpri z dotikom.</string>
@@ -322,7 +334,9 @@ Prejeto sporočilo z neznanim identifikacijskim ključem. Kliknite za obdelavo i
   <string name="MessageNotifier_mark_all_as_read">Označi vse kot prebrano</string>
   <string name="MessageNotifier_mark_as_read">Označi kot prebrano</string>
   <string name="MessageNotifier_media_message">Multiedijsko sporočilo</string>
-  <string name="QuickResponseService_sorry_quick_response_is_not_yet_supported_by_openchatservice">Aplikacija OpenchatService žal še ne podpira Hitrega odziva!</string>
+  <string name="MessageNotifier_reply">Odgovor</string>
+  <string name="QuickResponseService_quick_response_unavailable_when_OpenchatService_is_locked">Ko je OpenchatService zaklenjen, hitro odgovarjanje ni mogoče!</string>
+  <string name="QuickResponseService_problem_sending_message">Težava pri pošiljanju sporočila</string>
   <string name="change_passphrase_activity__old_passphrase">Staro geslo:</string>
   <string name="change_passphrase_activity__new_passphrase">Novo geslo:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">Ponovi novo geslo:</string>
@@ -360,6 +374,7 @@ Prejeto sporočilo z neznanim identifikacijskim ključem. Kliknite za obdelavo i
   <string name="conversation_fragment_cab__batch_selection_amount">Izbranih: %s</string>
   <string name="country_selection_fragment__loading_countries">Pripravljam države...</string>
   <string name="country_selection_fragment__search">Poišči</string>
+  <string name="device_list_fragment__no_devices_paired">Ni povezanih naprav...</string>
   <string name="log_submit_activity__log_fetch_failed">Ne morem zajeti podatkov iz vaše naprave. Sistemsko zabeležbo lahko zajamete tudi sami preko ADB.</string>
   <string name="log_submit_activity__thanks">Hvala za pomoč!</string>
   <string name="log_submit_activity__submitting">Oddajam</string>
@@ -479,6 +494,7 @@ bila uspešna.</string>
   <string name="AndroidManifest__media_overview">Vse slike</string>
   <string name="AndroidManifest__media_overview_named">Vse slike z %1$s</string>
   <string name="AndroidManifest__message_details">Podrobnosti sporočila</string>
+  <string name="AndroidManifest_manage_paired_devices">Upravljanje povezanih naprav</string>
   <string name="arrays__import_export">Uvoz/izvoz</string>
   <string name="arrays__my_identity_key">Moja identifikacija</string>
   <string name="arrays__use_default">Uporabi prednastavljeno</string>
@@ -625,6 +641,7 @@ Brezplačno zasebno sporočanje za OpenchatService in Openchat</string>
   <string name="conversation__menu_leave_group">Zapusti skupino</string>
   <string name="conversation__menu_delete_thread">Izbriši pogovor</string>
   <string name="conversation__menu_view_media">Vse slike</string>
+  <string name="conversation_popup__menu_expand_popup">Odpri pojavno okno</string>
   <string name="conversation_add_to_contacts__menu_add_to_contacts">Dodaj k stikom</string>
   <string name="convesation_group_options__recipients_list">Seznam prejemnikov</string>
   <string name="conversation_group_options__delivery">Dostava</string>
@@ -655,5 +672,4 @@ Brezplačno zasebno sporočanje za OpenchatService in Openchat</string>
   <string name="trimmer__deleting_old_messages">Brišem stara sporočila...</string>
   <string name="trimmer__old_messages_successfully_deleted">Stara sporočila so bila uspešno izbrisana</string>
   <string name="transport_selection_list_item__transport_icon">Ikona transporta</string>
-  <string name="MuteDialog_mute_notifications">Utišaj obvestila</string>
 </resources>

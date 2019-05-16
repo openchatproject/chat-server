@@ -9,7 +9,7 @@
   <string name="ApplicationPreferenceActivity_you_havent_set_a_passphrase_yet">Du har inte angivit ett lösenord än!</string>
   <string name="ApplicationPreferencesActivity_messages_per_conversation">%s meddelanden per konversation</string>
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Radera alla gamla meddelanden nu?</string>
-  <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Är du säker på att du omeddelbart vill trimma alla konversationstrådar till de %s senaste meddelandena?</string>
+  <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Är du säker på att du omedelbart vill trimma alla konversationstrådar till de %s senaste meddelandena?</string>
   <string name="ApplicationPreferencesActivity_delete">Radera</string>
   <string name="ApplicationPreferencesActivity_disable_storage_encryption">Inaktivera lagringskryptering?</string>
   <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
@@ -19,10 +19,10 @@ kommer kunna komma åt dem.</string>
   <string name="ApplicationPreferencesActivity_disable">Inaktivera</string>
   <string name="ApplicationPreferencesActivity_unregistering">Avregistrering</string>
   <string name="ApplicationPreferencesActivity_unregistering_from_openchatservice_messages">Avregistrerar från OpenchatService-meddelanden...</string>
-  <string name="ApplicationPreferencesActivity_disable_openchatservice_messages">Inaktivera OpenchatService meddelanden?</string>
+  <string name="ApplicationPreferencesActivity_disable_openchatservice_messages">Inaktivera OpenchatService-meddelanden?</string>
   <string name="ApplicationPreferencesActivity_this_will_disable_openchatservice_messages">
-        Detta kommer att inaktivera OpenchatService meddelanden genom att avregistrera dig från servern.
-        Du behöver registrera ditt telefonnummer igen för att använda OpenchatService meddelanden i framtiden.</string>
+        Detta kommer att inaktivera OpenchatService-meddelanden genom att avregistrera dig från servern.
+        Du behöver registrera ditt telefonnummer igen för att använda OpenchatService-meddelanden i framtiden.</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Fel vid anslutning till server!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">SMS aktiverat</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Tryck för att ändra din standardapp för SMS</string>
@@ -135,7 +135,7 @@ verifiera denna kontakt.</string>
   <string name="ExportFragment_export">Exportera</string>
   <string name="ExportFragment_export_plaintext_to_sd_card">Exportera okrypterat till minneskort?</string>
   <string name="ExportFragment_warning_this_will_export_the_plaintext_contents">Varning, detta kommer
-spara den okrypterad texten av din konversation till ditt minneskort.</string>
+spara den okrypterade texten av din konversation till ditt minneskort.</string>
   <string name="ExportFragment_cancel">Avbryt</string>
   <string name="ExportFragment_exporting">Sparar</string>
   <string name="ExportFragment_exporting_plaintext_to_sd_card">Exporterar okrypterat till minneskort...</string>
@@ -168,15 +168,16 @@ meddelanden från systemets ursprungliga SMS-databas till OpenchatService. Om du
 importerat systemets SMS-databas så kommer denna åtgärd skapa dubbletter av meddelandena.</string>
   <string name="ImportFragment_import">Importera</string>
   <string name="ImportFragment_cancel">Avbryt</string>
-  <string name="ImportFragment_restore_encrypted_backup">Återställ krypterad backup?</string>
-  <string name="ImportFragment_restoring_an_encrypted_backup_will_completely_replace_your_existing_keys">Genom att återställa en krypterad säkerhetskopia resulterar i att dina existerande nycklar,
+  <string name="ImportFragment_restore_encrypted_backup">Återställ krypterad säkerhetskopia?</string>
+  <string name="ImportFragment_restoring_an_encrypted_backup_will_completely_replace_your_existing_keys">
+Genom att återställa en krypterad säkerhetskopia resulterar detta i att dina existerande nycklar,
 inställningar och meddelanden kommer att skrivas över. Du kommer att förlora all information
 som för närvarande finns i OpenchatService.</string>
   <string name="ImportFragment_restore">Återställ</string>
-  <string name="ImportFragment_import_plaintext_backup">Importera okrypterad backup?</string>
+  <string name="ImportFragment_import_plaintext_backup">Importera okrypterad säkerhetskopia?</string>
   <string name="ImportFragment_this_will_import_messages_from_a_plaintext_backup">Denna åtgärd importerar meddelanden från en säkerhetskopia i klartext. Om du redan har importerat denna säkerhetskopia och importerar igen kommer du att få duplicerade meddelanden.</string>
   <string name="ImportFragment_importing">Importerar</string>
-  <string name="ImportFragment_import_plaintext_backup_elipse">Importerar okrypterad backup...</string>
+  <string name="ImportFragment_import_plaintext_backup_elipse">Importerar okrypterad säkerhetskopia...</string>
   <string name="ImportFragment_no_plaintext_backup_found">Ingen okrypterad säkerhetskopia kunde hittas!</string>
   <string name="ImportFragment_error_importing_backup">Ett fel inträffade vid importering av säkerhetskopian.</string>
   <string name="ImportFragment_import_complete">Importeringen lyckades!</string>
@@ -190,10 +191,10 @@ som för närvarande finns i OpenchatService.</string>
   <string name="MessageDetailsRecipient_failed_to_send">Misslyckades att skicka</string>
   <string name="MessageDetailsRecipient_new_identity">Ny identitet</string>
   <string name="MmsDownloader_error_storing_mms">Fel vid lagring av MMS!</string>
-  <string name="MmsDownloader_error_connecting_to_mms_provider">Fel vid anslutning till MMS leverantör...</string>
-  <string name="MmsDownloader_error_reading_mms_settings">Fel vid läsning av operatörens MMS inställningar...</string>
+  <string name="MmsDownloader_error_connecting_to_mms_provider">Fel vid anslutning till MMS-leverantör...</string>
+  <string name="MmsDownloader_error_reading_mms_settings">Fel vid läsning av operatörens MMS-inställningar...</string>
   <string name="NotificationMmsMessageRecord_multimedia_message">Multimediameddelande</string>
-  <string name="MessageRecord_message_encrypted_with_a_legacy_protocol_version_that_is_no_longer_supported">Fick krypterat meddelande från en gammal version av OpenchatService som inte längre supporteras. Vänligen be avsändaren att uppgradera till senaste version och skicka om meddelandet.</string>
+  <string name="MessageRecord_message_encrypted_with_a_legacy_protocol_version_that_is_no_longer_supported">Fick krypterat meddelande från en gammal version av OpenchatService som inte längre supporteras. Vänligen be avsändaren att uppgradera till senaste versionen och skicka om meddelandet.</string>
   <string name="MessageRecord_left_group">Du har lämnat gruppen.</string>
   <string name="MessageRecord_updated_group">Uppdaterade gruppen.</string>
   <string name="PassphraseChangeActivity_passphrases_dont_match_exclamation">Lösenorden matchar inte!</string>
@@ -310,11 +311,12 @@ Tog emot meddelande med okänd identitetsnyckel. Tryck för att bearbeta och vis
   <string name="MmsDatabase_downloading_mms">Laddar ner MMS...</string>
   <string name="MmsDatabase_mms_download_failed">MMS-nedladdning misslyckades!</string>
   <string name="MmsDatabase_downloading">Laddar ner...</string>
-  <string name="MmsDatabase_mms_pending_download">Tappa och ställ in MMS inställningar för att fortsätta nedladdning.</string>
+  <string name="MmsDatabase_mms_pending_download">Tappa och ställ in MMS-inställningar för att fortsätta nedladdning.</string>
   <string name="MmsDatabase_error_decrypting_message">Fel vid dekryptering av meddelande.</string>
   <string name="MmsMessageRecord_decrypting_mms_please_wait">Dekrypterar MMS, var vänlig vänta...</string>
   <string name="MmsMessageRecord_bad_encrypted_mms_message">Dåligt krypterat MMS meddelande...</string>
-  <string name="MmsMessageRecord_mms_message_encrypted_for_non_existing_session">MMS meddelande krypterat för icke-existerande session...</string>
+  <string name="MmsMessageRecord_mms_message_encrypted_for_non_existing_session">MMS-meddelande krypterat för icke-existerande session...</string>
+  <string name="MuteDialog_mute_notifications">Tysta ner notifieringar</string>
   <string name="ApplicationMigrationService_import_in_progress">Import pågår</string>
   <string name="ApplicationMigrationService_importing_text_messages">Importerar SMS</string>
   <string name="KeyCachingService_openchatservice_passphrase_cached">Tryck för att öppna.</string>
@@ -332,7 +334,6 @@ Tog emot meddelande med okänd identitetsnyckel. Tryck för att bearbeta och vis
   <string name="MessageNotifier_mark_all_as_read">Markera alla som lästa</string>
   <string name="MessageNotifier_mark_as_read">Markera som läst</string>
   <string name="MessageNotifier_media_message">Mediameddelande</string>
-  <string name="QuickResponseService_sorry_quick_response_is_not_yet_supported_by_openchatservice">Tyvärr, Quick Response stöds inte ännu av OpenchatService!</string>
   <string name="change_passphrase_activity__old_passphrase">GAMMALT LÖSENORD:</string>
   <string name="change_passphrase_activity__new_passphrase">NYTT LÖSENORD:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">UPPREPA NYTT LÖSENORD:</string>
@@ -393,7 +394,7 @@ från systemets standardapp för meddelanden.</string>
   <string name="media_overview_activity__no_images">Inga bilder</string>
   <string name="message_recipients_list_item__verify">VERIFIERA</string>
   <string name="message_recipients_list_item__resend">SKICKA OM</string>
-  <string name="MmsPreferencesFragment__manual_mms_settings_are_required">Manuella MMS inställningar krävs för din telefon.</string>
+  <string name="MmsPreferencesFragment__manual_mms_settings_are_required">Manuella MMS-inställningar krävs för din telefon.</string>
   <string name="MmsPreferencesFragment__enabled">Aktiverad</string>
   <string name="MmsPreferencesFragment__disabled">Inaktiverad</string>
   <string name="MmsPreferencesFragment__not_set">Inte satt</string>
@@ -403,8 +404,8 @@ från systemets standardapp för meddelanden.</string>
   <string name="GroupUtil_group_updated">Grupp uppdaterad.</string>
   <string name="GroupUtil_title_is_now">Titeln är nu \'%1$s\'.</string>
   <string name="prompt_passphrase_activity__unlock">Lås upp</string>
-  <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService kräver MMS inställningar för att leverera medie- och gruppmeddelanden via din mobilöperatör. Din enhet gör inte den här informationen tillgänglig, vilket ibland stämmer för låsta enheter och andra restriktiva konfigurationer.</string>
-  <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">För att skicka medie- och gruppmeddelande, klicka \'OK\' och fyll i de begärda inställningarna. MMS inställningarna för din operatör kan generellt hittas genom att söka efter \'din operatör APN\'. Du behöver bara göra det här en gång.</string>
+  <string name="prompt_mms_activity__openchatservice_requires_mms_settings_to_deliver_media_and_group_messages">OpenchatService kräver MMS-inställningar för att leverera medie- och gruppmeddelanden via din mobiloperatör. Din enhet gör inte den här informationen tillgänglig, vilket ibland stämmer för låsta enheter och andra restriktiva konfigurationer.</string>
+  <string name="prompt_mms_activity__to_send_media_and_group_messages_click_ok">För att skicka medie- och gruppmeddelande, klicka \'OK\' och fyll i de begärda inställningarna. MMS-inställningarna för din operatör kan generellt hittas genom att söka efter \'din operatör APN\'. Du behöver bara göra det här en gång.</string>
   <string name="recipient_preference_activity__blocked">BLOCKERAD</string>
   <string name="recipient_preferences__mute_conversation">Tysta konversation</string>
   <string name="recipient_preferences__disable_notifications_for_this_conversation">Inaktivera notifieringar för denna konversation</string>
@@ -428,7 +429,7 @@ med \'Your OpenchatService verification code:\', isåfall måste du konfigurera 
 meddelandeklient för att släppa igenom meddelanden.</string>
   <string name="registration_problems__incorrect_number">Felaktigt nummer.</string>
   <string name="registration_problems__please_checkt_to_make_sure_you_entered_your_number_correctly">
-Kontrollera att du angav telefonnummret rätt och att det är rätt formaterat för ditt område.</string>
+Kontrollera att du angav telefonnumret rätt och att det är rätt formaterat för ditt område.</string>
   <string name="registration_problems__google_voice">Google Voice.</string>
   <string name="registration_problems__openchatservice_will_not_work_with_google_voice_numbers">
 OpenchatService fungerar inte med Google Voice-nummer.</string>
@@ -444,19 +445,19 @@ OpenchatService kan också ringa upp dig för att verifiera ditt telefonnummer. 
 OpenchatService kunde inte ansluta till push-tjänsten.</string>
   <string name="registration_progress_activity__some_possible_problems_include">Några möjliga orsaker:</string>
   <string name="registration_progress_activity__no_network_connectivity">Ingen nätverksanslutning.</string>
-  <string name="registration_progress_activity__your_device_needs_network_connectivity">Din enhet behöver nätverksanslutning för att använda denna funktion. Kontrollera att du är ansluten via mobil data eller trådlöst nätverk.</string>
+  <string name="registration_progress_activity__your_device_needs_network_connectivity">Din enhet behöver nätverksanslutning för att använda denna funktion. Kontrollera att du är ansluten via mobildata eller trådlöst nätverk.</string>
   <string name="registration_progress_activity__restrictive_firewall">Restriktiv brandvägg.</string>
   <string name="registration_progress_activity__if_you_are_connected_via_wifi_its_possible_that_there_is_a_firewall">
 Om du är ansluten via trådlöst nätverk är det möjligt att en brandvägg blockerar åtkomst till OpenchatService-servern. Prova med ett annat nätverk eller mobil data.</string>
   <string name="registration_progress_activity__openchatservice_will_now_automatically_verify_your_number_with_a_confirmation_sms_message">
 OpenchatService kommer nu att automatiskt verifiera ditt telefonnummer med ett sms.</string>
   <string name="registration_progress_activity__connecting">Ansluter...</string>
-  <string name="registration_progress_activity__waiting_for_sms_verification">Väntar på sms-verifiering...</string>
+  <string name="registration_progress_activity__waiting_for_sms_verification">Väntar på SMS-verifiering...</string>
   <string name="registration_progress_activity__registering_with_server">Registrerar på server...</string>
   <string name="registration_progress_activity__this_couild_take_a_moment_please_be_patient">Detta kan ta en stund. Vi notifierar dig när verifieringen är klar.</string>
   <string name="registration_progress_activity__openchatservice_timed_out_while_waiting_for_a_verification_sms_message">
-OpenchatService uppnådde tidsgränsen för sms-verifiering.</string>
-  <string name="registration_progress_activity__sms_verification_failed">Sms-verifiering misslyckades.</string>
+OpenchatService uppnådde tidsgränsen för SMS-verifiering.</string>
+  <string name="registration_progress_activity__sms_verification_failed">SMS-verifiering misslyckades.</string>
   <string name="registration_progress_activity__generating_keys">Skapar nycklar...</string>
   <string name="registration_progress_activity__alert">Notifiera</string>
   <string name="registration_progress_activity__telephone">Telefon</string>
@@ -506,13 +507,13 @@ OpenchatService uppnådde tidsgränsen för sms-verifiering.</string>
   <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_text_messages">Använd OpenchatService för alla inkommande textmeddelanden</string>
   <string name="preferences__use_openchatservice_for_viewing_and_storing_all_incoming_multimedia_messages">Använd OpenchatService för alla inkommande multimediameddelanden</string>
   <string name="preferences__input_settings">Inputinställningar</string>
-  <string name="preferences__enable_enter_key_title">Aktivera returtagenten</string>
+  <string name="preferences__enable_enter_key_title">Aktivera returtangenten</string>
   <string name="preferences__replace_smiley_with_enter_key">Ersätt tangenten för uttryckssymboler med Retur</string>
   <string name="preferences__pref_enter_sends_title">Entertangenten skickar</string>
   <string name="preferences__pressing_the_enter_key_will_send_text_messages">Enter-tangenten skickar textmeddelanden</string>
   <string name="preferences__display_settings">Skärminställningar</string>
   <string name="preferences__choose_identity">Välj identitet</string>
-  <string name="preferences__choose_your_contact_entry_from_the_contacts_list">Välj din kontakt från kontakt listan.</string>
+  <string name="preferences__choose_your_contact_entry_from_the_contacts_list">Välj din kontakt från kontaktlistan.</string>
   <string name="preferences__change_passphrase">Ändra lösenord</string>
   <string name="preferences__change_my_passphrase">Ändra mitt lösenord</string>
   <string name="preferences__enable_passphrase">Aktivera lösenordsfras</string>
@@ -527,7 +528,7 @@ OpenchatService uppnådde tidsgränsen för sms-verifiering.</string>
   <string name="preferences__pref_timeout_interval_title">Timeout intervall</string>
   <string name="preferences__the_amount_of_time_to_wait_before_forgetting_passphrase">Väntetiden innan lösenordet glöms från minnet</string>
   <string name="preferences__notifications">Notifikationer</string>
-  <string name="preferences__display_message_notifications_in_status_bar">Visa meddelande notifikationer i statusraden</string>
+  <string name="preferences__display_message_notifications_in_status_bar">Visa meddelande-notifikationer i statusraden</string>
   <string name="preferences__led_color">Färg på ljusindikator</string>
   <string name="preferences__led_color_unknown">Okänd</string>
   <string name="preferences__pref_led_blink_title">Blinkmönster på ljusindikator</string>
@@ -597,7 +598,7 @@ Fria privata meddelanden till användare av OpenchatService och Openchat</string
   <string name="preferences_app_protection__blocked_contacts">Blockerade kontakter</string>
   <string name="contact_selection_list__menu_select_all">Markera alla</string>
   <string name="contact_selection_list__menu_unselect_all">Avmarkera alla</string>
-  <string name="contact_selection_list__header_openchatservice_users">OPENCHAT ANVÄNDARE</string>
+  <string name="contact_selection_list__header_openchatservice_users">OPENCHAT-ANVÄNDARE</string>
   <string name="contact_selection_list__header_other">ALLA KONTAKTER</string>
   <string name="contact_selection_list__unknown_contact">Nytt meddelande till...</string>
   <string name="contact_selection__menu_finished">Färdig</string>
@@ -606,7 +607,7 @@ Fria privata meddelanden till användare av OpenchatService och Openchat</string
   <string name="conversation_context__menu_message_details">Meddelande detaljer</string>
   <string name="conversation_context__menu_copy_text">Kopiera text</string>
   <string name="conversation_context__menu_delete_message">Radera meddelande</string>
-  <string name="conversation_context__menu_forward_message">Vidarebefodra meddelande</string>
+  <string name="conversation_context__menu_forward_message">Vidarebefordra meddelande</string>
   <string name="conversation_context__menu_resend_message">Skicka meddelande igen</string>
   <string name="conversation_context_image__save_attachment">Spara bilaga</string>
   <string name="conversation_insecure__invite">Bjud in</string>
@@ -629,7 +630,7 @@ Fria privata meddelanden till användare av OpenchatService och Openchat</string
   <string name="conversation__menu_delete_thread">Radera tråd</string>
   <string name="conversation__menu_view_media">Alla bilder</string>
   <string name="conversation_add_to_contacts__menu_add_to_contacts">Lägg till kontakter</string>
-  <string name="convesation_group_options__recipients_list">Mottagare lista</string>
+  <string name="convesation_group_options__recipients_list">Mottagarlista</string>
   <string name="conversation_group_options__delivery">Leverans</string>
   <string name="conversation_group_options__conversation">Konversation</string>
   <string name="conversation_group_options__broadcast">Sändning</string>
@@ -658,5 +659,4 @@ Fria privata meddelanden till användare av OpenchatService och Openchat</string
   <string name="trimmer__deleting_old_messages">Raderar gamla meddelanden...</string>
   <string name="trimmer__old_messages_successfully_deleted">Gamla meddelanden har raderats</string>
   <string name="transport_selection_list_item__transport_icon">Transportikon</string>
-  <string name="MuteDialog_mute_notifications">Tysta ner notifieringar</string>
 </resources>

@@ -322,7 +322,6 @@ Bilinmeyen kimlik anahtarı içeren bir mesaj alındı. İşlemek ve görüntül
   <string name="MessageNotifier_mark_all_as_read">Tümünü okundu işaretle</string>
   <string name="MessageNotifier_mark_as_read">Okundu işaretle</string>
   <string name="MessageNotifier_media_message">Medya mesajı</string>
-  <string name="QuickResponseService_sorry_quick_response_is_not_yet_supported_by_openchatservice">Üzgünüz, Quick Response, OpenchatService tarafından henüz desteklenmiyor!</string>
   <string name="change_passphrase_activity__old_passphrase">ESKİ PAROLA:</string>
   <string name="change_passphrase_activity__new_passphrase">YENİ PAROLA:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">YENİ PAROLA TEKRAR:</string>

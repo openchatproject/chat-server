@@ -312,6 +312,7 @@
   <string name="MmsMessageRecord_decrypting_mms_please_wait">正在解密彩信，请稍后...</string>
   <string name="MmsMessageRecord_bad_encrypted_mms_message">已损坏的加密彩信…</string>
   <string name="MmsMessageRecord_mms_message_encrypted_for_non_existing_session">已为不存在的会话加密彩信消息...</string>
+  <string name="MuteDialog_mute_notifications">静音通知</string>
   <string name="ApplicationMigrationService_import_in_progress">正在导入数据</string>
   <string name="ApplicationMigrationService_importing_text_messages">正在导入文本信息</string>
   <string name="KeyCachingService_openchatservice_passphrase_cached">轻触以开启。</string>
@@ -329,7 +330,6 @@
   <string name="MessageNotifier_mark_all_as_read">全部标记为已读</string>
   <string name="MessageNotifier_mark_as_read">标记为已读</string>
   <string name="MessageNotifier_media_message">媒体信息</string>
-  <string name="QuickResponseService_sorry_quick_response_is_not_yet_supported_by_openchatservice">抱歉，OpenchatService目前还不支持快速回复。</string>
   <string name="change_passphrase_activity__old_passphrase">旧密码：</string>
   <string name="change_passphrase_activity__new_passphrase">新密码：</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">重复新密码：</string>
@@ -666,5 +666,4 @@ OpenchatService 在等待短信验证时超时。</string>
   <string name="trimmer__deleting_old_messages">正在删除旧信息…</string>
   <string name="trimmer__old_messages_successfully_deleted">旧信息已被成功删除。</string>
   <string name="transport_selection_list_item__transport_icon">传输图标</string>
-  <string name="MuteDialog_mute_notifications">静音通知</string>
 </resources>

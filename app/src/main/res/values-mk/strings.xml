@@ -326,6 +326,7 @@
   <string name="MmsMessageRecord_decrypting_mms_please_wait">Дешифрирање на MMS пораката, ве молиме почекајте...</string>
   <string name="MmsMessageRecord_bad_encrypted_mms_message">Погрешно шифрирана MMS порака...</string>
   <string name="MmsMessageRecord_mms_message_encrypted_for_non_existing_session">MMS пораката е шифрирана за непостоечка сесија...</string>
+  <string name="MuteDialog_mute_notifications">Безвучни известувања</string>
   <string name="ApplicationMigrationService_import_in_progress">Импортирањето е во прогрес</string>
   <string name="ApplicationMigrationService_importing_text_messages">Импортирање на текстуални пораки</string>
   <string name="KeyCachingService_openchatservice_passphrase_cached">Притиснете за отворање.</string>
@@ -343,7 +344,6 @@
   <string name="MessageNotifier_mark_all_as_read">Обележи ги сите како прочитани</string>
   <string name="MessageNotifier_mark_as_read">Обележи ги како прочитани</string>
   <string name="MessageNotifier_media_message">Медиа порака</string>
-  <string name="QuickResponseService_sorry_quick_response_is_not_yet_supported_by_openchatservice">Брз одговор сеуште не е поддржан во OpenchatService!</string>
   <string name="change_passphrase_activity__old_passphrase">СТАРА ЛОЗИНКА:</string>
   <string name="change_passphrase_activity__new_passphrase">НОВА ЛОЗИНКА:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">ПОВТОРЕТЕ ЈА НОВАТА ЛОЗИНКА:</string>
@@ -683,5 +683,4 @@ OpenchatService автоматски ќе го провери вашиот бр�
   <string name="trimmer__deleting_old_messages">Бришење на старите пораки...</string>
   <string name="trimmer__old_messages_successfully_deleted">Старите пораки се успешно избришани</string>
   <string name="transport_selection_list_item__transport_icon">Симбол за транспорт</string>
-  <string name="MuteDialog_mute_notifications">Безвучни известувања</string>
 </resources>

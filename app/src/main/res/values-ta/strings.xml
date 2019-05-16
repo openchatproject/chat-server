@@ -302,7 +302,6 @@ SMS-களை இறக்குமதி செய்திருந்தா�
   <string name="MessageNotifier_mark_all_as_read">அனைத்தையும் படித்தாக குறியிடு</string>
   <string name="MessageNotifier_mark_as_read"> படித்தாக குறியிடு</string>
   <string name="MessageNotifier_media_message">மீடியா செய்தி</string>
-  <string name="QuickResponseService_sorry_quick_response_is_not_yet_supported_by_openchatservice">மன்னிக்கவும், OpenchatService-இல் விரைவு பதிலுக்கு இன்னும் ஆதரவில்லை!</string>
   <string name="change_passphrase_activity__old_passphrase">பழைய கடவுச்சொல்:</string>
   <string name="change_passphrase_activity__new_passphrase">புதிய கடவுச்சொல்:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">மீண்டும் புதிய கடவுச்சொல்:</string>

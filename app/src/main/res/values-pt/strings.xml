@@ -291,7 +291,6 @@ Recebida mensagem com chave de identidade desconhecida. Clique para processar e 
   <string name="MessageNotifier_mark_all_as_read">Marcar todas como lidas</string>
   <string name="MessageNotifier_mark_as_read">Marcar como lidas</string>
   <string name="MessageNotifier_media_message">Mensagem media</string>
-  <string name="QuickResponseService_sorry_quick_response_is_not_yet_supported_by_openchatservice">Desculpe, a \'Resposta Rápida\' ainda não é suportada pelo OpenchatService!</string>
   <string name="change_passphrase_activity__old_passphrase">Frase-chave anterior:</string>
   <string name="change_passphrase_activity__new_passphrase">Frase-chave nova:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">Repetir a frase-chave nova:</string>

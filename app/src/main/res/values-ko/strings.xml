@@ -296,6 +296,7 @@
   <string name="MmsMessageRecord_decrypting_mms_please_wait">MMS 메시지를 복호화하는 중입니다. 잠시 기다려 주세요…</string>
   <string name="MmsMessageRecord_bad_encrypted_mms_message">암호화된 MMS 메시지가 잘못되었습니다.</string>
   <string name="MmsMessageRecord_mms_message_encrypted_for_non_existing_session">MMS 메시지가 암호화된 세션이 없습니다.</string>
+  <string name="MuteDialog_mute_notifications">대화 알림 끄기</string>
   <string name="ApplicationMigrationService_import_in_progress">가져오는 중입니다.</string>
   <string name="ApplicationMigrationService_importing_text_messages">메시지 가져오기</string>
   <string name="KeyCachingService_openchatservice_passphrase_cached">열려면 터치하세요.</string>
@@ -313,7 +314,6 @@
   <string name="MessageNotifier_mark_all_as_read">모두 읽음으로 표시</string>
   <string name="MessageNotifier_mark_as_read">읽음으로 표시</string>
   <string name="MessageNotifier_media_message">미디어 메시지</string>
-  <string name="QuickResponseService_sorry_quick_response_is_not_yet_supported_by_openchatservice">OpenchatService에서 빠른 응답 아직 지원하지 않음</string>
   <string name="change_passphrase_activity__old_passphrase">기존 암호:</string>
   <string name="change_passphrase_activity__new_passphrase">새 암호:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">새 암호 다시 입력:</string>
@@ -622,5 +622,4 @@
   <string name="trimmer__deleting_old_messages">이전 메시지를 삭제 중…</string>
   <string name="trimmer__old_messages_successfully_deleted">이전 메시지 삭제됨</string>
   <string name="transport_selection_list_item__transport_icon">전송 아이콘</string>
-  <string name="MuteDialog_mute_notifications">대화 알림 끄기</string>
 </resources>

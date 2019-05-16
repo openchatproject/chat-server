@@ -293,7 +293,6 @@
   <string name="MessageNotifier_mark_all_as_read">Пазначыць усе як прачытаныя</string>
   <string name="MessageNotifier_mark_as_read">Пазначыць як прачытанае</string>
   <string name="MessageNotifier_media_message">Мультымедыя паведамленне</string>
-  <string name="QuickResponseService_sorry_quick_response_is_not_yet_supported_by_openchatservice">Нажаль Quick Response больш не падтрымліваецца OpenchatService!</string>
   <string name="change_passphrase_activity__old_passphrase">СТАРЫ ПАРОЛЬ:</string>
   <string name="change_passphrase_activity__new_passphrase">НОВЫ ПАРОЛЬ:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">ПАЎТАРЫЦЕ НОВЫ ПАРОЛЬ:</string>

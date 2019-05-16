@@ -321,6 +321,7 @@ SMS съобщенията от системната базата данни в 
   <string name="MmsMessageRecord_decrypting_mms_please_wait">MMS-а се разшифрова, моля изчакайте...</string>
   <string name="MmsMessageRecord_bad_encrypted_mms_message">Лошо шифровано MMS съобщение...</string>
   <string name="MmsMessageRecord_mms_message_encrypted_for_non_existing_session">MMS съобщението е шифровано за не съществуваща сесия...</string>
+  <string name="MuteDialog_mute_notifications">Тих режим за известия</string>
   <string name="ApplicationMigrationService_import_in_progress">Извършва се внасяне</string>
   <string name="ApplicationMigrationService_importing_text_messages">Внасяне на текстови съобщения</string>
   <string name="KeyCachingService_openchatservice_passphrase_cached">Натисни, за да отвориш.</string>
@@ -338,7 +339,6 @@ SMS съобщенията от системната базата данни в 
   <string name="MessageNotifier_mark_all_as_read">Всички са прочетени</string>
   <string name="MessageNotifier_mark_as_read">Прочетено</string>
   <string name="MessageNotifier_media_message">Медийно съобщение</string>
-  <string name="QuickResponseService_sorry_quick_response_is_not_yet_supported_by_openchatservice">За съжаление, OpenchatService все още не поддържа Quick Response!</string>
   <string name="change_passphrase_activity__old_passphrase">СТАРА ПАРОЛА: </string>
   <string name="change_passphrase_activity__new_passphrase">НОВА ПАРОЛА: </string>
   <string name="change_passphrase_activity__repeat_new_passphrase">ПОВТОРИ НОВАТА ПАРОЛА: </string>
@@ -683,5 +683,4 @@ OpenchatService чака твърде дълго за SMS потвърждени
   <string name="trimmer__deleting_old_messages">Изтриване на стари съобщения...</string>
   <string name="trimmer__old_messages_successfully_deleted">Старите съобщения бяха успешно изтрити</string>
   <string name="transport_selection_list_item__transport_icon">Икона за транспорт</string>
-  <string name="MuteDialog_mute_notifications">Тих режим за известия</string>
 </resources>

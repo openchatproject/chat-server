@@ -339,6 +339,7 @@ Ismeretlen azonosító kulcsú üzenet érkezett. Kattints rá a feldolgozáshoz
   <string name="MmsMessageRecord_decrypting_mms_please_wait">MMS dekódolása, kérlek várj...</string>
   <string name="MmsMessageRecord_bad_encrypted_mms_message">Hibás titkosított MMS üzenet...</string>
   <string name="MmsMessageRecord_mms_message_encrypted_for_non_existing_session">Az MMS üzenet titkosításra került egy nem létező üzenetváltáshoz.</string>
+  <string name="MuteDialog_mute_notifications">Értesítések némítása</string>
   <string name="ApplicationMigrationService_import_in_progress">Az importálás folyamatban van.</string>
   <string name="ApplicationMigrationService_importing_text_messages">SMS üzenetek importálása</string>
   <string name="KeyCachingService_openchatservice_passphrase_cached">A megnyitáshoz érintsd meg!</string>
@@ -356,7 +357,6 @@ Ismeretlen azonosító kulcsú üzenet érkezett. Kattints rá a feldolgozáshoz
   <string name="MessageNotifier_mark_all_as_read">Az összes olvasottként való megjelölése</string>
   <string name="MessageNotifier_mark_as_read">Olvasottként való megjelölés</string>
   <string name="MessageNotifier_media_message">Média üzenet</string>
-  <string name="QuickResponseService_sorry_quick_response_is_not_yet_supported_by_openchatservice">Sajnáljuk, de a gyors válasz funkciót a OpenchatService még nem támogatja!</string>
   <string name="change_passphrase_activity__old_passphrase">RÉGI JELSZÓ:</string>
   <string name="change_passphrase_activity__new_passphrase">ÚJ JELSZÓ:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">ISMÉTELD MEG AZ ÚJ JELSZÓT:</string>
@@ -713,5 +713,4 @@ Ingyenes biztonságos üzenet küldés OpenchatService és Openchat felhasznál�
   <string name="trimmer__deleting_old_messages">Régi üzenetek törlése...</string>
   <string name="trimmer__old_messages_successfully_deleted">A régi üzenetek sikeresen törlődtek</string>
   <string name="transport_selection_list_item__transport_icon">Átvitel ikon</string>
-  <string name="MuteDialog_mute_notifications">Értesítések némítása</string>
 </resources>

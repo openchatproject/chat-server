@@ -191,7 +191,6 @@ Nhận thông tin về chìa khóa nhận diện không rõ. Bấm để xử l�
   <string name="MessageNotifier_error_delivering_message">Có lỗi khi phân phối tin.</string>
   <string name="MessageNotifier_mark_all_as_read">Đánh dấu tất cả đã đọc</string>
   <string name="MessageNotifier_mark_as_read">Đánh dấu đã đọc</string>
-  <string name="QuickResponseService_sorry_quick_response_is_not_yet_supported_by_openchatservice">Xin lỗi, Hồi Âm Nhanh chưa được OpenchatService hỗ trợ!</string>
   <string name="change_passphrase_activity__old_passphrase">MẬT KHẨU CŨ:</string>
   <string name="change_passphrase_activity__new_passphrase">MẬT KHẨU MỚI:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">LẬP LẠI MẬT KHẨU MỚI:</string>

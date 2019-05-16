@@ -335,7 +335,6 @@ SMS της συσκευής σας στο OpenchatService. Αν έχετε ήδ�
   <string name="MessageNotifier_mark_all_as_read">Επισήμανση όλων ως αναγνωσμένα</string>
   <string name="MessageNotifier_mark_as_read">Επισήμανση ως αναγνωσμένο</string>
   <string name="MessageNotifier_media_message">Μήνυμα πολυμέσων</string>
-  <string name="QuickResponseService_sorry_quick_response_is_not_yet_supported_by_openchatservice">Λυπούμαστε, η Άμεση Απάντηση δεν υποστηρίζεται ακόμα από το OpenchatService!</string>
   <string name="change_passphrase_activity__old_passphrase">ΠΑΛΙΟ ΣΥΝΘΗΜΑΤΙΚΟ</string>
   <string name="change_passphrase_activity__new_passphrase">ΝΕΟ ΣΥΝΘΗΜΑΤΙΚΟ:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">ΕΠΑΝΑΛΗΨΗ ΝΕΟΥ ΣΥΝΘΗΜΑΤΙΚΟΥ:</string>

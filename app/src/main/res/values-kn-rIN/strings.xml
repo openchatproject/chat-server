@@ -309,7 +309,6 @@
   <string name="MessageNotifier_mark_all_as_read">ಎಲ್ಲವನ್ನು ಓದಿದೆ ಎಂದು ಗುರುತು ಮಾಡಿ</string>
   <string name="MessageNotifier_mark_as_read">ಓದಿದೆ ಎಂದು ಗುರುತು ಮಾಡಿ</string>
   <string name="MessageNotifier_media_message">ಬಹುಮಾಧ್ಯಮ ಸಂದೇಶ</string>
-  <string name="QuickResponseService_sorry_quick_response_is_not_yet_supported_by_openchatservice">ಕ್ಷಮಿಸಿ, ತ್ವರಿತ ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಸದ್ಯಕ್ಕೆ ಟೆಕ್ಸ್ಟ್ ಸೆಕ್ಯೂರ್ ಬೆಂಬಲಿಸುತ್ತಿಲ್ಲ!</string>
   <string name="change_passphrase_activity__old_passphrase">ಹಳೆಯ ಗುಪ್ತಪದ:</string>
   <string name="change_passphrase_activity__new_passphrase">ಹೊಸ ಗುಪ್ತಪದ:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">ಹೊಸ ಗುಪ್ತಪದವನ್ನು ಪುನರಾವರ್ತಿಸಿ:</string>

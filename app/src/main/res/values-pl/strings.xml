@@ -312,6 +312,7 @@ Otrzymano wiadomość z nieznanym kluczem tożsamości. Kliknij aby przetworzyć
   <string name="MmsMessageRecord_decrypting_mms_please_wait">Trwa odszyfrowywanie MMSa, proszę czekać...</string>
   <string name="MmsMessageRecord_bad_encrypted_mms_message">Źle zaszyfrowana wiadomość MMS...</string>
   <string name="MmsMessageRecord_mms_message_encrypted_for_non_existing_session">Wiadomość MMS zaszyfrowana dla nieistniejącej sesji...</string>
+  <string name="MuteDialog_mute_notifications">Wycisz powiadomienia</string>
   <string name="ApplicationMigrationService_import_in_progress">Trwa importowanie</string>
   <string name="ApplicationMigrationService_importing_text_messages">Importowanie wiadomości tekstowych</string>
   <string name="KeyCachingService_openchatservice_passphrase_cached">Dotknij, aby otworzyć.</string>
@@ -329,7 +330,6 @@ Otrzymano wiadomość z nieznanym kluczem tożsamości. Kliknij aby przetworzyć
   <string name="MessageNotifier_mark_all_as_read">Oznacz wszystkie jako przeczytane</string>
   <string name="MessageNotifier_mark_as_read">Oznacz jako przeczytane</string>
   <string name="MessageNotifier_media_message">Wiadomość multimedialna</string>
-  <string name="QuickResponseService_sorry_quick_response_is_not_yet_supported_by_openchatservice">Przepraszamy, Szybka Odpowiedź nie jest jeszcze wspierana przez OpenchatService!</string>
   <string name="change_passphrase_activity__old_passphrase">STARE HASŁO:</string>
   <string name="change_passphrase_activity__new_passphrase">NOWE HASŁO:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">POWTÓRZ NOWE HASŁO:</string>
@@ -655,5 +655,4 @@ Darmowe i prywatne wiadomości do użytkowników OpenchatService i Openchat</str
   <string name="trimmer__deleting_old_messages">Usuwanie starych wiadomości...</string>
   <string name="trimmer__old_messages_successfully_deleted">Stare wiadomości zostały pomyślnie usunięte</string>
   <string name="transport_selection_list_item__transport_icon">Ikona transportu</string>
-  <string name="MuteDialog_mute_notifications">Wycisz powiadomienia</string>
 </resources>
