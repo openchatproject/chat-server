@@ -19,6 +19,7 @@ import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.LRUCache;
 import com.openchat.secureim.util.ListenableFutureTask;
 import com.openchat.secureim.util.Util;
+import com.openchat.protocal.util.guava.Optional;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -51,9 +52,9 @@ public class RecipientProvider {
     String number = CanonicalAddressDatabase.getInstance(context).getAddressFromId(recipientId);
 
     if (asynchronous) {
-      cachedRecipient = new Recipient(recipientId, number, getRecipientDetailsAsync(context, number));
+      cachedRecipient = new Recipient(recipientId, number, getRecipientDetailsAsync(context, recipientId, number));
     } else {
-      cachedRecipient = new Recipient(recipientId, getRecipientDetailsSync(context, number));
+      cachedRecipient = new Recipient(recipientId, getRecipientDetailsSync(context, recipientId, number));
     }
 
     recipientCache.put(recipientId, cachedRecipient);
@@ -83,12 +84,13 @@ public class RecipientProvider {
   }
 
   private @NonNull ListenableFutureTask<RecipientDetails> getRecipientDetailsAsync(final Context context,
+                                                                                   final long recipientId,
                                                                                    final String number)
   {
     Callable<RecipientDetails> task = new Callable<RecipientDetails>() {
       @Override
       public RecipientDetails call() throws Exception {
-        return getRecipientDetailsSync(context, number);
+        return getRecipientDetailsSync(context, recipientId, number);
       }
     };
 
@@ -97,15 +99,17 @@ public class RecipientProvider {
     return future;
   }
 
-  private @NonNull RecipientDetails getRecipientDetailsSync(Context context, String number) {
+  private @NonNull RecipientDetails getRecipientDetailsSync(Context context, long recipientId, String number) {
     if (GroupUtil.isEncodedGroup(number)) return getGroupRecipientDetails(context, number);
-    else                                  return getIndividualRecipientDetails(context, number);
+    else                                  return getIndividualRecipientDetails(context, recipientId, number);
   }
 
-  private @NonNull RecipientDetails getIndividualRecipientDetails(Context context, String number) {
-    Uri uri       = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
-    Cursor cursor = context.getContentResolver().query(uri, CALLER_ID_PROJECTION,
-                                                       null, null, null);
+  private @NonNull RecipientDetails getIndividualRecipientDetails(Context context, long recipientId, String number) {
+    Optional<RecipientsPreferences> preferences = DatabaseFactory.getRecipientPreferenceDatabase(context).getRecipientsPreferences(new long[]{recipientId});
+    Optional<Integer>               color       = preferences.isPresent() ? preferences.get().getColor() : Optional.<Integer>absent();
+    Uri                             uri         = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
+    Cursor                          cursor      = context.getContentResolver().query(uri, CALLER_ID_PROJECTION,
+                                                                                     null, null, null);
 
     try {
       if (cursor != null && cursor.moveToFirst()) {
@@ -115,14 +119,14 @@ public class RecipientProvider {
                                                                         Uri.withAppendedPath(Contacts.CONTENT_URI, cursor.getLong(2) + ""),
                                                                         name);
 
-        return new RecipientDetails(cursor.getString(0), cursor.getString(3), contactUri, contactPhoto);
+        return new RecipientDetails(cursor.getString(0), cursor.getString(3), contactUri, contactPhoto, color);
       }
     } finally {
       if (cursor != null)
         cursor.close();
     }
 
-    return new RecipientDetails(null, number, null, ContactPhotoFactory.getDefaultContactPhoto(null));
+    return new RecipientDetails(null, number, null, ContactPhotoFactory.getDefaultContactPhoto(null), color);
   }
 
   private @NonNull RecipientDetails getGroupRecipientDetails(Context context, String groupId) {
@@ -132,13 +136,13 @@ public class RecipientProvider {
 
       if (record != null) {
         ContactPhoto contactPhoto = ContactPhotoFactory.getGroupContactPhoto(record.getAvatar());
-        return new RecipientDetails(record.getTitle(), groupId, null, contactPhoto);
+        return new RecipientDetails(record.getTitle(), groupId, null, contactPhoto, Optional.<Integer>absent());
       }
 
-      return new RecipientDetails(null, groupId, null, ContactPhotoFactory.getDefaultGroupPhoto());
+      return new RecipientDetails(null, groupId, null, ContactPhotoFactory.getDefaultGroupPhoto(), Optional.<Integer>absent());
     } catch (IOException e) {
       Log.w("RecipientProvider", e);
-      return new RecipientDetails(null, groupId, null, ContactPhotoFactory.getDefaultGroupPhoto());
+      return new RecipientDetails(null, groupId, null, ContactPhotoFactory.getDefaultGroupPhoto(), Optional.<Integer>absent());
     }
   }
 
@@ -162,18 +166,21 @@ public class RecipientProvider {
   }
 
   public static class RecipientDetails {
-    @Nullable public final String       name;
-    @NonNull  public final String       number;
-    @NonNull  public final ContactPhoto avatar;
-    @Nullable public final Uri          contactUri;
+    @Nullable public final String            name;
+    @NonNull  public final String            number;
+    @NonNull  public final ContactPhoto      avatar;
+    @Nullable public final Uri               contactUri;
+    @NonNull  public final Optional<Integer> color;
 
     public RecipientDetails(@Nullable String name, @NonNull String number,
-                            @Nullable Uri contactUri, @NonNull ContactPhoto avatar)
+                            @Nullable Uri contactUri, @NonNull ContactPhoto avatar,
+                            @NonNull  Optional<Integer> color)
     {
       this.name          = name;
       this.number        = number;
       this.avatar        = avatar;
       this.contactUri    = contactUri;
+      this.color         = color;
     }
   }
 

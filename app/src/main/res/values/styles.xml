@@ -40,7 +40,7 @@
         <item name="titleTextStyle">@style/OpenchatService.TitleTextStyle</item>
         <item name="subtitleTextStyle">@style/OpenchatService.SubtitleTextStyle</item>
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColorSecondary">#99ffffff</item>
+        <item name="android:textColorSecondary">#BFffffff</item>
     </style>
 
     <style name="OpenchatService.DarkActionBar.TabBar"
@@ -60,7 +60,7 @@
     </style>
 
     <style name="OpenchatService.SubtitleTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Subtitle">
-        <item name="android:textColor">#99ffffff</item>
+        <item name="android:textColor">#BFffffff</item>
     </style>
 
     <style name="OpenchatService.IntroActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
