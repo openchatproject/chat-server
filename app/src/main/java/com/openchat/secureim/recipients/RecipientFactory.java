@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.openchat.secureim.contacts.ContactPhotoFactory;
+import com.openchat.secureim.contacts.avatars.ContactPhotoFactory;
 import com.openchat.secureim.database.CanonicalAddressDatabase;
 import com.openchat.secureim.util.Util;
 import com.openchat.protocal.util.guava.Optional;
@@ -104,7 +104,6 @@ public class RecipientFactory {
   }
 
   public static void clearCache() {
-    ContactPhotoFactory.clearCache();
     provider.clearCache();
   }
 
