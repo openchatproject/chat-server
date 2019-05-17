@@ -1,13 +1,16 @@
 package com.openchat.secureim;
 
+import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -24,6 +27,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnKeyListener;
 import android.view.ViewStub;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -33,6 +37,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.google.protobuf.ByteString;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import com.openchat.secureim.TransportOptions.OnTransportChangedListener;
 import com.openchat.secureim.components.AnimatingToggle;
@@ -42,6 +47,7 @@ import com.openchat.secureim.components.emoji.EmojiDrawer;
 import com.openchat.secureim.components.emoji.EmojiToggle;
 import com.openchat.secureim.contacts.ContactAccessor;
 import com.openchat.secureim.contacts.ContactAccessor.ContactData;
+import com.openchat.secureim.contacts.avatars.ContactColors;
 import com.openchat.secureim.crypto.MasterCipher;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.SecurityEvent;
@@ -144,6 +150,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   private DynamicTheme    dynamicTheme    = new DynamicTheme();
   private DynamicLanguage dynamicLanguage = new DynamicLanguage();
 
+  @TargetApi(Build.VERSION_CODES.KITKAT)
   @Override
   protected void onPreCreate() {
     dynamicTheme.onCreate(this);
@@ -197,6 +204,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     initializeIme();
 
     titleView.setTitle(recipients);
+    setActionBarColor(recipients.getColor());
     setBlockedUserState(recipients);
     calculateCharactersRemaining();
 
@@ -771,11 +779,13 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
   @Override
   public void onModified(final Recipients recipients) {
+    Log.w(TAG, "onModified()");
     titleView.post(new Runnable() {
       @Override
       public void run() {
         titleView.setTitle(recipients);
         setBlockedUserState(recipients);
+        setActionBarColor(recipients.getColor());
       }
     });
   }
@@ -962,6 +972,18 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     }.execute(thisThreadId);
 
     return future;
+  }
+
+  private void setActionBarColor(Optional<Integer> color) {
+    int colorPrimary     = getResources().getColor(R.color.openchatservice_primary);
+    int colorPrimaryDark = getResources().getColor(R.color.openchatservice_primary_dark);
+
+    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(color.or(colorPrimary)));
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      if (color.isPresent()) getWindow().setStatusBarColor(ContactColors.getStatusTinted(color.get()).or(colorPrimaryDark));
+      else                   getWindow().setStatusBarColor(colorPrimaryDark);
+    }
   }
 
   private void setBlockedUserState(Recipients recipients) {
