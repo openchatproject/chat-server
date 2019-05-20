@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.openchat.secureim.color.MaterialColor;
 import com.openchat.secureim.contacts.avatars.ContactColors;
 import com.openchat.secureim.contacts.avatars.ContactPhoto;
 import com.openchat.secureim.contacts.avatars.ContactPhotoFactory;
@@ -12,7 +13,6 @@ import com.openchat.secureim.recipients.RecipientProvider.RecipientDetails;
 import com.openchat.secureim.util.FutureTaskListener;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.ListenableFutureTask;
-import com.openchat.protocal.util.guava.Optional;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -30,16 +30,17 @@ public class Recipient {
   private String number;
   private String name;
 
-  private ContactPhoto      contactPhoto;
-  private Uri               contactUri;
-  private Optional<Integer> color;
+  private ContactPhoto contactPhoto;
+  private Uri          contactUri;
+
+  @Nullable private MaterialColor color;
 
   Recipient(long recipientId, String number, ListenableFutureTask<RecipientDetails> future)
   {
     this.recipientId  = recipientId;
     this.number       = number;
     this.contactPhoto = ContactPhotoFactory.getLoadingPhoto();
-    this.color        = Optional.absent();
+    this.color        = null;
 
     future.addListener(new FutureTaskListener<RecipientDetails>() {
       @Override
@@ -81,13 +82,13 @@ public class Recipient {
     return this.name;
   }
 
-  public synchronized @NonNull Optional<Integer> getColor() {
-    if      (color.isPresent()) return color;
-    else if (name != null)      return Optional.of(ContactColors.generateFor(name));
-    else                        return Optional.of(ContactColors.UNKNOWN_COLOR);
+  public synchronized @NonNull MaterialColor getColor() {
+    if      (color != null) return color;
+    else if (name != null)  return ContactColors.generateFor(name);
+    else                    return ContactColors.UNKNOWN_COLOR;
   }
 
-  public void setColor(Optional<Integer> color) {
+  public void setColor(@NonNull MaterialColor color) {
     synchronized (this) {
       this.color = color;
     }
@@ -125,8 +126,7 @@ public class Recipient {
 
   public static Recipient getUnknownRecipient() {
     return new Recipient(-1, new RecipientDetails("Unknown", "Unknown", null,
-                                                  ContactPhotoFactory.getDefaultContactPhoto("Unknown"),
-                                                  Optional.<Integer>absent()));
+                                                  ContactPhotoFactory.getDefaultContactPhoto("Unknown"), null));
   }
 
   @Override

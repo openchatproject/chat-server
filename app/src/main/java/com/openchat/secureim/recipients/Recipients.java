@@ -1,11 +1,14 @@
 package com.openchat.secureim.recipients;
 
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.Patterns;
 
+import com.openchat.secureim.color.MaterialColor;
+import com.openchat.secureim.contacts.avatars.ContactColors;
 import com.openchat.secureim.contacts.avatars.ContactPhoto;
 import com.openchat.secureim.contacts.avatars.ContactPhotoFactory;
 import com.openchat.secureim.database.RecipientPreferenceDatabase.RecipientsPreferences;
@@ -16,7 +19,6 @@ import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.ListenableFutureTask;
 import com.openchat.secureim.util.NumberUtil;
 import com.openchat.secureim.util.Util;
-import com.openchat.protocal.util.guava.Optional;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -139,13 +141,13 @@ public class Recipients implements Iterable<Recipient>, RecipientModifiedListene
     else                        return ContactPhotoFactory.getDefaultGroupPhoto();
   }
 
-  public synchronized @NonNull Optional<Integer> getColor() {
-    if      (!isSingleRecipient() || isGroupRecipient()) return Optional.absent();
-    else if (isEmpty())                                  return Optional.absent();
+  public synchronized @NonNull MaterialColor getColor(Context context) {
+    if      (!isSingleRecipient() || isGroupRecipient()) return ContactColors.getGroupColor(context);
+    else if (isEmpty())                                  return ContactColors.UNKNOWN_COLOR;
     else                                                 return recipients.get(0).getColor();
   }
 
-  public synchronized void setColor(Optional<Integer> color) {
+  public synchronized void setColor(@NonNull MaterialColor color) {
     if      (!isSingleRecipient() || isGroupRecipient()) throw new AssertionError("Groups don't have colors!");
     else if (!isEmpty())                                 recipients.get(0).setColor(color);
   }

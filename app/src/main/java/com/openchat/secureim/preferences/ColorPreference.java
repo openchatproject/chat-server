@@ -55,15 +55,6 @@ public class ColorPreference extends Preference {
     try {
       mItemLayoutId = a.getResourceId(R.styleable.ColorPreference_itemLayout, mItemLayoutId);
       mNumColumns = a.getInteger(R.styleable.ColorPreference_numColumns, mNumColumns);
-      int choicesResId = a.getResourceId(R.styleable.ColorPreference_choices,
-                                         R.array.default_color_choice_values);
-      if (choicesResId > 0) {
-        String[] choices = a.getResources().getStringArray(choicesResId);
-        mColorChoices = new int[choices.length];
-        for (int i = 0; i < choices.length; i++) {
-          mColorChoices[i] = Color.parseColor(choices[i]);
-        }
-      }
 
     } finally {
       a.recycle();
@@ -85,6 +76,10 @@ public class ColorPreference extends Preference {
       persistInt(value);
       notifyChanged();
     }
+  }
+
+  public void setChoices(int[] values) {
+    mColorChoices = values;
   }
 
   @Override

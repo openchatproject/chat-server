@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.AlertDialogWrapper;
 
 import com.openchat.secureim.ConversationFragment.SelectionClickListener;
+import com.openchat.secureim.color.ThemeType;
 import com.openchat.secureim.components.AvatarImageView;
 import com.openchat.secureim.components.ThumbnailView;
 import com.openchat.secureim.crypto.MasterSecret;
@@ -166,14 +168,14 @@ public class ConversationItem extends LinearLayout {
   private void setBubbleState(MessageRecord messageRecord) {
     int[]      attributes   = new int[]{R.attr.conversation_item_bubble_background};
     TypedArray colors       = context.obtainStyledAttributes(attributes);
-    int        defaultColor = colors.getColor(0, 0xFFFFFF);
+    int        defaultColor = colors.getColor(0, Color.WHITE);
 
     if (messageRecord.isOutgoing()) {
       bodyBubble.getBackground().setColorFilter(defaultColor, PorterDuff.Mode.MULTIPLY);
     } else {
       bodyBubble.getBackground().setColorFilter(messageRecord.getIndividualRecipient()
                                                              .getColor()
-                                                             .or(defaultColor),
+                                                             .toConversationColor(ThemeType.getCurrent(context)),
                                                 PorterDuff.Mode.MULTIPLY);
     }
 

@@ -30,6 +30,7 @@ import android.util.Log;
 import com.openchat.secureim.ConversationActivity;
 import com.openchat.secureim.ConversationListActivity;
 import com.openchat.secureim.R;
+import com.openchat.secureim.color.ThemeType;
 import com.openchat.secureim.contacts.avatars.ContactColors;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
@@ -170,8 +171,8 @@ public class MessageNotifier {
     Recipient                  recipient           = notifications.get(0).getIndividualRecipient();
     Recipients                 recipients          = notifications.get(0).getRecipients();
     int                        largeIconTargetSize = context.getResources().getDimensionPixelSize(R.dimen.contact_photo_target_size);
-    Drawable                   recipientPhoto      = recipient.getContactPhoto().asDrawable(context, recipients == null ? ContactColors.UNKNOWN_COLOR :
-                                                                                                     recipients.getColor().or(ContactColors.UNKNOWN_COLOR));
+    Drawable                   recipientPhoto      = recipient.getContactPhoto().asDrawable(context, recipients == null ? ContactColors.UNKNOWN_COLOR.toConversationColor(ThemeType.LIGHT) :
+                                                                                                     recipients.getColor(context).toConversationColor(ThemeType.LIGHT));
 
     if (recipientPhoto != null) {
       Bitmap recipientPhotoBitmap = BitmapUtil.createFromDrawable(recipientPhoto, largeIconTargetSize, largeIconTargetSize);

@@ -3,6 +3,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="OpenchatService.LightNoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="theme_type">light</item>
         <item name="actionBarStyle">@style/OpenchatService.LightActionBar</item>
         <item name="actionBarTabBarStyle">@style/OpenchatService.LightActionBar.TabBar</item>
         <item name="colorPrimary">@color/openchatservice_primary</item>
@@ -12,6 +13,7 @@
     </style>
 
     <style name="OpenchatService.DarkNoActionBar" parent="@style/Theme.AppCompat.NoActionBar">
+        <item name="theme_type">dark</item>
         <item name="actionBarStyle">@style/OpenchatService.DarkActionBar</item>
         <item name="actionBarTabBarStyle">@style/OpenchatService.DarkActionBar.TabBar</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
@@ -57,6 +59,7 @@
     </style>
 
     <style name="OpenchatService.LightTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="theme_type">light</item>
         <item name="actionBarStyle">@style/OpenchatService.LightActionBar</item>
         <item name="actionBarTabBarStyle">@style/OpenchatService.LightActionBar.TabBar</item>
         <item name="colorPrimary">@color/openchatservice_primary</item>
@@ -168,6 +171,7 @@
     </style>
 
     <style name="OpenchatService.DarkTheme" parent="@style/Theme.AppCompat">
+        <item name="theme_type">dark</item>
         <item name="actionBarStyle">@style/OpenchatService.DarkActionBar</item>
         <item name="actionBarTabBarStyle">@style/OpenchatService.DarkActionBar.TabBar</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Dark</item>

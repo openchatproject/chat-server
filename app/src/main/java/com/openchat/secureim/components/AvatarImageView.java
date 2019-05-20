@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.openchat.secureim.R;
+import com.openchat.secureim.color.MaterialColor;
+import com.openchat.secureim.color.ThemeType;
 import com.openchat.secureim.contacts.avatars.ContactColors;
 import com.openchat.secureim.contacts.avatars.ContactPhotoFactory;
 import com.openchat.secureim.recipients.Recipient;
@@ -37,12 +39,14 @@ public class AvatarImageView extends ImageView {
   }
 
   public void setAvatar(@Nullable Recipients recipients, boolean quickContactEnabled) {
+    ThemeType themeType = ThemeType.getCurrent(getContext());
+
     if (recipients != null) {
-      int backgroundColor = recipients.getColor().or(ContactColors.UNKNOWN_COLOR);
-      setImageDrawable(recipients.getContactPhoto().asDrawable(getContext(), backgroundColor, inverted));
+      MaterialColor backgroundColor = recipients.getColor(getContext());
+      setImageDrawable(recipients.getContactPhoto().asDrawable(getContext(), backgroundColor.toConversationColor(themeType), inverted));
       setAvatarClickHandler(recipients, quickContactEnabled);
     } else {
-      setImageDrawable(ContactPhotoFactory.getDefaultContactPhoto(null).asDrawable(getContext(), ContactColors.UNKNOWN_COLOR, inverted));
+      setImageDrawable(ContactPhotoFactory.getDefaultContactPhoto(null).asDrawable(getContext(), ContactColors.UNKNOWN_COLOR.toConversationColor(themeType), inverted));
       setOnClickListener(null);
     }
   }
