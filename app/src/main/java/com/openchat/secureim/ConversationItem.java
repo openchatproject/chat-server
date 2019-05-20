@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.AlertDialogWrapper;
 
 import com.openchat.secureim.ConversationFragment.SelectionClickListener;
-import com.openchat.secureim.color.ThemeType;
 import com.openchat.secureim.components.AvatarImageView;
 import com.openchat.secureim.components.ThumbnailView;
 import com.openchat.secureim.crypto.MasterSecret;
@@ -175,7 +174,7 @@ public class ConversationItem extends LinearLayout {
     } else {
       bodyBubble.getBackground().setColorFilter(messageRecord.getIndividualRecipient()
                                                              .getColor()
-                                                             .toConversationColor(ThemeType.getCurrent(context)),
+                                                             .toConversationColor(context),
                                                 PorterDuff.Mode.MULTIPLY);
     }
 

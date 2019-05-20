@@ -1,5 +1,7 @@
 package com.openchat.secureim.color;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -54,12 +56,12 @@ public class MaterialColors {
       return null;
     }
 
-    public int[] asConversationColorArray(ThemeType themeType) {
+    public int[] asConversationColorArray(@NonNull Context context) {
       int[] results = new int[colors.size()];
       int   index   = 0;
 
       for (MaterialColor color : colors) {
-        results[index++] = color.toConversationColor(themeType);
+        results[index++] = color.toConversationColor(context);
       }
 
       return results;

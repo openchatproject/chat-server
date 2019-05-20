@@ -39,7 +39,6 @@ import com.google.protobuf.ByteString;
 
 import com.openchat.secureim.TransportOptions.OnTransportChangedListener;
 import com.openchat.secureim.color.MaterialColor;
-import com.openchat.secureim.color.ThemeType;
 import com.openchat.secureim.components.AnimatingToggle;
 import com.openchat.secureim.components.ComposeText;
 import com.openchat.secureim.components.SendButton;
@@ -973,12 +972,10 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   }
 
   private void setActionBarColor(MaterialColor color) {
-    ThemeType themeType = ThemeType.getCurrent(this);
-
-    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(color.toActionBarColor(themeType)));
+    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(color.toActionBarColor(this)));
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      getWindow().setStatusBarColor(color.toStatusBarColor(themeType));
+      getWindow().setStatusBarColor(color.toStatusBarColor(this));
     }
   }
 
