@@ -10,24 +10,24 @@ import java.util.List;
 
 public class MaterialColors {
 
-  public static final MaterialColor GREY = new GreyMaterialColor();
-
   public static final MaterialColorList CONVERSATION_PALETTE = new MaterialColorList(new ArrayList<>(Arrays.asList(
-    new RedMaterialColor(),
-    new PinkMaterialColor(),
-    new PurpleMaterialColor(),
-    new DeepPurpleMaterialColor(),
-    new IndigoMaterialColor(),
-    new BlueMaterialColor(),
-    new LightBlueMaterialColor(),
-    new CyanMaterialColor(),
-    new TealMaterialColor(),
-    new GreenMaterialColor(),
-    new LightGreenMaterialColor(),
-    new OrangeMaterialColor(),
-    new DeepOrangeMaterialColor(),
-    new BrownMaterialColor(),
-    new BlueGreyMaterialColor()
+    MaterialColor.RED,
+    MaterialColor.PINK,
+    MaterialColor.PURPLE,
+
+    MaterialColor.DEEP_PURPLE,
+    MaterialColor.INDIGO,
+    MaterialColor.BLUE,
+
+    MaterialColor.LIGHT_BLUE,
+    MaterialColor.CYAN,
+    MaterialColor.TEAL,
+    MaterialColor.GREEN,
+    MaterialColor.LIGHT_GREEN,
+    MaterialColor.ORANGE,
+    MaterialColor.DEEP_ORANGE,
+    MaterialColor.BROWN,
+    MaterialColor.BLUE_GREY
   )));
 
   public static class MaterialColorList {
@@ -46,9 +46,9 @@ public class MaterialColors {
       return colors.size();
     }
 
-    public @Nullable MaterialColor getByColor(int colorValue) {
+    public @Nullable MaterialColor getByColor(Context context, int colorValue) {
       for (MaterialColor color : colors) {
-        if (color.represents(colorValue)) {
+        if (color.represents(context, colorValue)) {
           return color;
         }
       }
