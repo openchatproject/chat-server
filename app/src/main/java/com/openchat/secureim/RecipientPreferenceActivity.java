@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.RingtonePreference;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -31,6 +30,7 @@ import com.openchat.secureim.components.AvatarImageView;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.RecipientPreferenceDatabase.VibrateState;
+import com.openchat.secureim.preferences.AdvancedRingtonePreference;
 import com.openchat.secureim.preferences.ColorPreference;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.Recipients;
@@ -184,11 +184,11 @@ public class RecipientPreferenceActivity extends PassphraseRequiredActionBarActi
     }
 
     private void setSummaries(Recipients recipients) {
-      CheckBoxPreference mutePreference     = (CheckBoxPreference) this.findPreference(PREFERENCE_MUTED);
-      RingtonePreference ringtonePreference = (RingtonePreference) this.findPreference(PREFERENCE_TONE);
-      ListPreference     vibratePreference  = (ListPreference)     this.findPreference(PREFERENCE_VIBRATE);
-      ColorPreference    colorPreference    = (ColorPreference)    this.findPreference(PREFERENCE_COLOR);
-      Preference         blockPreference    = this.findPreference(PREFERENCE_BLOCK);
+      CheckBoxPreference         mutePreference     = (CheckBoxPreference) this.findPreference(PREFERENCE_MUTED);
+      AdvancedRingtonePreference ringtonePreference = (AdvancedRingtonePreference) this.findPreference(PREFERENCE_TONE);
+      ListPreference             vibratePreference  = (ListPreference) this.findPreference(PREFERENCE_VIBRATE);
+      ColorPreference            colorPreference    = (ColorPreference) this.findPreference(PREFERENCE_COLOR);
+      Preference                 blockPreference    = this.findPreference(PREFERENCE_BLOCK);
 
       mutePreference.setChecked(recipients.isMuted());
 
@@ -197,6 +197,7 @@ public class RecipientPreferenceActivity extends PassphraseRequiredActionBarActi
 
         if (tone != null) {
           ringtonePreference.setSummary(tone.getTitle(getActivity()));
+          ringtonePreference.setCurrentRingtone(recipients.getRingtone());
         }
       } else {
         ringtonePreference.setSummary(R.string.preferences__default);
