@@ -333,7 +333,6 @@ SMS της συσκευής σας στο OpenchatService. Αν έχετε ήδ�
   <string name="MessageNotifier_failed_to_deliver_message">Αποτυχία παράδοσης του μήνυματος.</string>
   <string name="MessageNotifier_error_delivering_message">Σφάλμα κατά την παράδοση του μηνύματος.</string>
   <string name="MessageNotifier_mark_all_as_read">Επισήμανση όλων ως αναγνωσμένα</string>
-  <string name="MessageNotifier_mark_as_read">Επισήμανση ως αναγνωσμένο</string>
   <string name="MessageNotifier_media_message">Μήνυμα πολυμέσων</string>
   <string name="change_passphrase_activity__old_passphrase">ΠΑΛΙΟ ΣΥΝΘΗΜΑΤΙΚΟ</string>
   <string name="change_passphrase_activity__new_passphrase">ΝΕΟ ΣΥΝΘΗΜΑΤΙΚΟ:</string>

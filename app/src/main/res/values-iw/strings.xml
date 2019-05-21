@@ -114,7 +114,6 @@
   <string name="MessageNotifier_failed_to_deliver_message">כישלון במסירת ההודעה.</string>
   <string name="MessageNotifier_error_delivering_message">שגיאה במסירת ההודעה.</string>
   <string name="MessageNotifier_mark_all_as_read">סמן הכל כנקרא</string>
-  <string name="MessageNotifier_mark_as_read">סמן כנקרא</string>
   <string name="change_passphrase_activity__old_passphrase">סיסמה ישנה:</string>
   <string name="change_passphrase_activity__new_passphrase">סיסמה חדשה:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">חזור על הסיסמה החדשה:</string>

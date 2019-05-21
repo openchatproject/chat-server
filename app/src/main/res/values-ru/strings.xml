@@ -322,7 +322,6 @@
   <string name="MessageNotifier_failed_to_deliver_message">Не удалось доставить сообщение.</string>
   <string name="MessageNotifier_error_delivering_message">Ошибка при доставке сообщения.</string>
   <string name="MessageNotifier_mark_all_as_read">Отметить все как прочитанные</string>
-  <string name="MessageNotifier_mark_as_read">Отметить как прочитанное</string>
   <string name="MessageNotifier_media_message">MMS-сообщение</string>
   <string name="change_passphrase_activity__old_passphrase">СТАРАЯ ПАРОЛЬНАЯ ФРАЗА:</string>
   <string name="change_passphrase_activity__new_passphrase">НОВАЯ ПАРОЛЬНАЯ ФРАЗА:</string>

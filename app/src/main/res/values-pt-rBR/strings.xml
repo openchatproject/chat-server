@@ -140,7 +140,6 @@ Tem certeza que deseja fazer isto?</string>
   <string name="DeviceListActivity_by_disconnecting_this_device_it_will_no_longer_be_able_to_send_or_receive">Ao desconectar este dispositivo, ele não poderá mais enviar ou receber mensagens.</string>
   <string name="DeviceListActivity_network_connection_failed">Conexão de rede falhou...</string>
   <string name="DeviceListActivity_try_again">Tentar de novo</string>
-  <string name="DeviceListActivity_disconnecting_device">Desconectando dispositivo...</string>
   <string name="DeviceListActivity_disconnecting_device_no_ellipse">Desconectando dispositivo</string>
   <string name="DeviceListActivity_network_failed">Rede falhou!</string>
   <string name="DeviceListItem_unnamed_device">Dispositivo sem nome</string>
@@ -369,7 +368,6 @@ Tem certeza que deseja fazer isto?</string>
   <string name="MessageNotifier_failed_to_deliver_message">Falha ao enviar mensagem.</string>
   <string name="MessageNotifier_error_delivering_message">Erro ao enviar mensagem.</string>
   <string name="MessageNotifier_mark_all_as_read">Marcar todas como lidas</string>
-  <string name="MessageNotifier_mark_as_read">Marcar como lida</string>
   <string name="MessageNotifier_media_message">Mensagem multimídia</string>
   <string name="MessageNotifier_reply">Responder</string>
   <string name="QuickResponseService_quick_response_unavailable_when_OpenchatService_is_locked">Responder rápido não está disponível quando o OpenchatService está travado!</string>

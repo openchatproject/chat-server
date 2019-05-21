@@ -242,7 +242,6 @@
   <string name="MessageNotifier_failed_to_deliver_message">無法傳送訊息。</string>
   <string name="MessageNotifier_error_delivering_message">傳送訊息發生失誤。</string>
   <string name="MessageNotifier_mark_all_as_read">全部標示為已讀</string>
-  <string name="MessageNotifier_mark_as_read">標示已讀</string>
   <string name="MessageNotifier_media_message">媒體訊息</string>
   <string name="change_passphrase_activity__old_passphrase">舊的『自訂密碼』:</string>
   <string name="change_passphrase_activity__new_passphrase">新的『自訂密碼』:</string>

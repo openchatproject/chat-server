@@ -354,7 +354,7 @@ Vastaanotettiin viesti tuntemattomalla identiteettiavaimella. Aloita käsittely 
   <string name="MessageNotifier_failed_to_deliver_message">Viestin toimitus epäonnistui.</string>
   <string name="MessageNotifier_error_delivering_message">Virhe viestiä toimitettaessa.</string>
   <string name="MessageNotifier_mark_all_as_read">Merkitse kaikki luetuiksi</string>
-  <string name="MessageNotifier_mark_as_read">Merkitse luetuksi</string>
+  <string name="MessageNotifier_mark_read">Merkitse luetuksi</string>
   <string name="MessageNotifier_media_message">Mediaviesti</string>
   <string name="MessageNotifier_reply">Vastaa</string>
   <string name="QuickResponseService_quick_response_unavailable_when_OpenchatService_is_locked">Pikavastaus ei toimi, kun OpenchatService on lukittu!</string>
@@ -441,6 +441,8 @@ Tuo salaamaton varmuuskopiotiedosto. Yhteensopiva \"SMS Backup And Restore\" -so
   <string name="recipient_preferences__ringtone">Ilmoitusääni</string>
   <string name="recipient_preferences__vibrate">Värinä</string>
   <string name="recipient_preferences__block">Estä</string>
+  <string name="recipient_preferences__color">Väri</string>
+  <string name="recipient_preferences__color_for_this_contact">Tämän yhteystiedon väri</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
 Jotta voit ottaa OpenchatServicen käyttöön, tulee sinun ensin vahvistaa puhelinnumerosi.</string>
   <string name="registration_activity__your_country">MAA</string>
@@ -449,6 +451,7 @@ PUHELINNUMEROSI</string>
   <string name="registration_activity__phone_number">PUHELINNUMERO</string>
   <string name="registration_activity__register">Rekisteröidy</string>
   <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">Rekisteröityminen siirtää joitakin yhteystietoja väliaikaisesti palvelimelle. Niitä ei kuitenkaan tallenneta sinne.</string>
+  <string name="registration_activity__powered_by_twilio">Powered by twilio</string>
   <string name="registration_problems__some_possible_problems_include">Mahdollisiin ongelmiin
 sisältyvät:</string>
   <string name="registration_problems__sms_interceptors">Tekstiviestisieppaajat.</string>

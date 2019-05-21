@@ -135,6 +135,15 @@ Elküldöd a titkosítatlan üzenetet?</string>
   <string name="CustomDefaultPreference_none">Egyik sem</string>
   <string name="DateUtils_now">Most</string>
   <string name="DateUtils_minutes_ago">%d perc</string>
+  <string name="DeviceListActivity_disconnect_s">Lecsatlakoztatod \'%s\'-t?</string>
+  <string name="DeviceListActivity_by_disconnecting_this_device_it_will_no_longer_be_able_to_send_or_receive">Ennek az eszköznek a lecsatlakoztatásával többé nem lesz alkalmas üzenetek küldésére vagy fogadására.</string>
+  <string name="DeviceListActivity_network_connection_failed">Hálózati csatlakozás sikertelen...</string>
+  <string name="DeviceListActivity_try_again">Újrapróbálkozás</string>
+  <string name="DeviceListActivity_disconnecting_device_no_ellipse">Eszköz lecsatlakoztatása</string>
+  <string name="DeviceListActivity_network_failed">Hálózati hiba!</string>
+  <string name="DeviceListItem_unnamed_device">Megnevezetlen eszköz</string>
+  <string name="DeviceListItem_created_s">Készítve %s</string>
+  <string name="DeviceListItem_last_active_s">Utoljára aktív %s</string>
   <string name="ShareActivity_share_with">Megosztás...</string>
   <string name="ExportFragment_export">Exportálás</string>
   <string name="ExportFragment_export_plaintext_to_sd_card">Titkosítatlan szöveg exportálása SD kártyára?</string>
@@ -223,6 +232,7 @@ akkor az újbóli importálás duplikált üzeneteket eredményez.</string>
   <string name="DeviceProvisioningActivity_content_progress_no_device">Nem található eszköz</string>
   <string name="DeviceProvisioningActivity_content_progress_network_error">Hálózati hiba</string>
   <string name="DeviceProvisioningActivity_content_progress_key_error">Érvénytelen QR kód</string>
+  <string name="DeviceProvisioningActivity_sorry_you_have_too_many_devices_registered_already">Sajnálom, túl sok eszközöd van jelenleg regisztrálva, próbálj eltávolítani néhányat...</string>
   <string name="PassphrasePromptActivity_enter_passphrase">Jelszó megadása</string>
   <string name="PassphrasePromptActivity_watermark_content_description">OpenchatService ikon</string>
   <string name="PassphrasePromptActivity_ok_button_content_description">Jelszó küldése</string>
@@ -355,8 +365,10 @@ Ismeretlen azonosító kulcsú üzenet érkezett. Kattints rá a feldolgozáshoz
   <string name="MessageNotifier_failed_to_deliver_message">Nem sikerült az üzenet kézbesítése!</string>
   <string name="MessageNotifier_error_delivering_message">Hiba az üzenet kézbesítése közben!</string>
   <string name="MessageNotifier_mark_all_as_read">Az összes olvasottként való megjelölése</string>
-  <string name="MessageNotifier_mark_as_read">Olvasottként való megjelölés</string>
   <string name="MessageNotifier_media_message">Média üzenet</string>
+  <string name="MessageNotifier_reply">Válasz</string>
+  <string name="QuickResponseService_quick_response_unavailable_when_OpenchatService_is_locked">Gyors válasz nem elérhető, amikor a OpenchatService zárolva van!</string>
+  <string name="QuickResponseService_problem_sending_message">Probléma az üzenetküldésben!</string>
   <string name="change_passphrase_activity__old_passphrase">RÉGI JELSZÓ:</string>
   <string name="change_passphrase_activity__new_passphrase">ÚJ JELSZÓ:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">ISMÉTELD MEG AZ ÚJ JELSZÓT:</string>
@@ -394,6 +406,7 @@ Ismeretlen azonosító kulcsú üzenet érkezett. Kattints rá a feldolgozáshoz
   <string name="conversation_fragment_cab__batch_selection_amount">%s kijelölésre került</string>
   <string name="country_selection_fragment__loading_countries">Országok betöltése...</string>
   <string name="country_selection_fragment__search">Keresés</string>
+  <string name="device_list_fragment__no_devices_paired">Nincsenek eszközök párosítva...</string>
   <string name="log_submit_activity__log_fetch_failed">Nem sikerült a naplóbejegyzések elérése az eszközön. Helyettük az ADB használható a hibakeresési naplóbejegyzésekhez.</string>
   <string name="log_submit_activity__thanks">Köszönjük a segítségedet!</string>
   <string name="log_submit_activity__submitting">Küldés</string>
@@ -539,6 +552,7 @@ sikertelen.
   <string name="AndroidManifest__media_overview">Minden fénykép</string>
   <string name="AndroidManifest__media_overview_named">Minden fénykép vele: %1$s</string>
   <string name="AndroidManifest__message_details">Üzenet részletei</string>
+  <string name="AndroidManifest_manage_paired_devices">Párosított eszközök kezelése</string>
   <string name="arrays__import_export">Importálás / Exportálás</string>
   <string name="arrays__my_identity_key">Saját azonosító kulcs</string>
   <string name="arrays__use_default">Alapértelmezett</string>
@@ -683,6 +697,7 @@ Ingyenes biztonságos üzenet küldés OpenchatService és Openchat felhasznál�
   <string name="conversation__menu_leave_group">Csoport elhagyása</string>
   <string name="conversation__menu_delete_thread">Beszélgetésfolyam törlése</string>
   <string name="conversation__menu_view_media">Minden fénykép</string>
+  <string name="conversation_popup__menu_expand_popup">Felugró kiterjesztése</string>
   <string name="conversation_add_to_contacts__menu_add_to_contacts">Hozzáadás névjegyzékhez</string>
   <string name="convesation_group_options__recipients_list">Címzettek listája</string>
   <string name="conversation_group_options__delivery">Kézbesítés</string>
