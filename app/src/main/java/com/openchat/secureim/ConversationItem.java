@@ -237,6 +237,7 @@ public class ConversationItem extends LinearLayout {
       mediaThumbnail.setImageResource(masterSecret, messageRecord.getId(),
                                       messageRecord.getDateReceived(),
                                       ((MediaMmsMessageRecord)messageRecord).getSlideDeckFuture());
+      mediaThumbnail.setShowProgress(!messageRecord.isFailed());
       bodyText.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     } else {
       mediaThumbnail.setVisibility(View.GONE);
@@ -346,7 +347,6 @@ public class ConversationItem extends LinearLayout {
     contactPhoto.setAvatar(recipient, true);
     contactPhoto.setVisibility(View.VISIBLE);
   }
-  
 
   private void handleApproveIdentity() {
     List<IdentityKeyMismatch> mismatches = messageRecord.getIdentityKeyMismatches();

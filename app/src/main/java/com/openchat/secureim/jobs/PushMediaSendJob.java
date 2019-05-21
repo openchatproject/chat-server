@@ -8,6 +8,7 @@ import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsDatabase;
 import com.openchat.secureim.database.NoSuchMessageException;
+import com.openchat.secureim.database.PartDatabase;
 import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.secureim.mms.MediaConstraints;
 import com.openchat.secureim.mms.PartParser;
@@ -30,6 +31,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import ws.com.google.android.mms.MmsException;
+import ws.com.google.android.mms.pdu.PduBody;
 import ws.com.google.android.mms.pdu.SendReq;
 
 import static com.openchat.secureim.dependencies.OpenchatServiceCommunicationModule.OpenchatServiceMessageSenderFactory;
@@ -69,6 +71,7 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
       database.markAsPush(messageId);
       database.markAsSecure(messageId);
       database.markAsSent(messageId, "push".getBytes(), 0);
+      updatePartsStatus(message.getBody());
     } catch (InsecureFallbackApprovalException ifae) {
       Log.w(TAG, ifae);
       database.markAsPendingInsecureSmsFallback(messageId);
@@ -95,6 +98,14 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
   public void onCanceled() {
     DatabaseFactory.getMmsDatabase(context).markAsSentFailed(messageId);
     notifyMediaMessageDeliveryFailed(context, messageId);
+  }
+
+  private void updatePartsStatus(PduBody body) {
+    if (body == null) return;
+    PartDatabase database = DatabaseFactory.getPartDatabase(context);
+    for (int i = 0; i < body.getPartsNum(); i++) {
+      database.markPartUploaded(messageId, body.getPart(i));
+    }
   }
 
   private void deliver(MasterSecret masterSecret, SendReq message)

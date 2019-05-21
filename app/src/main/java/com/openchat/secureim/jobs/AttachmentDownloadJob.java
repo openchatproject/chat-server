@@ -7,6 +7,7 @@ import com.openchat.secureim.crypto.MasterCipher;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.PartDatabase;
+import com.openchat.secureim.database.PartDatabase.PartId;
 import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
 import com.openchat.secureim.util.Base64;
@@ -15,6 +16,7 @@ import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.protocal.InvalidMessageException;
 import com.openchat.imservice.api.OpenchatServiceMessageReceiver;
+import com.openchat.imservice.api.messages.OpenchatServiceAttachment.ProgressListener;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentPointer;
 import com.openchat.imservice.api.push.exceptions.NonSuccessfulResponseCodeException;
 import com.openchat.imservice.api.push.exceptions.PushNetworkException;
@@ -26,6 +28,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import de.greenrobot.event.EventBus;
 import ws.com.google.android.mms.MmsException;
 import ws.com.google.android.mms.pdu.PduPart;
 
@@ -82,15 +85,19 @@ public class AttachmentDownloadJob extends MasterSecretJob implements Injectable
   private void retrievePart(MasterSecret masterSecret, PduPart part, long messageId)
       throws IOException
   {
-    PartDatabase        database       = DatabaseFactory.getPartDatabase(context);
-    File                attachmentFile = null;
-    PartDatabase.PartId partId         = part.getPartId();
+    PartDatabase database       = DatabaseFactory.getPartDatabase(context);
+    File         attachmentFile = null;
 
+    final PartId partId = part.getPartId();
     try {
       attachmentFile = createTempFile();
 
       OpenchatServiceAttachmentPointer pointer    = createAttachmentPointer(masterSecret, part);
-      InputStream                 attachment = messageReceiver.retrieveAttachment(pointer, attachmentFile);
+      InputStream                 attachment = messageReceiver.retrieveAttachment(pointer, attachmentFile, new ProgressListener() {
+        @Override public void onAttachmentProgress(long total, long progress) {
+          EventBus.getDefault().postSticky(new PartProgressEvent(partId, total, progress));
+        }
+      });
 
       database.updateDownloadedPart(masterSecret, messageId, partId, part, attachment);
     } catch (InvalidPartException | NonSuccessfulResponseCodeException | InvalidMessageException | MmsException e) {
@@ -145,4 +152,5 @@ public class AttachmentDownloadJob extends MasterSecretJob implements Injectable
   private class InvalidPartException extends Exception {
     public InvalidPartException(Exception e) {super(e);}
   }
+
 }

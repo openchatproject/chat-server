@@ -10,13 +10,12 @@ import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
 import com.openchat.secureim.mms.PartAuthority;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.recipients.Recipients;
-import com.openchat.secureim.util.GroupUtil;
-import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
+import com.openchat.imservice.api.messages.OpenchatServiceAttachment.ProgressListener;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentStream;
 import com.openchat.imservice.api.push.OpenchatServiceAddress;
 import com.openchat.imservice.api.util.InvalidNumberException;
@@ -26,6 +25,7 @@ import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import ws.com.google.android.mms.ContentType;
 import ws.com.google.android.mms.pdu.PduPart;
 import ws.com.google.android.mms.pdu.SendReq;
@@ -59,16 +59,19 @@ public abstract class PushSendJob extends SendJob {
     List<OpenchatServiceAttachment> attachments = new LinkedList<>();
 
     for (int i=0;i<message.getBody().getPartsNum();i++) {
-      PduPart part = message.getBody().getPart(i);
-      String contentType = Util.toIsoString(part.getContentType());
+      final PduPart part        = message.getBody().getPart(i);
+      final String  contentType = Util.toIsoString(part.getContentType());
       if (ContentType.isImageType(contentType) ||
           ContentType.isAudioType(contentType) ||
           ContentType.isVideoType(contentType))
       {
-
         try {
           InputStream is = PartAuthority.getPartStream(context, masterSecret, part.getDataUri());
-          attachments.add(new OpenchatServiceAttachmentStream(is, contentType, part.getDataSize()));
+          attachments.add(new OpenchatServiceAttachmentStream(is, contentType, part.getDataSize(), new ProgressListener() {
+            @Override public void onAttachmentProgress(long total, long progress) {
+              EventBus.getDefault().postSticky(new PartProgressEvent(part.getPartId(), total, progress));
+            }
+          }));
         } catch (IOException ioe) {
           Log.w(TAG, "Couldn't open attachment", ioe);
         }

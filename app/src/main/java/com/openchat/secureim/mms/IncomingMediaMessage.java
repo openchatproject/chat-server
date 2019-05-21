@@ -79,7 +79,7 @@ public class IncomingMediaMessage {
             media.setName(Util.toIsoBytes(relay.get()));
           }
 
-          media.setPendingPush(true);
+          media.setInProgress(true);
 
           this.body.addPart(media);
         }
