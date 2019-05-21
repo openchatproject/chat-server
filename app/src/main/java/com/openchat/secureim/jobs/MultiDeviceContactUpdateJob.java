@@ -20,6 +20,7 @@ import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.OpenchatServiceMessageSender;
 import com.openchat.imservice.api.crypto.UntrustedIdentityException;
+import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentStream;
 import com.openchat.imservice.api.messages.multidevice.DeviceContact;
 import com.openchat.imservice.api.messages.multidevice.DeviceContactsOutputStream;
@@ -101,10 +102,11 @@ public class MultiDeviceContactUpdateJob extends MasterSecretJob implements Inje
       throws IOException, UntrustedIdentityException, NetworkException
   {
     FileInputStream            contactsFileStream = new FileInputStream(contactsFile);
-    OpenchatServiceAttachmentStream attachmentStream   = new OpenchatServiceAttachmentStream(contactsFileStream,
-                                                                                   "application/octet-stream",
-                                                                                   contactsFile.length(),
-                                                                                   null);
+    OpenchatServiceAttachmentStream attachmentStream   = OpenchatServiceAttachment.newStreamBuilder()
+                                                                        .withStream(contactsFileStream)
+                                                                        .withContentType("application/octet-stream")
+                                                                        .withLength(contactsFile.length())
+                                                                        .build();
 
     try {
       messageSender.sendMessage(OpenchatServiceSyncMessage.forContacts(attachmentStream));
@@ -118,7 +120,12 @@ public class MultiDeviceContactUpdateJob extends MasterSecretJob implements Inje
       try {
         Uri                 displayPhotoUri = Uri.withAppendedPath(uri, ContactsContract.Contacts.Photo.DISPLAY_PHOTO);
         AssetFileDescriptor fd              = context.getContentResolver().openAssetFileDescriptor(displayPhotoUri, "r");
-        return Optional.of(new OpenchatServiceAttachmentStream(fd.createInputStream(), "image/*", fd.getLength(), null));
+
+        return Optional.of(OpenchatServiceAttachment.newStreamBuilder()
+                                               .withStream(fd.createInputStream())
+                                               .withContentType("image/*")
+                                               .withLength(fd.getLength())
+                                               .build());
       } catch (IOException e) {
         Log.w(TAG, e);
       }
@@ -141,7 +148,11 @@ public class MultiDeviceContactUpdateJob extends MasterSecretJob implements Inje
         byte[] data = cursor.getBlob(0);
 
         if (data != null) {
-          return Optional.of(new OpenchatServiceAttachmentStream(new ByteArrayInputStream(data), "image/*", data.length, null));
+          return Optional.of(OpenchatServiceAttachment.newStreamBuilder()
+                                                 .withStream(new ByteArrayInputStream(data))
+                                                 .withContentType("image/*")
+                                                 .withLength(data.length)
+                                                 .build());
         }
       }
 

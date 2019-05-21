@@ -14,6 +14,7 @@ import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.OpenchatServiceMessageSender;
 import com.openchat.imservice.api.crypto.UntrustedIdentityException;
+import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachmentStream;
 import com.openchat.imservice.api.messages.multidevice.DeviceGroup;
 import com.openchat.imservice.api.messages.multidevice.DeviceGroupsOutputStream;
@@ -93,10 +94,11 @@ public class MultiDeviceGroupUpdateJob extends MasterSecretJob implements Inject
       throws IOException, UntrustedIdentityException
   {
     FileInputStream            contactsFileStream = new FileInputStream(contactsFile);
-    OpenchatServiceAttachmentStream attachmentStream   = new OpenchatServiceAttachmentStream(contactsFileStream,
-                                                                                   "application/octet-stream",
-                                                                                   contactsFile.length(),
-                                                                                   null);
+    OpenchatServiceAttachmentStream attachmentStream   = OpenchatServiceAttachment.newStreamBuilder()
+                                                                        .withStream(contactsFileStream)
+                                                                        .withContentType("application/octet-stream")
+                                                                        .withLength(contactsFile.length())
+                                                                        .build();
 
     messageSender.sendMessage(OpenchatServiceSyncMessage.forGroups(attachmentStream));
   }
@@ -104,8 +106,11 @@ public class MultiDeviceGroupUpdateJob extends MasterSecretJob implements Inject
   private Optional<OpenchatServiceAttachmentStream> getAvatar(@Nullable byte[] avatar) {
     if (avatar == null) return Optional.absent();
 
-    return Optional.of(new OpenchatServiceAttachmentStream(new ByteArrayInputStream(avatar),
-                                                      "image/*", avatar.length, null));
+    return Optional.of(OpenchatServiceAttachment.newStreamBuilder()
+                                           .withStream(new ByteArrayInputStream(avatar))
+                                           .withContentType("image/*")
+                                           .withLength(avatar.length)
+                                           .build());
   }
 
   private File createTempFile(String prefix) throws IOException {
