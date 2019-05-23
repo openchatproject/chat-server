@@ -457,6 +457,7 @@
     <string name="conversation_activity__compose_description">Message composition</string>
     <string name="conversation_activity__emoji_toggle_description">Toggle emoji keyboard</string>
     <string name="conversation_activity__attachment_thumbnail">Attachment Thumbnail</string>
+    <string name="conversation_activity__quick_attachment_drawer_toggle_description">Toggle attachment drawer</string>
 
     <string name="conversation_item__mms_downloading_description">Media message downloading</string>
     <string name="conversation_item__mms_image_description">Media message</string>
@@ -858,5 +859,7 @@
     <string name="trimmer__old_messages_successfully_deleted">Old messages successfully deleted</string>
 
     <string name="transport_selection_list_item__transport_icon">Transport icon</string>
+
+    <string name="quick_camera_unavailable">Camera unavailable</string>
 
 </resources>
