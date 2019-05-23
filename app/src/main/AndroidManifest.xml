@@ -315,6 +315,14 @@
         </intent-filter>
     </receiver>
 
+    <receiver android:name=".notifications.WearReplyReceiver"
+              android:enabled="true"
+              android:exported="true">
+        <intent-filter>
+            <action android:name="com.openchat.secureim.notifications.WEAR_REPLY"/>
+        </intent-filter>
+    </receiver>
+
     <provider android:name=".providers.PartProvider"
               android:grantUriPermissions="true"
               android:authorities="com.openchat.secureim.provider" />
