@@ -50,10 +50,6 @@ public abstract class Slide {
     return false;
   }
 
-  public boolean isEncrypted() {
-    return false;
-  }
-
   public PduPart getPart() {
     return part;
   }

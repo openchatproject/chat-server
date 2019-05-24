@@ -5,13 +5,12 @@ import android.content.Context;
 import android.content.UriMatcher;
 import android.net.Uri;
 
-import com.openchat.secureim.crypto.DecryptingPartInputStream;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.PartDatabase;
+import com.openchat.secureim.providers.CaptureProvider;
 import com.openchat.secureim.providers.PartProvider;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -22,36 +21,34 @@ public class PartAuthority {
   private static final Uri    PART_CONTENT_URI  = Uri.parse(PART_URI_STRING);
   private static final Uri    THUMB_CONTENT_URI = Uri.parse(THUMB_URI_STRING);
 
-  private static final int PART_ROW  = 1;
-  private static final int THUMB_ROW = 2;
+  private static final int PART_ROW    = 1;
+  private static final int THUMB_ROW   = 2;
+  private static final int CAPTURE_ROW = 3;
 
   private static final UriMatcher uriMatcher;
 
   static {
     uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     uriMatcher.addURI("com.openchat.secureim", "part#", THUMB_ROW);
+    uriMatcher.addURI(CaptureProvider.AUTHORITY, CaptureProvider.EXPECTED_PATH, CAPTURE_ROW);
   }
 
   public static InputStream getPartStream(Context context, MasterSecret masterSecret, Uri uri)
       throws IOException
   {
-    PartDatabase partDatabase = DatabaseFactory.getPartDatabase(context);
-    int          match        = uriMatcher.match(uri);
-
+    int match = uriMatcher.match(uri);
     try {
       switch (match) {
       case PART_ROW:
         PartUriParser partUri = new PartUriParser(uri);
-        return partDatabase.getPartStream(masterSecret, partUri.getPartId());
+        return DatabaseFactory.getPartDatabase(context).getPartStream(masterSecret, partUri.getPartId());
       case THUMB_ROW:
         partUri = new PartUriParser(uri);
-        return partDatabase.getThumbnailStream(masterSecret, partUri.getPartId());
+        return DatabaseFactory.getPartDatabase(context).getThumbnailStream(masterSecret, partUri.getPartId());
+      case CAPTURE_ROW:
+        return CaptureProvider.getInstance(context).getStream(masterSecret, ContentUris.parseId(uri));
       default:
-        String tempMediaDir = context.getDir("media", Context.MODE_PRIVATE).getPath();
-        if (uri.getPath().startsWith(tempMediaDir))
-          return  new DecryptingPartInputStream(new File(uri.getPath()), masterSecret);
-        else
-          return context.getContentResolver().openInputStream(uri);
+        return context.getContentResolver().openInputStream(uri);
       }
     } catch (SecurityException se) {
       throw new IOException(se);
