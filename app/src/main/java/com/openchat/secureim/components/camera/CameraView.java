@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.hardware.Camera;
 import android.hardware.Camera.PreviewCallback;
 import android.os.Build;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import java.io.IOException;
@@ -21,7 +23,6 @@ import java.util.concurrent.CountDownLatch;
 
 import com.commonsware.cwac.camera.CameraHost;
 import com.commonsware.cwac.camera.CameraHost.FailureReason;
-import com.commonsware.cwac.camera.PreviewStrategy;
 
 import com.openchat.secureim.ApplicationContext;
 import com.openchat.secureim.util.Util;
@@ -70,11 +71,12 @@ public class CameraView extends FrameLayout {
     } else {
       previewStrategy = new SurfacePreviewStrategy(this);
     }
+    addView(previewStrategy.getWidget());
   }
 
   @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
   public void onResume() {
-    addView(previewStrategy.getWidget());
+    Log.w(TAG, "onResume()");
     final CameraHost host = getHost();
     submitTask(new SerializedAsyncTask<FailureReason>() {
       @Override protected FailureReason onRunBackground() {
@@ -105,6 +107,8 @@ public class CameraView extends FrameLayout {
         synchronized (CameraView.this) {
           CameraView.this.notifyAll();
         }
+        previewCreated();
+        initPreview();
         requestLayout();
         invalidate();
       }
@@ -112,7 +116,7 @@ public class CameraView extends FrameLayout {
   }
 
   public void onPause() {
-    removeView(previewStrategy.getWidget());
+    Log.w(TAG, "onPause()");
     submitTask(new SerializedAsyncTask<Void>() {
       @Override protected void onPreMain() {
         cameraReady = false;
@@ -138,7 +142,6 @@ public class CameraView extends FrameLayout {
 
   @Override
   protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
     if (getMeasuredWidth() > 0 && getMeasuredHeight() > 0 && camera != null && cameraReady) {
       Camera.Size newSize = null;
@@ -176,11 +179,12 @@ public class CameraView extends FrameLayout {
         }
       }
     }
+    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
   }
 
   @SuppressWarnings("SuspiciousNameCombination") @Override
   protected void onLayout(boolean changed, int l, int t, int r, int b) {
-    if (changed && getChildCount() > 0) {
+    if (getChildCount() > 0) {
       final View child         = getChildAt(0);
       final int  width         = r - l;
       final int  height        = b - t;
@@ -287,6 +291,8 @@ public class CameraView extends FrameLayout {
   }
 
   private void stopPreview() {
+    Log.w(TAG, "stopPreview()");
+    camera.startPreview();
     inPreview = false;
     getHost().autoFocusUnavailable();
     camera.stopPreview();
@@ -463,7 +469,7 @@ public class CameraView extends FrameLayout {
   private abstract class PostInitializationTask<Result> extends SerializedAsyncTask<Result> {
     @Override protected void onWait() {
       synchronized (CameraView.this) {
-        while (camera == null || previewSize == null) {
+        while (camera == null || previewSize == null || !previewStrategy.isReady()) {
           Util.wait(CameraView.this, 0);
         }
       }

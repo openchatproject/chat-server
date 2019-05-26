@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
 
-import com.commonsware.cwac.camera.PreviewStrategy;
-
 import java.io.IOException;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -32,9 +30,7 @@ class TexturePreviewStrategy implements PreviewStrategy,
                                         int width, int height) {
     Log.w(TAG, "onSurfaceTextureAvailable()");
     this.surface=surface;
-
-    cameraView.previewCreated();
-    cameraView.initPreview();
+    synchronized (cameraView) { cameraView.notifyAll(); }
   }
 
   @Override
@@ -58,7 +54,6 @@ class TexturePreviewStrategy implements PreviewStrategy,
 
   @Override
   public void attach(Camera camera) throws IOException {
-    Log.w(TAG, "attach(Camera)");
     camera.setPreviewTexture(surface);
   }
 
@@ -70,6 +65,11 @@ class TexturePreviewStrategy implements PreviewStrategy,
       throw new IllegalStateException(
           "Cannot use TextureView with MediaRecorder");
     }
+  }
+
+  @Override
+  public boolean isReady() {
+    return widget.isAvailable();
   }
 
   @Override
