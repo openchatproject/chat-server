@@ -37,7 +37,6 @@ class TexturePreviewStrategy implements PreviewStrategy,
   public void onSurfaceTextureSizeChanged(SurfaceTexture surface,
                                           int width, int height) {
     Log.w(TAG, "onSurfaceTextureChanged()");
-    cameraView.previewReset();
   }
 
   @Override
