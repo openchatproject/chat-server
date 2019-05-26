@@ -7,6 +7,7 @@ import com.openchat.secureim.BuildConfig;
 import com.openchat.secureim.OpenchatServiceExpiredException;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
+import com.openchat.secureim.database.PartDatabase;
 import com.openchat.secureim.mms.MediaConstraints;
 import com.openchat.secureim.transport.UndeliverableMessageException;
 import com.openchat.secureim.util.MediaUtil;
@@ -81,6 +82,14 @@ public abstract class SendJob extends MasterSecretJob {
       part.setDataSize(resizedData.length);
     }
     return part;
+  }
+
+  protected void markPartsUploaded(long messageId, PduBody body) {
+    if (body == null) return;
+    PartDatabase database = DatabaseFactory.getPartDatabase(context);
+    for (int i = 0; i < body.getPartsNum(); i++) {
+      database.markPartUploaded(messageId, body.getPart(i));
+    }
   }
 
   private byte[] getResizedPartData(MasterSecret masterSecret, MediaConstraints constraints,
