@@ -13,7 +13,7 @@
   <string name="ApplicationPreferencesActivity_delete">Poista</string>
   <string name="ApplicationPreferencesActivity_disable_storage_encryption">Poistetaanko tallennustilan salaus käytöstä?</string>
   <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
-Varoitus. Viestiesi ja avaimiesi tallennustilan salaus poistetaan käytöstä. Salatut istuntosi
+Varoitus: Viestiesi ja avaimiesi tallennustilan salaus poistetaan käytöstä. Salatut istuntosi
 jatkavat toimintaansa, mutta kuka tahansa, jolla on fyysinen pääsy laitteeseesi, voi lukea ne.</string>
   <string name="ApplicationPreferencesActivity_disable">Poista käytöstä</string>
   <string name="ApplicationPreferencesActivity_unregistering">Puretaan rekisteröintiä</string>
@@ -147,12 +147,12 @@ Vastaanotettu: %4$s</string>
   <string name="ShareActivity_share_with">Jaa</string>
   <string name="ExportFragment_export">Vie</string>
   <string name="ExportFragment_export_plaintext_to_sd_card">Viedäänkö salaamattomana tallennustilaan?</string>
-  <string name="ExportFragment_warning_this_will_export_the_plaintext_contents">Varoitus, tämä vie
+  <string name="ExportFragment_warning_this_will_export_the_plaintext_contents">Varoitus: tämä vie
 kaikki OpenchatService-viestisi salaamattomana laitteesi tallennustilaan.</string>
   <string name="ExportFragment_cancel">Peruuta</string>
   <string name="ExportFragment_exporting">Viedään</string>
   <string name="ExportFragment_exporting_plaintext_to_sd_card">Viedään salaamattomana tallennustilaan...</string>
-  <string name="ExportFragment_error_unable_to_write_to_sd_card">Virhe, tallennustilaan kirjoitus epäonnistui!</string>
+  <string name="ExportFragment_error_unable_to_write_to_sd_card">Virhe: tallennustilaan kirjoitus epäonnistui!</string>
   <string name="ExportFragment_error_while_writing_to_sd_card">Tallennustilaan kirjoitettaessa sattui virhe.</string>
   <string name="ExportFragment_success">Onnistui!</string>
   <string name="GcmRefreshJob_Permanent_OpenchatService_communication_failure">Pysyvä OpenchatService-yhteysvirhe!</string>
@@ -303,17 +303,17 @@ Vastaanotettiin viesti tuntemattomalla identiteettiavaimella. Aloita käsittely 
   <string name="ThreadRecord_left_the_group">Poistui ryhmästä...</string>
   <string name="TheadRecord_secure_session_ended">Salattu istunto päättyi</string>
   <string name="ThreadRecord_draft">Luonnos:</string>
-  <string name="VerifyIdentityActivity_you_do_not_have_an_identity_key">Sinulla ei ole identiteettiavainta.</string>
-  <string name="VerifyIdentityActivity_recipient_has_no_identity_key">Vastaanottajalla ei ole identiteettiavainta.</string>
-  <string name="VerifyIdentityActivity_recipient_has_no_identity_key_exclamation">Vastaanottajalla ei ole identiteettiavainta!</string>
+  <string name="VerifyIdentityActivity_you_do_not_have_an_identity_key">(Sinulla ei ole identiteettiavainta.)</string>
+  <string name="VerifyIdentityActivity_recipient_has_no_identity_key">(Vastapuolella ei ole identiteettiavainta.)</string>
+  <string name="VerifyIdentityActivity_recipient_has_no_identity_key_exclamation">Vastapuolella ei ole identiteettiavainta!</string>
   <string name="VerifyIdentityActivity_scan_their_key_to_compare">Skannaa vastapuolen avaimen QR-koodi</string>
   <string name="VerifyIdentityActivity_get_my_key_scanned">Näytä oman avaimeni QR-koodi</string>
-  <string name="VerifyIdentityActivity_warning_the_scanned_key_does_not_match_please_check_the_fingerprint_text_carefully">VAROITUS, skannattu avain EI TÄSMÄÄ! Tarkastakaa sormenjälki huolella.</string>
+  <string name="VerifyIdentityActivity_warning_the_scanned_key_does_not_match_please_check_the_fingerprint_text_carefully">VAROITUS: Skannattu avain EI TÄSMÄÄ! Tarkastakaa sormenjälki huolella.</string>
   <string name="VerifyIdentityActivity_not_verified_exclamation">EI varmennettu!</string>
   <string name="VerifyIdentityActivity_their_key_is_correct_it_is_also_necessary_to_verify_your_key_with_them_as_well">Vastapuolen avain on oikea. Huomaa, että hänen on syytä tarkastaa vastaavasti sinun avaimesi.</string>
   <string name="VerifyIdentityActivity_verified_exclamation">Varmennettu!</string>
   <string name="VerifyIdentityActivity_you_don_t_have_an_identity_key_exclamation">Sinulla ei ole identiteettiavainta!</string>
-  <string name="ViewIdentityActivity_you_do_not_have_an_identity_key">Sinulla ei ole identiteettiavainta.</string>
+  <string name="ViewIdentityActivity_you_do_not_have_an_identity_key">(Sinulla ei ole identiteettiavainta.)</string>
   <string name="ViewIdentityActivity_scan_to_compare">Skannaa vastapuolen avaimen QR-koodi</string>
   <string name="ViewIdentityActivity_get_scanned_to_compare">Näytä oman avaimeni QR-koodi</string>
   <string name="ViewIdentityActivity_warning_the_scanned_key_does_not_match_exclamation">VAROITUS: Skannattu avain EI TÄSMÄÄ!</string>
@@ -354,7 +354,7 @@ Vastaanotettiin viesti tuntemattomalla identiteettiavaimella. Aloita käsittely 
   <string name="MessageNotifier_failed_to_deliver_message">Viestin toimitus epäonnistui.</string>
   <string name="MessageNotifier_error_delivering_message">Virhe viestiä toimitettaessa.</string>
   <string name="MessageNotifier_mark_all_as_read">Merkitse kaikki luetuiksi</string>
-  <string name="MessageNotifier_mark_read">Merkitse luetuksi</string>
+  <string name="MessageNotifier_mark_read">Merk. luetuksi</string>
   <string name="MessageNotifier_media_message">Mediaviesti</string>
   <string name="MessageNotifier_reply">Vastaa</string>
   <string name="QuickResponseService_quick_response_unavailable_when_OpenchatService_is_locked">Pikavastaus ei toimi, kun OpenchatService on lukittu!</string>
@@ -379,8 +379,9 @@ Vastaanotettiin viesti tuntemattomalla identiteettiavaimella. Aloita käsittely 
   <string name="conversation_activity__remove">Poista</string>
   <string name="conversation_activity__window_description">Keskustelu %1$s kanssa</string>
   <string name="conversation_activity__compose_description">Viestin kirjoitus</string>
-  <string name="conversation_activity__emoji_toggle_description">Ota emojinäppäimistö käyttöön</string>
+  <string name="conversation_activity__emoji_toggle_description">Näytä tai piilota emoji-näppäimistö</string>
   <string name="conversation_activity__attachment_thumbnail">Liitteen esikatselu</string>
+  <string name="conversation_activity__quick_attachment_drawer_toggle_description">Näytä tai piilota liitetiedostopaneeli</string>
   <string name="conversation_item__mms_downloading_description">Ladataan mediaviestiä</string>
   <string name="conversation_item__mms_image_description">Mediaviesti</string>
   <string name="conversation_item__secure_message_description">Salattu viesti</string>
@@ -451,7 +452,7 @@ PUHELINNUMEROSI</string>
   <string name="registration_activity__phone_number">PUHELINNUMERO</string>
   <string name="registration_activity__register">Rekisteröidy</string>
   <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">Rekisteröityminen siirtää joitakin yhteystietoja väliaikaisesti palvelimelle. Niitä ei kuitenkaan tallenneta sinne.</string>
-  <string name="registration_activity__powered_by_twilio">Powered by twilio</string>
+  <string name="registration_activity__powered_by_twilio">Palvelun tarjoaa Twilio</string>
   <string name="registration_problems__some_possible_problems_include">Mahdollisiin ongelmiin
 sisältyvät:</string>
   <string name="registration_problems__sms_interceptors">Tekstiviestisieppaajat.</string>
@@ -479,8 +480,8 @@ OpenchatService ei saanut yhteyttä pikaviestipalveluun.</string>
 sisältyvät:</string>
   <string name="registration_progress_activity__no_network_connectivity">Ei verkkoyhteyttä.</string>
   <string name="registration_progress_activity__your_device_needs_network_connectivity">Laitteesi
-tarvitsee verkkoyhteyttä tämän OpenchatServicen ominaisuuden käyttämiseen. Tarkista, että laitteesi
-on yhdistettynä 3G- tai WiFi-verkkoon.</string>
+tarvitsee verkkoyhteyttä tämän OpenchatServicen ominaisuuden käyttämiseen. Tarkista, että
+laitteesi on yhdistettynä mobiilitiedonsiirto- tai WiFi-verkkoon.</string>
   <string name="registration_progress_activity__restrictive_firewall">Rajoittava palomuuri.</string>
   <string name="registration_progress_activity__if_you_are_connected_via_wifi_its_possible_that_there_is_a_firewall">
 Jos olet yhdistänyt WiFi-verkkoon, on mahdollista että palomuuri estää pääsyn OpenchatServicen palvelimelle. Kokeile toista verkkoa tai mobiiliverkkoa.</string>
@@ -630,8 +631,8 @@ epäonnistui.</string>
   <string name="preferences__use_the_data_channel_for_communication_with_other_openchatservice_users">
 Ilmaiset ja yksityiset viestit OpenchatServicen ja Openchatin käyttäjille</string>
   <string name="preferences__submit_debug_log">Lähetä virheenkorjausloki</string>
-  <string name="preferences__support_wifi_calling">\'WiFi Calling\' -yhteensopiva tila</string>
-  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Ota käyttöön, jos laitteesi lähettää SMS/MMS-viestit WiFi-yhteyden kautta (ota käyttöön vain kun \'WiFi Calling\' on käytössä laitteessasi).</string>
+  <string name="preferences__support_wifi_calling">\"WiFi Calling\" -yhteensopiva tila</string>
+  <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Ota käyttöön, jos laitteesi lähettää SMS- ja MMS-viestit WiFi-yhteyden kautta. (Ota käyttöön vain, kun \"WiFi Calling\" on käytössä laitteessasi.)</string>
   <string name="preferences_app_protection__blocked_contacts">Estetyt yhteystiedot</string>
   <string name="contact_selection_list__menu_select_all">Valitse kaikki</string>
   <string name="contact_selection_list__menu_unselect_all">Poista kaikkien valinta</string>
@@ -666,6 +667,7 @@ Ilmaiset ja yksityiset viestit OpenchatServicen ja Openchatin käyttäjille</str
   <string name="conversation__menu_leave_group">Poistu ryhmästä</string>
   <string name="conversation__menu_delete_thread">Poista keskustelu</string>
   <string name="conversation__menu_view_media">Kaikki kuvat</string>
+  <string name="conversation__menu_conversation_settings">Keskustelun asetukset</string>
   <string name="conversation_popup__menu_expand_popup">Suurenna ponnahdusikkuna</string>
   <string name="conversation_add_to_contacts__menu_add_to_contacts">Lisää yhteystietoihin</string>
   <string name="convesation_group_options__recipients_list">Vastaanottajalista</string>
@@ -697,4 +699,5 @@ Ilmaiset ja yksityiset viestit OpenchatServicen ja Openchatin käyttäjille</str
   <string name="trimmer__deleting_old_messages">Vanhoja viestejä poistetaan...</string>
   <string name="trimmer__old_messages_successfully_deleted">Vanhojen viestien poisto onnistui</string>
   <string name="transport_selection_list_item__transport_icon">Tyypin kuvake</string>
+  <string name="quick_camera_unavailable">Kamera ei käytettävissä</string>
 </resources>

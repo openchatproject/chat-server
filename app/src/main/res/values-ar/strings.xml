@@ -128,6 +128,7 @@
   <string name="DeviceListActivity_by_disconnecting_this_device_it_will_no_longer_be_able_to_send_or_receive">الجهاز لن يتمكن من إرسال أو استقبال رسائل بعد قطع الاتصال.</string>
   <string name="DeviceListActivity_network_connection_failed">فشل في اتصال الشبكة...</string>
   <string name="DeviceListActivity_try_again">حاول مجددا</string>
+  <string name="DeviceListActivity_disconnecting_device">جارٍ فصل الجهاز...</string>
   <string name="DeviceListActivity_disconnecting_device_no_ellipse">جارٍ فصل الجهاز</string>
   <string name="DeviceListActivity_network_failed">فشل في الشبكة!</string>
   <string name="DeviceListItem_unnamed_device">جهاز غير مسمى</string>
@@ -415,6 +416,8 @@
   <string name="recipient_preferences__ringtone">نغمة الرنين</string>
   <string name="recipient_preferences__vibrate">الاهتزاز</string>
   <string name="recipient_preferences__block">حظر</string>
+  <string name="recipient_preferences__color">اللون</string>
+  <string name="recipient_preferences__color_for_this_contact">اللون المخصص لجهة الاتصال</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
 تحقق من رقم تليفونك للاتصال بتيكست سيكيور</string>
   <string name="registration_activity__your_country">بلدك</string>
@@ -501,8 +504,8 @@
     <item quantity="zero">%d صفر</item>
     <item quantity="one">%d ساعة</item>
     <item quantity="two">%d ساعتين</item>
-    <item quantity="few">%d أقل</item>
-    <item quantity="many">%d كثيرة</item>
+    <item quantity="few">%d ساعات</item>
+    <item quantity="many">%d ساعة</item>
     <item quantity="other">%d أخرى</item>
   </plurals>
   <string name="preferences__general">عام</string>
@@ -634,6 +637,7 @@
   <string name="conversation__menu_leave_group">أترك المجموعة</string>
   <string name="conversation__menu_delete_thread">حذف المحادثة</string>
   <string name="conversation__menu_view_media">جميع الصور</string>
+  <string name="conversation__menu_conversation_settings">إعدادات المحادثة</string>
   <string name="conversation_popup__menu_expand_popup">توسيع الإشعار</string>
   <string name="conversation_add_to_contacts__menu_add_to_contacts">أضف إلى جهات الاتصال</string>
   <string name="convesation_group_options__recipients_list">قائمة المستلمون</string>
@@ -665,4 +669,5 @@
   <string name="trimmer__deleting_old_messages">جار حذف الرسائل القديمة...</string>
   <string name="trimmer__old_messages_successfully_deleted">تم حذف الرسائل القديمة بنجاح</string>
   <string name="transport_selection_list_item__transport_icon">أيقونة النقل.</string>
+  <string name="quick_camera_unavailable">الكاميرا غير متاحة</string>
 </resources>

@@ -34,6 +34,7 @@
   <string name="AttachmentTypeSelectorAdapter_video">ویدئو</string>
   <string name="AttachmentTypeSelectorAdapter_audio">صدا</string>
   <string name="AttachmentTypeSelectorAdapter_contact">اطلاعات مخاطب</string>
+  <string name="BlockedContactsActivity_blocked_contacts">اطلاعات تماس مسدود</string>
   <string name="ConfirmIdentityDialog_you_may_wish_to_verify_this_contact">شما ممکن است مایل به منظور بررسی
 تماس با ما</string>
   <string name="ConfirmIdentityDialog_accept">پذیرفتن</string>
@@ -90,6 +91,7 @@
   <string name="ConversationFragment_push">داده ها (OpenchatService)</string>
   <string name="ConversationFragment_mms">MMS</string>
   <string name="ConversationFragment_sms">پیامک</string>
+  <string name="ConversationFragment_deleting">در حال حذف کردن</string>
   <string name="ConversationFragment_deleting_messages">حذف پیام های...</string>
   <string name="ConversationListActivity_search">جستجو...</string>
   <string name="ConversationListFragment_delete_threads_question">حذف گفتگو ها؟</string>
@@ -101,6 +103,10 @@
   <string name="CustomDefaultPreference_using_default">با استفاده از پیش فرض: %s</string>
   <string name="CustomDefaultPreference_none">هیچ کدام</string>
   <string name="DateUtils_now">اکنون</string>
+  <string name="DeviceListActivity_try_again">دوباره تلاش کن</string>
+  <string name="DeviceListActivity_disconnecting_device">قطع اتصال دستگاه ...</string>
+  <string name="DeviceListActivity_disconnecting_device_no_ellipse">قطع اتصال دستگاه</string>
+  <string name="DeviceListItem_unnamed_device">دستگاهی که نامش ذکر نشده</string>
   <string name="ShareActivity_share_with">به اشتراک گذاشتن با</string>
   <string name="ExportFragment_export">خروجی</string>
   <string name="ExportFragment_export_plaintext_to_sd_card">خروجی گرفتن متنی به کارت SD؟</string>
@@ -262,7 +268,9 @@
   <string name="MessageNotifier_failed_to_deliver_message">ناموفق برای تحویل پیام.</string>
   <string name="MessageNotifier_error_delivering_message">خطا در تحویل پیام.</string>
   <string name="MessageNotifier_mark_all_as_read">علامت همه به عنوان خوانده شده</string>
+  <string name="MessageNotifier_mark_read">علامت گذاری به عنوان خوانده شده</string>
   <string name="MessageNotifier_media_message">پیام رسانه</string>
+  <string name="MessageNotifier_reply">پاسخ</string>
   <string name="change_passphrase_activity__old_passphrase">رمز قبلی:</string>
   <string name="change_passphrase_activity__new_passphrase">رمز جدید:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">تکرار رمز جدید:</string>
@@ -323,6 +331,8 @@
   <string name="recipient_preferences__ringtone">آهنگ های زنگ</string>
   <string name="recipient_preferences__vibrate">لرزش</string>
   <string name="recipient_preferences__block">بلوک</string>
+  <string name="recipient_preferences__color">رنگ</string>
+  <string name="recipient_preferences__color_for_this_contact">رنگ برای این مخاطب</string>
   <string name="registration_activity__your_country">کشور شما</string>
   <string name="registration_activity__your_country_code_and_phone_number">کد کشور شما و
 شماره تلفن</string>
@@ -476,6 +486,7 @@
   <string name="preferences__openchatservice_messages">پیام های OpenchatService</string>
   <string name="preferences__submit_debug_log">ارسال گزارش اشکال‌زدایی</string>
   <string name="preferences__support_wifi_calling">\'وای فای تلفن\' حالت سازگاری</string>
+  <string name="preferences_app_protection__blocked_contacts">اطلاعات تماس مسدود</string>
   <string name="contact_selection_list__menu_select_all">انتخاب همه</string>
   <string name="contact_selection_list__menu_unselect_all">عدم انتخاب همه</string>
   <string name="contact_selection_list__header_openchatservice_users">کاربران OPENCHAT</string>
@@ -531,7 +542,9 @@
   <string name="MediaPreviewActivity_unssuported_media_type">نوع رسانه پشتیبانی نشده</string>
   <string name="media_preview__save_title">دخیره</string>
   <string name="media_preview_activity__image_content_description">پیش‌نمایش تصویر</string>
+  <string name="trimmer__deleting">در حال حذف</string>
   <string name="trimmer__deleting_old_messages">در حال حذف پیام‌های قدیمی...</string>
   <string name="trimmer__old_messages_successfully_deleted">پیام‌های قدیمی با موفقیت حذف شدند</string>
   <string name="transport_selection_list_item__transport_icon">آیکون های حمل و نقل</string>
+  <string name="quick_camera_unavailable">دوربین در دسترس نیست</string>
 </resources>

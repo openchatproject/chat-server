@@ -130,6 +130,7 @@ denne kontakten.</string>
   <string name="DeviceListActivity_by_disconnecting_this_device_it_will_no_longer_be_able_to_send_or_receive">Ved å frakoble denne enheten vil den ikke lenger være i stand til å sende eller motta meldinger.</string>
   <string name="DeviceListActivity_network_connection_failed">Nettverksforbindelse feilet...</string>
   <string name="DeviceListActivity_try_again">Prøv igjen</string>
+  <string name="DeviceListActivity_disconnecting_device">Frakobler enhet...</string>
   <string name="DeviceListActivity_disconnecting_device_no_ellipse">Frakobler enhet</string>
   <string name="DeviceListActivity_network_failed">Nettverk feilet!</string>
   <string name="DeviceListItem_unnamed_device">Ikke navngitt enhet</string>
@@ -336,6 +337,7 @@ Mottatt melding med ukjent ID nøkkel. Klikk for å prosessere og vise.</string>
   <string name="MessageNotifier_failed_to_deliver_message">Klarte ikke å levere meldingen.</string>
   <string name="MessageNotifier_error_delivering_message">Feil ved levering av meldingen.</string>
   <string name="MessageNotifier_mark_all_as_read">Marker alle som lest</string>
+  <string name="MessageNotifier_mark_read">Marker som lest</string>
   <string name="MessageNotifier_media_message">Multimediamelding</string>
   <string name="MessageNotifier_reply">Svar</string>
   <string name="QuickResponseService_quick_response_unavailable_when_OpenchatService_is_locked">Rask tilbakemelding ikke tilgjengelig når OpenchatService er låst!</string>
@@ -362,6 +364,7 @@ Mottatt melding med ukjent ID nøkkel. Klikk for å prosessere og vise.</string>
   <string name="conversation_activity__compose_description">Meldingssammensetning</string>
   <string name="conversation_activity__emoji_toggle_description">Emoji tastatur av/på</string>
   <string name="conversation_activity__attachment_thumbnail">Vedleggsikon</string>
+  <string name="conversation_activity__quick_attachment_drawer_toggle_description">Vedleggsskuff av/på</string>
   <string name="conversation_item__mms_downloading_description">Media melding lastes ned</string>
   <string name="conversation_item__mms_image_description">Multimediamelding</string>
   <string name="conversation_item__secure_message_description">Sikret melding</string>
@@ -420,6 +423,8 @@ Importer en klartekst backup kompatibel med \'SMSBackup And Restore\'.</string>
   <string name="recipient_preferences__ringtone">Ringelyd</string>
   <string name="recipient_preferences__vibrate">Vibrer</string>
   <string name="recipient_preferences__block">Blokker</string>
+  <string name="recipient_preferences__color">Farge</string>
+  <string name="recipient_preferences__color_for_this_contact">Farge for denne kontakten</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">
 Verifiser telefonnummeret dit for å koble til OpenchatService.
 </string>
@@ -429,6 +434,7 @@ TELEFONNUMMER</string>
   <string name="registration_activity__phone_number">TELEFONNUMMER</string>
   <string name="registration_activity__register">Registrer</string>
   <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">Registrering sender noe kontaktinformasjon til serveren. Det blir ikke lagret.</string>
+  <string name="registration_activity__powered_by_twilio">Drevet av twilio</string>
   <string name="registration_problems__some_possible_problems_include">Noen mulige problemer
 inkluderer:</string>
   <string name="registration_problems__sms_interceptors">SMS blokkerere.</string>
@@ -641,6 +647,7 @@ Gratis og private meldinger til OpenchatService og Openchat brukere
   <string name="conversation__menu_leave_group">Forlat gruppe</string>
   <string name="conversation__menu_delete_thread">Slett tråd</string>
   <string name="conversation__menu_view_media">Alle bilder</string>
+  <string name="conversation__menu_conversation_settings">Samtaleinstillinger</string>
   <string name="conversation_popup__menu_expand_popup">Utvid pop-up</string>
   <string name="conversation_add_to_contacts__menu_add_to_contacts">Legg til kontakter</string>
   <string name="convesation_group_options__recipients_list">Mottakerliste</string>
@@ -672,4 +679,5 @@ Gratis og private meldinger til OpenchatService og Openchat brukere
   <string name="trimmer__deleting_old_messages">Sletter gamle meldinger...</string>
   <string name="trimmer__old_messages_successfully_deleted">Sletting av gamle meldinger vellykket</string>
   <string name="transport_selection_list_item__transport_icon">Transportikon</string>
+  <string name="quick_camera_unavailable">Kamera utilgjengelig</string>
 </resources>

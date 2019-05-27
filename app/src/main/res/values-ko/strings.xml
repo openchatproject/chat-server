@@ -312,6 +312,7 @@
   <string name="MessageNotifier_failed_to_deliver_message">메시지가 전송되지 않았습니다.</string>
   <string name="MessageNotifier_error_delivering_message">메시지 전송 오류</string>
   <string name="MessageNotifier_mark_all_as_read">모두 읽음으로 표시</string>
+  <string name="MessageNotifier_mark_read">읽음으로 표시</string>
   <string name="MessageNotifier_media_message">미디어 메시지</string>
   <string name="MessageNotifier_reply">답장</string>
   <string name="QuickResponseService_quick_response_unavailable_when_OpenchatService_is_locked">OpenchatService 잠겨 있는 경우 빠른 응답 사용할 수 없음</string>
@@ -393,6 +394,8 @@
   <string name="recipient_preferences__ringtone">알림 벨소리</string>
   <string name="recipient_preferences__vibrate">진동</string>
   <string name="recipient_preferences__block">차단</string>
+  <string name="recipient_preferences__color">색상</string>
+  <string name="recipient_preferences__color_for_this_contact">사용자 색상</string>
   <string name="registration_activity__openchatservice_can_use_instant_messages_to_avoid_sms_charges_when_communicating_with_other_openchatservice_users">OpenchatService에 연결을 위해 전화번호를 확인합니다.</string>
   <string name="registration_activity__your_country">국가</string>
   <string name="registration_activity__your_country_code_and_phone_number">국제전화 나라 번호 및 전화번호</string>
