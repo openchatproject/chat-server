@@ -137,6 +137,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   private static final int PICK_AUDIO        = 3;
   private static final int PICK_CONTACT_INFO = 4;
   private static final int GROUP_EDIT        = 5;
+  private static final int TAKE_PHOTO        = 6;
 
   private   MasterSecret              masterSecret;
   protected ComposeText               composeText;
@@ -262,7 +263,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     Log.w(TAG, "onActivityResult called: " + reqCode + ", " + resultCode + " , " + data);
     super.onActivityResult(reqCode, resultCode, data);
 
-    if (data == null || resultCode != RESULT_OK) return;
+    if (data == null && reqCode != TAKE_PHOTO || resultCode != RESULT_OK) return;
 
     switch (reqCode) {
     case PICK_IMAGE:
@@ -282,6 +283,11 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       titleView.setTitle(recipients);
       setBlockedUserState(recipients);
       supportInvalidateOptionsMenu();
+      break;
+    case TAKE_PHOTO:
+      if (attachmentManager.getCaptureUri() != null) {
+        addAttachmentImage(masterSecret, attachmentManager.getCaptureUri());
+      }
       break;
     }
   }
@@ -781,6 +787,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     ComposeKeyPressedListener composeKeyPressedListener = new ComposeKeyPressedListener();
 
     attachButton.setOnClickListener(new AttachButtonListener());
+    quickAttachmentToggle.setEnabled(false);
     sendButton.setOnClickListener(sendButtonListener);
     sendButton.setEnabled(true);
     sendButton.addOnTransportChangedListener(new OnTransportChangedListener() {
@@ -934,6 +941,8 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       AttachmentManager.selectAudio(this, PICK_AUDIO); break;
     case AttachmentTypeSelectorAdapter.ADD_CONTACT_INFO:
       AttachmentManager.selectContactInfo(this, PICK_CONTACT_INFO); break;
+    case AttachmentTypeSelectorAdapter.TAKE_PHOTO:
+      attachmentManager.capturePhoto(this, TAKE_PHOTO); break;
     }
   }
 

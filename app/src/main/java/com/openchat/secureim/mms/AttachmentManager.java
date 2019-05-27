@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.providers.CaptureProvider;
 import com.openchat.secureim.util.BitmapDecodingException;
 
+import java.io.File;
 import java.io.IOException;
 
 public class AttachmentManager {
@@ -76,7 +78,7 @@ public class AttachmentManager {
   }
 
   public void cleanup() {
-    if (captureUri != null) CaptureProvider.getInstance(context).delete(captureUri);
+    if (captureUri != null) new File(captureUri.getPath()).delete();
     captureUri = null;
   }
 
@@ -136,6 +138,24 @@ public class AttachmentManager {
   public static void selectContactInfo(Activity activity, int requestCode) {
     Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
     activity.startActivityForResult(intent, requestCode);
+  }
+
+  public Uri getCaptureUri() {
+    return captureUri;
+  }
+
+  public void capturePhoto(Activity activity, int requestCode) {
+    try {
+      Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+      if (captureIntent.resolveActivity(activity.getPackageManager()) != null) {
+        File captureFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".jpg", activity.getExternalFilesDir(null));
+        captureUri = Uri.fromFile(captureFile);
+        captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, captureUri);
+        activity.startActivityForResult(captureIntent, requestCode);
+      }
+    } catch (IOException ioe) {
+      Log.w(TAG, ioe);
+    }
   }
 
   private static void selectMediaType(Activity activity, String type, int requestCode) {
