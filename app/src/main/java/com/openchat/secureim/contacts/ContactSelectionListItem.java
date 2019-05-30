@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.openchat.secureim.R;
 import com.openchat.secureim.components.AvatarImageView;
+import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.Recipients;
 
@@ -50,7 +51,10 @@ public class ContactSelectionListItem extends RelativeLayout implements Recipien
     this.id     = id;
     this.number = number;
 
-    if (number != null) {
+    if (type == ContactsDatabase.NEW_TYPE) {
+      this.recipients = null;
+      this.contactPhotoImage.setAvatar(Recipient.getUnknownRecipient(), false);
+    } else if (number != null) {
       this.recipients = RecipientFactory.getRecipientsFromString(getContext(), number, true);
       this.recipients.addListener(this);
     }
