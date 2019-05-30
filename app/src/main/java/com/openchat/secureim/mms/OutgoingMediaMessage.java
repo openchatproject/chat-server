@@ -3,11 +3,10 @@ package com.openchat.secureim.mms;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.openchat.secureim.crypto.MasterCipher;
-import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecretUnion;
+import com.openchat.secureim.crypto.MediaKey;
 import com.openchat.secureim.database.ThreadDatabase;
 import com.openchat.secureim.recipients.Recipients;
-import com.openchat.secureim.util.Base64;
 import com.openchat.secureim.util.Util;
 import com.openchat.imservice.api.messages.OpenchatServiceAttachment;
 
@@ -40,7 +39,7 @@ public class OutgoingMediaMessage {
     this(context, recipients, slideDeck.toPduBody(), message, distributionType);
   }
 
-  public OutgoingMediaMessage(Context context, MasterSecret masterSecret,
+  public OutgoingMediaMessage(Context context, MasterSecretUnion masterSecret,
                               Recipients recipients, List<OpenchatServiceAttachment> attachments,
                               String message)
   {
@@ -74,17 +73,17 @@ public class OutgoingMediaMessage {
     return false;
   }
 
-  private static PduBody pduBodyFor(MasterSecret masterSecret, List<OpenchatServiceAttachment> attachments) {
+  private static PduBody pduBodyFor(MasterSecretUnion masterSecret, List<OpenchatServiceAttachment> attachments) {
     PduBody body = new PduBody();
 
     for (OpenchatServiceAttachment attachment : attachments) {
       if (attachment.isPointer()) {
         PduPart media        = new PduPart();
-        byte[]  encryptedKey = new MasterCipher(masterSecret).encryptBytes(attachment.asPointer().getKey());
+        String  encryptedKey = MediaKey.getEncrypted(masterSecret, attachment.asPointer().getKey());
 
         media.setContentType(Util.toIsoBytes(attachment.getContentType()));
         media.setContentLocation(Util.toIsoBytes(String.valueOf(attachment.asPointer().getId())));
-        media.setContentDisposition(Util.toIsoBytes(Base64.encodeBytes(encryptedKey)));
+        media.setContentDisposition(Util.toIsoBytes(encryptedKey));
 
         body.addPart(media);
       }

@@ -13,8 +13,6 @@ import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.Base64;
 import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.InvalidKeyException;
-import com.openchat.secureim.crypto.MasterCipher;
-import com.openchat.secureim.crypto.MasterSecret;
 
 import java.io.IOException;
 
@@ -26,13 +24,11 @@ public class IdentityDatabase extends Database {
   private static final String ID            = "_id";
   public  static final String RECIPIENT     = "recipient";
   public  static final String IDENTITY_KEY  = "key";
-  public  static final String MAC           = "mac";
 
   public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME +
       " (" + ID + " INTEGER PRIMARY KEY, " +
       RECIPIENT + " INTEGER UNIQUE, " +
-      IDENTITY_KEY + " TEXT, " +
-      MAC + " TEXT);";
+      IDENTITY_KEY + " TEXT);";
 
   public IdentityDatabase(Context context, SQLiteOpenHelper databaseHelper) {
     super(context, databaseHelper);
@@ -48,28 +44,19 @@ public class IdentityDatabase extends Database {
     return cursor;
   }
 
-  public boolean isValidIdentity(MasterSecret masterSecret,
-                                 long recipientId,
+  public boolean isValidIdentity(long recipientId,
                                  IdentityKey theirIdentity)
   {
-    SQLiteDatabase database   = databaseHelper.getReadableDatabase();
-    MasterCipher masterCipher = new MasterCipher(masterSecret);
-    Cursor cursor             = null;
+    SQLiteDatabase database = databaseHelper.getReadableDatabase();
+    Cursor         cursor   = null;
 
     try {
       cursor = database.query(TABLE_NAME, null, RECIPIENT + " = ?",
                               new String[] {recipientId+""}, null, null,null);
 
       if (cursor != null && cursor.moveToFirst()) {
-        String serializedIdentity = cursor.getString(cursor.getColumnIndexOrThrow(IDENTITY_KEY));
-        String mac                = cursor.getString(cursor.getColumnIndexOrThrow(MAC));
-
-        if (!masterCipher.verifyMacFor(recipientId + serializedIdentity, Base64.decode(mac))) {
-          Log.w("IdentityDatabase", "MAC failed");
-          return false;
-        }
-
-        IdentityKey ourIdentity = new IdentityKey(Base64.decode(serializedIdentity), 0);
+        String      serializedIdentity = cursor.getString(cursor.getColumnIndexOrThrow(IDENTITY_KEY));
+        IdentityKey ourIdentity        = new IdentityKey(Base64.decode(serializedIdentity), 0);
 
         return ourIdentity.equals(theirIdentity);
       } else {
@@ -88,18 +75,14 @@ public class IdentityDatabase extends Database {
     }
   }
 
-  public void saveIdentity(MasterSecret masterSecret, long recipientId, IdentityKey identityKey)
+  public void saveIdentity(long recipientId, IdentityKey identityKey)
   {
-    SQLiteDatabase database   = databaseHelper.getWritableDatabase();
-    MasterCipher masterCipher = new MasterCipher(masterSecret);
-    String identityKeyString  = Base64.encodeBytes(identityKey.serialize());
-    String macString          = Base64.encodeBytes(masterCipher.getMacFor(recipientId +
-                                                                              identityKeyString));
+    SQLiteDatabase database          = databaseHelper.getWritableDatabase();
+    String         identityKeyString = Base64.encodeBytes(identityKey.serialize());
 
     ContentValues contentValues = new ContentValues();
     contentValues.put(RECIPIENT, recipientId);
     contentValues.put(IDENTITY_KEY, identityKeyString);
-    contentValues.put(MAC, macString);
 
     database.replace(TABLE_NAME, null, contentValues);
 
@@ -113,17 +96,15 @@ public class IdentityDatabase extends Database {
     context.getContentResolver().notifyChange(CHANGE_URI, null);
   }
 
-  public Reader readerFor(MasterSecret masterSecret, Cursor cursor) {
-    return new Reader(masterSecret, cursor);
+  public Reader readerFor(Cursor cursor) {
+    return new Reader(cursor);
   }
 
   public class Reader {
     private final Cursor cursor;
-    private final MasterCipher cipher;
 
-    public Reader(MasterSecret masterSecret, Cursor cursor) {
+    public Reader(Cursor cursor) {
       this.cursor = cursor;
-      this.cipher = new MasterCipher(masterSecret);
     }
 
     public Identity getCurrent() {
@@ -131,14 +112,9 @@ public class IdentityDatabase extends Database {
       Recipients recipients  = RecipientFactory.getRecipientsForIds(context, new long[]{recipientId}, true);
 
       try {
-        String identityKeyString = cursor.getString(cursor.getColumnIndexOrThrow(IDENTITY_KEY));
-        String mac               = cursor.getString(cursor.getColumnIndexOrThrow(MAC));
+        String      identityKeyString = cursor.getString(cursor.getColumnIndexOrThrow(IDENTITY_KEY));
+        IdentityKey identityKey       = new IdentityKey(Base64.decode(identityKeyString), 0);
 
-        if (!cipher.verifyMacFor(recipientId + identityKeyString, Base64.decode(mac))) {
-          return new Identity(recipients, null);
-        }
-
-        IdentityKey identityKey = new IdentityKey(Base64.decode(identityKeyString), 0);
         return new Identity(recipients, identityKey);
       } catch (IOException e) {
         Log.w("IdentityDatabase", e);

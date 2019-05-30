@@ -2,7 +2,6 @@ package com.openchat.secureim.crypto.storage;
 
 import android.content.Context;
 
-import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.protocal.OpenchatAddress;
 import com.openchat.protocal.IdentityKey;
 import com.openchat.protocal.IdentityKeyPair;
@@ -25,11 +24,11 @@ public class OpenchatServiceOpenchatStore implements OpenchatStore {
   private final IdentityKeyStore  identityKeyStore;
   private final SessionStore      sessionStore;
 
-  public OpenchatServiceOpenchatStore(Context context, MasterSecret masterSecret) {
-    this.preKeyStore       = new OpenchatServicePreKeyStore(context, masterSecret);
-    this.signedPreKeyStore = new OpenchatServicePreKeyStore(context, masterSecret);
-    this.identityKeyStore  = new OpenchatServiceIdentityKeyStore(context, masterSecret);
-    this.sessionStore      = new OpenchatServiceSessionStore(context, masterSecret);
+  public OpenchatServiceOpenchatStore(Context context) {
+    this.preKeyStore       = new OpenchatServicePreKeyStore(context);
+    this.signedPreKeyStore = new OpenchatServicePreKeyStore(context);
+    this.identityKeyStore  = new OpenchatServiceIdentityKeyStore(context);
+    this.sessionStore      = new OpenchatServiceSessionStore(context);
   }
 
   @Override

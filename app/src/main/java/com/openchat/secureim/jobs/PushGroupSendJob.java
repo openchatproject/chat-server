@@ -130,7 +130,7 @@ public class PushGroupSendJob extends PushSendJob implements InjectableType {
   {
     message = getResolvedMessage(masterSecret, message, MediaConstraints.PUSH_CONSTRAINTS, false);
 
-    OpenchatServiceMessageSender    messageSender = messageSenderFactory.create(masterSecret);
+    OpenchatServiceMessageSender    messageSender = messageSenderFactory.create();
     byte[]                     groupId       = GroupUtil.getDecodedId(message.getTo()[0].getString());
     Recipients                 recipients    = DatabaseFactory.getGroupDatabase(context).getGroupMembers(groupId, false);
     List<OpenchatServiceAttachment> attachments   = getAttachments(masterSecret, message);

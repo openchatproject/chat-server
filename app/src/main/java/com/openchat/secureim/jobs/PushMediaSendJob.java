@@ -104,7 +104,7 @@ public class PushMediaSendJob extends PushSendJob implements InjectableType {
       throws RetryLaterException, InsecureFallbackApprovalException, UntrustedIdentityException,
              UndeliverableMessageException
   {
-    OpenchatServiceMessageSender messageSender = messageSenderFactory.create(masterSecret);
+    OpenchatServiceMessageSender messageSender = messageSenderFactory.create();
     String                  destination   = message.getTo()[0].getString();
 
     try {

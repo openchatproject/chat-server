@@ -2,8 +2,11 @@ package com.openchat.secureim.mms;
 
 import android.text.TextUtils;
 
+import com.openchat.secureim.crypto.AsymmetricMasterCipher;
 import com.openchat.secureim.crypto.MasterCipher;
 import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecretUnion;
+import com.openchat.secureim.crypto.MediaKey;
 import com.openchat.secureim.util.Base64;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.Util;
@@ -34,7 +37,7 @@ public class IncomingMediaMessage {
     this.push    = false;
   }
 
-  public IncomingMediaMessage(MasterSecret masterSecret,
+  public IncomingMediaMessage(MasterSecretUnion masterSecret,
                               String from,
                               String to,
                               long sentTimeMillis,
@@ -69,11 +72,11 @@ public class IncomingMediaMessage {
       for (OpenchatServiceAttachment attachment : attachments.get()) {
         if (attachment.isPointer()) {
           PduPart media        = new PduPart();
-          byte[]  encryptedKey = new MasterCipher(masterSecret).encryptBytes(attachment.asPointer().getKey());
+          String  encryptedKey = MediaKey.getEncrypted(masterSecret, attachment.asPointer().getKey());
 
           media.setContentType(Util.toIsoBytes(attachment.getContentType()));
           media.setContentLocation(Util.toIsoBytes(String.valueOf(attachment.asPointer().getId())));
-          media.setContentDisposition(Util.toIsoBytes(Base64.encodeBytes(encryptedKey)));
+          media.setContentDisposition(Util.toIsoBytes(encryptedKey));
 
           if (relay.isPresent()) {
             media.setName(Util.toIsoBytes(relay.get()));

@@ -46,7 +46,7 @@ public class DeliveryReceiptJob extends ContextJob implements InjectableType {
   @Override
   public void onRun() throws IOException {
     Log.w("DeliveryReceiptJob", "Sending delivery receipt...");
-    OpenchatServiceMessageSender messageSender     = messageSenderFactory.create(null);
+    OpenchatServiceMessageSender messageSender     = messageSenderFactory.create();
     OpenchatServiceAddress       openchatServiceAddress = new OpenchatServiceAddress(destination, Optional.fromNullable(relay));
 
     messageSender.sendDeliveryReceipt(openchatServiceAddress, timestamp);

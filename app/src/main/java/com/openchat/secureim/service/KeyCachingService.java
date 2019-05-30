@@ -12,6 +12,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -24,6 +25,7 @@ import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.InvalidPassphraseException;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.MasterSecretUtil;
+import com.openchat.secureim.jobs.MasterSecretDecryptJob;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.ParcelUtil;
@@ -56,7 +58,7 @@ public class KeyCachingService extends Service {
 
   public KeyCachingService() {}
 
-  public static synchronized MasterSecret getMasterSecret(Context context) {
+  public static synchronized @Nullable MasterSecret getMasterSecret(Context context) {
     if (masterSecret == null && OpenchatServicePreferences.isPasswordDisabled(context)) {
       try {
         MasterSecret masterSecret = MasterSecretUtil.getMasterSecret(context, MasterSecretUtil.UNENCRYPTED_PASSPHRASE);
@@ -81,13 +83,14 @@ public class KeyCachingService extends Service {
       broadcastNewSecret();
       startTimeoutIfAppropriate();
 
+      if (!OpenchatServicePreferences.isPasswordDisabled(this)) {
+        ApplicationContext.getInstance(this).getJobManager().add(new MasterSecretDecryptJob(this));
+      }
+
       new AsyncTask<Void, Void, Void>() {
         @Override
         protected Void doInBackground(Void... params) {
           if (!DatabaseUpgradeActivity.isUpdate(KeyCachingService.this)) {
-            ApplicationContext.getInstance(KeyCachingService.this)
-                              .getJobManager()
-                              .setEncryptionKeys(new EncryptionKeys(ParcelUtil.serialize(masterSecret)));
             MessageNotifier.updateNotification(KeyCachingService.this, masterSecret);
           }
           return null;

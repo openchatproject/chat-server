@@ -6,6 +6,7 @@ import android.util.Pair;
 
 import com.openchat.secureim.ApplicationContext;
 import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecretUnion;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.database.MmsDatabase;
@@ -57,7 +58,7 @@ public class MessageSender {
       allocatedThreadId = threadId;
     }
 
-    long messageId = database.insertMessageOutbox(masterSecret, allocatedThreadId, message, forceSms, System.currentTimeMillis());
+    long messageId = database.insertMessageOutbox(new MasterSecretUnion(masterSecret), allocatedThreadId, message, forceSms, System.currentTimeMillis());
 
     sendTextMessage(context, recipients, forceSms, keyExchange, messageId);
 
@@ -83,7 +84,7 @@ public class MessageSender {
       }
 
       Recipients recipients = message.getRecipients();
-      long       messageId  = database.insertMessageOutbox(masterSecret, message, allocatedThreadId, forceSms, System.currentTimeMillis());
+      long       messageId  = database.insertMessageOutbox(new MasterSecretUnion(masterSecret), message, allocatedThreadId, forceSms, System.currentTimeMillis());
 
       sendMediaMessage(context, masterSecret, recipients, forceSms, messageId);
 

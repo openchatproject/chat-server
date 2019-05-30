@@ -3,14 +3,15 @@ package com.openchat.secureim.jobs;
 import android.content.Context;
 import android.util.Log;
 
-import com.openchat.secureim.crypto.MasterCipher;
+import com.openchat.secureim.crypto.AsymmetricMasterSecret;
 import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecretUtil;
+import com.openchat.secureim.crypto.MediaKey;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.PartDatabase;
 import com.openchat.secureim.database.PartDatabase.PartId;
 import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
-import com.openchat.secureim.util.Base64;
 import com.openchat.secureim.util.Util;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
@@ -113,10 +114,10 @@ public class AttachmentDownloadJob extends MasterSecretJob implements Injectable
       throws InvalidPartException
   {
     try {
-      MasterCipher masterCipher = new MasterCipher(masterSecret);
-      long         id           = Long.parseLong(Util.toIsoString(part.getContentLocation()));
-      byte[]       key          = masterCipher.decryptBytes(Base64.decode(Util.toIsoString(part.getContentDisposition())));
-      String       relay        = null;
+      AsymmetricMasterSecret asymmetricMasterSecret = MasterSecretUtil.getAsymmetricMasterSecret(context, masterSecret);
+      long                   id                     = Long.parseLong(Util.toIsoString(part.getContentLocation()));
+      byte[]                 key                    = MediaKey.getDecrypted(masterSecret, asymmetricMasterSecret, Util.toIsoString(part.getContentDisposition()));
+      String                 relay                  = null;
 
       if (part.getName() != null) {
         relay = Util.toIsoString(part.getName());

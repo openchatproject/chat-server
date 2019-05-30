@@ -2,21 +2,17 @@ package com.openchat.secureim.jobs;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.util.Log;
 import android.util.Pair;
 
 import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecretUnion;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.MmsDatabase;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
 import com.openchat.secureim.mms.ApnUnavailableException;
 import com.openchat.secureim.mms.CompatMmsConnection;
-import com.openchat.secureim.mms.IncomingLollipopMmsConnection;
 import com.openchat.secureim.mms.IncomingMediaMessage;
-import com.openchat.secureim.mms.IncomingLegacyMmsConnection;
-import com.openchat.secureim.mms.IncomingMmsConnection;
 import com.openchat.secureim.mms.MmsRadioException;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.protocol.WirePrefix;
@@ -154,8 +150,8 @@ public class MmsDownloadJob extends MasterSecretJob {
       database.markAsLegacyVersion(messageId, threadId);
       messageAndThreadId = new Pair<>(messageId, threadId);
     } else {
-      messageAndThreadId = database.insertMessageInbox(masterSecret, message,
-                                                       contentLocation, threadId);
+      messageAndThreadId = database.insertMessageInbox(new MasterSecretUnion(masterSecret),
+                                                       message, contentLocation, threadId);
       database.delete(messageId);
     }
 

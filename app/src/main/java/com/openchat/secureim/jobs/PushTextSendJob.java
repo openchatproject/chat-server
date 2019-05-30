@@ -59,7 +59,7 @@ public class PushTextSendJob extends PushSendJob implements InjectableType {
     try {
       Log.w(TAG, "Sending message: " + messageId);
 
-      deliver(masterSecret, record);
+      deliver(record);
       database.markAsPush(messageId);
       database.markAsSecure(messageId);
       database.markAsSent(messageId);
@@ -99,12 +99,12 @@ public class PushTextSendJob extends PushSendJob implements InjectableType {
     }
   }
 
-  private void deliver(MasterSecret masterSecret, SmsMessageRecord message)
+  private void deliver(SmsMessageRecord message)
       throws UntrustedIdentityException, InsecureFallbackApprovalException, RetryLaterException
   {
     try {
       OpenchatServiceAddress       address           = getPushAddress(message.getIndividualRecipient().getNumber());
-      OpenchatServiceMessageSender messageSender     = messageSenderFactory.create(masterSecret);
+      OpenchatServiceMessageSender messageSender     = messageSenderFactory.create();
       OpenchatServiceDataMessage   openchatServiceMessage = OpenchatServiceDataMessage.newBuilder()
                                                                        .withTimestamp(message.getDateSent())
                                                                        .withBody(message.getBody().getBody())

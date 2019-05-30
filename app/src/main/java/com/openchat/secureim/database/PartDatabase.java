@@ -14,6 +14,7 @@ import android.util.Pair;
 import com.openchat.secureim.crypto.DecryptingPartInputStream;
 import com.openchat.secureim.crypto.EncryptingPartOutputStream;
 import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecretUnion;
 import com.openchat.secureim.mms.PartAuthority;
 import com.openchat.secureim.util.BitmapDecodingException;
 import com.openchat.secureim.util.MediaUtil;
@@ -205,7 +206,7 @@ public class PartDatabase extends Database {
     }
   }
 
-  void insertParts(MasterSecret masterSecret, long mmsId, PduBody body) throws MmsException {
+  void insertParts(MasterSecretUnion masterSecret, long mmsId, PduBody body) throws MmsException {
     for (int i=0;i<body.getPartsNum();i++) {
       PduPart part = body.getPart(i);
       PartId partId = insertPart(masterSecret, part, mmsId, part.getThumbnail());
@@ -415,13 +416,13 @@ public class PartDatabase extends Database {
     return part;
   }
 
-  private PartId insertPart(MasterSecret masterSecret, PduPart part, long mmsId, Bitmap thumbnail) throws MmsException {
+  private PartId insertPart(MasterSecretUnion masterSecret, PduPart part, long mmsId, Bitmap thumbnail) throws MmsException {
     Log.w(TAG, "inserting part to mms " + mmsId);
     SQLiteDatabase   database = databaseHelper.getWritableDatabase();
     Pair<File, Long> partData = null;
 
-    if (part.getData() != null || part.getDataUri() != null) {
-      partData = writePartData(masterSecret, part);
+    if ((part.getData() != null || part.getDataUri() != null) && masterSecret.getMasterSecret().isPresent()) {
+      partData = writePartData(masterSecret.getMasterSecret().get(), part);
       Log.w(TAG, "Wrote part to file: " + partData.first.getAbsolutePath());
     }
 
@@ -436,12 +437,12 @@ public class PartDatabase extends Database {
     long   partRowId = database.insert(TABLE_NAME, null, contentValues);
     PartId partId    = new PartId(partRowId, part.getUniqueId());
 
-    if (thumbnail != null) {
+    if (thumbnail != null && masterSecret.getMasterSecret().isPresent()) {
       Log.w(TAG, "inserting pre-generated thumbnail");
       ThumbnailData data = new ThumbnailData(thumbnail);
-      updatePartThumbnail(masterSecret, partId, part, data.toDataStream(), data.getAspectRatio());
+      updatePartThumbnail(masterSecret.getMasterSecret().get(), partId, part, data.toDataStream(), data.getAspectRatio());
     } else if (!part.isInProgress()) {
-      thumbnailExecutor.submit(new ThumbnailFetchCallable(masterSecret, partId));
+      thumbnailExecutor.submit(new ThumbnailFetchCallable(masterSecret.getMasterSecret().get(), partId));
     }
 
     return partId;

@@ -16,8 +16,10 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 
 import com.openchat.secureim.ApplicationContext;
 import com.openchat.secureim.R;
+import com.openchat.secureim.crypto.AsymmetricMasterCipher;
 import com.openchat.secureim.crypto.MasterCipher;
 import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.crypto.MasterSecretUnion;
 import com.openchat.secureim.database.documents.NetworkFailure;
 import com.openchat.secureim.database.documents.NetworkFailureList;
 import com.openchat.secureim.database.documents.IdentityKeyMismatch;
@@ -336,12 +338,11 @@ public class MmsDatabase extends MessagingDatabase {
     return cursor;
   }
 
-  public void updateResponseStatus(long messageId, int status) {
-    SQLiteDatabase database     = databaseHelper.getWritableDatabase();
-    ContentValues contentValues = new ContentValues();
-    contentValues.put(RESPONSE_STATUS, status);
+  public Reader getDecryptInProgressMessages(MasterSecret masterSecret) {
+    SQLiteDatabase db = databaseHelper.getReadableDatabase();
+    String where       = MESSAGE_BOX + " & " + (Types.ENCRYPTION_ASYMMETRIC_BIT) + " != 0";
 
-    database.update(TABLE_NAME, contentValues, ID_WHERE, new String[] {messageId + ""});
+    return readerFor(masterSecret, db.query(TABLE_NAME, MMS_PROJECTION, where, null, null, null, null));
   }
 
   private void updateMailboxBitmask(long id, long maskOff, long maskOn) {
@@ -396,15 +397,6 @@ public class MmsDatabase extends MessagingDatabase {
     notifyConversationListeners(getThreadIdForMessage(messageId));
   }
 
-  public void markDeliveryStatus(long messageId, int status) {
-    SQLiteDatabase database     = databaseHelper.getWritableDatabase();
-    ContentValues contentValues = new ContentValues();
-    contentValues.put(STATUS, status);
-
-    database.update(TABLE_NAME, contentValues, ID_WHERE, new String[] {messageId + ""});
-    notifyConversationListeners(getThreadIdForMessage(messageId));
-  }
-
   public void markAsNoSession(long messageId, long threadId) {
     updateMailboxBitmask(messageId, Types.ENCRYPTION_MASK, Types.ENCRYPTION_REMOTE_NO_SESSION_BIT);
     notifyConversationListeners(threadId);
@@ -451,6 +443,36 @@ public class MmsDatabase extends MessagingDatabase {
     contentValues.put(READ, 1);
 
     database.update(TABLE_NAME, contentValues, null, null);
+  }
+
+  public void updateMessageBody(MasterSecretUnion masterSecret, long messageId, String body) {
+    body = getEncryptedBody(masterSecret, body);
+
+    long type;
+
+    if (masterSecret.getMasterSecret().isPresent()) {
+      type = Types.ENCRYPTION_SYMMETRIC_BIT;
+    } else {
+      type = Types.ENCRYPTION_ASYMMETRIC_BIT;
+    }
+
+    updateMessageBodyAndType(messageId, body, Types.ENCRYPTION_MASK, type);
+  }
+
+  private Pair<Long, Long> updateMessageBodyAndType(long messageId, String body, long maskOff, long maskOn) {
+    SQLiteDatabase db = databaseHelper.getWritableDatabase();
+    db.execSQL("UPDATE " + TABLE_NAME + " SET " + BODY + " = ?, " +
+               MESSAGE_BOX + " = (" + MESSAGE_BOX + " & " + (Types.TOTAL_MASK - maskOff) + " | " + maskOn + ") " +
+               "WHERE " + ID + " = ?",
+               new String[] {body, messageId + ""});
+
+    long threadId = getThreadIdForMessage(messageId);
+
+    DatabaseFactory.getThreadDatabase(context).update(threadId);
+    notifyConversationListeners(threadId);
+    notifyConversationListListeners();
+
+    return new Pair<>(messageId, threadId);
   }
 
   public Optional<NotificationInd> getNotification(long messageId) {
@@ -523,15 +545,6 @@ public class MmsDatabase extends MessagingDatabase {
     }
   }
 
-  public Reader getNotificationsWithDownloadState(MasterSecret masterSecret, long state) {
-    SQLiteDatabase database   = databaseHelper.getReadableDatabase();
-    String selection          = STATUS + " = ?";
-    String[] selectionArgs    = new String[]{state + ""};
-
-    Cursor cursor = database.query(TABLE_NAME, MMS_PROJECTION, selection, selectionArgs, null, null, null);
-    return new Reader(masterSecret, cursor);
-  }
-
   public long copyMessageInbox(MasterSecret masterSecret, long messageId) throws MmsException {
     try {
       SendReq request = getOutgoingMessage(masterSecret, messageId);
@@ -542,15 +555,17 @@ public class MmsDatabase extends MessagingDatabase {
       contentValues.put(READ, 1);
       contentValues.put(DATE_RECEIVED, contentValues.getAsLong(DATE_SENT));
 
-      return insertMediaMessage(masterSecret, request.getPduHeaders(),
+      return insertMediaMessage(new MasterSecretUnion(masterSecret), request.getPduHeaders(),
                                 request.getBody(), contentValues);
     } catch (NoSuchMessageException e) {
       throw new MmsException(e);
     }
   }
 
-  private Pair<Long, Long> insertMessageInbox(MasterSecret masterSecret, IncomingMediaMessage retrieved,
-                                              String contentLocation, long threadId, long mailbox)
+  private Pair<Long, Long> insertMessageInbox(MasterSecretUnion masterSecret,
+                                              IncomingMediaMessage retrieved,
+                                              String contentLocation,
+                                              long threadId, long mailbox)
       throws MmsException
   {
     PduHeaders    headers       = retrieved.getPduHeaders();
@@ -593,35 +608,44 @@ public class MmsDatabase extends MessagingDatabase {
     return new Pair<>(messageId, threadId);
   }
 
-  public Pair<Long, Long> insertMessageInbox(MasterSecret masterSecret,
+  public Pair<Long, Long> insertMessageInbox(MasterSecretUnion masterSecret,
                                              IncomingMediaMessage retrieved,
                                              String contentLocation, long threadId)
       throws MmsException
   {
-    return insertMessageInbox(masterSecret, retrieved, contentLocation, threadId,
-                              Types.BASE_INBOX_TYPE | Types.ENCRYPTION_SYMMETRIC_BIT |
-                              (retrieved.isPushMessage() ? Types.PUSH_MESSAGE_BIT : 0));
+    long type = Types.BASE_INBOX_TYPE;
+
+    if (masterSecret.getMasterSecret().isPresent()) {
+      type |= Types.ENCRYPTION_SYMMETRIC_BIT;
+    } else {
+      type |= Types.ENCRYPTION_ASYMMETRIC_BIT;
+    }
+
+    if (retrieved.isPushMessage()) {
+      type |= Types.PUSH_MESSAGE_BIT;
+    }
+
+    return insertMessageInbox(masterSecret, retrieved, contentLocation, threadId, type);
   }
 
-  public Pair<Long, Long> insertSecureMessageInbox(MasterSecret masterSecret,
-                                                   IncomingMediaMessage retrieved,
-                                                   String contentLocation, long threadId)
-      throws MmsException
-  {
-    return insertMessageInbox(masterSecret, retrieved, contentLocation, threadId,
-                              Types.BASE_INBOX_TYPE | Types.SECURE_MESSAGE_BIT |
-                              Types.ENCRYPTION_REMOTE_BIT);
-  }
-
-  public Pair<Long, Long> insertSecureDecryptedMessageInbox(MasterSecret masterSecret,
+  public Pair<Long, Long> insertSecureDecryptedMessageInbox(MasterSecretUnion masterSecret,
                                                             IncomingMediaMessage retrieved,
                                                             long threadId)
       throws MmsException
   {
-    return insertMessageInbox(masterSecret, retrieved, "", threadId,
-                              Types.BASE_INBOX_TYPE | Types.SECURE_MESSAGE_BIT |
-                              Types.ENCRYPTION_SYMMETRIC_BIT |
-                              (retrieved.isPushMessage() ? Types.PUSH_MESSAGE_BIT : 0));
+    long type = Types.BASE_INBOX_TYPE | Types.SECURE_MESSAGE_BIT;
+
+    if (masterSecret.getMasterSecret().isPresent()) {
+      type |= Types.ENCRYPTION_SYMMETRIC_BIT;
+    } else {
+      type |= Types.ENCRYPTION_ASYMMETRIC_BIT;
+    }
+
+    if (retrieved.isPushMessage()) {
+      type |= Types.PUSH_MESSAGE_BIT;
+    }
+
+    return insertMessageInbox(masterSecret, retrieved, "", threadId, type);
   }
 
   public Pair<Long, Long> insertMessageInbox(@NonNull NotificationInd notification) {
@@ -659,11 +683,15 @@ public class MmsDatabase extends MessagingDatabase {
     jobManager.add(new TrimThreadJob(context, threadId));
   }
 
-  public long insertMessageOutbox(MasterSecret masterSecret, OutgoingMediaMessage message,
+  public long insertMessageOutbox(@NonNull MasterSecretUnion masterSecret,
+                                  @NonNull OutgoingMediaMessage message,
                                   long threadId, boolean forceSms, long timestamp)
       throws MmsException
   {
-    long type = Types.BASE_OUTBOX_TYPE | Types.ENCRYPTION_SYMMETRIC_BIT;
+    long type = Types.BASE_OUTBOX_TYPE;
+
+    if (masterSecret.getMasterSecret().isPresent()) type |= Types.ENCRYPTION_SYMMETRIC_BIT;
+    else                                            type |= Types.ENCRYPTION_ASYMMETRIC_BIT;
 
     if (message.isSecure()) type |= Types.SECURE_MESSAGE_BIT;
     if (forceSms)           type |= Types.MESSAGE_FORCE_SMS_BIT;
@@ -706,14 +734,23 @@ public class MmsDatabase extends MessagingDatabase {
       }
     }
 
-    long messageId = insertMediaMessage(masterSecret, sendRequest.getPduHeaders(),
+    long messageId = insertMediaMessage(masterSecret,
+                                        sendRequest.getPduHeaders(),
                                         sendRequest.getBody(), contentValues);
     jobManager.add(new TrimThreadJob(context, threadId));
 
     return messageId;
   }
 
-  private long insertMediaMessage(MasterSecret masterSecret,
+  private String getEncryptedBody(MasterSecretUnion masterSecret, String body) {
+    if (masterSecret.getMasterSecret().isPresent()) {
+      return new MasterCipher(masterSecret.getMasterSecret().get()).encryptBody(body);
+    } else {
+      return new AsymmetricMasterCipher(masterSecret.getAsymmetricMasterSecret().get()).encryptBody(body);
+    }
+  }
+
+  private long insertMediaMessage(MasterSecretUnion masterSecret,
                                   PduHeaders headers,
                                   PduBody body,
                                   ContentValues contentValues)
@@ -723,12 +760,14 @@ public class MmsDatabase extends MessagingDatabase {
     PartDatabase       partsDatabase   = DatabaseFactory.getPartDatabase(context);
     MmsAddressDatabase addressDatabase = DatabaseFactory.getMmsAddressDatabase(context);
 
-    if (Types.isSymmetricEncryption(contentValues.getAsLong(MESSAGE_BOX))) {
+    if (Types.isSymmetricEncryption(contentValues.getAsLong(MESSAGE_BOX)) ||
+        Types.isAsymmetricEncryption(contentValues.getAsLong(MESSAGE_BOX)))
+    {
       String messageText = PartParser.getMessageText(body);
       body               = PartParser.getSupportedMediaParts(body);
 
       if (!TextUtils.isEmpty(messageText)) {
-        contentValues.put(BODY, new MasterCipher(masterSecret).encryptBody(messageText));
+        contentValues.put(BODY, getEncryptedBody(masterSecret, messageText));
       }
     }
 
@@ -1078,6 +1117,8 @@ public class MmsDatabase extends MessagingDatabase {
         if (!TextUtils.isEmpty(body) && masterCipher != null && Types.isSymmetricEncryption(box)) {
           return new DisplayRecord.Body(masterCipher.decryptBody(body), true);
         } else if (!TextUtils.isEmpty(body) && masterCipher == null && Types.isSymmetricEncryption(box)) {
+          return new DisplayRecord.Body(body, false);
+        } else if (!TextUtils.isEmpty(body) && Types.isAsymmetricEncryption(box)) {
           return new DisplayRecord.Body(body, false);
         } else {
           return new DisplayRecord.Body(body == null ? "" : body, true);

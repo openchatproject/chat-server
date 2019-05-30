@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.openchat.secureim.BuildConfig;
 import com.openchat.secureim.DeviceListActivity;
-import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.storage.OpenchatServiceOpenchatStore;
 import com.openchat.secureim.jobs.AttachmentDownloadJob;
 import com.openchat.secureim.jobs.CleanPreKeysJob;
@@ -61,12 +60,12 @@ public class OpenchatServiceCommunicationModule {
   @Provides OpenchatServiceMessageSenderFactory provideOpenchatServiceMessageSenderFactory() {
     return new OpenchatServiceMessageSenderFactory() {
       @Override
-      public OpenchatServiceMessageSender create(MasterSecret masterSecret) {
+      public OpenchatServiceMessageSender create() {
         return new OpenchatServiceMessageSender(BuildConfig.PUSH_URL,
                                            new OpenchatServicePushTrustStore(context),
                                            OpenchatServicePreferences.getLocalNumber(context),
                                            OpenchatServicePreferences.getPushServerPassword(context),
-                                           new OpenchatServiceOpenchatStore(context, masterSecret),
+                                           new OpenchatServiceOpenchatStore(context),
                                            Optional.of((OpenchatServiceMessageSender.EventListener)
                                                            new SecurityEventListener(context)));
       }
@@ -80,7 +79,7 @@ public class OpenchatServiceCommunicationModule {
   }
 
   public static interface OpenchatServiceMessageSenderFactory {
-    public OpenchatServiceMessageSender create(MasterSecret masterSecret);
+    public OpenchatServiceMessageSender create();
   }
 
   private static class DynamicCredentialsProvider implements CredentialsProvider {

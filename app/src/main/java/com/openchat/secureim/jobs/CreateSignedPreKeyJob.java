@@ -7,9 +7,8 @@ import com.openchat.secureim.crypto.IdentityKeyUtil;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.PreKeyUtil;
 import com.openchat.secureim.dependencies.InjectableType;
-import com.openchat.secureim.util.ParcelUtil;
+import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.jobqueue.EncryptionKeys;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
 import com.openchat.protocal.IdentityKeyPair;
@@ -21,17 +20,19 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-public class CreateSignedPreKeyJob extends ContextJob implements InjectableType {
+public class CreateSignedPreKeyJob extends MasterSecretJob implements InjectableType {
+
+  private static final long serialVersionUID = 1L;
 
   private static final String TAG = CreateSignedPreKeyJob.class.getSimpleName();
 
   @Inject transient OpenchatServiceAccountManager accountManager;
 
-  public CreateSignedPreKeyJob(Context context, MasterSecret masterSecret) {
+  public CreateSignedPreKeyJob(Context context) {
     super(context, JobParameters.newBuilder()
                                 .withPersistence()
                                 .withRequirement(new NetworkRequirement(context))
-                                .withEncryption(new EncryptionKeys(ParcelUtil.serialize(masterSecret)))
+                                .withRequirement(new MasterSecretRequirement(context))
                                 .withGroupId(CreateSignedPreKeyJob.class.getSimpleName())
                                 .create());
   }
@@ -40,16 +41,14 @@ public class CreateSignedPreKeyJob extends ContextJob implements InjectableType 
   public void onAdded() {}
 
   @Override
-  public void onRun() throws IOException {
-    MasterSecret masterSecret = ParcelUtil.deserialize(getEncryptionKeys().getEncoded(), MasterSecret.CREATOR);
-
+  public void onRun(MasterSecret masterSecret) throws IOException {
     if (OpenchatServicePreferences.isSignedPreKeyRegistered(context)) {
       Log.w(TAG, "Signed prekey already registered...");
       return;
     }
 
-    IdentityKeyPair    identityKeyPair    = IdentityKeyUtil.getIdentityKeyPair(context, masterSecret);
-    SignedPreKeyRecord signedPreKeyRecord = PreKeyUtil.generateSignedPreKey(context, masterSecret, identityKeyPair);
+    IdentityKeyPair    identityKeyPair    = IdentityKeyUtil.getIdentityKeyPair(context);
+    SignedPreKeyRecord signedPreKeyRecord = PreKeyUtil.generateSignedPreKey(context, identityKeyPair);
 
     accountManager.setSignedPreKey(signedPreKeyRecord);
     OpenchatServicePreferences.setSignedPreKeyRegistered(context, true);
@@ -59,7 +58,7 @@ public class CreateSignedPreKeyJob extends ContextJob implements InjectableType 
   public void onCanceled() {}
 
   @Override
-  public boolean onShouldRetry(Exception exception) {
+  public boolean onShouldRetryThrowable(Exception exception) {
     if (exception instanceof PushNetworkException) return true;
     return false;
   }

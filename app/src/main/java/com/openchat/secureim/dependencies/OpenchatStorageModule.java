@@ -22,13 +22,13 @@ public class OpenchatStorageModule {
   @Provides SignedPreKeyStoreFactory provideSignedPreKeyStoreFactory() {
     return new SignedPreKeyStoreFactory() {
       @Override
-      public SignedPreKeyStore create(MasterSecret masterSecret) {
-        return new OpenchatServiceOpenchatStore(context, masterSecret);
+      public SignedPreKeyStore create() {
+        return new OpenchatServiceOpenchatStore(context);
       }
     };
   }
 
   public static interface SignedPreKeyStoreFactory {
-    public SignedPreKeyStore create(MasterSecret masterSecret);
+    public SignedPreKeyStore create();
   }
 }

@@ -59,7 +59,7 @@ public class MultiDeviceContactUpdateJob extends MasterSecretJob implements Inje
   public void onRun(MasterSecret masterSecret)
       throws IOException, UntrustedIdentityException, NetworkException
   {
-    OpenchatServiceMessageSender messageSender   = messageSenderFactory.create(masterSecret);
+    OpenchatServiceMessageSender messageSender   = messageSenderFactory.create();
     File                    contactDataFile = createTempFile("multidevice-contact-update");
 
     try {
