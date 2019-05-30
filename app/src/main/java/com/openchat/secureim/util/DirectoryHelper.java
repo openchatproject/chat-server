@@ -1,19 +1,28 @@
 package com.openchat.secureim.util;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.OperationApplicationException;
+import android.os.RemoteException;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.openchat.secureim.R;
+import com.openchat.secureim.contacts.ContactsDatabase;
 import com.openchat.secureim.database.NotInDirectoryException;
 import com.openchat.secureim.database.OpenchatServiceDirectory;
 import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
 import com.openchat.secureim.recipients.Recipients;
+import com.openchat.protocal.util.guava.Optional;
 import com.openchat.imservice.api.OpenchatServiceAccountManager;
 import com.openchat.imservice.api.push.ContactTokenDetails;
 import com.openchat.imservice.api.util.InvalidNumberException;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -65,6 +74,7 @@ public class DirectoryHelper {
       throws IOException
   {
     OpenchatServiceDirectory       directory              = OpenchatServiceDirectory.getInstance(context);
+    Optional<Account>         account                = getOrCreateAccount(context);
     Set<String>               eligibleContactNumbers = directory.getPushEligibleContactNumbers(localNumber);
     List<ContactTokenDetails> activeTokens           = accountManager.getContacts(eligibleContactNumbers);
 
@@ -75,6 +85,20 @@ public class DirectoryHelper {
       }
 
       directory.setNumbers(activeTokens, eligibleContactNumbers);
+
+      if (account.isPresent()) {
+        List<String> e164numbers = new LinkedList<>();
+
+        for (ContactTokenDetails contactTokenDetails : activeTokens) {
+          e164numbers.add(contactTokenDetails.getNumber());
+        }
+
+        try {
+          new ContactsDatabase(context).setRegisteredUsers(account.get(), e164numbers);
+        } catch (RemoteException | OperationApplicationException e) {
+          Log.w(TAG, e);
+        }
+      }
     }
   }
 
@@ -113,24 +137,25 @@ public class DirectoryHelper {
     }
   }
 
-  public static boolean isSmsFallbackAllowed(Context context, Recipients recipients) {
-    try {
-      if (recipients == null || !recipients.isSingleRecipient() || recipients.isGroupRecipient()) {
-        return false;
-      }
+  private static Optional<Account> getOrCreateAccount(Context context) {
+    AccountManager accountManager = AccountManager.get(context);
+    Account[]      accounts       = accountManager.getAccountsByType("com.openchat.secureim");
 
-      final String number = recipients.getPrimaryRecipient().getNumber();
+    if (accounts.length == 0) return createAccount(context);
+    else                      return Optional.of(accounts[0]);
+  }
 
-      if (number == null) {
-        return false;
-      }
+  private static Optional<Account> createAccount(Context context) {
+    AccountManager accountManager = AccountManager.get(context);
+    Account        account        = new Account(context.getString(R.string.app_name), "com.openchat.secureim");
 
-      final String e164number = Util.canonicalizeNumber(context, number);
-
-      return OpenchatServiceDirectory.getInstance(context).isSmsFallbackSupported(e164number);
-    } catch (InvalidNumberException e) {
-      Log.w(TAG, e);
-      return false;
+    if (accountManager.addAccountExplicitly(account, null, null)) {
+      Log.w(TAG, "Created new account...");
+      ContentResolver.setIsSyncable(account, ContactsContract.AUTHORITY, 1);
+      return Optional.of(account);
+    } else {
+      Log.w(TAG, "Failed to create account!");
+      return Optional.absent();
     }
   }
 
