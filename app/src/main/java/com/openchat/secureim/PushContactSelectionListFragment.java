@@ -15,9 +15,10 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.openchat.secureim.contacts.ContactAccessor;
 import com.openchat.secureim.contacts.ContactSelectionListAdapter;
 import com.openchat.secureim.contacts.ContactSelectionListItem;
+import com.openchat.secureim.contacts.ContactsCursorLoader;
+import com.openchat.secureim.util.OpenchatServicePreferences;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -116,11 +117,10 @@ public class PushContactSelectionListFragment extends    Fragment
 
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-    if (getActivity().getIntent().getBooleanExtra(PushContactSelectionActivity.PUSH_ONLY_EXTRA, false)) {
-      return ContactAccessor.getInstance().getCursorLoaderForPushContacts(getActivity(), cursorFilter);
-    } else {
-      return ContactAccessor.getInstance().getCursorLoaderForContacts(getActivity(), cursorFilter);
-    }
+    boolean pushOnly    = getActivity().getIntent().getBooleanExtra(PushContactSelectionActivity.PUSH_ONLY_EXTRA, false);
+    boolean supportsSms = OpenchatServicePreferences.isSmsEnabled(getActivity());
+
+    return new ContactsCursorLoader(getActivity(), !pushOnly && supportsSms, cursorFilter);
   }
 
   @Override

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.openchat.secureim.R;
 import com.openchat.secureim.contacts.ContactsDatabase;
+import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.NotInDirectoryException;
 import com.openchat.secureim.database.OpenchatServiceDirectory;
 import com.openchat.secureim.push.OpenchatServiceCommunicationFactory;
@@ -94,7 +95,7 @@ public class DirectoryHelper {
         }
 
         try {
-          new ContactsDatabase(context).setRegisteredUsers(account.get(), e164numbers);
+          DatabaseFactory.getContactsDatabase(context).setRegisteredUsers(account.get(), e164numbers);
         } catch (RemoteException | OperationApplicationException e) {
           Log.w(TAG, e);
         }
