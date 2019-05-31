@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
@@ -14,9 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -24,9 +20,9 @@ import com.openchat.secureim.R;
 import com.openchat.secureim.components.ThumbnailView;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.providers.CaptureProvider;
+import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.BitmapDecodingException;
 
-import java.io.File;
 import java.io.IOException;
 
 public class AttachmentManager {
@@ -78,7 +74,7 @@ public class AttachmentManager {
   }
 
   public void cleanup() {
-    if (captureUri != null) new File(captureUri.getPath()).delete();
+    if (captureUri != null) CaptureProvider.getInstance(context).delete(captureUri);
     captureUri = null;
   }
 
@@ -114,15 +110,6 @@ public class AttachmentManager {
     return slideDeck;
   }
 
-  public void setCaptureImage(MasterSecret masterSecret, Bitmap bitmap) {
-    try {
-      captureUri = CaptureProvider.getInstance(context).create(masterSecret, bitmap);
-      setImage(masterSecret, captureUri);
-    } catch (IOException | BitmapDecodingException e) {
-      Log.w(TAG, e);
-    }
-  }
-
   public static void selectVideo(Activity activity, int requestCode) {
     selectMediaType(activity, "video/*", requestCode);
   }
@@ -144,12 +131,15 @@ public class AttachmentManager {
     return captureUri;
   }
 
-  public void capturePhoto(Activity activity, int requestCode) {
+  public void setCaptureUri(Uri captureUri) {
+    this.captureUri = captureUri;
+  }
+
+  public void capturePhoto(Activity activity, Recipients recipients, int requestCode) {
     try {
       Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
       if (captureIntent.resolveActivity(activity.getPackageManager()) != null) {
-        File captureFile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".jpg", activity.getExternalFilesDir(null));
-        captureUri = Uri.fromFile(captureFile);
+        captureUri = CaptureProvider.getInstance(context).createForExternal(recipients);
         captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, captureUri);
         activity.startActivityForResult(captureIntent, requestCode);
       }
