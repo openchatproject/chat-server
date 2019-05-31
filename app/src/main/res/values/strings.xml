@@ -63,6 +63,8 @@
     </string>
     <string name="ConfirmIdentityDialog_accept">Accept</string>
 
+    <string name="ContactsDatabase_message_s">Message %s</string>
+
     <string name="ConversationItem_message_size_d_kb">Message size: %d KB</string>
     <string name="ConversationItem_expires_s">Expires: %s</string>
     <string name="ConversationItem_error_not_delivered">Not delivered</string>
