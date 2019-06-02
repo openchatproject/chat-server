@@ -1,6 +1,7 @@
 package com.openchat.secureim;
 
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -66,6 +67,8 @@ public class ContactSelectionListFragment extends    Fragment
     listView.setFastScrollEnabled(true);
     listView.setDrawingListUnderStickyHeader(false);
     listView.setOnItemClickListener(new ListClickListener());
+
+    swipeRefresh.setEnabled(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT);
 
     return view;
   }
