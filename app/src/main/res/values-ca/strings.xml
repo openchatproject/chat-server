@@ -146,7 +146,6 @@
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Toca per obrir, o toca el bloqueig per tancar.</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatService està desbloquejat</string>
   <string name="KeyCachingService_lock">Bloqueja amb una frase contrasenya</string>
-  <string name="MessageNotifier_encrypted_message">Missatge encriptat...</string>
   <string name="MessageNotifier_message_delivery_failed">Entrega del missatge fallida.</string>
   <string name="MessageNotifier_failed_to_deliver_message">No s\'ha pogut entregar el missatge.</string>
   <string name="MessageNotifier_error_delivering_message">Error entregant el missatge.</string>

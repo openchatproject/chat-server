@@ -305,7 +305,6 @@
   <string name="KeyCachingService_lock">암호로 잠금</string>
   <string name="MessageNotifier_d_messages_in_d_conversations">대화 %2$d개에 있는 메시지 %1$d개</string>
   <string name="MessageNotifier_most_recent_from_s">%1$s님에게서 최근 메시지</string>
-  <string name="MessageNotifier_encrypted_message">암호화된 메시지</string>
   <string name="MessageNotifier_media_message_with_text">미디어 메시지: %s</string>
   <string name="MessageNotifier_no_subject">(제목 없음)</string>
   <string name="MessageNotifier_message_delivery_failed">메시지 전송 실패</string>
@@ -488,7 +487,6 @@
   <string name="preferences__change_my_passphrase">암호 변경</string>
   <string name="preferences__enable_passphrase">암호 사용</string>
   <string name="preferences__passphrase_summary">암호 %s</string>
-  <string name="preferences__enable_local_encryption_of_messages_and_keys">저장된 메시지 및 키 암호화 사용</string>
   <string name="preferences__screen_security">화면 보안</string>
   <string name="preferences__screen_security_summary">화면 보안 %s</string>
   <string name="preferences__disable_screen_security_to_allow_screen_shots">최근 사용 목록/개요 및 앱 안에서 스크린샷 차단</string>

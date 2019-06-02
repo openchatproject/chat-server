@@ -236,7 +236,6 @@
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">按一下開啟，或按一下鎖住並關閉。</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatService 已解除鎖定</string>
   <string name="KeyCachingService_lock">以『自訂密碼』進行鎖定</string>
-  <string name="MessageNotifier_encrypted_message">加密的訊息...</string>
   <string name="MessageNotifier_no_subject">(在此輸入主題)</string>
   <string name="MessageNotifier_message_delivery_failed">訊息傳送失敗。</string>
   <string name="MessageNotifier_failed_to_deliver_message">無法傳送訊息。</string>

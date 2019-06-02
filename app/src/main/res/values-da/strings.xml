@@ -240,7 +240,6 @@ Modtog en besked med en ukendt identitetsnøgle. Klik for at se og behandle den.
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Klik for at åbne eller klik på låsen for at lukke.</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatService er låst op</string>
   <string name="KeyCachingService_lock">Lås med et kodeord</string>
-  <string name="MessageNotifier_encrypted_message">Krypteret besked...</string>
   <string name="MessageNotifier_no_subject">(Intet emne)</string>
   <string name="MessageNotifier_message_delivery_failed">Levering af besked mislykkedes.</string>
   <string name="MessageNotifier_failed_to_deliver_message">Kunne ikke sende besked.</string>

@@ -300,7 +300,6 @@
   <string name="KeyCachingService_lock">ಗುಪ್ತಪದವನ್ನು ಉಪಯೋಗಿಸಿಕೊಂಡು ಬೀಗ ಹಾಕಿ</string>
   <string name="MessageNotifier_d_messages_in_d_conversations">%1$d ಸಂದೇಶಗಳನ್ನು %2$d ಸಂಭಾಷಣೆಗಳಲ್ಲಿ.</string>
   <string name="MessageNotifier_most_recent_from_s">%1$s ನಿಂದ ಇತ್ತೀಚಿನ</string>
-  <string name="MessageNotifier_encrypted_message">ಗೂಢಲಿಪೀಕರಣಗೊಂಡ ಸಂದೇಶ...</string>
   <string name="MessageNotifier_media_message_with_text">ಬಹುಮಾಧ್ಯಮ ಸಂದೇಶ: %s</string>
   <string name="MessageNotifier_no_subject">(ವಿಷಯವಸ್ತು ಇಲ್ಲ)</string>
   <string name="MessageNotifier_message_delivery_failed">ಸಂದೇಶ ತಲುಪಿಸಲು ವಿಫಲವಾಗಿದೆ.</string>
@@ -478,7 +477,6 @@
   <string name="preferences__change_passphrase">ಗುಪ್ತಪದವನ್ನು ಬದಲಾಯಿಸಿ</string>
   <string name="preferences__change_my_passphrase">ನನ್ನ ಗುಪ್ತಪದವನ್ನು ಬದಲಿಸು</string>
   <string name="preferences__enable_passphrase">ಗುಪ್ತಪದವನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ</string>
-  <string name="preferences__enable_local_encryption_of_messages_and_keys">ಸಂದೇಶಗಳ ಮತ್ತು ಕೀಗಳ ಸ್ಥಳೀಯ ಗೂಢಲಿಪೀಕರಣವನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಿ ಸಕ್ರಿಯಗೊಳಿಸಿ</string>
   <string name="preferences__screen_security">ತೆರೆಯ ಸುರಕ್ಷತೆ</string>
   <string name="preferences__disable_screen_security_to_allow_screen_shots">ಇತ್ತೀಚಿನ ಪಟ್ಟಿಯಲ್ಲಿ ಮತ್ತು ಅಪ್ಲಿಕೇಶನ್ ಒಳಗೆ  ಸ್ಕ್ರೀನ್ ಶಾಟ್ ಬ್ಲಾಕ್ ಮಾಡಿ</string>
   <string name="preferences__forget_passphrase_from_memory_after_some_interval">ವಿರಾಮದ ನಂತರ ಸ್ಮರಣೆಯಿಂದ ಗುಪ್ತಪದವನ್ನು ಮರೆತುಬಿಡಿ</string>

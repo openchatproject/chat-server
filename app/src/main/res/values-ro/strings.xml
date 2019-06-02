@@ -283,7 +283,6 @@ Primit mesaj trimis cu o cheie de identitate necunoscută. Faceți click pentru 
   <string name="KeyCachingService_lock">Blocare acces cu parola</string>
   <string name="MessageNotifier_d_messages_in_d_conversations">%1$d mesaje în %2$d conversaţii</string>
   <string name="MessageNotifier_most_recent_from_s">Cel mai recent de la: %1$s</string>
-  <string name="MessageNotifier_encrypted_message">Mesaj criptat...</string>
   <string name="MessageNotifier_media_message_with_text">Mesaje media: %s</string>
   <string name="MessageNotifier_no_subject">(Fără subiect)</string>
   <string name="MessageNotifier_message_delivery_failed">Trimiterea mesajului a esuat.</string>
@@ -465,7 +464,6 @@ Operaţiunea iniţiată de OpenchatService a expirat în timpul aşteptării pri
   <string name="preferences__change_my_passphrase">Schimbă parola</string>
   <string name="preferences__enable_passphrase">Activează parola</string>
   <string name="preferences__passphrase_summary">Parola %s</string>
-  <string name="preferences__enable_local_encryption_of_messages_and_keys">Activează criptarea locală a mesajelor și a cheilor</string>
   <string name="preferences__screen_security">Securitate ecran</string>
   <string name="preferences__screen_security_summary">Securitate ecran %s</string>
   <string name="preferences__disable_screen_security_to_allow_screen_shots">Blochează screenshot-urile în lista cu aplicaţii recente şi în interiorul applicaţiei</string>
