@@ -434,12 +434,11 @@
     <string name="change_passphrase_activity__new_passphrase">NEW PASSPHRASE:</string>
     <string name="change_passphrase_activity__repeat_new_passphrase">REPEAT NEW PASSPHRASE:</string>
 
+    <string name="contact_selection_activity__enter_name_or_number">Enter name or number</string>
+
     <string name="contact_selection_group_activity__no_contacts">No contacts.</string>
     <string name="contact_selection_group_activity__finding_contacts">Loading contacts&#8230;</string>
 
-    <string name="SingleContactSelectionActivity_you_are_not_registered_with_the_push_service">You are not registered with the push service&#8230;</string>
-    <string name="SingleContactSelectionActivity_updating_directory">Updating directory</string>
-    <string name="SingleContactSelectionActivity_updating_push_directory">Updating push directory&#8230;</string>
     <string name="SingleContactSelectionActivity_contact_photo">Contact Photo</string>
 
     <string name="ContactSelectionlistFragment_select_for">Select for</string>
