@@ -20,6 +20,7 @@ import com.openchat.secureim.util.DirectoryHelper;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicNoActionBarTheme;
 import com.openchat.secureim.util.DynamicTheme;
+import com.openchat.secureim.util.ServiceUtil;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -90,6 +91,7 @@ public abstract class ContactSelectionActivity extends PassphraseRequiredActionB
       @Override
       public void onClick(View v) {
         searchText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+        ServiceUtil.getInputMethodManager(ContactSelectionActivity.this).showSoftInput(searchText, 0);
         toggle.display(dialpadToggle);
       }
     });
@@ -98,6 +100,7 @@ public abstract class ContactSelectionActivity extends PassphraseRequiredActionB
       @Override
       public void onClick(View v) {
         searchText.setInputType(InputType.TYPE_CLASS_PHONE);
+        ServiceUtil.getInputMethodManager(ContactSelectionActivity.this).showSoftInput(searchText, 0);
         toggle.display(keyboardToggle);
       }
     });
