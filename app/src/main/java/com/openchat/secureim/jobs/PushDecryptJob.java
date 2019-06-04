@@ -34,8 +34,6 @@ import com.openchat.secureim.sms.OutgoingTextMessage;
 import com.openchat.secureim.util.Base64;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
-import com.openchat.secureim.util.Util;
-import com.openchat.secureim.util.VersionTracker;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.protocal.DuplicateMessageException;
 import com.openchat.protocal.IdentityKey;
@@ -88,11 +86,7 @@ public class PushDecryptJob extends ContextJob {
   }
 
   @Override
-  public void onAdded() {
-    if (KeyCachingService.getMasterSecret(context) == null) {
-      MessageNotifier.updateNotification(context, null, -2);
-    }
-  }
+  public void onAdded() {}
 
   @Override
   public void onRun() throws NoSuchMessageException {
@@ -100,7 +94,7 @@ public class PushDecryptJob extends ContextJob {
       Log.w(TAG, "Skipping job, waiting for migration...");
 
       if (KeyCachingService.getMasterSecret(context) != null) {
-        MessageNotifier.updateNotification(context, null, -2);
+        MessageNotifier.updateNotification(context, null, true, -2);
       }
 
       return;
