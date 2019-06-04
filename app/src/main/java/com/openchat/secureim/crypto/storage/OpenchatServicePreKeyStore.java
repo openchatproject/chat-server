@@ -183,6 +183,7 @@ public class OpenchatServicePreKeyStore implements PreKeyStore, SignedPreKeyStor
       throw new AssertionError("Migration didn't happen!");
     }
 
+    fin.close();
     return serializedRecord;
   }
 
