@@ -11,13 +11,6 @@
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Διαγραφή όλων των παλιών μηνυμάτων τώρα;</string>
   <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Είστε σίγουροι πως θέλετε να μειωθούν όλες οι συζητήσεις στα %s πιο πρόσφατα μηνύματα;</string>
   <string name="ApplicationPreferencesActivity_delete">Διαγραφή</string>
-  <string name="ApplicationPreferencesActivity_disable_storage_encryption">Απενεργοποίηση κρυπτογράφησης αποθηκευμένων δεδομένων;</string>
-  <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
-Προσοχή, αυτό θα απενεργοποιήσει τη κρυπτογράφηση των 
-αποθηκευμένων δεδομένων για όλα ταμηνύματα και τα κλειδιά σας.
-Οι κρυπτογραφημένες συζητήσεις σας θα συνεχίσουν να λειτουργούν, 
-αλλά οποιοσδήποτε με φυσική πρόσβαση στη συσκευή σας θα μπορεί να τα διαβάσει.
-    </string>
   <string name="ApplicationPreferencesActivity_disable">Απενεργοποίηση</string>
   <string name="ApplicationPreferencesActivity_disable_openchatservice_messages">Απενεργοποίηση μηνυμάτων του OpenchatService;</string>
   <string name="ApplicationPreferencesActivity_this_will_disable_openchatservice_messages">
@@ -338,9 +331,6 @@ SMS της συσκευής σας στο OpenchatService. Αν έχετε ήδ�
   <string name="change_passphrase_activity__repeat_new_passphrase">ΕΠΑΝΑΛΗΨΗ ΝΕΟΥ ΣΥΝΘΗΜΑΤΙΚΟΥ:</string>
   <string name="contact_selection_group_activity__no_contacts">Δεν υπάρχουν επαφές.</string>
   <string name="contact_selection_group_activity__finding_contacts">Φόρτωση των επαφών...</string>
-  <string name="SingleContactSelectionActivity_you_are_not_registered_with_the_push_service">Δεν είστε εγγεγραμμένοι για ειδοποιήσεις push...</string>
-  <string name="SingleContactSelectionActivity_updating_directory">Ενημέρωση καταλόγου</string>
-  <string name="SingleContactSelectionActivity_updating_push_directory">Ενημέρωση καταλόγου push...</string>
   <string name="SingleContactSelectionActivity_contact_photo">Φωτογραφία επαφής</string>
   <string name="ContactSelectionlistFragment_select_for">Επιλογή για</string>
   <string name="contact_selection_recent_activity__no_recent_calls">Δεν υπάρχουν πρόσφατες κλήσεις.</string>

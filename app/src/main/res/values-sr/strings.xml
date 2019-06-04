@@ -11,11 +11,6 @@
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Обрисати старе поруке сада?</string>
   <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Желите ли заиста одмах да скратите све нити преписки на %s најскоријих порука?</string>
   <string name="ApplicationPreferencesActivity_delete">Обриши</string>
-  <string name="ApplicationPreferencesActivity_disable_storage_encryption">Онемогућити шифровање складишта?</string>
-  <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
-Пазите, ово ће да онемогући шифровање складишта за све поруке и кључеве. Ваше шифроване сесије
-ће и даље функционисати, али ко год има физички приступ вашем уређају моћи ће да им приступи.
-    </string>
   <string name="ApplicationPreferencesActivity_disable">Онемогући</string>
   <string name="ApplicationPreferencesActivity_unregistering">Одјављујем</string>
   <string name="ApplicationPreferencesActivity_unregistering_from_openchatservice_messages">Одјављујем подршку за сигурне поруке...</string>
@@ -363,9 +358,6 @@
   <string name="change_passphrase_activity__repeat_new_passphrase">ПОНОВИТЕ НОВУ ЛОЗИНКУ:</string>
   <string name="contact_selection_group_activity__no_contacts">Нема контаката.</string>
   <string name="contact_selection_group_activity__finding_contacts">Учитавам контакте…</string>
-  <string name="SingleContactSelectionActivity_you_are_not_registered_with_the_push_service">Нисте пријављени на сервис сигурних порука…</string>
-  <string name="SingleContactSelectionActivity_updating_directory">Ажурирање регистра</string>
-  <string name="SingleContactSelectionActivity_updating_push_directory">Ажурирам регистар сигурних порука…</string>
   <string name="SingleContactSelectionActivity_contact_photo">Фотографија контакта</string>
   <string name="ContactSelectionlistFragment_select_for">Изаберите за</string>
   <string name="blocked_contacts_fragment__no_blocked_contacts">Нема блокираних контаката...</string>

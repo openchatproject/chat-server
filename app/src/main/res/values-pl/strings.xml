@@ -11,9 +11,6 @@
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Usunąć wszystkie stare wiadomości?</string>
   <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Czy na pewno chcesz przyciąć wszystkie wątki rozmów do %s najnowszych wiadomości?</string>
   <string name="ApplicationPreferencesActivity_delete">Usuń</string>
-  <string name="ApplicationPreferencesActivity_disable_storage_encryption">Wyłączyć lokalne szyfrowanie?</string>
-  <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
-Uwaga, szyfrowanie wszystkich Twoich wiadomości i kluczy zostanie wyłączone. Twoje szyfrowane sesje będą dalej funkcjonować, jednak każdy z fizycznym dostępem do Twojego telefonu będzie mógł uzyskać dostęp do Twoich wiadomości.</string>
   <string name="ApplicationPreferencesActivity_disable">Wyłącz</string>
   <string name="ApplicationPreferencesActivity_unregistering">Wyrejestrowanie </string>
   <string name="ApplicationPreferencesActivity_unregistering_from_openchatservice_messages">Trwa wyrejestrowanie od używania wiadomości OpenchatService</string>
@@ -346,9 +343,6 @@ Otrzymano wiadomość z nieznanym kluczem tożsamości. Kliknij aby przetworzyć
   <string name="change_passphrase_activity__repeat_new_passphrase">POWTÓRZ NOWE HASŁO:</string>
   <string name="contact_selection_group_activity__no_contacts">Brak kontaktów.</string>
   <string name="contact_selection_group_activity__finding_contacts">Ładowanie listy kontaktów...</string>
-  <string name="SingleContactSelectionActivity_you_are_not_registered_with_the_push_service">Nie jesteś zarejestrowany w usłudze push...</string>
-  <string name="SingleContactSelectionActivity_updating_directory">Aktualizowanie katalogu</string>
-  <string name="SingleContactSelectionActivity_updating_push_directory">Aktualizowanie katalogu push</string>
   <string name="SingleContactSelectionActivity_contact_photo">Obrazek kontaktu</string>
   <string name="ContactSelectionlistFragment_select_for">Wybierz dla</string>
   <string name="blocked_contacts_fragment__no_blocked_contacts">Brak zablokowanych kontaktów...</string>

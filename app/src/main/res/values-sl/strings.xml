@@ -11,9 +11,6 @@
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Izbrišem stara sporočila?</string>
   <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Ste prepričani, da želite izbrisati vse stare pogovore, razen najnovejših?</string>
   <string name="ApplicationPreferencesActivity_delete">Izbriši</string>
-  <string name="ApplicationPreferencesActivity_disable_storage_encryption">Onemogočim šifriranje pomnilnika?</string>
-  <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
-Pozor, s tem boste onemogočili šifriranje sporočil in ključev v pomnilniku naprave. Vaše šifrirane komunikacije bodo še vedno varne, toda vsakdo s fizičnim dostopom do vaše naprave bo lahko dostopal do njih.</string>
   <string name="ApplicationPreferencesActivity_disable">Onemogoči</string>
   <string name="ApplicationPreferencesActivity_unregistering">Odjava poteka</string>
   <string name="ApplicationPreferencesActivity_unregistering_from_openchatservice_messages">Odjava od sporočil OpenchatService...</string>
@@ -343,9 +340,6 @@ Prejeto sporočilo z neznanim identifikacijskim ključem. Kliknite za obdelavo i
   <string name="change_passphrase_activity__repeat_new_passphrase">Ponovi novo geslo:</string>
   <string name="contact_selection_group_activity__no_contacts">Ni stikov.</string>
   <string name="contact_selection_group_activity__finding_contacts">Nalagam stike...</string>
-  <string name="SingleContactSelectionActivity_you_are_not_registered_with_the_push_service">Niste prijavljeni v potisno storitev...</string>
-  <string name="SingleContactSelectionActivity_updating_directory">Posodabljam seznam</string>
-  <string name="SingleContactSelectionActivity_updating_push_directory">Posodabljam potisni seznam...</string>
   <string name="SingleContactSelectionActivity_contact_photo">Fotografija stika</string>
   <string name="ContactSelectionlistFragment_select_for">Izberi za</string>
   <string name="blocked_contacts_fragment__no_blocked_contacts">Ni blokiranih stikov...</string>
@@ -360,6 +354,7 @@ Prejeto sporočilo z neznanim identifikacijskim ključem. Kliknite za obdelavo i
   <string name="conversation_activity__compose_description">Sestavljanje sporočila</string>
   <string name="conversation_activity__emoji_toggle_description">Vklop tipkovnice emoji</string>
   <string name="conversation_activity__attachment_thumbnail">Predogledna sličica priponke</string>
+  <string name="conversation_activity__quick_attachment_drawer_toggle_description">Vklopi poteznik za priponke</string>
   <string name="conversation_item__mms_downloading_description">Nalagam multimedijsko sporočilo</string>
   <string name="conversation_item__mms_image_description">Multiedijsko sporočilo</string>
   <string name="conversation_item__secure_message_description">Zavarovano sporočilo</string>

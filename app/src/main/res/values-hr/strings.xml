@@ -11,11 +11,6 @@
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Obriši sve stare poruke?</string>
   <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Jeste li sigurni da želite skratiti sve razgovore na %s najnovijih poruka?</string>
   <string name="ApplicationPreferencesActivity_delete">Obriši</string>
-  <string name="ApplicationPreferencesActivity_disable_storage_encryption">Onemogući kriptiranje memorije?</string>
-  <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
-Ovo će onemogućiti kriptiranje memorije za sve poruke i ključeve. Vaše kriptirane
-sesije će nastaviti raditi, ali svi sa fizičkim pristupom vašem uređaju će
-im moći pristupiti.</string>
   <string name="ApplicationPreferencesActivity_disable">Onemogući</string>
   <string name="ApplicationPreferencesActivity_unregistering">Uklanjanje registracije</string>
   <string name="ApplicationPreferencesActivity_unregistering_from_openchatservice_messages">Uklanjanje registracije na OpenchatService poruke...</string>
@@ -355,9 +350,6 @@ Primljena poruka sa nepoznatim ključem identiteta. Pritisnite za obradu i prika
   <string name="change_passphrase_activity__repeat_new_passphrase">PONOVITE NOVU LOZINKU:</string>
   <string name="contact_selection_group_activity__no_contacts">Nema kontakata.</string>
   <string name="contact_selection_group_activity__finding_contacts">Učitavanje kontakata...</string>
-  <string name="SingleContactSelectionActivity_you_are_not_registered_with_the_push_service">Niste registrirani na instant uslugu...</string>
-  <string name="SingleContactSelectionActivity_updating_directory">Ažuriranje direktorija</string>
-  <string name="SingleContactSelectionActivity_updating_push_directory">Ažuriranje instant direktorija...</string>
   <string name="SingleContactSelectionActivity_contact_photo">Slika kontakta</string>
   <string name="ContactSelectionlistFragment_select_for">Odaberi za</string>
   <string name="blocked_contacts_fragment__no_blocked_contacts">Nema blokiranih kontakata...</string>

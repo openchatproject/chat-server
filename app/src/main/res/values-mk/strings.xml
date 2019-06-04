@@ -11,12 +11,6 @@
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Избришете ги сите стари пораки?</string>
   <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Дали сте сигурни дека сакате да се скратат сите теми на разговор на %s од најновите пораки?</string>
   <string name="ApplicationPreferencesActivity_delete">Избриши</string>
-  <string name="ApplicationPreferencesActivity_disable_storage_encryption">Оневозможи енкрипција на локацијата за трајно снимање?</string>
-  <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
-        Внимание, ова ќе го оневозможи шифрирањето на локацијата за трајно снимање за сите пораки и клучеви. Вашите шифрирани
-        сесии ќе продолжат да функционираат, но секој со физички пристап до вашиот уред ќе може да
-        пристапи до нив.
-    </string>
   <string name="ApplicationPreferencesActivity_disable">Оневозможи</string>
   <string name="ApplicationPreferencesActivity_unregistering">Одјавување</string>
   <string name="ApplicationPreferencesActivity_unregistering_from_openchatservice_messages">Одвјавување од OpenchatService пораки...</string>
@@ -347,9 +341,6 @@
   <string name="change_passphrase_activity__repeat_new_passphrase">ПОВТОРЕТЕ ЈА НОВАТА ЛОЗИНКА:</string>
   <string name="contact_selection_group_activity__no_contacts">Нема контакти.</string>
   <string name="contact_selection_group_activity__finding_contacts">Контактите се вчитуваат...</string>
-  <string name="SingleContactSelectionActivity_you_are_not_registered_with_the_push_service">Не сте регистрирани за OpenchatService услугата.</string>
-  <string name="SingleContactSelectionActivity_updating_directory">Ажурирање</string>
-  <string name="SingleContactSelectionActivity_updating_push_directory">Ажурирање на контакт листата...</string>
   <string name="SingleContactSelectionActivity_contact_photo">Слика на контакт</string>
   <string name="ContactSelectionlistFragment_select_for">Изберете за</string>
   <string name="blocked_contacts_fragment__no_blocked_contacts">Нема блокирани контакти...</string>

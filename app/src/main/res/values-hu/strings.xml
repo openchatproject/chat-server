@@ -11,12 +11,6 @@
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Minden régebbi üzenetet szeretnél törölni most?</string>
   <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Biztosan szeretnéd azonnal csonkolni az összes beszélgetésfolyamot a legutóbbi %s üzenetre?</string>
   <string name="ApplicationPreferencesActivity_delete">Törlés</string>
-  <string name="ApplicationPreferencesActivity_disable_storage_encryption">Letiltod a tároló titkosítását?</string>
-  <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
-Figyelmeztetés, ez letiltja a titkosított tárolást minden üzenethez és kulcshoz. A titkosított
-üzenetváltásod működni fog ugyan, de bárki aki fizikailag hozzáférhet az eszközödhöz
-hozzáférhet az üzenetekhez és a kulcsokhoz!
- </string>
   <string name="ApplicationPreferencesActivity_disable">Tiltás</string>
   <string name="ApplicationPreferencesActivity_unregistering">Leregisztrálás</string>
   <string name="ApplicationPreferencesActivity_unregistering_from_openchatservice_messages">Leregisztrálás OpenchatService üzenetekről...</string>
@@ -377,9 +371,6 @@ Ismeretlen azonosító kulcsú üzenet érkezett. Kattints rá a feldolgozáshoz
   <string name="change_passphrase_activity__repeat_new_passphrase">ISMÉTELD MEG AZ ÚJ JELSZÓT:</string>
   <string name="contact_selection_group_activity__no_contacts">Nincsenek névjegyek.</string>
   <string name="contact_selection_group_activity__finding_contacts">Névjegyek betöltése...</string>
-  <string name="SingleContactSelectionActivity_you_are_not_registered_with_the_push_service">Nem vagy regisztrálva az azonnali üzenetküldési szolgáltatás használatához...</string>
-  <string name="SingleContactSelectionActivity_updating_directory">Könyvtár frissítése</string>
-  <string name="SingleContactSelectionActivity_updating_push_directory">Azonnali üzenetváltás könyvtár frissítése...</string>
   <string name="SingleContactSelectionActivity_contact_photo">Névjegy fotó</string>
   <string name="ContactSelectionlistFragment_select_for">Kiválasztás...</string>
   <string name="blocked_contacts_fragment__no_blocked_contacts">Nincs letiltott névjegy...</string>

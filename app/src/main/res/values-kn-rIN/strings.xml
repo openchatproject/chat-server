@@ -11,11 +11,6 @@
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">ಈಗ ಎಲ್ಲಾ ಹಳೆಯ ಸಂದೇಶಗಳನ್ನು ಅಳಿಸಿ?</string>
   <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">ನೀವು ಈ  ಕ್ಷಣ ಎಲ್ಲಾ ಸಂಭಾಷಣೆಯ ಇತ್ತೀಚಿನ %s ಸಂದೇಶಗಳಿಗೆ ಮಿತಗೊಳಿಸಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
   <string name="ApplicationPreferencesActivity_delete">ಅಳಿಸಿಹಾಕು</string>
-  <string name="ApplicationPreferencesActivity_disable_storage_encryption">ಶೇಖರಣಾ ಗೂಢಲಿಪೀಕರಣವನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಿ?</string>
-  <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
-ಎಚ್ಚರಿಕೆ, ಇದು ಎಲ್ಲಾ ಸಂದೇಶಗಳ ಮತ್ತು ಕೀಲಿಗಳ ಶೇಖರಣಾ ಗೂಢಲಿಪೀಕರಣವನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸುತ್ತದೆ.
-ಸೆಷನ್ಸ್ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತವೆ, ಆದರೆ ನಿಮ್ಮ ಸಾಧನದ ಭೌತಿಕ ಪ್ರವೇಶದೊಂದಿಗೆ ಯಾರಿಗಾದರೂ ಅವುಗಳನ್ನು ನಿಲುಕಿಸಿಕೊಳ್ಳಲು 
-ಸಾಧ್ಯವಾಗುತ್ತದೆ.</string>
   <string name="ApplicationPreferencesActivity_disable">ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಿ</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">ಸರ್ವರ್ಗೆ ಸಂಪರ್ಕಿಸುವಾಗ ದೋಷ!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">ಎಸ್.ಎಮ್.ಎಸನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ</string>
@@ -103,7 +98,9 @@
   <string name="ConversationFragment_push">ದತ್ತಾಂಶ (ಟೆಕ್ಸ್ಟ್  ಸೆಕ್ಯೂರ್)</string>
   <string name="ConversationFragment_mms">ಎಮ್ ಎಮ್ ಎಸ್</string>
   <string name="ConversationFragment_sms">ಎಸ್ ಎಮ್ ಎಸ್</string>
+  <string name="ConversationFragment_deleting">ಅಳಿಸಲಾಗುತ್ತಿದೆ</string>
   <string name="ConversationFragment_deleting_messages">ಸಂದೇಶವನ್ನು ಅಳಿಸಲಾಗುತ್ತಿದೆ...</string>
+  <string name="ConversationListActivity_search">ಹುಡುಕಿ...</string>
   <string name="ConversationListFragment_delete_threads_question">ಸಂವಾದದ ಎಳೆಗಳನ್ನು ಅಳಿಸು?</string>
   <string name="ConversationListFragment_are_you_sure_you_wish_to_delete_all_selected_conversation_threads">ನೀವು ಆಯ್ಕೆ ಮಾಡಲಾದ ಎಲ್ಲಾ ಸಂವಾದವನ್ನು ಎಳೆಗಳನ್ನು ಅಳಿಸಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
   <string name="ConversationListFragment_deleting">ಅಳಿಸಲಾಗುತ್ತಿದೆ</string>
@@ -113,6 +110,7 @@
   <string name="CustomDefaultPreference_using_default">ಪೂರ್ವನಿಯೋಜಿತ ಬಳಕೆ: %s</string>
   <string name="CustomDefaultPreference_none">ಯಾವುದೂ ಇಲ್ಲ</string>
   <string name="DateUtils_now">ಈಗ</string>
+  <string name="DeviceListActivity_try_again">ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ</string>
   <string name="ShareActivity_share_with">ಜೊತೆ ಹಂಚಿಕೊಳ್ಳಿ </string>
   <string name="ExportFragment_export">ರಫ್ತು ಮಾಡಿ</string>
   <string name="ExportFragment_export_plaintext_to_sd_card">ಎಸ್ ಡಿ ಕಾರ್ಡ್ಗೆ ಸರಳಪಠ್ಯ ರಫ್ತು ಮಾಡಿ?</string>
@@ -312,9 +310,6 @@
   <string name="change_passphrase_activity__repeat_new_passphrase">ಹೊಸ ಗುಪ್ತಪದವನ್ನು ಪುನರಾವರ್ತಿಸಿ:</string>
   <string name="contact_selection_group_activity__no_contacts">ಸಂಪರ್ಕಗಳಿಲ್ಲ.</string>
   <string name="contact_selection_group_activity__finding_contacts">ಸಂಪರ್ಕಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ ...</string>
-  <string name="SingleContactSelectionActivity_you_are_not_registered_with_the_push_service">ನೀವು ಪುಶ್ ಸೇವೆಯೊಂದಿಗೆ ನೋಂದಾಯಿಸಿಕೊಂಡಿಲ್ಲ...</string>
-  <string name="SingleContactSelectionActivity_updating_directory">ಡೈರೆಕ್ಟರಿಯನ್ನು ನವೀಕರಿಸಲಾಗುತ್ತಿದೆ</string>
-  <string name="SingleContactSelectionActivity_updating_push_directory">ಪುಶ್ ಕೋಶವನ್ನು ನವೀಕರಿಸಲಾಗುತ್ತಿದೆ ...</string>
   <string name="SingleContactSelectionActivity_contact_photo">ಸಂಪರ್ಕದ ಛಾಯಾಚಿತ್ರ</string>
   <string name="ContactSelectionlistFragment_select_for">ಗೆ ಆಯ್ಕೆಮಾಡಿ</string>
   <string name="contact_selection_recent_activity__no_recent_calls">ಯಾವುದೇ ಇತ್ತೀಚಿನ ಕರೆಗಳಿಲ್ಲ.</string>
@@ -600,6 +595,7 @@
   <string name="MediaPreviewActivity_unssuported_media_type">ಬೆಂಬಲವಿಲ್ಲದ ಮಾಧ್ಯಮ ಪ್ರಕಾರ</string>
   <string name="media_preview__save_title">ಉಳಿಸಿ</string>
   <string name="media_preview_activity__image_content_description">ಚಿತ್ರ ಮುನ್ನೋಟ</string>
+  <string name="trimmer__deleting">ಅಳಿಸಲಾಗುತ್ತಿದೆ</string>
   <string name="trimmer__deleting_old_messages">ಹಳೆಯ ಸಂದೇಶವನ್ನು ಅಳಿಸಲಾಗುತ್ತಿದೆ...</string>
   <string name="trimmer__old_messages_successfully_deleted">ಹಳೆಯ ಸಂದೇಶಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ</string>
   <string name="transport_selection_list_item__transport_icon">ಸಾರಿಗೆ ಮಾಧ್ಯಮದ ಚಿಹ್ನೆ</string>

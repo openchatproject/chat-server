@@ -11,9 +11,6 @@
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Slette alle gamle meldinger nå?</string>
   <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Er du sikker på at du ønsker å umiddelbart trimme alle samtaletrådene til de siste %s meldinger?</string>
   <string name="ApplicationPreferencesActivity_delete">Slett</string>
-  <string name="ApplicationPreferencesActivity_disable_storage_encryption">Deaktivere kryptert lagring?</string>
-  <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
-Advarsel! Dette vil deaktivere kryptert lagring av alle meldinger og nøkler. Dine krypterte sesjoner vil fortsette å fungere, men alle med fysisk tilgang til enheten din vil kunne få tilgang til dem.</string>
   <string name="ApplicationPreferencesActivity_disable">Deaktiver</string>
   <string name="ApplicationPreferencesActivity_unregistering">Avregistrerer</string>
   <string name="ApplicationPreferencesActivity_unregistering_from_openchatservice_messages">Avregistrerer fra OpenchatService meldinger...</string>
@@ -46,6 +43,7 @@ Om du vil benytte OpenchatService meldinger igjen i fremtiden må du registrere 
   <string name="ConfirmIdentityDialog_you_may_wish_to_verify_this_contact">Du bør verifisere
 denne kontakten.</string>
   <string name="ConfirmIdentityDialog_accept">Godta</string>
+  <string name="ContactsDatabase_message_s">Melding %s</string>
   <string name="ConversationItem_message_size_d_kb">Meldingsstørrelse: %d KB</string>
   <string name="ConversationItem_expires_s">Utløper: %s</string>
   <string name="ConversationItem_error_not_delivered">Ikke levert</string>
@@ -330,6 +328,7 @@ Mottatt melding med ukjent ID nøkkel. Klikk for å prosessere og vise.</string>
   <string name="KeyCachingService_lock">Lås med passord</string>
   <string name="MessageNotifier_d_messages_in_d_conversations">%1$d meldinger i %2$d samtaler</string>
   <string name="MessageNotifier_most_recent_from_s">Nyeste fra: %1$s</string>
+  <string name="MessageNotifier_locked_message">Låst melding...</string>
   <string name="MessageNotifier_media_message_with_text">Media melding: %s</string>
   <string name="MessageNotifier_no_subject">(Mangler emne)</string>
   <string name="MessageNotifier_message_delivery_failed">Levering av meldingen mislyktes.</string>
@@ -346,9 +345,6 @@ Mottatt melding med ukjent ID nøkkel. Klikk for å prosessere og vise.</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">Gjenta nytt passord:</string>
   <string name="contact_selection_group_activity__no_contacts">Ingen kontakter.</string>
   <string name="contact_selection_group_activity__finding_contacts">Laster kontakter...</string>
-  <string name="SingleContactSelectionActivity_you_are_not_registered_with_the_push_service">Du er ikke registrert hos \"push\" tjenesten...</string>
-  <string name="SingleContactSelectionActivity_updating_directory">Oppdaterer katalog</string>
-  <string name="SingleContactSelectionActivity_updating_push_directory">Oppdaterer «push»-katalogen …</string>
   <string name="SingleContactSelectionActivity_contact_photo">Kontaktbilde</string>
   <string name="ContactSelectionlistFragment_select_for">Velg for</string>
   <string name="blocked_contacts_fragment__no_blocked_contacts">Ingen blokkerte kontakter...</string>
@@ -534,6 +530,7 @@ feilet.</string>
   <string name="preferences__change_my_passphrase">Velg et nytt passord</string>
   <string name="preferences__enable_passphrase">Aktiver passord</string>
   <string name="preferences__passphrase_summary">Passord %s</string>
+  <string name="preferences__enable_lock_screen_for_messages">Aktiver skjermlås for meldinger</string>
   <string name="preferences__screen_security">Skjermsikkerhet</string>
   <string name="preferences__screen_security_summary">Skjermsikkerhet %s</string>
   <string name="preferences__disable_screen_security_to_allow_screen_shots">Blokker skjermbilde i listen over siste applikasjoner og inni applikasjonen</string>

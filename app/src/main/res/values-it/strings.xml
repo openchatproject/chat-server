@@ -11,9 +11,6 @@
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Eliminare tutti i messaggi vecchi ora?</string>
   <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Vuoi davvero ridurre tutte conversazioni ai soli %s messaggi più recenti?</string>
   <string name="ApplicationPreferencesActivity_delete">Elimina</string>
-  <string name="ApplicationPreferencesActivity_disable_storage_encryption">Disabilitare la cifratura dei dati salvati?</string>
-  <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
-Attenzione, così facendo interromperai la cifratura di tutti i messaggi e le chiavi che hai salvato. Le tue sessioni cifrate continueranno a funzionare, ma chiunque avrà accesso fisico al tuo dispositivo sarà in grado di accedere ad esse.</string>
   <string name="ApplicationPreferencesActivity_disable">Disabilita</string>
   <string name="ApplicationPreferencesActivity_unregistering">Disiscriviti</string>
   <string name="ApplicationPreferencesActivity_unregistering_from_openchatservice_messages">Disicriviti dai messaggi di OpenchatService</string>
@@ -360,9 +357,6 @@ Ricevuto un messaggio con una chiave identificativa sconosciuta. Clicca per elab
   <string name="change_passphrase_activity__repeat_new_passphrase">Ripeti nuova password:</string>
   <string name="contact_selection_group_activity__no_contacts">Nessun contatto.</string>
   <string name="contact_selection_group_activity__finding_contacts">Caricamento contatti...</string>
-  <string name="SingleContactSelectionActivity_you_are_not_registered_with_the_push_service">Non sei registrato al servizio push...</string>
-  <string name="SingleContactSelectionActivity_updating_directory">Aggiornamento directory</string>
-  <string name="SingleContactSelectionActivity_updating_push_directory">Aggiornamento directory push...</string>
   <string name="SingleContactSelectionActivity_contact_photo">Foto del contatto</string>
   <string name="ContactSelectionlistFragment_select_for">Seleziona per</string>
   <string name="blocked_contacts_fragment__no_blocked_contacts">Nessun contatto bloccato...</string>

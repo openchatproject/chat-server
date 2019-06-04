@@ -11,9 +11,6 @@
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Удалить все старые сообщения?</string>
   <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Вы уверены, что хотите обрезать все разговоры до %s последних сообщений, удалив более старые?</string>
   <string name="ApplicationPreferencesActivity_delete">Удалить</string>
-  <string name="ApplicationPreferencesActivity_disable_storage_encryption">Отключить шифрование базы?</string>
-  <string name="ApplicationPreferencesActivity_warning_this_will_disable_storage_encryption_for_all_messages">
-Внимание, вы собираетесь отключить шифрование базы данных, в которой хранятся все ваши сообщения и ключи. При переписке шифрование продолжит работать, однако любой, кто имеет физический доступ к вашему устройству, сможет прочитать ваши сообщения.</string>
   <string name="ApplicationPreferencesActivity_disable">Отключить</string>
   <string name="ApplicationPreferencesActivity_unregistering">Отмена регистрации</string>
   <string name="ApplicationPreferencesActivity_unregistering_from_openchatservice_messages">Отменяем регистрацию в OpenchatService...</string>
@@ -345,9 +342,6 @@
   <string name="change_passphrase_activity__repeat_new_passphrase">ПОВТОРИТЕ НОВУЮ ПАРОЛЬНУЮ ФРАЗУ:</string>
   <string name="contact_selection_group_activity__no_contacts">Нет контактов.</string>
   <string name="contact_selection_group_activity__finding_contacts">Загружаем контакты...</string>
-  <string name="SingleContactSelectionActivity_you_are_not_registered_with_the_push_service">Вы не зарегистрированы в push-службе...</string>
-  <string name="SingleContactSelectionActivity_updating_directory">Обновление каталога</string>
-  <string name="SingleContactSelectionActivity_updating_push_directory">Обновляем push-каталог...</string>
   <string name="SingleContactSelectionActivity_contact_photo">Фото контактов</string>
   <string name="ContactSelectionlistFragment_select_for">Выбрать для</string>
   <string name="blocked_contacts_fragment__no_blocked_contacts">Нет заблокированных контактов...</string>
