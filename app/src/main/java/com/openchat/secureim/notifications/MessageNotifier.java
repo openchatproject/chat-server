@@ -480,7 +480,7 @@ public class MessageNotifier {
 
   private static void updateBadge(Context context, int count) {
     try {
-      ShortcutBadger.setBadge(context, count);
+      ShortcutBadger.setBadge(context.getApplicationContext(), count);
     } catch (Throwable t) {
       Log.w("MessageNotifier", t);
     }
