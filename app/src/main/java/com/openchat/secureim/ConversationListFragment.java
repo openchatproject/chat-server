@@ -1,6 +1,7 @@
 package com.openchat.secureim;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -35,6 +36,7 @@ import com.openchat.secureim.components.DefaultSmsReminder;
 import com.openchat.secureim.components.DividerItemDecoration;
 import com.openchat.secureim.components.ExpiredBuildReminder;
 import com.openchat.secureim.components.PushRegistrationReminder;
+import com.openchat.secureim.components.Reminder;
 import com.openchat.secureim.components.ReminderView;
 import com.openchat.secureim.components.SystemSmsImportReminder;
 import com.openchat.secureim.crypto.MasterSecret;
@@ -42,6 +44,7 @@ import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.loaders.ConversationListLoader;
 import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.recipients.Recipients;
+import com.openchat.protocal.util.guava.Optional;
 
 import java.util.Locale;
 import java.util.Set;
@@ -114,17 +117,29 @@ public class ConversationListFragment extends Fragment
   }
 
   private void initializeReminders() {
-    if (ExpiredBuildReminder.isEligible(getActivity())) {
-      reminderView.showReminder(new ExpiredBuildReminder());
-    } else if (DefaultSmsReminder.isEligible(getActivity())) {
-      reminderView.showReminder(new DefaultSmsReminder(getActivity()));
-    } else if (SystemSmsImportReminder.isEligible(getActivity())) {
-      reminderView.showReminder(new SystemSmsImportReminder(getActivity(), masterSecret));
-    } else if (PushRegistrationReminder.isEligible(getActivity())) {
-      reminderView.showReminder(new PushRegistrationReminder(getActivity(), masterSecret));
-    } else {
-      reminderView.hide();
-    }
+    reminderView.hide();
+    new AsyncTask<Context, Void, Optional<? extends Reminder>>() {
+      @Override protected Optional<? extends Reminder> doInBackground(Context... params) {
+        final Context context = params[0];
+        if (ExpiredBuildReminder.isEligible(context)) {
+          return Optional.of(new ExpiredBuildReminder());
+        } else if (DefaultSmsReminder.isEligible(context)) {
+          return Optional.of(new DefaultSmsReminder(context));
+        } else if (SystemSmsImportReminder.isEligible(context)) {
+          return Optional.of((new SystemSmsImportReminder(context, masterSecret)));
+        } else if (PushRegistrationReminder.isEligible(context)) {
+          return Optional.of((new PushRegistrationReminder(context, masterSecret)));
+        } else {
+          return Optional.absent();
+        }
+      }
+
+      @Override protected void onPostExecute(Optional<? extends Reminder> reminder) {
+        if (reminder.isPresent() && getActivity() != null && !isRemoving()) {
+          reminderView.showReminder(reminder.get());
+        }
+      }
+    }.execute(getActivity());
   }
 
   private void initializeListAdapter() {
