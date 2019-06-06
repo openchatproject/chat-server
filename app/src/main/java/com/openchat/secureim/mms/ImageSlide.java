@@ -8,6 +8,7 @@ import android.support.annotation.DrawableRes;
 import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.util.BitmapDecodingException;
+import com.openchat.secureim.util.MediaUtil;
 
 import java.io.IOException;
 
@@ -22,7 +23,7 @@ public class ImageSlide extends Slide {
   }
 
   public ImageSlide(Context context, MasterSecret masterSecret, Uri uri) throws IOException, BitmapDecodingException {
-    super(context, masterSecret, constructPartFromUri(uri));
+    super(context, masterSecret, constructPartFromUri(context, uri));
   }
 
   @Override
@@ -46,13 +47,15 @@ public class ImageSlide extends Slide {
     return true;
   }
 
-  private static PduPart constructPartFromUri(Uri uri)
+  private static PduPart constructPartFromUri(Context context, Uri uri)
       throws IOException, BitmapDecodingException
   {
     PduPart part = new PduPart();
 
+    final String mimeType = MediaUtil.getMimeType(context, uri);
+
     part.setDataUri(uri);
-    part.setContentType(ContentType.IMAGE_JPEG.getBytes());
+    part.setContentType((mimeType != null ? mimeType : ContentType.IMAGE_JPEG).getBytes());
     part.setContentId((System.currentTimeMillis()+"").getBytes());
     part.setName(("Image" + System.currentTimeMillis()).getBytes());
 

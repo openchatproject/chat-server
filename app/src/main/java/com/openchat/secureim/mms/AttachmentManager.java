@@ -22,6 +22,7 @@ import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.providers.CaptureProvider;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.util.BitmapDecodingException;
+import com.openchat.secureim.util.MediaUtil;
 
 import java.io.IOException;
 
@@ -52,22 +53,14 @@ public class AttachmentManager {
     AlphaAnimation animation = new AlphaAnimation(1.0f, 0.0f);
     animation.setDuration(200);
     animation.setAnimationListener(new Animation.AnimationListener() {
-      @Override
-      public void onAnimationStart(Animation animation) {
-
-      }
-
-      @Override
-      public void onAnimationEnd(Animation animation) {
+      @Override public void onAnimationStart(Animation animation) {}
+      @Override public void onAnimationRepeat(Animation animation) {}
+      @Override public void onAnimationEnd(Animation animation) {
         slideDeck.clear();
         attachmentView.setVisibility(View.GONE);
         attachmentListener.onAttachmentChanged();
       }
 
-      @Override
-      public void onAnimationRepeat(Animation animation) {
-
-      }
     });
 
     attachmentView.startAnimation(animation);
@@ -79,7 +72,11 @@ public class AttachmentManager {
   }
 
   public void setImage(MasterSecret masterSecret, Uri image) throws IOException, BitmapDecodingException {
-    setMedia(new ImageSlide(context, masterSecret, image), masterSecret);
+    if (MediaUtil.getMimeType(context, image).startsWith("image/gif")) {
+      setMedia(new GifSlide(context, masterSecret, image), masterSecret);
+    } else {
+      setMedia(new ImageSlide(context, masterSecret, image), masterSecret);
+    }
   }
 
   public void setVideo(Uri video) throws IOException, MediaTooLargeException {
