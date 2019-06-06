@@ -194,30 +194,6 @@ public class ColorPreference extends Preference {
     }
 
     private void sizeDialog() {
-      if (mPreference == null || mColorGrid == null) {
-        return;
-      }
-
-      Dialog dialog = getDialog();
-      if (dialog == null) {
-        return;
-      }
-
-      final Resources res = mColorGrid.getContext().getResources();
-      DisplayMetrics dm = res.getDisplayMetrics();
-
-      mColorGrid.measure(
-          View.MeasureSpec.makeMeasureSpec(dm.widthPixels, View.MeasureSpec.AT_MOST),
-          View.MeasureSpec.makeMeasureSpec(dm.heightPixels, View.MeasureSpec.AT_MOST));
-      int width = mColorGrid.getMeasuredWidth();
-      int height = mColorGrid.getMeasuredHeight();
-
-      int extraPadding = res.getDimensionPixelSize(R.dimen.color_grid_extra_padding);
-
-      width += extraPadding;
-      height += extraPadding;
-
-      dialog.getWindow().setLayout(width, height);
     }
   }
 
