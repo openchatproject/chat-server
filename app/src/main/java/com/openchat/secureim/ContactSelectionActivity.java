@@ -1,15 +1,16 @@
 package com.openchat.secureim;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.TouchDelegate;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -52,7 +53,7 @@ public abstract class ContactSelectionActivity extends PassphraseRequiredActionB
   }
 
   @Override
-  protected void onCreate(Bundle icicle, @NonNull MasterSecret masterSecret) {
+  protected void onCreate(Bundle icicle, MasterSecret masterSecret) {
     setContentView(R.layout.contact_selection_activity);
 
     initializeToolbar();
@@ -92,7 +93,7 @@ public abstract class ContactSelectionActivity extends PassphraseRequiredActionB
       public void onClick(View v) {
         searchText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
         ServiceUtil.getInputMethodManager(ContactSelectionActivity.this).showSoftInput(searchText, 0);
-        toggle.display(dialpadToggle);
+        displayTogglingView(dialpadToggle);
       }
     });
 
@@ -101,7 +102,7 @@ public abstract class ContactSelectionActivity extends PassphraseRequiredActionB
       public void onClick(View v) {
         searchText.setInputType(InputType.TYPE_CLASS_PHONE);
         ServiceUtil.getInputMethodManager(ContactSelectionActivity.this).showSoftInput(searchText, 0);
-        toggle.display(keyboardToggle);
+        displayTogglingView(keyboardToggle);
       }
     });
 
@@ -110,10 +111,12 @@ public abstract class ContactSelectionActivity extends PassphraseRequiredActionB
       public void onClick(View v) {
         searchText.setText("");
 
-        if (SearchUtil.isTextInput(searchText)) toggle.display(dialpadToggle);
-        else                                    toggle.display(keyboardToggle);
+        if (SearchUtil.isTextInput(searchText)) displayTogglingView(dialpadToggle);
+        else                                    displayTogglingView(keyboardToggle);
       }
     });
+
+    expandTapArea(toolbar, dialpadToggle, 500);
   }
 
   private void initializeSearch() {
@@ -130,9 +133,9 @@ public abstract class ContactSelectionActivity extends PassphraseRequiredActionB
 
       @Override
       public void afterTextChanged(Editable s) {
-        if      (!SearchUtil.isEmpty(searchText))     toggle.display(clearToggle);
-        else if (SearchUtil.isTextInput(searchText))  toggle.display(dialpadToggle);
-        else if (SearchUtil.isPhoneInput(searchText)) toggle.display(keyboardToggle);
+        if      (!SearchUtil.isEmpty(searchText))     displayTogglingView(clearToggle);
+        else if (SearchUtil.isTextInput(searchText))  displayTogglingView(dialpadToggle);
+        else if (SearchUtil.isPhoneInput(searchText)) displayTogglingView(keyboardToggle);
 
         contactsFragment.setQueryFilter(searchText.getText().toString());
       }
@@ -146,6 +149,28 @@ public abstract class ContactSelectionActivity extends PassphraseRequiredActionB
 
   @Override
   public void onContactSelected(String number) {}
+
+  private void displayTogglingView(View view) {
+    toggle.display(view);
+    expandTapArea(toolbar, view, 500);
+  }
+
+  private void expandTapArea(final View container, final View child, final int padding) {
+    container.post(new Runnable() {
+      @Override
+      public void run() {
+        Rect rect = new Rect();
+        child.getHitRect(rect);
+
+        rect.top    -= padding;
+        rect.left   -= padding;
+        rect.right  += padding;
+        rect.bottom += padding;
+
+        container.setTouchDelegate(new TouchDelegate(rect, child));
+      }
+    });
+  }
 
   private static class SearchUtil {
 
