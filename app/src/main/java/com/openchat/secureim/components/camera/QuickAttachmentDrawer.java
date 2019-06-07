@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.openchat.secureim.R;
-import com.openchat.secureim.components.InputManager.InputView;
+import com.openchat.secureim.components.InputAwareLayout.InputView;
 import com.openchat.secureim.components.KeyboardAwareLinearLayout;
 import com.openchat.secureim.components.camera.QuickCamera.QuickCameraListener;
 import com.openchat.secureim.util.ServiceUtil;
