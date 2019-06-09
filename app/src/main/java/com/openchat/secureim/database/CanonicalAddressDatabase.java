@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.NonNull;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.util.Log;
@@ -81,7 +82,7 @@ public class CanonicalAddressDatabase {
     }
   }
 
-  public String getAddressFromId(long id) {
+  public @NonNull String getAddressFromId(long id) {
     String cachedAddress = idCache.get(id);
 
     if (cachedAddress != null)
