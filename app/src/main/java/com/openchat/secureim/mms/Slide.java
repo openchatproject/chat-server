@@ -70,7 +70,7 @@ public abstract class Slide {
     return !getPart().getPartId().isValid();
   }
 
-  protected static void assertMediaSize(Context context, Uri uri)
+  protected static void assertMediaSize(Context context, Uri uri, long max)
       throws MediaTooLargeException, IOException
   {
     InputStream in = context.getContentResolver().openInputStream(uri);
@@ -80,7 +80,7 @@ public abstract class Slide {
 
     while ((read = in.read(buffer)) != -1) {
       size += read;
-      if (size > MmsMediaConstraints.MAX_MESSAGE_SIZE) throw new MediaTooLargeException("Media exceeds maximum message size.");
+      if (size > max) throw new MediaTooLargeException("Media exceeds maximum message size.");
     }
   }
 
