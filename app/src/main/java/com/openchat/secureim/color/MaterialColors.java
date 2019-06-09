@@ -26,7 +26,7 @@ public class MaterialColors {
     MaterialColor.LIGHT_GREEN,
     MaterialColor.ORANGE,
     MaterialColor.DEEP_ORANGE,
-    MaterialColor.BROWN,
+    MaterialColor.AMBER,
     MaterialColor.BLUE_GREY
   )));
 
