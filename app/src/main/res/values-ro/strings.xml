@@ -11,6 +11,7 @@
   <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Şterge toate mesajele vechi acum?</string>
   <string name="ApplicationPreferencesActivity_are_you_sure_you_would_like_to_immediately_trim_all_conversation_threads_to_the_s_most_recent_messages">Eşti sigur că doreşti să scurtezi toate conversaţiile la %s cele mai recente mesaje?</string>
   <string name="ApplicationPreferencesActivity_delete">Şterge</string>
+  <string name="ApplicationPreferencesActivity_disable_passphrase">Dezactivez parola?</string>
   <string name="ApplicationPreferencesActivity_disable">Dezactivează</string>
   <string name="ApplicationPreferencesActivity_disable_openchatservice_messages">Dezactivez mesajele OpenchatService?</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">Eroare de conectare cu serverul!</string>
@@ -28,7 +29,6 @@
   <string name="DraftDatabase_Draft_audio_snippet">(audio)</string>
   <string name="DraftDatabase_Draft_video_snippet">(video)</string>
   <string name="AttachmentManager_cant_open_media_selection">Nu pot găsi o aplicație pentru selecție media.</string>
-  <string name="AttachmentTypeSelectorAdapter_take_photo">Fă o poză</string>
   <string name="AttachmentTypeSelectorAdapter_picture">Imagine</string>
   <string name="AttachmentTypeSelectorAdapter_video">Video</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Audio</string>
@@ -319,6 +319,7 @@ Primit mesaj trimis cu o cheie de identitate necunoscută. Faceți click pentru 
   <string name="change_passphrase_activity__old_passphrase">PAROLA VECHE:</string>
   <string name="change_passphrase_activity__new_passphrase">NOUA PAROLĂ:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">REPETĂ NOUA PAROLĂ:</string>
+  <string name="contact_selection_activity__enter_name_or_number">Introduceţi un nume sau un număr</string>
   <string name="contact_selection_group_activity__no_contacts">Nu exista contacte.</string>
   <string name="contact_selection_group_activity__finding_contacts">Se încarcă contactele...</string>
   <string name="SingleContactSelectionActivity_contact_photo">Poză contact</string>
@@ -572,6 +573,9 @@ Operaţiunea iniţiată de OpenchatService a expirat în timpul aşteptării pri
   <string name="preferences__language">Limba</string>
   <string name="preferences__language_summary">Limba %s</string>
   <string name="preferences__openchatservice_messages">Mesaje OpenchatService</string>
+  <string name="preferences__use_the_data_channel_for_communication_with_other_openchatservice_users">
+        Mesagerie privată şi gratuită cu utilizatorii OpenchatService şi Openchat
+    </string>
   <string name="preferences__submit_debug_log">Trimite log-urile de depanare</string>
   <string name="preferences__support_wifi_calling">Mod compatibilitate \"Apelare WiFi\"</string>
   <string name="preferences_app_protection__blocked_contacts">Contacte blocate</string>

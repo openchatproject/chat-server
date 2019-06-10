@@ -32,7 +32,6 @@ Gelecekte OpenchatService mesajlarını tekrar kullanmak isterseniz telefon numa
   <string name="DraftDatabase_Draft_audio_snippet">(ses)</string>
   <string name="DraftDatabase_Draft_video_snippet">(görüntü)</string>
   <string name="AttachmentManager_cant_open_media_selection">Seçtiğiniz medya için bir uygulama bulunamadı.</string>
-  <string name="AttachmentTypeSelectorAdapter_take_photo">Foto Çek</string>
   <string name="AttachmentTypeSelectorAdapter_picture">Resim</string>
   <string name="AttachmentTypeSelectorAdapter_video">Görüntü</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Ses</string>

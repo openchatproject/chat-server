@@ -33,7 +33,6 @@ Aby ponownie zacząć używać wiadomości OpenchatService, będziesz musiał/a 
   <string name="DraftDatabase_Draft_audio_snippet">(dźwięk)</string>
   <string name="DraftDatabase_Draft_video_snippet">(film)</string>
   <string name="AttachmentManager_cant_open_media_selection">Nie można znaleźć aplikacji, aby wybrać media.</string>
-  <string name="AttachmentTypeSelectorAdapter_take_photo">Zrób zdjęcie</string>
   <string name="AttachmentTypeSelectorAdapter_picture">Zdjęcie</string>
   <string name="AttachmentTypeSelectorAdapter_video">Film</string>
   <string name="AttachmentTypeSelectorAdapter_audio">Dźwięk</string>
