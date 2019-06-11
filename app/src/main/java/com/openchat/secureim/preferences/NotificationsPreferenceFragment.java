@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -14,13 +15,18 @@ import android.text.TextUtils;
 
 import com.openchat.secureim.ApplicationPreferencesActivity;
 import com.openchat.secureim.R;
+import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 
 public class NotificationsPreferenceFragment extends ListSummaryPreferenceFragment {
 
+  private MasterSecret masterSecret;
+
   @Override
   public void onCreate(Bundle paramBundle) {
     super.onCreate(paramBundle);
+    masterSecret = getArguments().getParcelable("master_secret");
     addPreferencesFromResource(R.xml.preferences_notifications);
 
     this.findPreference(OpenchatServicePreferences.LED_COLOR_PREF)
@@ -31,10 +37,13 @@ public class NotificationsPreferenceFragment extends ListSummaryPreferenceFragme
         .setOnPreferenceChangeListener(new RingtoneSummaryListener());
     this.findPreference(OpenchatServicePreferences.REPEAT_ALERTS_PREF)
         .setOnPreferenceChangeListener(new ListSummaryListener());
+    this.findPreference(OpenchatServicePreferences.NOTIFICATION_PRIVACY_PREF)
+        .setOnPreferenceChangeListener(new NotificationPrivacyListener());
 
     initializeListSummary((ListPreference) findPreference(OpenchatServicePreferences.LED_COLOR_PREF));
     initializeListSummary((ListPreference) findPreference(OpenchatServicePreferences.LED_BLINK_PREF));
     initializeListSummary((ListPreference) findPreference(OpenchatServicePreferences.REPEAT_ALERTS_PREF));
+    initializeListSummary((ListPreference) findPreference(OpenchatServicePreferences.NOTIFICATION_PRIVACY_PREF));
     initializeRingtoneSummary((RingtonePreference) findPreference(OpenchatServicePreferences.RINGTONE_PREF));
   }
 
@@ -75,5 +84,21 @@ public class NotificationsPreferenceFragment extends ListSummaryPreferenceFragme
     final int offCapsResId  = R.string.ApplicationPreferencesActivity_Off;
 
     return context.getString(OpenchatServicePreferences.isNotificationsEnabled(context) ? onCapsResId : offCapsResId);
+  }
+
+  private class NotificationPrivacyListener extends ListSummaryListener {
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object value) {
+      new AsyncTask<Void, Void, Void>() {
+        @Override
+        protected Void doInBackground(Void... params) {
+          MessageNotifier.updateNotification(getActivity(), masterSecret);
+          return null;
+        }
+      }.execute();
+
+      return super.onPreferenceChange(preference, value);
+    }
+
   }
 }
