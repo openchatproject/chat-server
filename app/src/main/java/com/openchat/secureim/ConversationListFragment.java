@@ -33,7 +33,6 @@ import com.melnykov.fab.FloatingActionButton;
 
 import com.openchat.secureim.ConversationListAdapter.ItemClickListener;
 import com.openchat.secureim.components.DefaultSmsReminder;
-import com.openchat.secureim.components.DividerItemDecoration;
 import com.openchat.secureim.components.ExpiredBuildReminder;
 import com.openchat.secureim.components.PushRegistrationReminder;
 import com.openchat.secureim.components.Reminder;
@@ -75,7 +74,6 @@ public class ConversationListFragment extends Fragment
     fab          = (FloatingActionButton) view.findViewById(R.id.fab);
     list.setHasFixedSize(true);
     list.setLayoutManager(new LinearLayoutManager(getActivity()));
-    list.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, R.attr.conversation_list_item_divider));
     return view;
   }
 
