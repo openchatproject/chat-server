@@ -26,13 +26,17 @@ import com.openchat.secureim.database.MmsSmsDatabase;
 import com.openchat.secureim.database.PushDatabase;
 import com.openchat.secureim.database.SmsDatabase;
 import com.openchat.secureim.database.ThreadDatabase;
+import com.openchat.secureim.database.model.MediaMmsMessageRecord;
 import com.openchat.secureim.database.model.MessageRecord;
+import com.openchat.secureim.mms.SlideDeck;
 import com.openchat.secureim.recipients.Recipient;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.service.KeyCachingService;
+import com.openchat.secureim.util.ListenableFutureTask;
 import com.openchat.secureim.util.SpanUtil;
 import com.openchat.secureim.util.OpenchatServicePreferences;
+import com.openchat.secureim.util.concurrent.ListenableFuture;
 import com.openchat.imservice.api.messages.OpenchatServiceEnvelope;
 
 import java.io.IOException;
@@ -163,12 +167,12 @@ public class MessageNotifier {
       return;
     }
 
-    SingleRecipientNotificationBuilder builder       = new SingleRecipientNotificationBuilder(context, OpenchatServicePreferences.getNotificationPrivacy(context));
+    SingleRecipientNotificationBuilder builder       = new SingleRecipientNotificationBuilder(context, masterSecret, OpenchatServicePreferences.getNotificationPrivacy(context));
     List<NotificationItem>             notifications = notificationState.getNotifications();
 
     builder.setSender(notifications.get(0).getIndividualRecipient());
     builder.setMessageCount(notificationState.getMessageCount());
-    builder.setPrimaryMessageBody(notifications.get(0).getText());
+    builder.setPrimaryMessageBody(notifications.get(0).getText(), notifications.get(0).getSlideDeck());
     builder.setContentIntent(notifications.get(0).getPendingIntent(context));
 
     long timestamp = notifications.get(0).getTimestamp();
@@ -294,7 +298,7 @@ public class MessageNotifier {
         body.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), 0, body.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         if (!recipients.isMuted()) {
-          notificationState.addNotification(new NotificationItem(recipient, recipients, null, threadId, body, 0));
+          notificationState.addNotification(new NotificationItem(recipient, recipients, null, threadId, body, 0, null));
         }
       }
     } finally {
@@ -315,11 +319,12 @@ public class MessageNotifier {
     else                      reader = DatabaseFactory.getMmsSmsDatabase(context).readerFor(cursor, masterSecret);
 
     while ((record = reader.getNext()) != null) {
-      Recipient       recipient        = record.getIndividualRecipient();
-      Recipients      recipients       = record.getRecipients();
-      long            threadId         = record.getThreadId();
-      CharSequence    body             = record.getDisplayBody();
-      Recipients      threadRecipients = null;
+      Recipient                       recipient        = record.getIndividualRecipient();
+      Recipients                      recipients       = record.getRecipients();
+      long                            threadId         = record.getThreadId();
+      CharSequence                    body             = record.getDisplayBody();
+      Recipients                      threadRecipients = null;
+      ListenableFutureTask<SlideDeck> slideDeck        = null;
       long            timestamp;
 
       if (record.isPush()) timestamp = record.getDateSent();
@@ -333,14 +338,16 @@ public class MessageNotifier {
         body = SpanUtil.italic(context.getString(R.string.MessageNotifier_locked_message));
       } else if (record.isMms() && TextUtils.isEmpty(body)) {
         body = SpanUtil.italic(context.getString(R.string.MessageNotifier_media_message));
+        slideDeck = ((MediaMmsMessageRecord)record).getSlideDeckFuture();
       } else if (record.isMms() && !record.isMmsNotification()) {
         String message      = context.getString(R.string.MessageNotifier_media_message_with_text, body);
         int    italicLength = message.length() - body.length();
         body = SpanUtil.italic(message, italicLength);
+        slideDeck = ((MediaMmsMessageRecord)record).getSlideDeckFuture();
       }
 
       if (threadRecipients == null || !threadRecipients.isMuted()) {
-        notificationState.addNotification(new NotificationItem(recipient, recipients, threadRecipients, threadId, body, timestamp));
+        notificationState.addNotification(new NotificationItem(recipient, recipients, threadRecipients, threadId, body, timestamp, slideDeck));
       }
     }
 

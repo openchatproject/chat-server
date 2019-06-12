@@ -12,6 +12,7 @@ import com.openchat.secureim.database.PartDatabase;
 import com.openchat.secureim.database.PartDatabase.PartId;
 import com.openchat.secureim.dependencies.InjectableType;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
+import com.openchat.secureim.notifications.MessageNotifier;
 import com.openchat.secureim.util.Util;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
@@ -66,6 +67,8 @@ public class AttachmentDownloadJob extends MasterSecretJob implements Injectable
       retrievePart(masterSecret, part, messageId);
       Log.w(TAG, "Got part: " + part.getPartId());
     }
+
+    MessageNotifier.updateNotification(context, masterSecret);
   }
 
   @Override
