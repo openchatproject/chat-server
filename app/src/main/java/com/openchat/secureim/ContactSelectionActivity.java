@@ -14,6 +14,7 @@ import android.view.TouchDelegate;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.openchat.secureim.components.AnimatingToggle;
 import com.openchat.secureim.crypto.MasterSecret;
@@ -45,6 +46,7 @@ public abstract class ContactSelectionActivity extends PassphraseRequiredActionB
   private   ImageView       keyboardToggle;
   private   ImageView       dialpadToggle;
   private   ImageView       clearToggle;
+  private   LinearLayout    toggleContainer;
 
   @Override
   protected void onPreCreate() {
@@ -77,12 +79,13 @@ public abstract class ContactSelectionActivity extends PassphraseRequiredActionB
   }
 
   private void initializeResources() {
-    this.action         = (ImageView) findViewById(R.id.action_icon);
-    this.searchText     = (EditText) findViewById(R.id.search_view);
-    this.toggle         = (AnimatingToggle) findViewById(R.id.button_toggle);
-    this.keyboardToggle = (ImageView) findViewById(R.id.search_keyboard);
-    this.dialpadToggle  = (ImageView) findViewById(R.id.search_dialpad);
-    this.clearToggle    = (ImageView) findViewById(R.id.search_clear);
+    this.action          = (ImageView) findViewById(R.id.action_icon);
+    this.searchText      = (EditText) findViewById(R.id.search_view);
+    this.toggle          = (AnimatingToggle) findViewById(R.id.button_toggle);
+    this.keyboardToggle  = (ImageView) findViewById(R.id.search_keyboard);
+    this.dialpadToggle   = (ImageView) findViewById(R.id.search_dialpad);
+    this.clearToggle     = (ImageView) findViewById(R.id.search_clear);
+    this.toggleContainer = (LinearLayout) findViewById(R.id.toggle_container);
 
     contactsFragment = (ContactSelectionListFragment) getSupportFragmentManager().findFragmentById(R.id.contact_selection_list_fragment);
     contactsFragment.setOnContactSelectedListener(this);
@@ -116,7 +119,8 @@ public abstract class ContactSelectionActivity extends PassphraseRequiredActionB
       }
     });
 
-    expandTapArea(toolbar, dialpadToggle, 500);
+    expandTapArea(toolbar, action, 500);
+    expandTapArea(toggleContainer, dialpadToggle, 500);
   }
 
   private void initializeSearch() {
@@ -152,7 +156,7 @@ public abstract class ContactSelectionActivity extends PassphraseRequiredActionB
 
   private void displayTogglingView(View view) {
     toggle.display(view);
-    expandTapArea(toolbar, view, 500);
+    expandTapArea(toggleContainer, view, 500);
   }
 
   private void expandTapArea(final View container, final View child, final int padding) {
