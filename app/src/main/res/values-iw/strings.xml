@@ -153,7 +153,6 @@
   <string name="preferences__pref_timeout_interval_title">זמן התוקף</string>
   <string name="preferences__the_amount_of_time_to_wait_before_forgetting_passphrase">פרק הזמן שיש להמתין לפני שכיחת הסיסמה מהזיכרון</string>
   <string name="preferences__notifications">התראות</string>
-  <string name="preferences__display_message_notifications_in_status_bar">הצג התראות של הודעה בשורת המצב</string>
   <string name="preferences__led_color">צבע LED</string>
   <string name="preferences__pref_led_blink_title">תבנית הבהוב ה- LED</string>
   <string name="preferences__sound">קול</string>

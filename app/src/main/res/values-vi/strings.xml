@@ -281,7 +281,6 @@ OpenchatService hết hạn chờ trong lúc đợi tin nhắn SMS xác nhận.<
   <string name="preferences__pref_timeout_interval_title">Thời gian hết hạn</string>
   <string name="preferences__the_amount_of_time_to_wait_before_forgetting_passphrase">Khoảng thời gian chờ trước khi quên đi mật khẩu trong bộ nhớ</string>
   <string name="preferences__notifications">Thông báo</string>
-  <string name="preferences__display_message_notifications_in_status_bar">Hiển thị thông báo tin nhắn trong thanh trạng thái</string>
   <string name="preferences__led_color">Màu LED</string>
   <string name="preferences__pref_led_blink_title">Mô hình chớp nháy LED</string>
   <string name="preferences__pref_led_blink_custom_pattern_set">Mô hình chớp nháy LED tùy biến thiết lập xong!</string>

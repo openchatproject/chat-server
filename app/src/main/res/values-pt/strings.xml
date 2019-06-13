@@ -340,7 +340,6 @@ Recebida mensagem com chave de identidade desconhecida. Clique para processar e 
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Toque para abrir, ou toque no cadeado para fechar.</string>
   <string name="KeyCachingService_passphrase_cached">O OpenchatService está desbloqueado</string>
   <string name="KeyCachingService_lock">Bloquear com frase-chave</string>
-  <string name="MessageNotifier_d_messages_in_d_conversations">%1$d mensagens em %2$d conversas</string>
   <string name="MessageNotifier_most_recent_from_s">Mais recente de: %1$s</string>
   <string name="MessageNotifier_locked_message">Mensagem bloqueada...</string>
   <string name="MessageNotifier_media_message_with_text">Mensagem media: %s</string>
@@ -567,7 +566,6 @@ falhou.
   <string name="preferences__pref_timeout_interval_title">Intervalo de expiração</string>
   <string name="preferences__the_amount_of_time_to_wait_before_forgetting_passphrase">Tempo a esperar antes de remover a frase-chave da memória</string>
   <string name="preferences__notifications">Notificações</string>
-  <string name="preferences__display_message_notifications_in_status_bar">Apresentar notificações de mensagens na barra de estado</string>
   <string name="preferences__led_color">Cor do LED</string>
   <string name="preferences__led_color_unknown">Desconhecido</string>
   <string name="preferences__pref_led_blink_title">Padrão de piscar do LED</string>

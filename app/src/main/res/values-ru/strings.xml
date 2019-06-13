@@ -314,7 +314,6 @@
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Нажмите, чтобы открыть. Чтобы закрыть, нажмите на замок.</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatService разблокирован</string>
   <string name="KeyCachingService_lock">Заблокировать парольной фразой</string>
-  <string name="MessageNotifier_d_messages_in_d_conversations">%1$d сообщений %2$d разговорах</string>
   <string name="MessageNotifier_most_recent_from_s">Последнее от %1$s</string>
   <string name="MessageNotifier_media_message_with_text">MMS-сообщение: %s</string>
   <string name="MessageNotifier_no_subject">(Нет темы)</string>
@@ -534,7 +533,6 @@ SMS-подтверждения...
   <string name="preferences__pref_timeout_interval_title">Срок хранения</string>
   <string name="preferences__the_amount_of_time_to_wait_before_forgetting_passphrase">Время, по прошествии которого парольная фраза будет стёрта из памяти</string>
   <string name="preferences__notifications">Уведомления</string>
-  <string name="preferences__display_message_notifications_in_status_bar">Показывать уведомления о сообщениях в статусной строке</string>
   <string name="preferences__led_color">Цвет светодиода</string>
   <string name="preferences__led_color_unknown">Неизвестен</string>
   <string name="preferences__pref_led_blink_title">Мигание светодиода</string>

@@ -461,7 +461,6 @@ OpenchatService не дачакаўся параверачная SMS.</string>
   <string name="preferences__pref_timeout_interval_title">Інтэрвал часу запамінання</string>
   <string name="preferences__the_amount_of_time_to_wait_before_forgetting_passphrase">Значэнне часу, праз які пароль будзе выдалены з памяці</string>
   <string name="preferences__notifications">Апавяшчэнні</string>
-  <string name="preferences__display_message_notifications_in_status_bar">Адлюстроўваць апавяшчэнні пра паведамленні на статуснай панэлі</string>
   <string name="preferences__led_color">колер святлодыёда</string>
   <string name="preferences__led_color_unknown">Невядома</string>
   <string name="preferences__pref_led_blink_title">Узор міргацення светладыёда</string>

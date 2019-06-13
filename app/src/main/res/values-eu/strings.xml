@@ -426,7 +426,6 @@ huts egin du.
   <string name="preferences__pref_timeout_interval_title">Iraungitzearen tartea</string>
   <string name="preferences__the_amount_of_time_to_wait_before_forgetting_passphrase">Memoriatik pasahitza kentzeko itxaron behar den denbora</string>
   <string name="preferences__notifications">Jakinarazpenak</string>
-  <string name="preferences__display_message_notifications_in_status_bar">Mezuaren jakinarazpenak erakutsi egoera-barran</string>
   <string name="preferences__led_color">LED kolorea</string>
   <string name="preferences__led_color_unknown">Ezezaguna</string>
   <string name="preferences__pref_led_blink_title">LEDaren keinuka eredua</string>

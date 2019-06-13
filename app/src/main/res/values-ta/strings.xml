@@ -483,7 +483,6 @@ OpenchatService சரிபார்ப்பு SMS-செய்திக்�
   <string name="preferences__pref_timeout_interval_title">காலாவதி நேரம்</string>
   <string name="preferences__the_amount_of_time_to_wait_before_forgetting_passphrase">நினைவகத்திலிருந்து கடவுச்சொல்லை மறக்கச்செய்யும் முன் காத்திருக்கவேண்டிய நேர அளவு</string>
   <string name="preferences__notifications">அறிவிப்புகள்</string>
-  <string name="preferences__display_message_notifications_in_status_bar">செய்தி அறிவிப்புகளை நிலைப்பட்டையில் காண்பிக்கவும்</string>
   <string name="preferences__led_color">LED நிறம்</string>
   <string name="preferences__led_color_unknown">முன் தெரிந்திராத</string>
   <string name="preferences__pref_led_blink_title">LED மிளிரும் முறை</string>

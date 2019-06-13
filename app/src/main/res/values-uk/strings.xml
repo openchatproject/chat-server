@@ -208,7 +208,6 @@
   <string name="preferences__pref_timeout_interval_title">Термін зберігання</string>
   <string name="preferences__the_amount_of_time_to_wait_before_forgetting_passphrase">Час, після якого фраза-пароль буде стерта з пам’яті</string>
   <string name="preferences__notifications">Сповіщення</string>
-  <string name="preferences__display_message_notifications_in_status_bar">Показувати сповіщення повідомлень в рядку стану</string>
   <string name="preferences__led_color">Колір LED</string>
   <string name="preferences__pref_led_blink_title">Шаблон мерехтіння LED</string>
   <string name="preferences__pref_led_blink_custom_pattern_set">Власний шаблон мерехтіння LED задано!</string>
