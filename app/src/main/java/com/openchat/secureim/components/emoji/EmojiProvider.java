@@ -42,7 +42,7 @@ public class EmojiProvider {
   private final SparseArray<DrawInfo> offsets = new SparseArray<>();
 
   @SuppressWarnings("MalformedRegex")
-  private static final Pattern EMOJI_RANGE = Pattern.compile("[\\u20a0-\\u32ff\\ud83c\\udc00-\\ud83d\\udeff\\udbb9\\udce5-\\udbb9\\udcee]");
+  private static final Pattern EMOJI_RANGE = Pattern.compile("[\\u203c\\u2049\\u20a0-\\u32ff\\ud83c\\udc00-\\ud83d\\udeff\\udbb9\\udce5-\\udbb9\\udcee]");
 
   public static final int    EMOJI_RAW_HEIGHT = 64;
   public static final int    EMOJI_RAW_WIDTH  = 64;
