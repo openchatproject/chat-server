@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.GenericRequestBuilder;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
@@ -32,11 +31,11 @@ import com.openchat.secureim.R;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.jobs.PartProgressEvent;
 import com.openchat.secureim.mms.DecryptableStreamUriLoader.DecryptableUri;
+import com.openchat.secureim.mms.RoundedCorners;
 import com.openchat.secureim.mms.Slide;
 import com.openchat.secureim.mms.SlideDeck;
 import com.openchat.secureim.util.FutureTaskListener;
 import com.openchat.secureim.util.ListenableFutureTask;
-import com.openchat.secureim.mms.RoundedCorners;
 import com.openchat.secureim.util.Util;
 
 import de.greenrobot.event.EventBus;
@@ -245,7 +244,8 @@ public class ThumbnailView extends FrameLayout {
     public void onSuccess(final SlideDeck slideDeck) {
       if (slideDeck == null) return;
 
-      final Slide slide = slideDeck.getThumbnailSlide(getContext());
+      final Slide slide = slideDeck.getThumbnailSlide();
+
       if (slide != null) {
         Util.runOnMain(new Runnable() {
           @Override

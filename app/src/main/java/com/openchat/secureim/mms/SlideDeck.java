@@ -2,6 +2,7 @@ package com.openchat.secureim.mms;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.util.Pair;
 
 import com.openchat.secureim.R;
@@ -73,7 +74,7 @@ public class SlideDeck {
     return false;
   }
 
-  public Slide getThumbnailSlide(Context context) {
+  public @Nullable Slide getThumbnailSlide() {
     for (Slide slide : slides) {
       if (slide.hasImage()) {
         return slide;
