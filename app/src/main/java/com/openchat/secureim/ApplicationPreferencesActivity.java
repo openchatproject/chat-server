@@ -16,7 +16,7 @@ import com.openchat.secureim.preferences.AppProtectionPreferenceFragment;
 import com.openchat.secureim.preferences.AppearancePreferenceFragment;
 import com.openchat.secureim.preferences.NotificationsPreferenceFragment;
 import com.openchat.secureim.preferences.SmsMmsPreferenceFragment;
-import com.openchat.secureim.preferences.StoragePreferenceFragment;
+import com.openchat.secureim.preferences.ChatsPreferenceFragment;
 import com.openchat.secureim.service.KeyCachingService;
 import com.openchat.secureim.util.DynamicLanguage;
 import com.openchat.secureim.util.DynamicTheme;
@@ -31,7 +31,7 @@ public class ApplicationPreferencesActivity extends PassphraseRequiredActionBarA
   private static final String PREFERENCE_CATEGORY_NOTIFICATIONS  = "preference_category_notifications";
   private static final String PREFERENCE_CATEGORY_APP_PROTECTION = "preference_category_app_protection";
   private static final String PREFERENCE_CATEGORY_APPEARANCE     = "preference_category_appearance";
-  private static final String PREFERENCE_CATEGORY_STORAGE        = "preference_category_storage";
+  private static final String PREFERENCE_CATEGORY_CHATS          = "preference_category_chats";
   private static final String PREFERENCE_CATEGORY_DEVICES        = "preference_category_devices";
   private static final String PREFERENCE_CATEGORY_ADVANCED       = "preference_category_advanced";
 
@@ -107,8 +107,8 @@ public class ApplicationPreferencesActivity extends PassphraseRequiredActionBarA
         .setOnPreferenceClickListener(new CategoryClickListener(masterSecret, PREFERENCE_CATEGORY_APP_PROTECTION));
       this.findPreference(PREFERENCE_CATEGORY_APPEARANCE)
         .setOnPreferenceClickListener(new CategoryClickListener(masterSecret, PREFERENCE_CATEGORY_APPEARANCE));
-      this.findPreference(PREFERENCE_CATEGORY_STORAGE)
-        .setOnPreferenceClickListener(new CategoryClickListener(masterSecret, PREFERENCE_CATEGORY_STORAGE));
+      this.findPreference(PREFERENCE_CATEGORY_CHATS)
+        .setOnPreferenceClickListener(new CategoryClickListener(masterSecret, PREFERENCE_CATEGORY_CHATS));
       this.findPreference(PREFERENCE_CATEGORY_ADVANCED)
         .setOnPreferenceClickListener(new CategoryClickListener(masterSecret, PREFERENCE_CATEGORY_ADVANCED));
     }
@@ -129,8 +129,8 @@ public class ApplicationPreferencesActivity extends PassphraseRequiredActionBarA
           .setSummary(AppProtectionPreferenceFragment.getSummary(getActivity()));
       this.findPreference(PREFERENCE_CATEGORY_APPEARANCE)
           .setSummary(AppearancePreferenceFragment.getSummary(getActivity()));
-      this.findPreference(PREFERENCE_CATEGORY_STORAGE)
-          .setSummary(StoragePreferenceFragment.getSummary(getActivity()));
+      this.findPreference(PREFERENCE_CATEGORY_CHATS)
+          .setSummary(ChatsPreferenceFragment.getSummary(getActivity()));
     }
 
     private class CategoryClickListener implements Preference.OnPreferenceClickListener {
@@ -159,8 +159,8 @@ public class ApplicationPreferencesActivity extends PassphraseRequiredActionBarA
         case PREFERENCE_CATEGORY_APPEARANCE:
           fragment = new AppearancePreferenceFragment();
           break;
-        case PREFERENCE_CATEGORY_STORAGE:
-          fragment = new StoragePreferenceFragment();
+        case PREFERENCE_CATEGORY_CHATS:
+          fragment = new ChatsPreferenceFragment();
           break;
         case PREFERENCE_CATEGORY_DEVICES:
           Intent intent = new Intent(getActivity(), DeviceListActivity.class);

@@ -1,13 +1,11 @@
 package com.openchat.secureim.mms;
 
 import android.text.TextUtils;
+import android.util.Log;
 
-import com.openchat.secureim.crypto.AsymmetricMasterCipher;
-import com.openchat.secureim.crypto.MasterCipher;
-import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.MasterSecretUnion;
 import com.openchat.secureim.crypto.MediaKey;
-import com.openchat.secureim.util.Base64;
+import com.openchat.secureim.database.PartDatabase;
 import com.openchat.secureim.util.GroupUtil;
 import com.openchat.secureim.util.Util;
 import com.openchat.protocal.util.guava.Optional;
@@ -82,7 +80,7 @@ public class IncomingMediaMessage {
             media.setName(Util.toIsoBytes(relay.get()));
           }
 
-          media.setInProgress(true);
+          media.setTransferProgress(PartDatabase.TRANSFER_PROGRESS_AUTO_PENDING);
 
           this.body.addPart(media);
         }

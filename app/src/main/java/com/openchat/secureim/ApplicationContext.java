@@ -13,6 +13,7 @@ import com.openchat.secureim.dependencies.OpenchatServiceCommunicationModule;
 import com.openchat.secureim.jobs.GcmRefreshJob;
 import com.openchat.secureim.jobs.persistence.EncryptingJobSerializer;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirementProvider;
+import com.openchat.secureim.jobs.requirements.MediaNetworkRequirementProvider;
 import com.openchat.secureim.jobs.requirements.ServiceRequirementProvider;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.jobqueue.JobManager;
@@ -25,8 +26,10 @@ import dagger.ObjectGraph;
 
 public class ApplicationContext extends Application implements DependencyInjector {
 
-  private JobManager jobManager;
+  private JobManager  jobManager;
   private ObjectGraph objectGraph;
+
+  private MediaNetworkRequirementProvider mediaNetworkRequirementProvider = new MediaNetworkRequirementProvider();
 
   public static ApplicationContext getInstance(Context context) {
     return (ApplicationContext)context.getApplicationContext();
@@ -78,9 +81,14 @@ public class ApplicationContext extends Application implements DependencyInjecto
                                 .withJobSerializer(new EncryptingJobSerializer())
                                 .withRequirementProviders(new MasterSecretRequirementProvider(this),
                                                           new ServiceRequirementProvider(this),
-                                                          new NetworkRequirementProvider(this))
+                                                          new NetworkRequirementProvider(this),
+                                                          mediaNetworkRequirementProvider)
                                 .withConsumerThreads(5)
                                 .build();
+  }
+
+  public void notifyMediaControlEvent() {
+    mediaNetworkRequirementProvider.notifyMediaControlEvent();
   }
 
   private void initializeDependencyInjection() {

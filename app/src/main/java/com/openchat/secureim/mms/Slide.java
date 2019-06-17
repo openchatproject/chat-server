@@ -62,6 +62,10 @@ public abstract class Slide {
     return part.isInProgress();
   }
 
+  public long getTransferProgress() {
+    return part.getTransferProgress();
+  }
+
   public @DrawableRes int getPlaceholderRes(Theme theme) {
     throw new AssertionError("getPlaceholderRes() called for non-drawable slide");
   }
@@ -95,7 +99,7 @@ public abstract class Slide {
            this.hasImage() == that.hasImage()                        &&
            this.hasVideo() == that.hasVideo()                        &&
            this.isDraft() == that.isDraft()                          &&
-           this.isInProgress() == that.isInProgress()                &&
+           this.getTransferProgress() == that.getTransferProgress()  &&
            Util.equals(this.getUri(), that.getUri())                 &&
            Util.equals(this.getThumbnailUri(), that.getThumbnailUri());
   }
@@ -103,7 +107,7 @@ public abstract class Slide {
   @Override
   public int hashCode() {
     return Util.hashCode(getContentType(), hasAudio(), hasImage(),
-                         hasVideo(), isDraft(), getUri(), getThumbnailUri());
+                         hasVideo(), isDraft(), getUri(), getThumbnailUri(), getTransferProgress());
   }
 
 }
