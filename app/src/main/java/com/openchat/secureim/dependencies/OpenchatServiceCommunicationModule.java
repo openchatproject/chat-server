@@ -66,8 +66,7 @@ public class OpenchatServiceCommunicationModule {
                                            OpenchatServicePreferences.getLocalNumber(context),
                                            OpenchatServicePreferences.getPushServerPassword(context),
                                            new OpenchatServiceOpenchatStore(context),
-                                           Optional.of((OpenchatServiceMessageSender.EventListener)
-                                                           new SecurityEventListener(context)));
+                                           Optional.<OpenchatServiceMessageSender.EventListener>of(new SecurityEventListener(context)));
       }
     };
   }
