@@ -201,7 +201,7 @@ public class OpenchatServiceDirectory {
     }
   }
 
-  private class DatabaseHelper extends SQLiteOpenHelper {
+  private static class DatabaseHelper extends SQLiteOpenHelper {
 
     public DatabaseHelper(Context context, String name,
                           SQLiteDatabase.CursorFactory factory,

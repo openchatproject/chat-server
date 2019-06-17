@@ -4,7 +4,7 @@ public abstract class CharacterCalculator {
 
   public abstract CharacterState calculateCharacters(int charactersSpent);
 
-  public class CharacterState {
+  public static class CharacterState {
     public int charactersRemaining;
     public int messagesSpent;
     public int maxMessageSize;
