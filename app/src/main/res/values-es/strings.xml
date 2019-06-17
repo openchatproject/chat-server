@@ -362,6 +362,7 @@ Se recibió un mensaje con una clave de identidad desconocida. Haga clic para pr
   <string name="KeyCachingService_openchatservice_passphrase_cached_with_lock">Pulse para abrir, o pulse el candado para cerrar.</string>
   <string name="KeyCachingService_passphrase_cached">OpenchatService está desbloqueado</string>
   <string name="KeyCachingService_lock">Bloquear con clave de acceso</string>
+  <string name="MessageNotifier_d_new_messages_in_d_conversations">%1$d mensajes nuevos en %2$d conversaciones</string>
   <string name="MessageNotifier_most_recent_from_s">Más recientes desde: %1$s</string>
   <string name="MessageNotifier_locked_message">Mensaje bloqueado...</string>
   <string name="MessageNotifier_media_message_with_text">Mensaje multimedia: %s</string>
@@ -375,6 +376,8 @@ Se recibió un mensaje con una clave de identidad desconocida. Haga clic para pr
   <string name="MessageNotifier_reply">Responder</string>
   <string name="QuickResponseService_quick_response_unavailable_when_OpenchatService_is_locked">¡Respuesta rápida no disponible cuando OpenchatService está bloqueado!</string>
   <string name="QuickResponseService_problem_sending_message">¡Hubo un problema al enviar el mensaje!</string>
+  <string name="SingleRecipientNotificationBuilder_new_openchatservice_message">Nuevo mensajes de OpenchatService</string>
+  <string name="SingleRecipientNotificationBuilder_contents_hidden">Contenidos ocultos</string>
   <string name="change_passphrase_activity__old_passphrase">CLAVE DE ACCESO ANTERIOR:</string>
   <string name="change_passphrase_activity__new_passphrase">CLAVE DE ACCESO NUEVA:</string>
   <string name="change_passphrase_activity__repeat_new_passphrase">REPITA LA NUEVA CLAVE DE ACCESO:</string>
@@ -578,6 +581,9 @@ por SMS.
   <string name="arrays__settings_default">Configuración predeterminada</string>
   <string name="arrays__enabled">Habilitado</string>
   <string name="arrays__disabled">Deshabilitado</string>
+  <string name="arrays__name_and_message">Nombre y mensaje</string>
+  <string name="arrays__name_only">Sólo nombre</string>
+  <string name="arrays__neither">Ninguno de los dos</string>
   <plurals name="hours_ago">
     <item quantity="one">%d hora</item>
     <item quantity="other">%d horas</item>
@@ -610,6 +616,7 @@ por SMS.
   <string name="preferences__pref_timeout_interval_title">Intervalo de expiración</string>
   <string name="preferences__the_amount_of_time_to_wait_before_forgetting_passphrase">El intervalo de tiempo a esperar antes de eliminar la clave de acceso de la memoria</string>
   <string name="preferences__notifications">Notificaciones</string>
+  <string name="preferences__enable_message_notifications">Habilitar notificaciones de mensaje</string>
   <string name="preferences__led_color">Color del LED</string>
   <string name="preferences__led_color_unknown">Desconocido</string>
   <string name="preferences__pref_led_blink_title">Patrón de parpadeo del LED</string>
@@ -677,6 +684,7 @@ Mensajería privada gratuita con usuarios de OpenchatService y Openchat</string>
   <string name="preferences__support_wifi_calling">Modo de compatibilidad \'Llamada por WiFi\'</string>
   <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Habilítelo si su dispositivo utiliza entrega de SMS/MMS vía WiFi (actívelo sólo cuando \'Llamada por WiFi\' esté activada en su dispositivo)</string>
   <string name="preferences_app_protection__blocked_contacts">Contactos bloqueados</string>
+  <string name="preferences_notifications__display_in_notifications">Mostrar en notificaciones</string>
   <string name="contact_selection_list__menu_select_all">Seleccionar todos</string>
   <string name="contact_selection_list__menu_unselect_all">Deseleccionar todos</string>
   <string name="contact_selection_list__header_openchatservice_users">USUARIOS DE OPENCHAT</string>
