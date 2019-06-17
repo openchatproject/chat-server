@@ -1,12 +1,15 @@
 package com.openchat.secureim.util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.ArrayRes;
 import android.support.annotation.NonNull;
 import android.util.Log;
+
+import com.h6ah4i.android.compat.content.SharedPreferenceCompat;
 
 import com.openchat.secureim.R;
 import com.openchat.secureim.preferences.NotificationPrivacyPreference;
@@ -15,7 +18,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class OpenchatServicePreferences {
@@ -500,6 +502,13 @@ public class OpenchatServicePreferences {
   }
 
   private static Set<String> getStringSetPreference(Context context, String key, Set<String> defaultValues) {
-    return PreferenceManager.getDefaultSharedPreferences(context).getStringSet(key, defaultValues);
+    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+    if (prefs.contains(key)) {
+      return SharedPreferenceCompat.getStringSet(PreferenceManager.getDefaultSharedPreferences(context),
+                                                 key,
+                                                 Collections.<String>emptySet());
+    } else {
+      return defaultValues;
+    }
   }
 }
