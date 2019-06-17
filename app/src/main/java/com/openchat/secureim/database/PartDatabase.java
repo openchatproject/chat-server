@@ -16,7 +16,6 @@ import com.openchat.secureim.crypto.EncryptingPartOutputStream;
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.crypto.MasterSecretUnion;
 import com.openchat.secureim.mms.PartAuthority;
-import com.openchat.secureim.util.BitmapDecodingException;
 import com.openchat.secureim.util.MediaUtil;
 import com.openchat.secureim.util.MediaUtil.ThumbnailData;
 import com.openchat.secureim.util.Util;
@@ -591,16 +590,12 @@ public class PartDatabase extends Database {
         return stream;
       }
 
-      try {
-        PduPart part = getPart(partId);
-        ThumbnailData data = MediaUtil.generateThumbnail(context, masterSecret, part.getDataUri(), Util.toIsoString(part.getContentType()));
-        if (data == null) {
-          return null;
-        }
-        updatePartThumbnail(masterSecret, partId, part, data.toDataStream(), data.getAspectRatio());
-      } catch (BitmapDecodingException bde) {
-        throw new IOException(bde);
+      PduPart part = getPart(partId);
+      ThumbnailData data = MediaUtil.generateThumbnail(context, masterSecret, part.getDataUri(), Util.toIsoString(part.getContentType()));
+      if (data == null) {
+        return null;
       }
+      updatePartThumbnail(masterSecret, partId, part, data.toDataStream(), data.getAspectRatio());
 
       return getDataStream(masterSecret, partId, THUMBNAIL);
     }
@@ -644,7 +639,6 @@ public class PartDatabase extends Database {
 
       if (rowId != partId.rowId) return false;
       return uniqueId == partId.uniqueId;
-
     }
 
     @Override public int hashCode() {

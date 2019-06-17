@@ -1,20 +1,22 @@
 package com.openchat.secureim.mms;
 
 import android.content.Context;
+import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
 import android.util.Log;
 import android.util.Pair;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.gifdecoder.GifDecoder;
 
 import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.mms.DecryptableStreamUriLoader.DecryptableUri;
 import com.openchat.secureim.util.BitmapDecodingException;
 import com.openchat.secureim.util.BitmapUtil;
 import com.openchat.secureim.util.MediaUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.ExecutionException;
 
 import ws.com.google.android.mms.pdu.PduPart;
 
@@ -64,15 +66,10 @@ public abstract class MediaConstraints {
     if (!canResize(part) || part.getDataUri() == null) {
       throw new UnsupportedOperationException("Cannot resize this content type");
     }
-
     try {
-      return BitmapUtil.createScaledBytes(context, masterSecret, part.getDataUri(),
-                                          getImageMaxWidth(context),
-                                          getImageMaxHeight(context),
-                                          getImageMaxSize());
-    } catch (BitmapDecodingException bde) {
-      throw new IOException(bde);
+      return BitmapUtil.createScaledBytes(context, new DecryptableUri(masterSecret, part.getDataUri()), this);
+    } catch (ExecutionException ee) {
+      throw new IOException(ee);
     }
   }
-
 }

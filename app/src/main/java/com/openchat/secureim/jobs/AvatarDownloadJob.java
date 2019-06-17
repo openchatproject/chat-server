@@ -9,6 +9,7 @@ import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.GroupDatabase;
 import com.openchat.secureim.jobs.requirements.MasterSecretRequirement;
+import com.openchat.secureim.mms.AttachmentStreamUriLoader.AttachmentModel;
 import com.openchat.secureim.push.OpenchatServicePushTrustStore;
 import com.openchat.secureim.util.BitmapDecodingException;
 import com.openchat.secureim.util.BitmapUtil;
@@ -24,6 +25,7 @@ import com.openchat.imservice.internal.util.StaticCredentialsProvider;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.ExecutionException;
 
 public class AvatarDownloadJob extends MasterSecretJob {
 
@@ -61,14 +63,11 @@ public class AvatarDownloadJob extends MasterSecretJob {
         }
 
         attachment = downloadAttachment(relay, avatarId);
-
-        InputStream scaleInputStream   = new AttachmentCipherInputStream(attachment, key);
-        InputStream measureInputStream = new AttachmentCipherInputStream(attachment, key);
-        Bitmap      avatar             = BitmapUtil.createScaledBitmap(measureInputStream, scaleInputStream, 500, 500);
+        Bitmap avatar = BitmapUtil.createScaledBitmap(context, new AttachmentModel(attachment, key), 500, 500);
 
         database.updateAvatar(groupId, avatar);
       }
-    } catch (InvalidMessageException | BitmapDecodingException | NonSuccessfulResponseCodeException e) {
+    } catch (ExecutionException | NonSuccessfulResponseCodeException e) {
       Log.w(TAG, e);
     } finally {
       if (attachment != null)
