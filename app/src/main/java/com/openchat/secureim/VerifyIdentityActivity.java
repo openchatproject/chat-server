@@ -2,6 +2,7 @@ package com.openchat.secureim;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,56 +30,38 @@ public class VerifyIdentityActivity extends KeyScanningActivity {
   protected void onCreate(Bundle state, @NonNull MasterSecret masterSecret) {
     this.masterSecret = masterSecret;
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    getSupportActionBar().setTitle(R.string.AndroidManifest__verify_identity);
+
     setContentView(R.layout.verify_identity_activity);
 
-    initializeResources();
-    initializeFingerprints();
+    this.localIdentityFingerprint  = (TextView)findViewById(R.id.you_read);
+    this.remoteIdentityFingerprint = (TextView)findViewById(R.id.friend_reads);
   }
 
   @Override
   public void onResume() {
     super.onResume();
-    getSupportActionBar().setTitle(R.string.AndroidManifest__verify_identity);
 
+    this.recipient = RecipientFactory.getRecipientForId(this, this.getIntent().getLongExtra("recipient", -1), true);
+
+    initializeFingerprints();
   }
 
-  private void initializeLocalIdentityKey() {
+  private void initializeFingerprints() {
     if (!IdentityKeyUtil.hasIdentityKey(this)) {
       localIdentityFingerprint.setText(R.string.VerifyIdentityActivity_you_do_not_have_an_identity_key);
       return;
     }
 
     localIdentityFingerprint.setText(IdentityKeyUtil.getIdentityKey(this).getFingerprint());
-  }
 
-  private void initializeRemoteIdentityKey() {
-    IdentityKeyParcelable identityKeyParcelable = getIntent().getParcelableExtra("remote_identity");
-    IdentityKey           identityKey           = null;
-
-    if (identityKeyParcelable != null) {
-      identityKey = identityKeyParcelable.get();
-    }
-
-    if (identityKey == null) {
-      identityKey = getRemoteIdentityKey(masterSecret, recipient);
-    }
+    IdentityKey identityKey = getRemoteIdentityKey(masterSecret, recipient);
 
     if (identityKey == null) {
       remoteIdentityFingerprint.setText(R.string.VerifyIdentityActivity_recipient_has_no_identity_key);
     } else {
       remoteIdentityFingerprint.setText(identityKey.getFingerprint());
     }
-  }
-
-  private void initializeFingerprints() {
-    initializeLocalIdentityKey();
-    initializeRemoteIdentityKey();
-  }
-
-  private void initializeResources() {
-    this.localIdentityFingerprint  = (TextView)findViewById(R.id.you_read);
-    this.remoteIdentityFingerprint = (TextView)findViewById(R.id.friend_reads);
-    this.recipient                 = RecipientFactory.getRecipientForId(this, this.getIntent().getLongExtra("recipient", -1), true);
   }
 
   @Override
@@ -145,7 +128,13 @@ public class VerifyIdentityActivity extends KeyScanningActivity {
     return getString(R.string.VerifyIdentityActivity_verified_exclamation);
   }
 
-  private IdentityKey getRemoteIdentityKey(MasterSecret masterSecret, Recipient recipient) {
+  private @Nullable IdentityKey getRemoteIdentityKey(MasterSecret masterSecret, Recipient recipient) {
+    IdentityKeyParcelable identityKeyParcelable = getIntent().getParcelableExtra("remote_identity");
+
+    if (identityKeyParcelable != null) {
+      return identityKeyParcelable.get();
+    }
+
     SessionStore   sessionStore   = new OpenchatServiceSessionStore(this, masterSecret);
     OpenchatAddress axolotlAddress = new OpenchatAddress(recipient.getNumber(), OpenchatServiceAddress.DEFAULT_DEVICE_ID);
     SessionRecord  record         = sessionStore.loadSession(axolotlAddress);
