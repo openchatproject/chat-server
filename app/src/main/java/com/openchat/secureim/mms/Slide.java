@@ -5,8 +5,10 @@ import android.content.res.Resources.Theme;
 import android.net.Uri;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.openchat.secureim.crypto.MasterSecret;
+import com.openchat.secureim.util.MediaUtil;
 import com.openchat.secureim.util.Util;
 
 import java.io.IOException;
@@ -16,18 +18,12 @@ import ws.com.google.android.mms.pdu.PduPart;
 
 public abstract class Slide {
 
-  protected final PduPart      part;
-  protected final Context      context;
-  protected       MasterSecret masterSecret;
+  protected final PduPart part;
+  protected final Context context;
 
   public Slide(Context context, @NonNull PduPart part) {
     this.part    = part;
     this.context = context;
-  }
-
-  public Slide(Context context, @NonNull MasterSecret masterSecret, @NonNull PduPart part) {
-    this(context, part);
-    this.masterSecret = masterSecret;
   }
 
   public String getContentType() {
@@ -74,18 +70,23 @@ public abstract class Slide {
     return !getPart().getPartId().isValid();
   }
 
-  protected static void assertMediaSize(Context context, Uri uri, long max)
-      throws MediaTooLargeException, IOException
+  protected static PduPart constructPartFromUri(@NonNull  Context      context,
+                                                @NonNull  Uri          uri,
+                                                @NonNull  String       defaultMime,
+                                                          long         dataSize)
+      throws IOException
   {
-    InputStream in = context.getContentResolver().openInputStream(uri);
-    long   size    = 0;
-    byte[] buffer  = new byte[512];
-    int read;
+    final PduPart part            = new PduPart();
+    final String  mimeType        = MediaUtil.getMimeType(context, uri);
+    final String  derivedMimeType = mimeType != null ? mimeType : defaultMime;
 
-    while ((read = in.read(buffer)) != -1) {
-      size += read;
-      if (size > max) throw new MediaTooLargeException("Media exceeds maximum message size.");
-    }
+    part.setDataSize(dataSize);
+    part.setDataUri(uri);
+    part.setContentType(derivedMimeType.getBytes());
+    part.setContentId((System.currentTimeMillis()+"").getBytes());
+    part.setName((MediaUtil.getDiscreteMimeType(derivedMimeType) + System.currentTimeMillis()).getBytes());
+
+    return part;
   }
 
   @Override
@@ -109,5 +110,4 @@ public abstract class Slide {
     return Util.hashCode(getContentType(), hasAudio(), hasImage(),
                          hasVideo(), isDraft(), getUri(), getThumbnailUri(), getTransferProgress());
   }
-
 }
