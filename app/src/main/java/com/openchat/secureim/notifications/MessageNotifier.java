@@ -150,7 +150,10 @@ public class MessageNotifier {
       }
 
       updateBadge(context, notificationState.getMessageCount());
-      scheduleReminder(context, reminderCount);
+
+      if (openchat) {
+        scheduleReminder(context, reminderCount);
+      }
     } finally {
       if (telcoCursor != null) telcoCursor.close();
       if (pushCursor != null)  pushCursor.close();
