@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 
 import com.openchat.secureim.R;
 import com.openchat.secureim.components.emoji.EmojiProvider.EmojiDrawable;
+import com.openchat.secureim.util.OpenchatServicePreferences;
 
 public class EmojiEditText extends AppCompatEditText {
   private static final String TAG = EmojiEditText.class.getSimpleName();
@@ -23,7 +24,9 @@ public class EmojiEditText extends AppCompatEditText {
 
   public EmojiEditText(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    setFilters(new InputFilter[]{ new EmojiFilter(this) });
+    if (!OpenchatServicePreferences.isSystemEmojiPreferred(getContext())) {
+      setFilters(new InputFilter[]{ new EmojiFilter(this) });
+    }
   }
 
   public void insertEmoji(String emoji) {
