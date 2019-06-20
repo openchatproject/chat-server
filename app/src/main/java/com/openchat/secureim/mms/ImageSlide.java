@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources.Theme;
 import android.net.Uri;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 
 import com.openchat.secureim.R;
 
@@ -42,5 +43,9 @@ public class ImageSlide extends Slide {
   @Override
   public boolean hasImage() {
     return true;
+  }
+
+  @NonNull @Override public String getContentDescription() {
+    return context.getString(R.string.Slide_image);
   }
 }

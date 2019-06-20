@@ -17,6 +17,8 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Toast;
 
+import junit.framework.Assert;
+
 import com.openchat.secureim.R;
 import com.openchat.secureim.components.ThumbnailView;
 import com.openchat.secureim.crypto.MasterSecret;
