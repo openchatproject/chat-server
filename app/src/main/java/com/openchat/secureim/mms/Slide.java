@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 
 import com.openchat.secureim.crypto.MasterSecret;
 import com.openchat.secureim.util.MediaUtil;
+import com.openchat.secureim.database.PartDatabase;
 import com.openchat.secureim.util.Util;
 
 import java.io.IOException;
@@ -56,6 +57,11 @@ public abstract class Slide {
 
   public boolean isInProgress() {
     return part.isInProgress();
+  }
+
+  public boolean isPendingDownload() {
+    return getTransferProgress() == PartDatabase.TRANSFER_PROGRESS_FAILED ||
+           getTransferProgress() == PartDatabase.TRANSFER_PROGRESS_AUTO_PENDING;
   }
 
   public long getTransferProgress() {
