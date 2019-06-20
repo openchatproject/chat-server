@@ -163,7 +163,7 @@ public class Recipient {
     }
 
     for (RecipientModifiedListener listener : localListeners)
-      listener.onModified(Recipient.this);
+      listener.onModified(this);
   }
 
   public interface RecipientModifiedListener {
