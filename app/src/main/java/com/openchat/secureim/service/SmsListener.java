@@ -11,7 +11,6 @@ import android.util.Log;
 
 import com.openchat.secureim.ApplicationContext;
 import com.openchat.secureim.jobs.SmsReceiveJob;
-import com.openchat.secureim.protocol.WirePrefix;
 import com.openchat.secureim.util.OpenchatServicePreferences;
 import com.openchat.secureim.util.Util;
 
@@ -93,7 +92,7 @@ public class SmsListener extends BroadcastReceiver {
       return true;
     }
 
-    return WirePrefix.isEncryptedMessage(messageBody) || WirePrefix.isKeyExchange(messageBody);
+    return false;
   }
 
   private boolean isChallenge(Context context, Intent intent) {

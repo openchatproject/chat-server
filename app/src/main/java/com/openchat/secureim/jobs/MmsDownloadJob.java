@@ -15,7 +15,6 @@ import com.openchat.secureim.mms.CompatMmsConnection;
 import com.openchat.secureim.mms.IncomingMediaMessage;
 import com.openchat.secureim.mms.MmsRadioException;
 import com.openchat.secureim.notifications.MessageNotifier;
-import com.openchat.secureim.protocol.WirePrefix;
 import com.openchat.secureim.service.KeyCachingService;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.jobqueue.requirements.NetworkRequirement;
@@ -144,16 +143,9 @@ public class MmsDownloadJob extends MasterSecretJob {
     MmsDatabase          database = DatabaseFactory.getMmsDatabase(context);
     IncomingMediaMessage message  = new IncomingMediaMessage(retrieved);
 
-    Pair<Long, Long> messageAndThreadId;
-
-    if (retrieved.getSubject() != null && WirePrefix.isEncryptedMmsSubject(retrieved.getSubject().getString())) {
-      database.markAsLegacyVersion(messageId, threadId);
-      messageAndThreadId = new Pair<>(messageId, threadId);
-    } else {
-      messageAndThreadId = database.insertMessageInbox(new MasterSecretUnion(masterSecret),
-                                                       message, contentLocation, threadId);
-      database.delete(messageId);
-    }
+    Pair<Long, Long> messageAndThreadId  = database.insertMessageInbox(new MasterSecretUnion(masterSecret),
+                                                                       message, contentLocation, threadId);
+    database.delete(messageId);
 
     MessageNotifier.updateNotification(context, masterSecret, messageAndThreadId.second);
   }

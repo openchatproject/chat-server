@@ -11,11 +11,9 @@ import com.openchat.secureim.crypto.MasterSecretUtil;
 import com.openchat.secureim.database.DatabaseFactory;
 import com.openchat.secureim.database.EncryptingSmsDatabase;
 import com.openchat.secureim.notifications.MessageNotifier;
-import com.openchat.secureim.protocol.WirePrefix;
 import com.openchat.secureim.recipients.RecipientFactory;
 import com.openchat.secureim.recipients.Recipients;
 import com.openchat.secureim.service.KeyCachingService;
-import com.openchat.secureim.sms.IncomingEncryptedMessage;
 import com.openchat.secureim.sms.IncomingTextMessage;
 import com.openchat.jobqueue.JobParameters;
 import com.openchat.protocal.util.guava.Optional;
@@ -108,16 +106,6 @@ public class SmsReceiveJob extends ContextJob {
       return Optional.absent();
     }
 
-    IncomingTextMessage message =  new IncomingTextMessage(messages);
-
-    if (WirePrefix.isEncryptedMessage(message.getMessageBody()) ||
-        WirePrefix.isKeyExchange(message.getMessageBody())      ||
-        WirePrefix.isPreKeyBundle(message.getMessageBody())     ||
-        WirePrefix.isEndSession(message.getMessageBody()))
-    {
-      return Optional.<IncomingTextMessage>of(new IncomingEncryptedMessage(message, message.getMessageBody()));
-    } else {
-      return Optional.of(message);
-    }
+    return Optional.of(new IncomingTextMessage(messages));
   }
 }
