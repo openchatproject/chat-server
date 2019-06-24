@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -154,8 +153,8 @@ public class MessageDetailsActivity extends PassphraseRequiredActionBarActivity 
       toFromRes = R.string.message_details_header__from;
     }
     toFrom.setText(toFromRes);
-    conversationItem.set(masterSecret, messageRecord, dynamicLanguage.getCurrentLocale(),
-                         new HashSet<MessageRecord>(), new NullSelectionListener(),
+    conversationItem.bind(masterSecret, messageRecord, dynamicLanguage.getCurrentLocale(),
+                         new HashSet<MessageRecord>(),
                          recipients != messageRecord.getRecipients(),
                          DirectoryHelper.isPushDestination(this, recipients));
     recipientsList.setAdapter(new MessageDetailsRecipientAdapter(this, masterSecret, messageRecord,
@@ -284,15 +283,6 @@ public class MessageDetailsActivity extends PassphraseRequiredActionBarActivity 
         errorText.setVisibility(View.GONE);
         metadataContainer.setVisibility(View.VISIBLE);
       }
-    }
-  }
-
-  private static class NullSelectionListener implements ConversationFragment.SelectionClickListener {
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {}
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-      return false;
     }
   }
 }

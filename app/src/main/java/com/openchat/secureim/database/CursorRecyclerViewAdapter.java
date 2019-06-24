@@ -3,6 +3,7 @@ package com.openchat.secureim.database;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 
 public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
@@ -70,17 +71,34 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
            : 0;
   }
 
-  public abstract void onBindViewHolder(VH viewHolder, Cursor cursor);
+  public abstract void onBindViewHolder(VH viewHolder, @NonNull Cursor cursor);
 
   @Override
   public void onBindViewHolder(VH viewHolder, int position) {
+    moveToPositionOrThrow(position);
+    onBindViewHolder(viewHolder, cursor);
+  }
+
+  @Override public int getItemViewType(int position) {
+    moveToPositionOrThrow(position);
+    return getItemViewType(cursor);
+  }
+
+  public int getItemViewType(@NonNull Cursor cursor) {
+    return 0;
+  }
+
+  private void assertActiveCursor() {
     if (!isActiveCursor()) {
       throw new IllegalStateException("this should only be called when the cursor is valid");
     }
+  }
+
+  private void moveToPositionOrThrow(final int position) {
+    assertActiveCursor();
     if (!cursor.moveToPosition(position)) {
       throw new IllegalStateException("couldn't move cursor to position " + position);
     }
-    onBindViewHolder(viewHolder, cursor);
   }
 
   private boolean isActiveCursor() {

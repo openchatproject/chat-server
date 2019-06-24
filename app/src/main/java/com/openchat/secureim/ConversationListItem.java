@@ -26,7 +26,7 @@ import java.util.Set;
 import static com.openchat.secureim.util.SpanUtil.color;
 
 public class ConversationListItem extends RelativeLayout
-                                  implements Recipients.RecipientsModifiedListener
+                                  implements Recipients.RecipientsModifiedListener, Unbindable
 {
   private final static String TAG = ConversationListItem.class.getSimpleName();
 
@@ -92,9 +92,9 @@ public class ConversationListItem extends RelativeLayout
     this.contactPhotoImage.setAvatar(recipients, true);
   }
 
+  @Override
   public void unbind() {
-    if (this.recipients != null)
-      this.recipients.removeListener(this);
+    if (this.recipients != null) this.recipients.removeListener(this);
   }
 
   private void setBatchState(boolean batch) {
